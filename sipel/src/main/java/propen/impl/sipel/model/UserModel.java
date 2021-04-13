@@ -52,10 +52,10 @@ public class UserModel implements Serializable {
     @JsonIgnore
     private RoleModel role;
 
-    @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private List<OrderModel> listOrder;
+//    @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private List<OrderModel> listOrder;
 
     @OneToMany(mappedBy = "idUserEng", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -158,13 +158,13 @@ public class UserModel implements Serializable {
         return listTask;
     }
 
-    public void setListOrder(List<OrderModel> listOrder) {
-        this.listOrder = listOrder;
-    }
-
-    public List<OrderModel> getListOrder() {
-        return listOrder;
-    }
+//    public void setListOrder(List<OrderModel> listOrder) {
+//        this.listOrder = listOrder;
+//    }
+//
+//    public List<OrderModel> getListOrder() {
+//        return listOrder;
+//    }
 
     public void setListProjectInstallation(List<ProjectInstallationModel> listProjectInstallation) {
         this.listProjectInstallation = listProjectInstallation;

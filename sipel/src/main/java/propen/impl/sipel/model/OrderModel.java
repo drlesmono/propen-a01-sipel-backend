@@ -53,9 +53,8 @@ public class OrderModel implements Serializable {
     @Column(name="dateOrder", nullable = false)
     private Date dateOrder;
 
-    @NotNull
-    @Column(name="noSpk", nullable = false)
-    private String noSpk;
+    @Column(name="noPO", nullable = true)
+    private String noPO;
 
     @NotNull
     @Column(name="description", nullable = false)
@@ -73,11 +72,11 @@ public class OrderModel implements Serializable {
     @Column(name="isManagedService", nullable = false)
     private Boolean isManagedService;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private UserModel idUser;
+//    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+//    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private UserModel idUser;
 
     @OneToOne(mappedBy = "idOrder")
     @OnDelete(OnDeleteAction.CASCADE)
@@ -121,16 +120,16 @@ public class OrderModel implements Serializable {
         this.description = description;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
+//    public void setIdUser(Long idUser) {
+//        this.idUser = idUser;
+//    }
 
     public void setManagedService(Boolean managedService) {
         this.isManagedService = managedService;
     }
 
-    public void setNoSpk(String noSpk) {
-        this.noSpk = noSpk;
+    public void setNoPO(String noPO) {
+        this.noPO = noPO;
     }
 
     public void setOrderName(String orderName) {
@@ -193,11 +192,11 @@ public class OrderModel implements Serializable {
         return dateOrder;
     }
 
-    public Long getIdUser() {
-        return idUser;
-    }
+//    public Long getIdUser() {
+//        return idUser;
+//    }
 
-    public String getNoSpk() {
-        return noSpk;
+    public String getNoPO() {
+        return noPO;
     }
 }
