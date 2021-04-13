@@ -42,9 +42,9 @@ public class ManagedServicesModel {
     private Boolean isActivated;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="timeRemaining", nullable = false)
-    private Date timeRemaining;
+    private int timeRemaining;
 
     @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
