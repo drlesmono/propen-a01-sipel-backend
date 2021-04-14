@@ -18,8 +18,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "orders")
-@Inheritance(strategy=InheritanceType.JOINED)
-public class OrderModel implements Serializable {
+//@Inheritance(strategy=InheritanceType.JOINED)
+//public class OrderModel implements Serializable {
+public class OrderModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +74,18 @@ public class OrderModel implements Serializable {
     @Column(name="isManagedService", nullable = false)
     private Boolean isManagedService;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ProjectInstallationModel idOrderPi;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idOrderMs", referencedColumnName = "idOrderMs", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ManagedServicesModel idOrderMs;
+
 //    @ManyToOne(fetch = FetchType.EAGER, optional = false)
 //    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = false)
 //    @OnDelete(action = OnDeleteAction.CASCADE)
@@ -90,115 +103,139 @@ public class OrderModel implements Serializable {
 //    @JsonIgnore
 //    private ReportModel report;
 
-    public void setIdOrder(Long idOrder) {
-        this.idOrder = idOrder;
-    }
-
-    public void setClientDiv(String clientDiv) {
-        this.clientDiv = clientDiv;
-    }
-
-    public void setClientEmail(String clientEmail) {
-        this.clientEmail = clientEmail;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public void setClientOrg(String clientOrg) {
-        this.clientOrg = clientOrg;
-    }
-
-    public void setClientPhone(String clientPhone) {
-        this.clientPhone = clientPhone;
-    }
-
-    public void setDateOrder(Timestamp dateOrder) {
-        this.dateOrder = dateOrder;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
 //    public void setIdUser(Long idUser) {
 //        this.idUser = idUser;
 //    }
 
-    public void setManagedService(Boolean managedService) {
-        this.isManagedService = managedService;
-    }
-
-    public void setNoPO(String noPO) {
-        this.noPO = noPO;
-    }
-
-    public void setOrderName(String orderName) {
-        this.orderName = orderName;
-    }
-
-    public void setProjectInstallation(Boolean projectInstallation) {
-        this.isProjectInstallation = projectInstallation;
-    }
-
-    public void setVerified(Boolean verified) {
-        this.isVerified = verified;
-    }
+//    public Long getIdUser() {
+//        return idUser;
+//    }
 
     public Long getIdOrder() {
         return idOrder;
     }
 
-    public String getClientDiv() {
-        return clientDiv;
-    }
-
-    public String getClientEmail() {
-        return clientEmail;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public String getClientOrg() {
-        return clientOrg;
-    }
-
-    public String getClientPhone() {
-        return clientPhone;
-    }
-
-    public Boolean getProjectInstallation() {
-        return isProjectInstallation;
-    }
-
-    public Boolean getManagedService() {
-        return isManagedService;
-    }
-
-    public Boolean getVerified() {
-        return isVerified;
-    }
-
-    public String getDescription() {
-        return description;
+    public void setIdOrder(Long idOrder) {
+        this.idOrder = idOrder;
     }
 
     public String getOrderName() {
         return orderName;
     }
 
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getClientOrg() {
+        return clientOrg;
+    }
+
+    public void setClientOrg(String clientOrg) {
+        this.clientOrg = clientOrg;
+    }
+
+    public String getClientDiv() {
+        return clientDiv;
+    }
+
+    public void setClientDiv(String clientDiv) {
+        this.clientDiv = clientDiv;
+    }
+
+    public String getClientEmail() {
+        return clientEmail;
+    }
+
+    public void setClientEmail(String clientEmail) {
+        this.clientEmail = clientEmail;
+    }
+
+    public String getClientPhone() {
+        return clientPhone;
+    }
+
+    public void setClientPhone(String clientPhone) {
+        this.clientPhone = clientPhone;
+    }
+
     public Date getDateOrder() {
         return dateOrder;
     }
 
-//    public Long getIdUser() {
-//        return idUser;
-//    }
+    public void setDateOrder(Date dateOrder) {
+        this.dateOrder = dateOrder;
+    }
 
     public String getNoPO() {
         return noPO;
+    }
+
+    public void setNoPO(String noPO) {
+        this.noPO = noPO;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+    }
+
+    public Boolean getProjectInstallation() {
+        return isProjectInstallation;
+    }
+
+    public void setProjectInstallation(Boolean projectInstallation) {
+        isProjectInstallation = projectInstallation;
+    }
+
+    public Boolean getManagedService() {
+        return isManagedService;
+    }
+
+    public void setManagedService(Boolean managedService) {
+        isManagedService = managedService;
+    }
+
+    public ProjectInstallationModel getIdOrderPi() {
+        return idOrderPi;
+    }
+
+    public void setIdOrderPi(ProjectInstallationModel idOrderPi) {
+        this.idOrderPi = idOrderPi;
+    }
+
+    public ManagedServicesModel getIdOrderMs() {
+        return idOrderMs;
+    }
+
+    public void setIdOrderMs(ManagedServicesModel idOrderMs) {
+        this.idOrderMs = idOrderMs;
+    }
+
+    public DocumentOrderModel getDocumentOrder() {
+        return documentOrder;
+    }
+
+    public void setDocumentOrder(DocumentOrderModel documentOrder) {
+        this.documentOrder = documentOrder;
     }
 }

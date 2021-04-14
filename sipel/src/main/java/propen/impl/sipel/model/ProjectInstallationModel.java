@@ -15,7 +15,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "projectInstallation")
-public class ProjectInstallationModel extends OrderModel{
+@IdClass(OrderModel.class)
+public class ProjectInstallationModel implements Serializable{
+
+    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private OrderModel idOrder;
 
 //    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +64,14 @@ public class ProjectInstallationModel extends OrderModel{
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private BastModel idBast;
+
+    public OrderModel getIdOrder() {
+        return idOrder;
+    }
+
+    public void setIdOrder(OrderModel idOrder) {
+        this.idOrder = idOrder;
+    }
 
     public Long getIdOrderPi() {
         return idOrderPi;

@@ -15,14 +15,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "bast")
-public class BastModel extends ReportModel{
+@IdClass(ReportModel.class)
+public class BastModel implements Serializable{
 
-//    @Id
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private ReportModel idReport;
+    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ReportModel idReport;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idBast;
@@ -66,6 +67,22 @@ public class BastModel extends ReportModel{
 //    public ReportModel getIdReport() {
 //        return idReport;
 //    }
+
+    public ReportModel getIdReport() {
+        return idReport;
+    }
+
+    public void setIdReport(ReportModel idReport) {
+        this.idReport = idReport;
+    }
+
+    public Long getIdBast() {
+        return idBast;
+    }
+
+    public void setIdBast(Long idBast) {
+        this.idBast = idBast;
+    }
 
     public String getBastNum() {
         return bastNum;

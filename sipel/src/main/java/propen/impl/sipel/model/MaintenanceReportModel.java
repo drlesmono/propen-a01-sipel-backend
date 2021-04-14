@@ -15,14 +15,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "maintenanceReport")
-public class MaintenanceReportModel extends ReportModel{
+@IdClass(ReportModel.class)
+public class MaintenanceReportModel implements Serializable{
 
-//    @Id
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private ReportModel idReportMaintenance;
+    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ReportModel idReport;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMaintenanceReport;
@@ -40,6 +41,14 @@ public class MaintenanceReportModel extends ReportModel{
 //    public void setIdReportMaintenance(ReportModel idReportMaintenance) {
 //        this.idReportMaintenance = idReportMaintenance;
 //    }
+
+    public ReportModel getIdReport() {
+        return idReport;
+    }
+
+    public void setIdReport(ReportModel idReport) {
+        this.idReport = idReport;
+    }
 
     public Long getIdMaintenanceReport() {
         return idMaintenanceReport;

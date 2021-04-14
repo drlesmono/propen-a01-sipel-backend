@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "documentOrder")
-public class DocumentOrderModel {
+public class DocumentOrderModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
