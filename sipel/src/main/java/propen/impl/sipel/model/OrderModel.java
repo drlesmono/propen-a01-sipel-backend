@@ -17,7 +17,7 @@ import java.util.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class OrderModel implements Serializable {
 
     @Id
