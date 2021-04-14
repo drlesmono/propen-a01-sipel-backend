@@ -30,52 +30,69 @@ public class MaintenanceModel {
     @Column(name = "isMaintained", nullable = false)
     private Boolean isMaintained;
 
-    @NotNull
-    @Column(name = "idOrder", nullable = false)
-    private Long idOrder;
-
-    @OneToOne(mappedBy = "idMaintenance")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idOrderMS", referencedColumnName = "idOrderMS", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private MaintenanceReportModel maintenanceReport;
+    private ManagedServicesModel idOrderMS;
 
-    public void setIdMaintenance(Long idMaintenance) {
-        this.idMaintenance = idMaintenance;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idMaintenanceReport", referencedColumnName = "idMaintenanceReport", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private MaintenanceReportModel idMaintenanceReport;
 
-    public void setIdOrder(Long idOrder) {
-        this.idOrder = idOrder;
-    }
-
-    public void setMaintenanceReport(MaintenanceReportModel maintenanceReport) {
-        this.maintenanceReport = maintenanceReport;
-    }
-
-    public void setDateMn(Date dateMn) {
-        this.dateMn = dateMn;
-    }
-
-    public void setIsMaintained(Boolean maintained) {
-        this.isMaintained = isMaintained;
-    }
-
-    public Long getIdOrder() {
-        return idOrder;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idBast", referencedColumnName = "idBast", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private BastModel bast;
 
     public Long getIdMaintenance() {
         return idMaintenance;
+    }
+
+    public void setIdMaintenance(Long idMaintenance) {
+        this.idMaintenance = idMaintenance;
     }
 
     public Date getDateMn() {
         return dateMn;
     }
 
-    public Boolean getIsMaintained() {
+    public void setDateMn(Date dateMn) {
+        this.dateMn = dateMn;
+    }
+
+    public Boolean getMaintained() {
         return isMaintained;
     }
 
-    public MaintenanceReportModel getMaintenanceReport() {
-        return maintenanceReport;
+    public void setMaintained(Boolean maintained) {
+        isMaintained = maintained;
+    }
+
+    public ManagedServicesModel getIdOrderMS() {
+        return idOrderMS;
+    }
+
+    public void setIdOrderMS(ManagedServicesModel idOrderMS) {
+        this.idOrderMS = idOrderMS;
+    }
+
+    public MaintenanceReportModel getIdMaintenanceReport() {
+        return idMaintenanceReport;
+    }
+
+    public void setIdMaintenanceReport(MaintenanceReportModel idMaintenanceReport) {
+        this.idMaintenanceReport = idMaintenanceReport;
+    }
+
+    public BastModel getBast() {
+        return bast;
+    }
+
+    public void setBast(BastModel bast) {
+        this.bast = bast;
     }
 }

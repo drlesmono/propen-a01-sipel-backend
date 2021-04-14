@@ -15,9 +15,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "managedServices")
-public class ManagedServicesModel {
+public class ManagedServicesModel extends OrderModel{
 
-    @Id
+//    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
@@ -46,65 +46,77 @@ public class ManagedServicesModel {
     @Column(name="timeRemaining", nullable = false)
     private int timeRemaining;
 
-    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<ServicesModel> listService;
 
-
-    public void setIdOrderMs(Long idOrderMs) {
-        this.idOrderMs = idOrderMs;
-    }
-
-    public void setIdUserPic(UserModel idUserPic) {
-        this.idUserPic = idUserPic;
-    }
-
-    public void setActualStart(Date actualStart) {
-        this.actualStart = actualStart;
-    }
-
-    public void setActualEnd(Date actualEnd) {
-        this.actualEnd = actualEnd;
-    }
-
-    public void setTimeRemaining(Date timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
-
-    public void setIsActivated(Boolean activated) {
-        this.isActivated = isActivated;
-    }
-
-    public void setListService(List<ServicesModel> listService) {
-        this.listService = listService;
-    }
+    @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<MaintenanceModel> listMaintenance;
 
     public Long getIdOrderMs() {
         return idOrderMs;
+    }
+
+    public void setIdOrderMs(Long idOrderMs) {
+        this.idOrderMs = idOrderMs;
     }
 
     public UserModel getIdUserPic() {
         return idUserPic;
     }
 
+    public void setIdUserPic(UserModel idUserPic) {
+        this.idUserPic = idUserPic;
+    }
+
     public Date getActualStart() {
         return actualStart;
+    }
+
+    public void setActualStart(Date actualStart) {
+        this.actualStart = actualStart;
     }
 
     public Date getActualEnd() {
         return actualEnd;
     }
 
-    public Date getTimeRemaining() {
+    public void setActualEnd(Date actualEnd) {
+        this.actualEnd = actualEnd;
+    }
+
+    public Boolean getActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(Boolean activated) {
+        isActivated = activated;
+    }
+
+    public int getTimeRemaining() {
         return timeRemaining;
     }
 
-    public Boolean getIsActivated() {
-        return isActivated;
+    public void setTimeRemaining(int timeRemaining) {
+        this.timeRemaining = timeRemaining;
     }
 
     public List<ServicesModel> getListService() {
         return listService;
+    }
+
+    public void setListService(List<ServicesModel> listService) {
+        this.listService = listService;
+    }
+
+    public List<MaintenanceModel> getListMaintenance() {
+        return listMaintenance;
+    }
+
+    public void setListMaintenance(List<MaintenanceModel> listMaintenance) {
+        this.listMaintenance = listMaintenance;
     }
 }

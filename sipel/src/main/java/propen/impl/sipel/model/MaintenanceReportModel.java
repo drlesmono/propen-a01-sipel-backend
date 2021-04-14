@@ -15,34 +15,45 @@ import java.util.List;
 
 @Entity
 @Table(name = "maintenanceReport")
-public class MaintenanceReportModel {
+public class MaintenanceReportModel extends ReportModel{
 
-    @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private ReportModel idReportMaintenance;
+//    @Id
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private ReportModel idReportMaintenance;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idMaintenanceReport;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private ManagedServicesModel idMaintenance;
+    private MaintenanceModel idMaintenance;
 
-    public void setIdReportMaintenance(ReportModel idReportMaintenance) {
-        this.idReportMaintenance = idReportMaintenance;
+//    public ReportModel getIdReportMaintenance() {
+//        return idReportMaintenance;
+//    }
+//
+//    public void setIdReportMaintenance(ReportModel idReportMaintenance) {
+//        this.idReportMaintenance = idReportMaintenance;
+//    }
+
+    public Long getIdMaintenanceReport() {
+        return idMaintenanceReport;
     }
 
-    public void setIdMaintenance(ReportModel idMaintenance) {
-        this.idMaintenance = idMaintenance;
+    public void setIdMaintenanceReport(Long idMaintenanceReport) {
+        this.idMaintenanceReport = idMaintenanceReport;
     }
 
-    public ReportModel getIdReportMaintenance() {
-        return idReportMaintenance;
-    }
-
-    public ReportModel getIdMaintenance() {
+    public MaintenanceModel getIdMaintenance() {
         return idMaintenance;
+    }
+
+    public void setIdMaintenance(MaintenanceModel idMaintenance) {
+        this.idMaintenance = idMaintenance;
     }
 }

@@ -17,7 +17,8 @@ import java.util.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
+@Inheritance(strategy=InheritanceType.JOINED)
 public class OrderModel implements Serializable {
 
     @Id
@@ -78,15 +79,16 @@ public class OrderModel implements Serializable {
 //    @JsonIgnore
 //    private UserModel idUser;
 
-    @OneToOne(mappedBy = "idOrder")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idDoc", referencedColumnName = "idDoc", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private DocumentOrderModel documentOrder;
 
-    @OneToOne(mappedBy = "idOrder")
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private ReportModel report;
+//    @OneToOne(mappedBy = "idOrder")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private ReportModel report;
 
     public void setIdOrder(Long idOrder) {
         this.idOrder = idOrder;
@@ -188,7 +190,7 @@ public class OrderModel implements Serializable {
         return orderName;
     }
 
-    public Timestamp getDateOrder() {
+    public Date getDateOrder() {
         return dateOrder;
     }
 

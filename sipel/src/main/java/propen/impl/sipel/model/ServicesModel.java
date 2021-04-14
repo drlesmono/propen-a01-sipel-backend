@@ -22,10 +22,10 @@ public class ServicesModel {
     private Long idService;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idOrderMs", referencedColumnName = "idOrderMs", nullable = false)
+    @JoinColumn(name = "idOrderMS", referencedColumnName = "idOrderMS", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private ManagedServicesModel idOrderMs;
+    private ManagedServicesModel idOrderMS;
 
     @NotNull
     @Column(name="name", nullable = false)
@@ -37,35 +37,35 @@ public class ServicesModel {
     @JsonIgnore
     private UserModel idUser;
 
-    public void setIdService(Long idService) {
-        this.idService = idService;
-    }
-
-    public void setIdOrderMs(ManagedServicesModel idOrderMs) {
-        this.idOrderMs = idOrderMs;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setIdUser(UserModel idUser) {
-        this.idUser = idUser;
-    }
-
     public Long getIdService() {
         return idService;
     }
 
-    public ManagedServicesModel getIdOrderMs() {
-        return idOrderMs;
+    public void setIdService(Long idService) {
+        this.idService = idService;
+    }
+
+    public ManagedServicesModel getIdOrderMS() {
+        return idOrderMS;
+    }
+
+    public void setIdOrderMS(ManagedServicesModel idOrderMS) {
+        this.idOrderMS = idOrderMS;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public UserModel getIdUser() {
         return idUser;
+    }
+
+    public void setIdUser(UserModel idUser) {
+        this.idUser = idUser;
     }
 }
