@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "maintenance")
-public class MaintenanceModel {
+public class MaintenanceModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,15 @@ public class MaintenanceModel {
     private Long idOrder;
 
     @OneToOne(mappedBy = "idMaintenance")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceReportModel maintenanceReport;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idOrderMs", referencedColumnName = "idOrderMs", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ManagedServicesModel idOrderMs;
 
     public void setIdMaintenance(Long idMaintenance) {
         this.idMaintenance = idMaintenance;
@@ -59,6 +65,10 @@ public class MaintenanceModel {
         this.isMaintained = isMaintained;
     }
 
+    public void setIdOrderMs(ManagedServicesModel idOrderMs) {
+        this.idOrderMs = idOrderMs;
+    }
+
     public Long getIdOrder() {
         return idOrder;
     }
@@ -77,5 +87,9 @@ public class MaintenanceModel {
 
     public MaintenanceReportModel getMaintenanceReport() {
         return maintenanceReport;
+    }
+
+    public ManagedServicesModel getIdOrderMs() {
+        return idOrderMs;
     }
 }

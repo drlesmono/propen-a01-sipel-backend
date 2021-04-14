@@ -15,14 +15,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "bast")
-public class BastModel {
+public class BastModel implements Serializable{
 
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private ReportModel idReport;
+    private ReportModel idReportBast;
 
     @NotNull
     @Column(name="bastNum", nullable = false)
@@ -52,8 +52,9 @@ public class BastModel {
     @Column(name="endPeriod", nullable = false)
     private Date endPeriod;
 
-    public void setIdReport(ReportModel idReport) {
-        this.idReport = idReport;
+
+    public void setIdReportBast(ReportModel idReportBast) {
+        this.idReportBast = idReportBast;
     }
 
     public void setBastNum(String bastNum) {
@@ -80,8 +81,8 @@ public class BastModel {
         this.endPeriod = endPeriod;
     }
 
-    public ReportModel getIdReport() {
-        return idReport;
+    public ReportModel getIdReportBast() {
+        return idReportBast;
     }
 
     public String getBastNum() {

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "services")
-public class ServicesModel {
+public class ServicesModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

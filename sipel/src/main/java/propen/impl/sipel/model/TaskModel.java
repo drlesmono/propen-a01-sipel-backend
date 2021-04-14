@@ -13,7 +13,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "task")
-public class TaskModel {
+public class TaskModel implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idTask;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
@@ -24,6 +28,10 @@ public class TaskModel {
     @NotNull
     @Column(name="taskName", nullable = false)
     private String taskName;
+
+    @NotNull
+    @Column(name="description", nullable = false)
+    private String description;
 
     @NotNull
     @Column(name="percentage", nullable = false)
@@ -51,7 +59,11 @@ public class TaskModel {
         this.taskName = taskName;
     }
 
-    public UserModel getIdOrderPi() {
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ProjectInstallationModel getIdOrderPi() {
         return idOrderPi;
     }
 
@@ -67,6 +79,7 @@ public class TaskModel {
         return taskName;
     }
 
-    pub
-
+    public String getDescription() {
+        return description;
+    }
 }

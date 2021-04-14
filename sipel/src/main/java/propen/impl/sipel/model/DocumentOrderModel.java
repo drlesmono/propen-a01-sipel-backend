@@ -15,15 +15,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "documentOrder")
-public class DocumentOrderModel {
+public class DocumentOrderModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDoc;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
 

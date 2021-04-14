@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "projectInstallation")
-public class ProjectInstallationModel {
+public class ProjectInstallationModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class ProjectInstallationModel {
     private List<TaskModel> listTask;
 
     @OneToOne(mappedBy = "idOrderPi")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private InstallationReportModel installationReport;
 

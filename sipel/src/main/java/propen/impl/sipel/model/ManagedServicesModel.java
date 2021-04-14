@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "managedServices")
-public class ManagedServicesModel {
+public class ManagedServicesModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,14 +42,18 @@ public class ManagedServicesModel {
     private Boolean isActivated;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="timeRemaining", nullable = false)
-    private Date timeRemaining;
+    private Long timeRemaining;
 
-    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idService", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<ServicesModel> listService;
+
+    @OneToMany(mappedBy = "idMaintenance", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private List<MaintenanceModel> listMaintenance;
 
 
     public void setIdOrderMs(Long idOrderMs) {
@@ -68,7 +72,7 @@ public class ManagedServicesModel {
         this.actualEnd = actualEnd;
     }
 
-    public void setTimeRemaining(Date timeRemaining) {
+    public void setTimeRemaining(Long timeRemaining) {
         this.timeRemaining = timeRemaining;
     }
 
@@ -78,6 +82,10 @@ public class ManagedServicesModel {
 
     public void setListService(List<ServicesModel> listService) {
         this.listService = listService;
+    }
+
+    public void setListMaintenance(List<MaintenanceModel> listMaintenance) {
+        this.listMaintenance = listMaintenance;
     }
 
     public Long getIdOrderMs() {
@@ -96,7 +104,7 @@ public class ManagedServicesModel {
         return actualEnd;
     }
 
-    public Date getTimeRemaining() {
+    public Long getTimeRemaining() {
         return timeRemaining;
     }
 
@@ -106,5 +114,9 @@ public class ManagedServicesModel {
 
     public List<ServicesModel> getListService() {
         return listService;
+    }
+
+    public List<MaintenanceModel> getListMaintenance() {
+        return listMaintenance;
     }
 }

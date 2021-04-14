@@ -79,13 +79,13 @@ public class OrderModel implements Serializable {
     @JsonIgnore
     private UserModel idUser;
 
-    @OneToOne(mappedBy = "idOrder")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "idOrder", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private DocumentOrderModel documentOrder;
+    private List<DocumentOrderModel> listDocumentOrder;
 
     @OneToOne(mappedBy = "idOrder")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ReportModel report;
 
@@ -113,15 +113,11 @@ public class OrderModel implements Serializable {
         this.clientPhone = clientPhone;
     }
 
-    public void setDateOrder(Timestamp dateOrder) {
-        this.dateOrder = dateOrder;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setIdUser(Long idUser) {
+    public void setIdUser(UserModel idUser) {
         this.idUser = idUser;
     }
 
@@ -143,6 +139,18 @@ public class OrderModel implements Serializable {
 
     public void setVerified(Boolean verified) {
         this.isVerified = verified;
+    }
+
+    public void setDateOrder(Date dateOrder) {
+        this.dateOrder = dateOrder;
+    }
+
+    public void setListDocumentOrder(List<DocumentOrderModel> listDocumentOrder) {
+        this.listDocumentOrder = listDocumentOrder;
+    }
+
+    public void setReport(ReportModel report) {
+        this.report = report;
     }
 
     public Long getIdOrder() {
@@ -189,15 +197,23 @@ public class OrderModel implements Serializable {
         return orderName;
     }
 
-    public Timestamp getDateOrder() {
+    public Date getDateOrder() {
         return dateOrder;
     }
 
-    public Long getIdUser() {
+    public UserModel getIdUser() {
         return idUser;
     }
 
     public String getNoSpk() {
         return noSpk;
+    }
+
+    public List<DocumentOrderModel> getListDocumentOrder() {
+        return listDocumentOrder;
+    }
+
+    public ReportModel getReport() {
+        return report;
     }
 }

@@ -15,26 +15,26 @@ import java.util.List;
 
 @Entity
 @Table(name = "maintenanceReport")
-public class MaintenanceReportModel {
+public class MaintenanceReportModel implements Serializable{
 
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ReportModel idReportMaintenance;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private ManagedServicesModel idMaintenance;
+    private MaintenanceModel idMaintenance;
 
     public void setIdReportMaintenance(ReportModel idReportMaintenance) {
         this.idReportMaintenance = idReportMaintenance;
     }
 
-    public void setIdMaintenance(ReportModel idMaintenance) {
+    public void setIdMaintenance(MaintenanceModel idMaintenance) {
         this.idMaintenance = idMaintenance;
     }
 
@@ -42,7 +42,7 @@ public class MaintenanceReportModel {
         return idReportMaintenance;
     }
 
-    public ReportModel getIdMaintenance() {
+    public MaintenanceModel getIdMaintenance() {
         return idMaintenance;
     }
 }

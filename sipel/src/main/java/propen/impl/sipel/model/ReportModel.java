@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "report")
-public class ReportModel {
+public class ReportModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class ReportModel {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
 
@@ -48,18 +48,18 @@ public class ReportModel {
     @Column(name = "reportType", nullable = false)
     private String reportType;
 
-    @OneToOne(mappedBy = "idReport")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "idReportBast")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private BastModel Bast;
 
     @OneToOne(mappedBy = "idReportInstallation")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private InstallationReportModel installationReport;
 
-    @OneToOne(mappedBy = "idReportInstallation")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OneToOne(mappedBy = "idReportMaintenance")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceReportModel maintenanceReport;
 
