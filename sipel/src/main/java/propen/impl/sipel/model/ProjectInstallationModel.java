@@ -15,9 +15,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "projectInstallation")
-public class ProjectInstallationModel {
+public class ProjectInstallationModel extends OrderModel{
 
-    @Id
+//    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderPi;
 
@@ -45,64 +45,79 @@ public class ProjectInstallationModel {
     @JsonIgnore
     private List<TaskModel> listTask;
 
-    @OneToOne(mappedBy = "idOrderPi")
-    @OnDelete(OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idInstallationReport", referencedColumnName = "idInstallationReport", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private InstallationReportModel installationReport;
+    private InstallationReportModel idInstallationReport;
 
-    public void setIdOrderPi(Long idOrderPi) {
-        this.idOrderPi = idOrderPi;
-    }
-
-    public void setIdUserEng(UserModel idUserEng) {
-        this.idUserEng = idUserEng;
-    }
-
-    public void setPercentage(Float percentage) {
-        this.percentage = percentage;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
-    }
-
-    public void setIsClose(Boolean close) {
-        this.isClose = isClose;
-    }
-
-    public void setListTask(List<TaskModel> listTask) {
-        this.listTask = listTask;
-    }
-
-    public void setInstallationReport(InstallationReportModel installationReport) {
-        this.installationReport = installationReport;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idBast", referencedColumnName = "idBast", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private BastModel idBast;
 
     public Long getIdOrderPi() {
         return idOrderPi;
+    }
+
+    public void setIdOrderPi(Long idOrderPi) {
+        this.idOrderPi = idOrderPi;
     }
 
     public UserModel getIdUserEng() {
         return idUserEng;
     }
 
+    public void setIdUserEng(UserModel idUserEng) {
+        this.idUserEng = idUserEng;
+    }
+
     public Float getPercentage() {
         return percentage;
+    }
+
+    public void setPercentage(Float percentage) {
+        this.percentage = percentage;
     }
 
     public Date getDeadline() {
         return deadline;
     }
 
-    public Boolean getIsClose() {
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
+
+    public Boolean getClose() {
         return isClose;
+    }
+
+    public void setClose(Boolean close) {
+        isClose = close;
     }
 
     public List<TaskModel> getListTask() {
         return listTask;
     }
 
-    public InstallationReportModel getInstallationReport() {
-        return installationReport;
+    public void setListTask(List<TaskModel> listTask) {
+        this.listTask = listTask;
+    }
+
+    public InstallationReportModel getIdInstallationReport() {
+        return idInstallationReport;
+    }
+
+    public void setIdInstallationReport(InstallationReportModel idInstallationReport) {
+        this.idInstallationReport = idInstallationReport;
+    }
+
+    public BastModel getIdBast() {
+        return idBast;
+    }
+
+    public void setIdBast(BastModel idBast) {
+        this.idBast = idBast;
     }
 }

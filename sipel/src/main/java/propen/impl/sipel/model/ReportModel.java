@@ -15,7 +15,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "report")
-public class ReportModel {
+@Inheritance(strategy=InheritanceType.JOINED)
+public class ReportModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +31,11 @@ public class ReportModel {
     @Column(name="uploadedDate", nullable = false)
     private Date uploadedDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private OrderModel idOrder;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private OrderModel idOrder;
 
     @NotNull
     @Column(name = "statusApproval", nullable = false)
@@ -48,98 +49,100 @@ public class ReportModel {
     @Column(name = "reportType", nullable = false)
     private String reportType;
 
-    @OneToOne(mappedBy = "idReport")
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private BastModel Bast;
+//    @OneToOne(mappedBy = "idReport")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private BastModel Bast;
 
-    @OneToOne(mappedBy = "idReportInstallation")
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private InstallationReportModel installationReport;
+//    @OneToOne(fetch = FetchType.EAGER, optional = false)
+//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private InstallationReportModel idInstallationReport;
+//
+//    @OneToOne(fetch = FetchType.EAGER, optional = false)
+//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private MaintenanceReportModel idMaintenanceReport;
 
-    @OneToOne(mappedBy = "idReportInstallation")
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private MaintenanceReportModel maintenanceReport;
+//    public void setIdOrder(OrderModel idOrder) {
+//        this.idOrder = idOrder;
+//    }
 
-    public void setIdOrder(OrderModel idOrder) {
-        this.idOrder = idOrder;
+//    public OrderModel getIdOrder() {
+//        return idOrder;
+//    }
+
+    public Long getIdReport() {
+        return idReport;
     }
 
     public void setIdReport(Long idReport) {
         this.idReport = idReport;
     }
 
-    public void setReportName(String reportName) {
-        this.reportName = reportName;
-    }
-
-    public void setReportType(String reportType) {
-        this.reportType = reportType;
-    }
-
-    public void setIsSigned(Boolean signed) {
-        this.isSigned = isSigned;
-    }
-
-    public void setStatusApproval(String statusApproval) {
-        this.statusApproval = statusApproval;
-    }
-
-    public void setUploadedDate(Date uploadedDate) {
-        this.uploadedDate = uploadedDate;
-    }
-
-    public void setBast(BastModel bast) {
-        Bast = bast;
-    }
-
-    public void setInstallationReport(InstallationReportModel installationReport) {
-        this.installationReport = installationReport;
-    }
-
-    public void setMaintenanceReport(MaintenanceReportModel maintenanceReport) {
-        this.maintenanceReport = maintenanceReport;
-    }
-
-    public OrderModel getIdOrder() {
-        return idOrder;
-    }
-
-    public Long getIdReport() {
-        return idReport;
-    }
-
     public String getReportName() {
         return reportName;
     }
 
-    public String getReportType() {
-        return reportType;
-    }
-
-    public Boolean getIsSigned() {
-        return isSigned;
-    }
-
-    public String getStatusApproval() {
-        return statusApproval;
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
     }
 
     public Date getUploadedDate() {
         return uploadedDate;
     }
 
-    public BastModel getBast() {
-        return Bast;
+    public void setUploadedDate(Date uploadedDate) {
+        this.uploadedDate = uploadedDate;
     }
 
-    public InstallationReportModel getInstallationReport() {
-        return installationReport;
+    public String getStatusApproval() {
+        return statusApproval;
     }
 
-    public MaintenanceReportModel getMaintenanceReport() {
-        return maintenanceReport;
+    public void setStatusApproval(String statusApproval) {
+        this.statusApproval = statusApproval;
     }
+
+    public Boolean getSigned() {
+        return isSigned;
+    }
+
+    public void setSigned(Boolean signed) {
+        isSigned = signed;
+    }
+
+    public String getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+
+//    public BastModel getBast() {
+//        return Bast;
+//    }
+//
+//    public void setBast(BastModel bast) {
+//        Bast = bast;
+//    }
+//
+//    public InstallationReportModel getIdInstallationReport() {
+//        return idInstallationReport;
+//    }
+//
+//    public void setIdInstallationReport(InstallationReportModel idInstallationReport) {
+//        this.idInstallationReport = idInstallationReport;
+//    }
+//
+//    public MaintenanceReportModel getIdMaintenanceReport() {
+//        return idMaintenanceReport;
+//    }
+//
+//    public void setIdMaintenanceReport(MaintenanceReportModel idMaintenanceReport) {
+//        this.idMaintenanceReport = idMaintenanceReport;
+//    }
 }

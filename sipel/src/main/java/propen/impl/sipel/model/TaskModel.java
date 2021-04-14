@@ -15,6 +15,10 @@ import java.util.List;
 @Table(name = "task")
 public class TaskModel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idTask;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -35,38 +39,43 @@ public class TaskModel {
     @JsonIgnore
     private UserModel idUserPic;
 
-    public void setIdOrderPi(ProjectInstallationModel idOrderPi) {
-        this.idOrderPi = idOrderPi;
+    public Long getIdTask() {
+        return idTask;
     }
 
-    public void setIdUserPic(UserModel idUserPic) {
-        this.idUserPic = idUserPic;
+    public void setIdTask(Long idTask) {
+        this.idTask = idTask;
     }
 
-    public void setPercentage(Float percentage) {
-        this.percentage = percentage;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public UserModel getIdOrderPi() {
+    public ProjectInstallationModel getIdOrderPi() {
         return idOrderPi;
     }
 
-    public UserModel getIdUserPic() {
-        return idUserPic;
-    }
-
-    public Float getPercentage() {
-        return percentage;
+    public void setIdOrderPi(ProjectInstallationModel idOrderPi) {
+        this.idOrderPi = idOrderPi;
     }
 
     public String getTaskName() {
         return taskName;
     }
 
-    pub
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
 
+    public Float getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(Float percentage) {
+        this.percentage = percentage;
+    }
+
+    public UserModel getIdUserPic() {
+        return idUserPic;
+    }
+
+    public void setIdUserPic(UserModel idUserPic) {
+        this.idUserPic = idUserPic;
+    }
 }

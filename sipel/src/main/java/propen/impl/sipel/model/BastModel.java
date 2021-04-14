@@ -15,14 +15,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "bast")
-public class BastModel {
+public class BastModel extends ReportModel{
 
-    @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-    @OnDelete(OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private ReportModel idReport;
+//    @Id
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+//    private ReportModel idReport;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idBast;
 
     @NotNull
     @Column(name="bastNum", nullable = false)
@@ -34,13 +37,17 @@ public class BastModel {
     @Column(name="dateHandover", nullable = false)
     private Date dateHandover;
 
-    @NotNull
-    @Column(name="idMaintenance", nullable = false)
-    private Long idMaintenance;
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private MaintenanceModel idMaintenance;
 
-    @NotNull
-    @Column(name="idOrderPi", nullable = false)
-    private Long idOrderPi;
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ProjectInstallationModel idOrderPi;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -52,59 +59,59 @@ public class BastModel {
     @Column(name="endPeriod", nullable = false)
     private Date endPeriod;
 
-    public void setIdReport(ReportModel idReport) {
-        this.idReport = idReport;
+//    public void setIdReport(ReportModel idReport) {
+//        this.idReport = idReport;
+//    }
+
+//    public ReportModel getIdReport() {
+//        return idReport;
+//    }
+
+    public String getBastNum() {
+        return bastNum;
     }
 
     public void setBastNum(String bastNum) {
         this.bastNum = bastNum;
     }
 
-    public void setDateHandover(Date dateHandover) {
-        this.dateHandover = dateHandover;
-    }
-
-    public void setIdMaintenance(Long idMaintenance) {
-        this.idMaintenance = idMaintenance;
-    }
-
-    public void setIdOrderPi(Long idOrderPi) {
-        this.idOrderPi = idOrderPi;
-    }
-
-    public void setStartPeriod(Date startPeriod) {
-        this.startPeriod = startPeriod;
-    }
-
-    public void setEndPeriod(Date endPeriod) {
-        this.endPeriod = endPeriod;
-    }
-
-    public ReportModel getIdReport() {
-        return idReport;
-    }
-
-    public String getBastNum() {
-        return bastNum;
-    }
-
     public Date getDateHandover() {
         return dateHandover;
     }
 
-    public Long getIdMaintenance() {
+    public void setDateHandover(Date dateHandover) {
+        this.dateHandover = dateHandover;
+    }
+
+    public MaintenanceModel getIdMaintenance() {
         return idMaintenance;
     }
 
-    public Long getIdOrderPi() {
+    public void setIdMaintenance(MaintenanceModel idMaintenance) {
+        this.idMaintenance = idMaintenance;
+    }
+
+    public ProjectInstallationModel getIdOrderPi() {
         return idOrderPi;
+    }
+
+    public void setIdOrderPi(ProjectInstallationModel idOrderPi) {
+        this.idOrderPi = idOrderPi;
     }
 
     public Date getStartPeriod() {
         return startPeriod;
     }
 
+    public void setStartPeriod(Date startPeriod) {
+        this.startPeriod = startPeriod;
+    }
+
     public Date getEndPeriod() {
         return endPeriod;
+    }
+
+    public void setEndPeriod(Date endPeriod) {
+        this.endPeriod = endPeriod;
     }
 }
