@@ -25,7 +25,7 @@ public class ManagedServicesModel implements Serializable{
     @JsonIgnore
     private OrderModel idOrder;
 
-    @Id
+//    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 

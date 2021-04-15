@@ -15,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "bast")
+
 //@IdClass(ReportModel.class)
 public class BastModel implements Serializable{
 
@@ -41,12 +42,14 @@ public class BastModel implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = true)
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceModel idMaintenance;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = true)
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
@@ -85,8 +88,8 @@ public class BastModel implements Serializable{
         this.idBast = idBast;
     }
 
-    public String getBastNum() {
-        return bastNum;
+    public MaintenanceModel getIdMaintenance() {
+        return idMaintenance;
     }
 
     public void setBastNum(String bastNum) {

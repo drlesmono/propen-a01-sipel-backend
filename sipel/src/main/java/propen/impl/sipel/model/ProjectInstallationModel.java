@@ -25,7 +25,7 @@ public class ProjectInstallationModel implements Serializable{
     @JsonIgnore
     private OrderModel idOrder;
 
-    @Id
+//    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderPi;
 
