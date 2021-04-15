@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "orders")
 //@Inheritance(strategy=InheritanceType.JOINED)
-//public class OrderModel implements Serializable {
 public class OrderModel implements Serializable{
 
     @Id

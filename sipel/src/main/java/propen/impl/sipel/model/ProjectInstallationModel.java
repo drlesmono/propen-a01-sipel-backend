@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "projectInstallation")
-//@IdClass(OrderModel.class)
+@IdClass(OrderModel.class)
 public class ProjectInstallationModel implements Serializable{
 
     @Id
