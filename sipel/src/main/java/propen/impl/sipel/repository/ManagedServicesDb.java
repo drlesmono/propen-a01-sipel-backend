@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import propen.impl.sipel.model.ManagedServicesModel;
 
 @Repository
-public interface ManagedServicesDb extends JpaRepository<ManagedServicesModel,Long> {
+public interface ManagedServicesDb extends JpaRepository<ManagedServicesModel, Long> {
 }

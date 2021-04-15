@@ -13,7 +13,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "task")
-public class TaskModel {
+public class TaskModel implements Serializable{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idTask;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

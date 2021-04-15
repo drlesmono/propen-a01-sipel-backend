@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import propen.impl.sipel.model.MaintenanceModel;
 
 @Repository
-public interface MaintenanceDb extends JpaRepository<MaintenanceModel,Long> {
+public interface MaintenanceDb extends JpaRepository<MaintenanceModel, Long> {
 }
