@@ -15,17 +15,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "managedServices")
-@IdClass(OrderModel.class)
+//@IdClass(OrderModel.class)
 public class ManagedServicesModel implements Serializable{
 
-    @Id
+//    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
 
-//    @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 

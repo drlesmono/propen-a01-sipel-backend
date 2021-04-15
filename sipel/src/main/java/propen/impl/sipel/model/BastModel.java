@@ -15,16 +15,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "bast")
-@IdClass(ReportModel.class)
+//@IdClass(ReportModel.class)
 public class BastModel implements Serializable{
 
-    @Id
+//    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ReportModel idReport;
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idBast;
 
@@ -38,14 +39,14 @@ public class BastModel implements Serializable{
     @Column(name="dateHandover", nullable = false)
     private Date dateHandover;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceModel idMaintenance;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;

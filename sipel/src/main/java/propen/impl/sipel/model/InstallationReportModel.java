@@ -15,20 +15,21 @@ import java.util.List;
 
 @Entity
 @Table(name = "installationReport")
-@IdClass(ReportModel.class)
+//@IdClass(ReportModel.class)
 public class InstallationReportModel implements Serializable{
 
-    @Id
+//    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ReportModel idReport;
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idInstallationReport;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

@@ -54,49 +54,20 @@ public class ReportModel implements Serializable{
 //    @JsonIgnore
 //    private BastModel Bast;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idInstallationReport", referencedColumnName = "idInstallationReport", nullable = false)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private InstallationReportModel idInstallationReport;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idMaintenanceReport", referencedColumnName = "idMaintenanceReport", nullable = false)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceReportModel idMaintenanceReport;
 
-//    public void setIdOrder(OrderModel idOrder) {
-//        this.idOrder = idOrder;
-//    }
-
-//    public OrderModel getIdOrder() {
-//        return idOrder;
-//    }
-
-//    public BastModel getBast() {
-//        return Bast;
-//    }
-//
-//    public void setBast(BastModel bast) {
-//        Bast = bast;
-//    }
-//
-//    public InstallationReportModel getIdInstallationReport() {
-//        return idInstallationReport;
-//    }
-//
-//    public void setIdInstallationReport(InstallationReportModel idInstallationReport) {
-//        this.idInstallationReport = idInstallationReport;
-//    }
-//
-//    public MaintenanceReportModel getIdMaintenanceReport() {
-//        return idMaintenanceReport;
-//    }
-//
-//    public void setIdMaintenanceReport(MaintenanceReportModel idMaintenanceReport) {
-//        this.idMaintenanceReport = idMaintenanceReport;
-//    }
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private BastModel idBast;
 
     public Long getIdReport() {
         return idReport;

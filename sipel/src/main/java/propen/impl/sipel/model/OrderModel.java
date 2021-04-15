@@ -73,14 +73,12 @@ public class OrderModel implements Serializable{
     @Column(name="isManagedService", nullable = false)
     private Boolean isManagedService;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
+    @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrderMs", referencedColumnName = "idOrderMs", nullable = false)
+    @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ManagedServicesModel idOrderMs;
@@ -91,11 +89,10 @@ public class OrderModel implements Serializable{
 //    @JsonIgnore
 //    private UserModel idUser;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idDoc", referencedColumnName = "idDoc", nullable = false)
+    @OneToMany(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private DocumentOrderModel documentOrder;
+    private List<DocumentOrderModel> documentOrder;
 
 //    @OneToOne(mappedBy = "idOrder")
 //    @OnDelete(action = OnDeleteAction.CASCADE)
@@ -230,11 +227,11 @@ public class OrderModel implements Serializable{
         this.idOrderMs = idOrderMs;
     }
 
-    public DocumentOrderModel getDocumentOrder() {
+    public List<DocumentOrderModel> getDocumentOrder() {
         return documentOrder;
     }
 
-    public void setDocumentOrder(DocumentOrderModel documentOrder) {
+    public void setDocumentOrder(List<DocumentOrderModel> documentOrder) {
         this.documentOrder = documentOrder;
     }
 }

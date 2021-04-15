@@ -21,7 +21,7 @@ public class DocumentOrderModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDoc;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
