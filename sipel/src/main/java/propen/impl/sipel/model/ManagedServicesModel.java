@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "managedServices")
-@IdClass(OrderModel.class)
+//@IdClass(OrderModel.class)
 public class ManagedServicesModel implements Serializable{
 
     @Id
