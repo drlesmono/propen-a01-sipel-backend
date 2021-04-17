@@ -59,4 +59,37 @@ public class OrderController {
 
         return "display-success";
     }
+
+    @GetMapping("/order/detail-order")
+    public String getOrdDetail(
+            @RequestParam(value = "idOrder") Long idOrder,
+            Model model
+    ) {
+        if (idOrder != null) {
+            if (isOrderExist(idOrder)) {
+                OrderModel order = orderService.getOrderById(idOrder).get();
+                if (order.getProjectInstallation()){
+                    ProjectInstallationModel projectInstallation = order.getIdOrderPi();
+                    model.addAttribute("order", order);
+                    model.addAttribute("projectInstallation", projectInstallation);
+
+                    return "ord-PI-detail";
+                }
+                if (order.getManagedService()){
+                    ManagedServicesModel managedServices = order.getIdOrderMs();
+                    model.addAttribute("order", order);
+                    model.addAttribute("managedServices", managedServices);
+
+                    return "ord-MS-detail";
+                }
+            }
+        }
+        model.addAttribute("msg", "Order tidak ditemukan!");
+
+        return "error";
+    }
+
+    private boolean isOrderExist(Long idOrder) {
+        return orderService.getOrderById(idOrder).isPresent();
+    }
 }
