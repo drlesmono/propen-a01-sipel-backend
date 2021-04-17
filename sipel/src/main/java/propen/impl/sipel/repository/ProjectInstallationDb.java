@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import propen.impl.sipel.model.ProjectInstallationModel;
 
 @Repository
-public interface ProjectInstallationDb extends JpaRepository<ProjectInstallationModel,Long> {
+public interface ProjectInstallationDb extends JpaRepository<ProjectInstallationModel, Long> {
 }

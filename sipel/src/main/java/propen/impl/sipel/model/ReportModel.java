@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "report")
-@Inheritance(strategy=InheritanceType.JOINED)
+//@Inheritance(strategy=InheritanceType.JOINED)
 public class ReportModel implements Serializable{
 
     @Id
@@ -54,25 +54,20 @@ public class ReportModel implements Serializable{
 //    @JsonIgnore
 //    private BastModel Bast;
 
-//    @OneToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private InstallationReportModel idInstallationReport;
-//
-//    @OneToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private MaintenanceReportModel idMaintenanceReport;
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private InstallationReportModel idInstallationReport;
 
-//    public void setIdOrder(OrderModel idOrder) {
-//        this.idOrder = idOrder;
-//    }
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private MaintenanceReportModel idMaintenanceReport;
 
-//    public OrderModel getIdOrder() {
-//        return idOrder;
-//    }
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private BastModel idBast;
 
     public Long getIdReport() {
         return idReport;
@@ -122,27 +117,19 @@ public class ReportModel implements Serializable{
         this.reportType = reportType;
     }
 
-//    public BastModel getBast() {
-//        return Bast;
-//    }
-//
-//    public void setBast(BastModel bast) {
-//        Bast = bast;
-//    }
-//
-//    public InstallationReportModel getIdInstallationReport() {
-//        return idInstallationReport;
-//    }
-//
-//    public void setIdInstallationReport(InstallationReportModel idInstallationReport) {
-//        this.idInstallationReport = idInstallationReport;
-//    }
-//
-//    public MaintenanceReportModel getIdMaintenanceReport() {
-//        return idMaintenanceReport;
-//    }
-//
-//    public void setIdMaintenanceReport(MaintenanceReportModel idMaintenanceReport) {
-//        this.idMaintenanceReport = idMaintenanceReport;
-//    }
+    public InstallationReportModel getIdInstallationReport() {
+        return idInstallationReport;
+    }
+
+    public void setIdInstallationReport(InstallationReportModel idInstallationReport) {
+        this.idInstallationReport = idInstallationReport;
+    }
+
+    public MaintenanceReportModel getIdMaintenanceReport() {
+        return idMaintenanceReport;
+    }
+
+    public void setIdMaintenanceReport(MaintenanceReportModel idMaintenanceReport) {
+        this.idMaintenanceReport = idMaintenanceReport;
+    }
 }

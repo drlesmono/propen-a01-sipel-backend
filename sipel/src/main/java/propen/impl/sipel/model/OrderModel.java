@@ -18,8 +18,8 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "orders")
-@Inheritance(strategy=InheritanceType.JOINED)
-public class OrderModel implements Serializable {
+//@Inheritance(strategy=InheritanceType.JOINED)
+public class OrderModel implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,16 +37,18 @@ public class OrderModel implements Serializable {
     @Column(name="clientOrg", nullable = false)
     private String clientOrg;
 
-    @NotNull
-    @Column(name="clientDiv", nullable = false)
+    @Column(name="clientDiv", nullable = true)
     private String clientDiv;
+
+    @NotNull
+    @Column(name="clientPIC", nullable = false)
+    private String clientPIC;
 
     @NotNull
     @Column(name="clientEmail", nullable = false)
     private String clientEmail;
 
-    @NotNull
-    @Column(name="clientPhone", nullable = false)
+    @Column(name="clientPhone", nullable = true)
     private String clientPhone;
 
     @NotNull
@@ -56,6 +58,9 @@ public class OrderModel implements Serializable {
 
     @Column(name="noPO", nullable = true)
     private String noPO;
+
+    @Column(name="noSPH", nullable = true)
+    private String noSPH;
 
     @NotNull
     @Column(name="description", nullable = false)
@@ -73,132 +78,181 @@ public class OrderModel implements Serializable {
     @Column(name="isManagedService", nullable = false)
     private Boolean isManagedService;
 
+    @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ProjectInstallationModel idOrderPi;
+
+    @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ManagedServicesModel idOrderMs;
+
 //    @ManyToOne(fetch = FetchType.EAGER, optional = false)
 //    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = false)
 //    @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
 //    private UserModel idUser;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idDoc", referencedColumnName = "idDoc", nullable = false)
+    @OneToMany(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private DocumentOrderModel documentOrder;
+    private List<DocumentOrderModel> documentOrder;
 
 //    @OneToOne(mappedBy = "idOrder")
 //    @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
 //    private ReportModel report;
 
-    public void setIdOrder(Long idOrder) {
-        this.idOrder = idOrder;
-    }
-
-    public void setClientDiv(String clientDiv) {
-        this.clientDiv = clientDiv;
-    }
-
-    public void setClientEmail(String clientEmail) {
-        this.clientEmail = clientEmail;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public void setClientOrg(String clientOrg) {
-        this.clientOrg = clientOrg;
-    }
-
-    public void setClientPhone(String clientPhone) {
-        this.clientPhone = clientPhone;
-    }
-
-    public void setDateOrder(Timestamp dateOrder) {
-        this.dateOrder = dateOrder;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
 //    public void setIdUser(Long idUser) {
 //        this.idUser = idUser;
 //    }
 
-    public void setManagedService(Boolean managedService) {
-        this.isManagedService = managedService;
-    }
-
-    public void setNoPO(String noPO) {
-        this.noPO = noPO;
-    }
-
-    public void setOrderName(String orderName) {
-        this.orderName = orderName;
-    }
-
-    public void setProjectInstallation(Boolean projectInstallation) {
-        this.isProjectInstallation = projectInstallation;
-    }
-
-    public void setVerified(Boolean verified) {
-        this.isVerified = verified;
-    }
+//    public Long getIdUser() {
+//        return idUser;
+//    }
 
     public Long getIdOrder() {
         return idOrder;
     }
 
-    public String getClientDiv() {
-        return clientDiv;
-    }
-
-    public String getClientEmail() {
-        return clientEmail;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public String getClientOrg() {
-        return clientOrg;
-    }
-
-    public String getClientPhone() {
-        return clientPhone;
-    }
-
-    public Boolean getProjectInstallation() {
-        return isProjectInstallation;
-    }
-
-    public Boolean getManagedService() {
-        return isManagedService;
-    }
-
-    public Boolean getVerified() {
-        return isVerified;
-    }
-
-    public String getDescription() {
-        return description;
+    public void setIdOrder(Long idOrder) {
+        this.idOrder = idOrder;
     }
 
     public String getOrderName() {
         return orderName;
     }
 
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getClientOrg() {
+        return clientOrg;
+    }
+
+    public void setClientOrg(String clientOrg) {
+        this.clientOrg = clientOrg;
+    }
+
+    public String getClientDiv() {
+        return clientDiv;
+    }
+
+    public void setClientDiv(String clientDiv) {
+        this.clientDiv = clientDiv;
+    }
+
+    public String getClientEmail() {
+        return clientEmail;
+    }
+
+    public void setClientEmail(String clientEmail) {
+        this.clientEmail = clientEmail;
+    }
+
+    public String getClientPhone() {
+        return clientPhone;
+    }
+
+    public void setClientPhone(String clientPhone) {
+        this.clientPhone = clientPhone;
+    }
+
     public Date getDateOrder() {
         return dateOrder;
     }
 
-//    public Long getIdUser() {
-//        return idUser;
-//    }
+    public void setDateOrder(Date dateOrder) {
+        this.dateOrder = dateOrder;
+    }
 
     public String getNoPO() {
         return noPO;
+    }
+
+    public void setNoPO(String noPO) {
+        this.noPO = noPO;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+    }
+
+    public Boolean getProjectInstallation() {
+        return isProjectInstallation;
+    }
+
+    public void setProjectInstallation(Boolean projectInstallation) {
+        isProjectInstallation = projectInstallation;
+    }
+
+    public Boolean getManagedService() {
+        return isManagedService;
+    }
+
+    public void setManagedService(Boolean managedService) {
+        isManagedService = managedService;
+    }
+
+    public ProjectInstallationModel getIdOrderPi() {
+        return idOrderPi;
+    }
+
+    public void setIdOrderPi(ProjectInstallationModel idOrderPi) {
+        this.idOrderPi = idOrderPi;
+    }
+
+    public ManagedServicesModel getIdOrderMs() {
+        return idOrderMs;
+    }
+
+    public void setIdOrderMs(ManagedServicesModel idOrderMs) {
+        this.idOrderMs = idOrderMs;
+    }
+
+    public List<DocumentOrderModel> getDocumentOrder() {
+        return documentOrder;
+    }
+
+    public void setDocumentOrder(List<DocumentOrderModel> documentOrder) {
+        this.documentOrder = documentOrder;
+    }
+
+    public String getClientPIC() {
+        return clientPIC;
+    }
+
+    public void setClientPIC(String clientPIC) {
+        this.clientPIC = clientPIC;
+    }
+
+    public String getNoSPH() {
+        return noSPH;
+    }
+
+    public void setNoSPH(String noSPH) {
+        this.noSPH = noSPH;
     }
 }

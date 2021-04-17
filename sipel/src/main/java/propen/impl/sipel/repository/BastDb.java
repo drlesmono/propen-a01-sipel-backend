@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import propen.impl.sipel.model.BastModel;
 
 @Repository
-public interface BastDb extends JpaRepository<BastModel,Long> {
+public interface BastDb extends JpaRepository<BastModel, Long> {
 
 }

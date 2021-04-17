@@ -15,9 +15,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "managedServices")
-public class ManagedServicesModel extends OrderModel{
+//@IdClass(OrderModel.class)
+public class ManagedServicesModel implements Serializable{
 
 //    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private OrderModel idOrder;
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
@@ -44,7 +52,7 @@ public class ManagedServicesModel extends OrderModel{
     @NotNull
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="timeRemaining", nullable = false)
-    private int timeRemaining;
+    private Long timeRemaining;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -55,6 +63,18 @@ public class ManagedServicesModel extends OrderModel{
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<MaintenanceModel> listMaintenance;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name="dateClosedMS", nullable = true)
+    private Date dateClosedMS;
+
+    public OrderModel getIdOrder() {
+        return idOrder;
+    }
+
+    public void setIdOrder(OrderModel idOrder) {
+        this.idOrder = idOrder;
+    }
 
     public Long getIdOrderMs() {
         return idOrderMs;
@@ -96,11 +116,11 @@ public class ManagedServicesModel extends OrderModel{
         isActivated = activated;
     }
 
-    public int getTimeRemaining() {
+    public Long getTimeRemaining() {
         return timeRemaining;
     }
 
-    public void setTimeRemaining(int timeRemaining) {
+    public void setTimeRemaining(Long timeRemaining) {
         this.timeRemaining = timeRemaining;
     }
 
@@ -118,5 +138,13 @@ public class ManagedServicesModel extends OrderModel{
 
     public void setListMaintenance(List<MaintenanceModel> listMaintenance) {
         this.listMaintenance = listMaintenance;
+    }
+
+    public Date getDateClosedMS() {
+        return dateClosedMS;
+    }
+
+    public void setDateClosedMS(Date dateClosedMS) {
+        this.dateClosedMS = dateClosedMS;
     }
 }

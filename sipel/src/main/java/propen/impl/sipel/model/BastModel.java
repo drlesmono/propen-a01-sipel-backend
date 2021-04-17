@@ -15,15 +15,18 @@ import java.util.List;
 
 @Entity
 @Table(name = "bast")
-public class BastModel extends ReportModel{
+
+//@IdClass(ReportModel.class)
+public class BastModel implements Serializable{
 
 //    @Id
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private ReportModel idReport;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private ReportModel idReport;
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idBast;
 
@@ -37,14 +40,16 @@ public class BastModel extends ReportModel{
     @Column(name="dateHandover", nullable = false)
     private Date dateHandover;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = true)
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceModel idMaintenance;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = true)
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
@@ -67,8 +72,24 @@ public class BastModel extends ReportModel{
 //        return idReport;
 //    }
 
-    public String getBastNum() {
-        return bastNum;
+    public ReportModel getIdReport() {
+        return idReport;
+    }
+
+    public void setIdReport(ReportModel idReport) {
+        this.idReport = idReport;
+    }
+
+    public Long getIdBast() {
+        return idBast;
+    }
+
+    public void setIdBast(Long idBast) {
+        this.idBast = idBast;
+    }
+
+    public MaintenanceModel getIdMaintenance() {
+        return idMaintenance;
     }
 
     public void setBastNum(String bastNum) {
@@ -83,9 +104,9 @@ public class BastModel extends ReportModel{
         this.dateHandover = dateHandover;
     }
 
-    public MaintenanceModel getIdMaintenance() {
-        return idMaintenance;
-    }
+//    public MaintenanceModel getIdMaintenance() {
+//        return idMaintenance;
+//    }
 
     public void setIdMaintenance(MaintenanceModel idMaintenance) {
         this.idMaintenance = idMaintenance;
