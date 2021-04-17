@@ -104,9 +104,9 @@ public class BastModel implements Serializable{
         this.dateHandover = dateHandover;
     }
 
-    public MaintenanceModel getIdMaintenance() {
-        return idMaintenance;
-    }
+//    public MaintenanceModel getIdMaintenance() {
+//        return idMaintenance;
+//    }
 
     public void setIdMaintenance(MaintenanceModel idMaintenance) {
         this.idMaintenance = idMaintenance;
