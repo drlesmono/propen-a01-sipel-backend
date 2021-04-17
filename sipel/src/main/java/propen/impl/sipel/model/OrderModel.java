@@ -37,16 +37,18 @@ public class OrderModel implements Serializable{
     @Column(name="clientOrg", nullable = false)
     private String clientOrg;
 
-    @NotNull
-    @Column(name="clientDiv", nullable = false)
+    @Column(name="clientDiv", nullable = true)
     private String clientDiv;
+
+    @NotNull
+    @Column(name="clientPIC", nullable = false)
+    private String clientPIC;
 
     @NotNull
     @Column(name="clientEmail", nullable = false)
     private String clientEmail;
 
-    @NotNull
-    @Column(name="clientPhone", nullable = false)
+    @Column(name="clientPhone", nullable = true)
     private String clientPhone;
 
     @NotNull
@@ -56,6 +58,9 @@ public class OrderModel implements Serializable{
 
     @Column(name="noPO", nullable = true)
     private String noPO;
+
+    @Column(name="noSPH", nullable = true)
+    private String noSPH;
 
     @NotNull
     @Column(name="description", nullable = false)
@@ -233,5 +238,21 @@ public class OrderModel implements Serializable{
 
     public void setDocumentOrder(List<DocumentOrderModel> documentOrder) {
         this.documentOrder = documentOrder;
+    }
+
+    public String getClientPIC() {
+        return clientPIC;
+    }
+
+    public void setClientPIC(String clientPIC) {
+        this.clientPIC = clientPIC;
+    }
+
+    public String getNoSPH() {
+        return noSPH;
+    }
+
+    public void setNoSPH(String noSPH) {
+        this.noSPH = noSPH;
     }
 }

@@ -25,7 +25,7 @@ public class ProjectInstallationModel implements Serializable{
     @JsonIgnore
     private OrderModel idOrder;
 
-//    @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderPi;
 
@@ -41,12 +41,21 @@ public class ProjectInstallationModel implements Serializable{
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name="startPI", nullable = false)
+    private Date startPI;
+
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="deadline", nullable = false)
     private Date deadline;
 
     @NotNull
     @Column(name = "isClose", nullable = false)
     private Boolean isClose;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name="dateClosedPI", nullable = true)
+    private Date dateClosedPI;
 
     @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -133,5 +142,21 @@ public class ProjectInstallationModel implements Serializable{
 
     public void setIdBast(List<BastModel> idBast) {
         this.idBast = idBast;
+    }
+
+    public Date getStartPI() {
+        return startPI;
+    }
+
+    public void setStartPI(Date startPI) {
+        this.startPI = startPI;
+    }
+
+    public Date getDateClosedPI() {
+        return dateClosedPI;
+    }
+
+    public void setDateClosedPI(Date dateClosedPI) {
+        this.dateClosedPI = dateClosedPI;
     }
 }

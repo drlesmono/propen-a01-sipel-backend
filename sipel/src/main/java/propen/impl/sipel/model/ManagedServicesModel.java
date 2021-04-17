@@ -25,7 +25,7 @@ public class ManagedServicesModel implements Serializable{
     @JsonIgnore
     private OrderModel idOrder;
 
-//    @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
@@ -63,6 +63,10 @@ public class ManagedServicesModel implements Serializable{
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<MaintenanceModel> listMaintenance;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name="dateClosedMS", nullable = true)
+    private Date dateClosedMS;
 
     public OrderModel getIdOrder() {
         return idOrder;
@@ -134,5 +138,13 @@ public class ManagedServicesModel implements Serializable{
 
     public void setListMaintenance(List<MaintenanceModel> listMaintenance) {
         this.listMaintenance = listMaintenance;
+    }
+
+    public Date getDateClosedMS() {
+        return dateClosedMS;
+    }
+
+    public void setDateClosedMS(Date dateClosedMS) {
+        this.dateClosedMS = dateClosedMS;
     }
 }
