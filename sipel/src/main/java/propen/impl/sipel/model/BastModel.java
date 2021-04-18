@@ -90,6 +90,7 @@ public class BastModel implements Serializable{
         return idMaintenance;
     }
 
+    public String getBastNum () { return bastNum; }
     public void setBastNum(String bastNum) {
         this.bastNum = bastNum;
     }
