@@ -40,14 +40,14 @@ public class BastModel implements Serializable{
     @Column(name="dateHandover", nullable = false)
     private Date dateHandover;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = true)
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceModel idMaintenance;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = true)
 
     @OnDelete(action = OnDeleteAction.CASCADE)
