@@ -55,11 +55,11 @@ public class BastModel implements Serializable{
     private ProjectInstallationModel idOrderPi;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="startPeriod", nullable = false)
+    @Column(name="startPeriod", nullable = true)
     private Date startPeriod;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="endPeriod", nullable = false)
+    @Column(name="endPeriod", nullable = true)
     private Date endPeriod;
 
 //    public void setIdReport(ReportModel idReport) {
