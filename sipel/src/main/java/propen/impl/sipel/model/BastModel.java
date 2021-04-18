@@ -54,12 +54,10 @@ public class BastModel implements Serializable{
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
-    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="startPeriod", nullable = false)
     private Date startPeriod;
 
-    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="endPeriod", nullable = false)
     private Date endPeriod;
