@@ -37,13 +37,13 @@ public class MaintenanceModel implements Serializable{
     private ManagedServicesModel idOrderMS;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idMaintenanceReport", referencedColumnName = "idMaintenanceReport", nullable = false)
+    @JoinColumn(name = "idMaintenanceReport", referencedColumnName = "idMaintenanceReport", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceReportModel idMaintenanceReport;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idBast", referencedColumnName = "idBast", nullable = false)
+    @JoinColumn(name = "idBast", referencedColumnName = "idBast", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private BastModel bast;
