@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#2F3F58',
     color: theme.palette.common.white,
   },
   body: {
@@ -20,9 +20,9 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
+    // '&:nth-of-type(odd)': {
+    //   backgroundColor: theme.palette.action.hover,
+    // },
   },
 }))(TableRow);
 
