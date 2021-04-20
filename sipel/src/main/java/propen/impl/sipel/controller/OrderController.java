@@ -8,12 +8,15 @@ import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.service.OrderService;
 import propen.impl.sipel.service.ProjectInstallationService;
 import propen.impl.sipel.service.ManagedServicesService;
+import propen.impl.sipel.service.ServicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class OrderController {
@@ -26,6 +29,9 @@ public class OrderController {
 
     @Autowired
     ManagedServicesService managedServicesService;
+
+    @Autowired
+    ServicesService servicesService;
 
     @GetMapping("/order/tambah-order")
     public String createOrder(Model model) {
@@ -56,16 +62,20 @@ public class OrderController {
         boolean flagPI = order.isProjectInstallation();
         boolean flagMS = order.isManagedService();
         if (flagPI == true) {
+            projectInstallation.setIdOrder(order);
             projectInstallation.setPercentage(0.00F);
             projectInstallation.setClose(false);
             projectInstallation.setDateClosedPI(null);
             projectInstallationService.addOrderPI(projectInstallation);
         }
         if (flagMS == true) {
+            managedServices.setIdOrder(order);
             managedServices.setActivated(false);
             managedServices.setDateClosedMS(null);
             managedServices.setTimeRemaining(managedServicesService.setTimeRem(managedServices));
             managedServicesService.addOrderMS(managedServices);
+            services.setIdOrderMS(managedServices);
+            servicesService.addServices(services);
         }
 
         return "display-success";
@@ -88,8 +98,10 @@ public class OrderController {
                 }
                 if (order.isManagedService()){
                     ManagedServicesModel managedServices = order.getIdOrderMs();
+                    List<ServicesModel> listServices = managedServices.getListService();
                     model.addAttribute("order", order);
                     model.addAttribute("managedServices", managedServices);
+                    model.addAttribute("listServices", listServices);
 
                     return "ord-MS-detail";
                 }

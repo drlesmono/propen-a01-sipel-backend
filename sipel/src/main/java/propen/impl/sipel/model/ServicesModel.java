@@ -31,8 +31,8 @@ public class ServicesModel implements Serializable{
     @Column(name="name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private UserModel idUser;
