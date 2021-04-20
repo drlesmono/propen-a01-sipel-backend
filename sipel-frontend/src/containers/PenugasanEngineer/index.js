@@ -20,6 +20,7 @@ class PenugasanEngineer extends Component {
     async loadData() {
         try {
             const { data } = await APIConfig.get("/ordersVerified");
+            console.log(data);
             this.setState({ ordersVerified: data});
         } catch (error) {
             alert("Oops terjadi masalah pada server");
