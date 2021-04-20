@@ -20,7 +20,7 @@ public class ManagedServicesModel implements Serializable{
 
 //    @Id
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
+    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
@@ -29,8 +29,8 @@ public class ManagedServicesModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private UserModel idUserPic;

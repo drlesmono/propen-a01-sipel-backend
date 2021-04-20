@@ -13,4 +13,6 @@ public interface OrderService {
     List<OrderModel> getOrderList();
 
     Optional<OrderModel> getOrderById(Long idOrder);
+
+    OrderModel buildNewOrder();
 }

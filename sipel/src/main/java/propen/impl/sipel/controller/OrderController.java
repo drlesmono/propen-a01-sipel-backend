@@ -1,8 +1,10 @@
 package propen.impl.sipel.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.service.OrderService;
 import propen.impl.sipel.service.ProjectInstallationService;
 import propen.impl.sipel.service.ManagedServicesService;
@@ -15,6 +17,7 @@ import java.util.Date;
 
 @Controller
 public class OrderController {
+    @Qualifier("orderServiceImpl")
     @Autowired
     OrderService orderService;
 
@@ -24,11 +27,12 @@ public class OrderController {
     @Autowired
     ManagedServicesService managedServicesService;
 
-    @GetMapping("/order/tambah-gaji")
+    @GetMapping("/order/tambah-order")
     public String createOrder(Model model) {
-        model.addAttribute("order", new OrderModel());
+        model.addAttribute("order", orderService.buildNewOrder());
         model.addAttribute("projectInstallation", new ProjectInstallationModel());
         model.addAttribute("managedService", new ManagedServicesModel());
+        model.addAttribute("services", new ServicesModel());
 
         return "form-create-order";
     }
@@ -38,24 +42,31 @@ public class OrderController {
             @ModelAttribute OrderModel order,
             @ModelAttribute ProjectInstallationModel projectInstallation,
             @ModelAttribute ManagedServicesModel managedServices,
+            @ModelAttribute ServicesModel services,
             Model model
     ) {
-        if (order.getProjectInstallation()) {
+        Date today = new Date();
+        order.setDateOrder(today);
+        order.setVerified(false);
+        orderService.addOrder(order);
+        model.addAttribute("namaOrder", order.getOrderName());
+
+        order.setProjectInstallation(true);
+        order.setManagedService(true);
+        boolean flagPI = order.isProjectInstallation();
+        boolean flagMS = order.isManagedService();
+        if (flagPI == true) {
             projectInstallation.setPercentage(0.00F);
             projectInstallation.setClose(false);
             projectInstallation.setDateClosedPI(null);
             projectInstallationService.addOrderPI(projectInstallation);
         }
-        if (order.getManagedService()) {
+        if (flagMS == true) {
             managedServices.setActivated(false);
             managedServices.setDateClosedMS(null);
             managedServices.setTimeRemaining(managedServicesService.setTimeRem(managedServices));
             managedServicesService.addOrderMS(managedServices);
         }
-        Date today = new Date();
-        order.setDateOrder(today);
-        orderService.addOrder(order);
-        model.addAttribute("namaOrder", order.getOrderName());
 
         return "display-success";
     }
@@ -68,14 +79,14 @@ public class OrderController {
         if (idOrder != null) {
             if (isOrderExist(idOrder)) {
                 OrderModel order = orderService.getOrderById(idOrder).get();
-                if (order.getProjectInstallation()){
+                if (order.isProjectInstallation()){
                     ProjectInstallationModel projectInstallation = order.getIdOrderPi();
                     model.addAttribute("order", order);
                     model.addAttribute("projectInstallation", projectInstallation);
 
                     return "ord-PI-detail";
                 }
-                if (order.getManagedService()){
+                if (order.isManagedService()){
                     ManagedServicesModel managedServices = order.getIdOrderMs();
                     model.addAttribute("order", order);
                     model.addAttribute("managedServices", managedServices);

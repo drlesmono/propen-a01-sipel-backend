@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Tambah Order</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" style="background-color:#98BF64; color: white;text-align: center; font-weight: bold;font-size: 20px;">Tambah Order</div>
+                <div class="card-body">
+                    <form th:action="@{/order/tambah-order}" th:object="${order}" method="POST">
+                        <label>Nomor PO</label>
+                        <input type="text" name="noPO" class="form-control" placeholder="Masukkan nomor PO" />
+                        <br>
+                        <label>Nomor SPH</label>
+                        <input type="text" name="noSPH" class="form-control" placeholder="Masukkan nomor SPH" />
+                        <br>
+                        <label>Nama Order</label>
+                        <input type="text" name="orderName" class="form-control" placeholder="Masukkan nama order" required/>
+                        <br>
+                        <label>Deskripsi Order</label>
+                        <input type="text" name="description" class="form-control" placeholder="Masukkan deskripsi order" required/>
+                        <br>
+                        <label>Jenis Order</label>
+                        <br>
+                        <div class="ui checkbox">
+                            <input type="checkbox"
+                                   name="isProjectInstallation"
+                                   th:checked="${order.isProjectInstallation}"
+                            />
+                            <label>Project Installation</label>
+                            <br>
+                            <input type="checkbox"
+                                   name="isManagedService"
+                                   th:checked="${order.setManagedService(true)}"
+                            />
+                            <label>Managed Services</label>
+                        </div>
+                        <br>
+                        <label>Tanggal Mulai</label>
+                        <br>
+                        <input type="date" name="startPI" class="form-control" />
+                        <br>
+                        <label>Target Tanggal Selesai</label>
+                        <br>
+                        <input type="date" name="deadline" class="form-control" />
+                        <br>
+                        <label>Periode Mulai</label>
+                        <br>
+                        <input type="date" name="actualStart" class="form-control" />
+                        <br>
+                        <label>Periode Selesai</label>
+                        <br>
+                        <input type="date" name="actualEnd" class="form-control" />
+                        <br>
+                        <label>Services</label>
+                        <br>
+                        <input type="text" name="name" class="form-control" placeholder="Masukkan nama services" />
+                        <br>
+                        <label>Nama Pelanggan</label>
+                        <br>
+                        <input type="text" name="clientName" class="form-control" placeholder="Masukkan nama pelanggan" required />
+                        <br>
+                        <label>Divisi Pelanggan</label>
+                        <br>
+                        <input type="text" name="clientDiv" class="form-control" placeholder="Masukkan divisi pelanggan" />
+                        <br>
+                        <label>PIC Pelanggan</label>
+                        <br>
+                        <input type="text" name="clientPIC" class="form-control" placeholder="Masukkan PIC pelanggan" required />
+                        <br>
+                        <label>Organisasi Pelanggan</label>
+                        <br>
+                        <input type="text" name="clientOrg" class="form-control" placeholder="Masukkan organisasi pelanggan" required />
+                        <br>
+                        <label>Nomor Telepon Pelanggan</label>
+                        <br>
+                        <input type="text" name="clientPhone" class="form-control" placeholder="Masukkan nomor pelanggan" />
+                        <br>
+                        <label>Email Pelanggan</label>
+                        <br>
+                        <input type="email" name="clientEmail" class="form-control" placeholder="Masukkan email pelanggan" required />
+                        <br>
+                        <button type="submit" value="Submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</body>
+</html>

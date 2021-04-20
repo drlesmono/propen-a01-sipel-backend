@@ -68,15 +68,15 @@ public class OrderModel implements Serializable{
 
     @NotNull
     @Column(name="isVerified", nullable = false)
-    private Boolean isVerified;
+    private boolean isVerified;
 
     @NotNull
     @Column(name="isProjectInstallation", nullable = false)
-    private Boolean isProjectInstallation;
+    private boolean isProjectInstallation;
 
     @NotNull
     @Column(name="isManagedService", nullable = false)
-    private Boolean isManagedService;
+    private boolean isManagedService;
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -192,29 +192,29 @@ public class OrderModel implements Serializable{
         this.description = description;
     }
 
-    public Boolean getVerified() {
+    /*public boolean getVerified() {
         return isVerified;
     }
 
-    public void setVerified(Boolean verified) {
+    public void setVerified(boolean verified) {
         isVerified = verified;
     }
 
-    public Boolean getProjectInstallation() {
+    public boolean getProjectInstallation() {
         return isProjectInstallation;
     }
 
-    public void setProjectInstallation(Boolean projectInstallation) {
+    public void setProjectInstallation(boolean projectInstallation) {
         isProjectInstallation = projectInstallation;
     }
 
-    public Boolean getManagedService() {
+    public boolean getManagedService() {
         return isManagedService;
     }
 
-    public void setManagedService(Boolean managedService) {
+    public void setManagedService(boolean managedService) {
         isManagedService = managedService;
-    }
+    }*/
 
     public ProjectInstallationModel getIdOrderPi() {
         return idOrderPi;
@@ -254,5 +254,29 @@ public class OrderModel implements Serializable{
 
     public void setNoSPH(String noSPH) {
         this.noSPH = noSPH;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public boolean isProjectInstallation() {
+        return isProjectInstallation;
+    }
+
+    public void setProjectInstallation(boolean projectInstallation) {
+        isProjectInstallation = projectInstallation;
+    }
+
+    public boolean isManagedService() {
+        return isManagedService;
+    }
+
+    public void setManagedService(boolean managedService) {
+        isManagedService = managedService;
     }
 }

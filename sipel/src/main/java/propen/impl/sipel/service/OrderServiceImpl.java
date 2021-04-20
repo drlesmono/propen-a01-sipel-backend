@@ -36,4 +36,13 @@ public class OrderServiceImpl implements OrderService {
     public Optional<OrderModel> getOrderById(Long idOrder) {
         return orderDb.findById(idOrder);
     }
+
+    @Override
+    public OrderModel buildNewOrder() {
+        OrderModel newOrder = new OrderModel();
+        newOrder.setProjectInstallation(true);
+        newOrder.setManagedService(false);
+
+        return newOrder;
+    }
 }

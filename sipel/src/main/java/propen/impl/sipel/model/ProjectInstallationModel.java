@@ -20,7 +20,7 @@ public class ProjectInstallationModel implements Serializable{
 
 //    @Id
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
+    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
@@ -29,8 +29,8 @@ public class ProjectInstallationModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderPi;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private UserModel idUserEng;
