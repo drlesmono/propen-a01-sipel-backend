@@ -57,7 +57,7 @@ public class OrderController {
         orderService.addOrder(order);
         model.addAttribute("namaOrder", order.getOrderName());
 
-        order.setProjectInstallation(true);
+        //order.setProjectInstallation(true);
         order.setManagedService(true);
         boolean flagPI = order.isProjectInstallation();
         boolean flagMS = order.isManagedService();
@@ -81,22 +81,33 @@ public class OrderController {
         return "display-success";
     }
 
-    @GetMapping("/order/detail-order")
+    @GetMapping("/order/detail-order/{idOrder}")
     public String getOrdDetail(
-            @RequestParam(value = "idOrder") Long idOrder,
+            @PathVariable(value = "idOrder") Long idOrder,
             Model model
     ) {
         if (idOrder != null) {
             if (isOrderExist(idOrder)) {
                 OrderModel order = orderService.getOrderById(idOrder).get();
-                if (order.isProjectInstallation()){
+                if (order.isProjectInstallation() && order.isManagedService()) {
+                    ProjectInstallationModel projectInstallation = order.getIdOrderPi();
+                    ManagedServicesModel managedServices = order.getIdOrderMs();
+                    List<ServicesModel> listServices = managedServices.getListService();
+                    model.addAttribute("order", order);
+                    model.addAttribute("projectInstallation", projectInstallation);
+                    model.addAttribute("managedServices", managedServices);
+                    model.addAttribute("listServices", listServices);
+
+                    return "ord-PIMS-detail";
+                }
+                if (order.isProjectInstallation() && !order.isManagedService()) {
                     ProjectInstallationModel projectInstallation = order.getIdOrderPi();
                     model.addAttribute("order", order);
                     model.addAttribute("projectInstallation", projectInstallation);
 
                     return "ord-PI-detail";
                 }
-                if (order.isManagedService()){
+                if (order.isManagedService() && !order.isProjectInstallation()) {
                     ManagedServicesModel managedServices = order.getIdOrderMs();
                     List<ServicesModel> listServices = managedServices.getListService();
                     model.addAttribute("order", order);

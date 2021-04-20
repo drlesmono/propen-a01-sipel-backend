@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Order</title>
+</head>
+<body>
+<div class="container-fluid">
+    <section>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <br>
+                <div class="card">
+                    <div class="card-header" style="background-color:#98BF64; color: white;text-align: center; font-weight: bold;font-size: 20px;"> Detail Order </div>
+                    <div class="card-body">
+                        <table class="table" th:object="${order}">
+                            <thead>
+                            <tr>
+                                <th> ID Order </th>
+                                <th> : </th>
+                                <th th:text="${idOrder}"></th>
+                            </tr>
+                            <tr>
+                                <th> Nomor PO </th>
+                                <th> : </th>
+                                <th th:text="${order.noPO}"></th>
+                            </tr>
+                            <tr>
+                                <th> Nomor SPH </th>
+                                <th> : </th>
+                                <th th:text="${order.noSPH}"></th>
+                            </tr>
+                            <tr>
+                                <th> Nama Order </th>
+                                <th> : </th>
+                                <th th:text="${order.orderName}"></th>
+                            </tr>
+                            <tr>
+                                <th> Deskripsi Order </th>
+                                <th> : </th>
+                                <th th:text="${order.description}"></th>
+                            </tr>
+                            <tr>
+                                <th> Tanggal Mulai Project </th>
+                                <th> : </th>
+                                <th th:text="${projectInstallation.startPI}"></th>
+                            </tr>
+                            <tr>
+                                <th> Tanggal Selesai Project </th>
+                                <th> : </th>
+                                <th th:text="${projectInstallation.deadline}"></th>
+                            </tr>
+                            <tr>
+                                <th> Persentase pengerjaan </th>
+                                <th> : </th>
+                                <th th:text="${projectInstallation.percentage}"></th>
+                            </tr>
+                            <tr>
+                                <th> Tanggal Order Masuk </th>
+                                <th> : </th>
+                                <th th:text="${order.dateOrder}"></th>
+                            </tr>
+                            <tr>
+                                <th> Tanggal Project Ditutup </th>
+                                <th> : </th>
+                                <th th:text="${projectInstallation.dateClosedPI}"></th>
+                            </tr>
+                            <tr>
+                                <th> Nama Client </th>
+                                <th> : </th>
+                                <th th:text="${order.clientName}"></th>
+                            </tr>
+                            <tr>
+                                <th> Periode Mulai </th>
+                                <th> : </th>
+                                <th th:text="${managedServices.actualStart}"></th>
+                            </tr>
+                            <tr>
+                                <th> Periode Selesai </th>
+                                <th> : </th>
+                                <th th:text="${managedServices.actualEnd}"></th>
+                            </tr>
+                            <tr>
+                                <th> Services </th>
+                                <th> : </th>
+                            <tr th:each="service, iterationStatus : ${listServices}" th:style="${iterationStatus.even} ? 'font-weight:bold;'">
+                                <th th:text="${service.name}"></th>
+                            </tr>
+                            </tr>
+                            <tr>
+                                <th> Tanggal Managed Ditutup </th>
+                                <th> : </th>
+                                <th th:text="${managedServices.dateClosedMS}"></th>
+                            </tr>
+                            <tr>
+                                <th> Waktu Sisa Kontrak </th>
+                                <th> : </th>
+                                <th th:text="${managedServices.timeRemaining}"></th>
+                            </tr>
+                            </td>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </section>
+</div>
+</body>
+</html>
