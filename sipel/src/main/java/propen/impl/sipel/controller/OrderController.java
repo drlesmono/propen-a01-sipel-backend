@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,16 +21,16 @@ import java.util.List;
 public class OrderController {
     @Qualifier("orderServiceImpl")
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
-    ProjectInstallationService projectInstallationService;
+    private ProjectInstallationService projectInstallationService;
 
     @Autowired
-    ManagedServicesService managedServicesService;
+    private ManagedServicesService managedServicesService;
 
     @Autowired
-    ServicesService servicesService;
+    private ServicesService servicesService;
 
     @GetMapping("/order/tambah-order")
     public String createOrder(Model model) {
@@ -61,14 +60,14 @@ public class OrderController {
         order.setManagedService(true);
         boolean flagPI = order.isProjectInstallation();
         boolean flagMS = order.isManagedService();
-        if (flagPI == true) {
+        if (flagPI) {
             projectInstallation.setIdOrder(order);
             projectInstallation.setPercentage(0.00F);
             projectInstallation.setClose(false);
             projectInstallation.setDateClosedPI(null);
             projectInstallationService.addOrderPI(projectInstallation);
         }
-        if (flagMS == true) {
+        if (flagMS) {
             managedServices.setIdOrder(order);
             managedServices.setActivated(false);
             managedServices.setDateClosedMS(null);
@@ -121,6 +120,50 @@ public class OrderController {
         model.addAttribute("msg", "Order tidak ditemukan!");
 
         return "error";
+    }
+
+    @GetMapping("/order/ubah-order/{idOrder}")
+    public String editOrder(
+            @PathVariable(required = false) Long idOrder,
+            Model model
+    ) {
+        if (idOrder != null && isOrderExist(idOrder)) {
+            OrderModel order = orderService.getOrderById(idOrder).get();
+            model.addAttribute("order", order);
+            if (order.isProjectInstallation()) {
+                ProjectInstallationModel orderPI = order.getIdOrderPi();
+                model.addAttribute("orderPI", orderPI);
+            }
+            else if (order.isManagedService()) {
+                ManagedServicesModel orderMS = order.getIdOrderMs();
+                List<ServicesModel> listServices = orderMS.getListService();
+                model.addAttribute("listServices", listServices);
+                for (ServicesModel i : listServices) {
+                    model.addAttribute("service", i);
+                }
+                model.addAttribute("orderMS", orderMS);
+            }
+            return "form-edit-order";
+        }
+        model.addAttribute("msg", "Id Order tidak dapat ditemukan");
+        return "error";
+    }
+
+    @PostMapping("/order/ubah-order/{idOrder}")
+    public String saveEditOrder(
+            @ModelAttribute OrderModel order,
+            @ModelAttribute ProjectInstallationModel projectInstallation,
+            @ModelAttribute ManagedServicesModel managedServices,
+            Model model
+    ) {
+        OrderModel editedOrder = orderService.updateOrder(order);
+        ProjectInstallationModel editedOrderPI = projectInstallationService.updateOrderPI(projectInstallation);
+        ManagedServicesModel editedOrderMS = managedServicesService.updateOrderMS(managedServices);
+        model.addAttribute("order", editedOrder);
+        model.addAttribute("orderPI", editedOrderPI);
+        model.addAttribute("orderMS", editedOrderMS);
+
+        return "display-success-edit";
     }
 
     private boolean isOrderExist(Long idOrder) {

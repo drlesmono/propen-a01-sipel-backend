@@ -27,7 +27,7 @@ public class ProjectInstallationServiceImpl implements ProjectInstallationServic
     }
 
     @Override
-    public Optional<ProjectInstallationModel> getOrderPIById(Long idOrderPi) {
-        return projectInstallationDb.findById(idOrderPi);
+    public Optional<ProjectInstallationModel> getOrderPIById(Long idOrder) {
+        return projectInstallationDb.findById(idOrder);
     }
 }

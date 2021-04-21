@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ManagedServicesDb extends JpaRepository<ManagedServicesModel, Long> {
-    Optional<ManagedServicesModel> findById(Long idOrderMs);
+    Optional<ManagedServicesModel> findById(Long idOrder);
 }

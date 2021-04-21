@@ -9,7 +9,7 @@ public interface ManagedServicesService {
 
     ManagedServicesModel updateOrderMS(ManagedServicesModel managedServicesModel);
 
-    Optional<ManagedServicesModel> getOrderMSById(Long idOrderMs);
+    Optional<ManagedServicesModel> getOrderMSById(Long idOrder);
 
     Long setTimeRem(ManagedServicesModel managedServices);
 }

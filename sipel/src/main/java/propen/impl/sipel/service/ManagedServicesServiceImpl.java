@@ -31,8 +31,8 @@ public class ManagedServicesServiceImpl implements ManagedServicesService {
     }
 
     @Override
-    public Optional<ManagedServicesModel> getOrderMSById(Long idOrderMs) {
-        return managedServicesDb.findById(idOrderMs);
+    public Optional<ManagedServicesModel> getOrderMSById(Long idOrder) {
+        return managedServicesDb.findById(idOrder);
     }
 
     @Override
