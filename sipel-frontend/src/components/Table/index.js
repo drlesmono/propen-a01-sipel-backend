@@ -42,6 +42,23 @@ export default function CustomizedTables(props) {
   const classes = useStyles();
   const { headers, rows } = props;
 
+  // const tablerows = rows.forEach((row, index) => {
+  //   return(
+  //     <StyledTableRow key={index}>
+  //       <StyledTableCell align="center" component="th" scope="row">{index+1}</StyledTableCell>
+  //         {row.map((cell) => (
+  //           cell.map((data, index) => (<StyledTableCell align="left" key={index}>{data}</StyledTableCell>))
+  //         ))} 
+  //   </StyledTableRow>
+  //   )
+  // });
+
+  // rows.forEach(row => 
+  //   row.map(cell => 
+  //     cell.map( data => console.log(data))
+  //   )
+  // );
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
@@ -56,11 +73,12 @@ export default function CustomizedTables(props) {
           {rows.map((row, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell align="center" component="th" scope="row">{index+1}</StyledTableCell>
-              {row.items.map((cell, index) => (
+              {row.map((cell, index) => (
                 <StyledTableCell align="left" key={index}>{cell}</StyledTableCell>
                 ))} 
             </StyledTableRow>
           ))}
+          {/* {tablerows} */}
         </TableBody>
       </Table>
     </TableContainer>
