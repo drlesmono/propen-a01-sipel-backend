@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org">
+<head>
+    <title>View All Penerbangan</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Daftar Order</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>ID Order</th>
+            <th>Nomor PO</th>
+            <th>Perusahaan</th>
+            <th>Tipe Order</th>
+            <th>Status</th>
+            <th>Aksi</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order, iterationStatus : ${listOrder}">
+            <td th:text="${iterationStatus.count}"></td>
+            <td th:text="${order.idOrder}"></td>
+            <td th:text="${prder.noPO}"></td>
+            <td th:text="${order.clientName}"></td>
+
+            <div th:if="${order.isProjectInstallation}">
+                <td>Project Installation></td>
+            </div>
+            <div th:if="${order.isManagedService}">
+                <td>Managed Service></td>
+            </div>
+
+            <td>Closed</td>
+            <td><a th:href="@{/order/change/} + ${order.idOrder}">Ubah</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

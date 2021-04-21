@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Change Status</title>
+</head>
+<body>
+<h2 class="text-center mt-5">Ubah Status Order</h2>
+<div class="d-flex justify-content-center" style="padding: 1%">
+    <form th:action="@{/order/change/status}" th:object="${order}" method="POST">
+        <!--<input type="hidden" name="usernamePengaju" th:value="${#httpServletRequest.userPrincipal.name}">-->
+        <input type="hidden" th:field="*{idOrder}"/>
+
+        <label>ID Order     :</label>
+        <label th:text="${order.idOrder}"></label>
+
+        <label>Nomor PO     :</label>
+        <label th:text="${order.noPO}"></label>
+
+        <label>Perusahaan   :</label>
+        <label th:text="${order.clientName}"></label>
+
+        <div th:if="${order.isProjectInstallation}">
+            <label>Project Installation></label>
+        </div>
+
+        <h5>Status Persetujuan: </h5>
+        <select class="form-control">
+            <option value ="In Progress">In Progress</option>
+            <option value ="On Hold">On Hold</option>
+            <option value ="Completed">Completed</option>
+        </select>
+
+        <br>
+        <div>
+            <button class="btn btn-dark" type="submit">Simpan</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
