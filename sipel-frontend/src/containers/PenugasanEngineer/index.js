@@ -20,7 +20,7 @@ class PenugasanEngineer extends Component {
             picEngineerPi: null,
             picEngineerMs: null,
             servicesEngineer: [],
-            listServiceEngineer: [],
+            listService: [],
             // services: [],
         };
         this.handleEdit = this.handleEdit.bind(this);
@@ -53,23 +53,23 @@ class PenugasanEngineer extends Component {
         try {
             if(this.state.orderTarget.projectInstallation === true){
                 const dataPi = {
-                idUserEng: this.state.picEngineerPi
+                idUserEng: this.getUser(this.state.picEngineerPi)
                 };
                 await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updatePIC`, dataPi);
             }
             if(this.state.orderTarget.managedService === true){
                 const dataMs = {
-                    idUserPic: this.state.picEngineerMs
+                    idUserPic: this.getUser(this.state.picEngineerMs)
                 }
                 await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/updatePIC`, dataMs);
                 
                 for(let i=0; i<=this.state.servicesEngineer.length; i++){
                     const dataService = {
-                        idUser: this.state.servicesEngineer[i]
+                        idUser: this.getUser(this.state.servicesEngineer[i])
                     }
-                    console.log(this.state.listServiceEngineer[i][0]);
+                    console.log(this.state.listService[i][0]);
                     await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}
-                    /service/${this.state.listServiceEngineer[i][0]}/updateEngineer`, dataService);
+                    /service/${this.state.listService[i]}/updateEngineer`, dataService);
                 }
             }
             this.loadData();
@@ -95,8 +95,6 @@ class PenugasanEngineer extends Component {
             order => order.idOrder === idOrder
         );
         let pi = orderTarget.map(order => {return order.idOrderPi});
-        // console.log(pi[0]);
-        // console.log(orderTarget !== null && pi[0] !== null);
     
         if(orderTarget !== null && pi[0] !== null){
             let user = orderTarget.map(order => order.idOrderPi.idUserEng);
@@ -137,50 +135,38 @@ class PenugasanEngineer extends Component {
     handleChangeField(event) {
         const { name, value } = event.target;
         const servicesEngineerNew = this.state.servicesEngineer;
-        // const listServiceEngineerNew = this.state.listServiceEngineer;
         if( name.substring(0,16) === "servicesEngineer"){
             let index = Number(name.substring(16));
             servicesEngineerNew[index] = value;
-            // if(listServiceEngineerNew !== null){
-            //     let service = listServiceEngineerNew[index];
-            //     service[1] = value;
-            //     service[2] = this.getService(service[0]).idUser.fullname;
-            // }
-            // this.getService(service.idService);
             this.setState({ servicesEngineer: servicesEngineerNew});
         }else{
             this.setState({ [name]: value });
         }
     }
 
-    // getService(idService){
-    //     const service = this.state.services.filter(service => service.idService === idService)[0];
-    //     // console.log(service);
-    //     return service;
-    // }
+    getUser(idUser){
+        const user = this.state.users.filter(user => user.id === idUser)[0];
+        console.log(user);
+        return user;
+    }
 
     render() {
         const { ordersVerified, isEdit, orderTarget, users, picEngineerPi, picEngineerMs, servicesEngineer} = this.state;
-        let listServiceEngineer;
+        let listService;
         // let listServiceEngineerNew;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
         const tableRows = ordersVerified.map((order) => 
                         [order.idOrder, order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
-                        <CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, listServiceEngineer)}>perbarui</CustomizedButtons>]);
+                        <CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, listService)}>perbarui</CustomizedButtons>]);
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
         // console.log(tableRows);
 
         // console.log(orderTarget.idOrder);
-        // let optionPicPiState = "Pilih Engineer";
-        // let optionPicMsState = "Pilih Engineer";
         if(orderTarget !== null){
             if(orderTarget.idOrderPi !== null){
-                // if(orderTarget.idOrderPi.idUserEng !== null){
-                //     optionPicPiState = orderTarget.idOrderPi.idUserEng.id;
-                // }
             }
             if(orderTarget.idOrderMs !== null){
                 const ordersMs = ordersVerified.filter(order => order.idOrderMs !== null && order.idOrderMs === orderTarget.idOrderMs);
@@ -190,19 +176,11 @@ class PenugasanEngineer extends Component {
                                         onChange={this.handleChangeField}>
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control>]);
-                listServiceEngineer = ordersMs[0].idOrderMs.listService.map((service) =>
-                                        [service.idService, service.idUser.id, service.idUser.fullname]);
+                listService = ordersMs[0].idOrderMs.listService.map((service) => service.idService);
                 // listServiceEngineerNew = listServiceEngineer.filter(user => user !== null);
-                console.log(listServiceEngineer);
-                // this.setState({listServiceEngineer: listServiceEngineer});
-                // console.log(tableServiceRows);
-                // if(orderTarget.idOrderMs.idUserPic !== null){
-                //     optionPicMsState = orderTarget.idOrderMs.idUserPic.id;
-                // }
             }
-            // this.setState({optionPicPiState: optionPicPiStateNew, optionPicMsState: optionPicMsStateNew, services: tableServiceRows});  
         }
-        // console.log(picPiTarget); 
+        console.log(this.getUser(picEngineerPi)); 
 
         return (
             <div>
