@@ -17,12 +17,16 @@ class PenugasanEngineer extends Component {
             isEdit: false,
             orderTarget: null,
             users: [],
-            optionPicPiState: "Pilih Engineer",
-            optionPicMsState: "Pilih Engineer",
-            services: [],
+            picEngineerPi: null,
+            picEngineerMs: null,
+            servicesEngineer: [],
+            listServiceEngineer: [],
+            // services: [],
         };
         this.handleEdit = this.handleEdit.bind(this);
-        this.handleCancel = this.handleCancel.bind(this); 
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleChangeField = this.handleChangeField.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     
     componentDidMount() {
@@ -33,13 +37,47 @@ class PenugasanEngineer extends Component {
         try {
             const orders = await APIConfig.get("/ordersVerified");
             const users = await APIConfig.get("/users");
+            // const services = await APIConfig.get("/services");
             console.log(orders.data);
-            this.setState({ ordersVerified: orders.data, users: users.data});
             console.log(users.data);
+            this.setState({ ordersVerified: orders.data, users: users.data});
+            
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
         }
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        try {
+            if(this.state.orderTarget.projectInstallation === true){
+                const dataPi = {
+                idUserEng: this.state.picEngineerPi
+                };
+                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updatePIC`, dataPi);
+            }
+            if(this.state.orderTarget.managedService === true){
+                const dataMs = {
+                    idUserPic: this.state.picEngineerMs
+                }
+                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/updatePIC`, dataMs);
+                
+                for(let i=0; i<=this.state.servicesEngineer.length; i++){
+                    const dataService = {
+                        idUser: this.state.servicesEngineer[i]
+                    }
+                    console.log(this.state.listServiceEngineer[i][0]);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}
+                    /service/${this.state.listServiceEngineer[i][0]}/updateEngineer`, dataService);
+                }
+            }
+            this.loadData();
+        } catch (error) {
+            alert("Oops terjadi masalah pada server");
+            console.log(error);
+        }
+        this.handleCancel(event);
     }
 
     checkTypeOrder(pi, ms){
@@ -87,8 +125,8 @@ class PenugasanEngineer extends Component {
         return "Belum ditugaskan";
     }
     
-    handleEdit(order) {
-        this.setState({isEdit: true, orderTarget: order});
+    handleEdit(order, listServiceEngineer) {
+        this.setState({isEdit: true, orderTarget: order, listServiceEngineer: listServiceEngineer});
     }
 
     handleCancel(event) {
@@ -96,45 +134,73 @@ class PenugasanEngineer extends Component {
         this.setState({isEdit: false});
     }
 
+    handleChangeField(event) {
+        const { name, value } = event.target;
+        const servicesEngineerNew = this.state.servicesEngineer;
+        // const listServiceEngineerNew = this.state.listServiceEngineer;
+        if( name.substring(0,16) === "servicesEngineer"){
+            let index = Number(name.substring(16));
+            servicesEngineerNew[index] = value;
+            // if(listServiceEngineerNew !== null){
+            //     let service = listServiceEngineerNew[index];
+            //     service[1] = value;
+            //     service[2] = this.getService(service[0]).idUser.fullname;
+            // }
+            // this.getService(service.idService);
+            this.setState({ servicesEngineer: servicesEngineerNew});
+        }else{
+            this.setState({ [name]: value });
+        }
+    }
+
+    // getService(idService){
+    //     const service = this.state.services.filter(service => service.idService === idService)[0];
+    //     // console.log(service);
+    //     return service;
+    // }
+
     render() {
-        const { ordersVerified, isEdit, orderTarget, users, optionPicPiState, optionPicMsState} = this.state;
+        const { ordersVerified, isEdit, orderTarget, users, picEngineerPi, picEngineerMs, servicesEngineer} = this.state;
+        let listServiceEngineer;
+        // let listServiceEngineerNew;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
         const tableRows = ordersVerified.map((order) => 
                         [order.idOrder, order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
-                        <CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order)}>perbarui</CustomizedButtons>]);
+                        <CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, listServiceEngineer)}>perbarui</CustomizedButtons>]);
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
-        let listServiceEngineer;
         // console.log(tableRows);
 
         // console.log(orderTarget.idOrder);
-        let optionPicPiStateNew = "Pilih Engineer";
-        let optionPicMsStateNew = "Pilih Engineer";
+        // let optionPicPiState = "Pilih Engineer";
+        // let optionPicMsState = "Pilih Engineer";
         if(orderTarget !== null){
             if(orderTarget.idOrderPi !== null){
-                if(orderTarget.idOrderPi.idUserEng !== null){
-                    optionPicPiStateNew = orderTarget.idOrderPi.idUserEng.id;
-                }
+                // if(orderTarget.idOrderPi.idUserEng !== null){
+                //     optionPicPiState = orderTarget.idOrderPi.idUserEng.id;
+                // }
             }
             if(orderTarget.idOrderMs !== null){
                 const ordersMs = ordersVerified.filter(order => order.idOrderMs !== null && order.idOrderMs === orderTarget.idOrderMs);
-                tableServiceRows = ordersMs[0].idOrderMs.listService.map((service) =>
+                tableServiceRows = ordersMs[0].idOrderMs.listService.map((service, index) =>
                                         [service.name, 
-                                        <Form.Control as="select" size="lg" value={service.idUser === null ? "Pilih Engineer" : service.idUser}>
+                                        <Form.Control as="select" size="lg" name={"servicesEngineer"+index} value={servicesEngineer[index]}
+                                        onChange={this.handleChangeField}>
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control>]);
                 listServiceEngineer = ordersMs[0].idOrderMs.listService.map((service) =>
-                                        [service.idUser.id, service.idUser.fullname]);
-                listServiceEngineer = listServiceEngineer.filter(user => user !== null);
+                                        [service.idService, service.idUser.id, service.idUser.fullname]);
+                // listServiceEngineerNew = listServiceEngineer.filter(user => user !== null);
                 console.log(listServiceEngineer);
+                // this.setState({listServiceEngineer: listServiceEngineer});
                 // console.log(tableServiceRows);
-                if(orderTarget.idOrderMs.idUserPic !== null){
-                    optionPicMsStateNew = orderTarget.idOrderMs.idUserPic.id;
-                }
+                // if(orderTarget.idOrderMs.idUserPic !== null){
+                //     optionPicMsState = orderTarget.idOrderMs.idUserPic.id;
+                // }
             }
-            this.setState({optionPicPiState: optionPicPiStateNew, optionPicMsState: optionPicMsStateNew, services: tableServiceRows});  
+            // this.setState({optionPicPiState: optionPicPiStateNew, optionPicMsState: optionPicMsStateNew, services: tableServiceRows});  
         }
         // console.log(picPiTarget); 
 
@@ -173,7 +239,7 @@ class PenugasanEngineer extends Component {
                                 </tr>
                                 <tr>
                                     <td>PIC Engineer</td>
-                                    <td><Form.Control as="select" size="lg" value={optionPicPiState}>
+                                    <td><Form.Control as="select" size="lg" name="picEngineerPi" value={picEngineerPi} onChange={this.handleChangeField}>
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control></td>
                                 </tr></>
@@ -190,13 +256,14 @@ class PenugasanEngineer extends Component {
                                 </tr>
                                 <tr>
                                     <td>PIC Engineer</td>
-                                    <td><Form.Control as="select" size="lg" value={optionPicMsState}>
-                                            {listServiceEngineer.map(user =><option value={user[0]}>{user[1]}</option>)}
+                                    <td><Form.Control as="select" size="lg" name="picEngineerMs" value={picEngineerMs} onChange={this.handleChangeField}>
+                                            {/* {listServiceEngineerNew.map(user =><option value={user[1]}>{user[2]}</option>)} */}
+                                            {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control></td>
                                 </tr></>
                                 : <></>}
                             </table>
-                            <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handle}>
+                            <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
                                 simpan
                             </CustomizedButtons></div>
                         </Form></>
