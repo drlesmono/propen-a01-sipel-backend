@@ -14,7 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -48,6 +51,7 @@ public class OrderController {
             @ModelAttribute ProjectInstallationModel projectInstallation,
             @ModelAttribute ManagedServicesModel managedServices,
             @ModelAttribute ServicesModel services,
+            HttpServletRequest request,
             Model model
     ) {
         Date today = new Date();
@@ -56,25 +60,30 @@ public class OrderController {
         orderService.addOrder(order);
         model.addAttribute("namaOrder", order.getOrderName());
 
-        //order.setProjectInstallation(true);
         order.setManagedService(true);
-        boolean flagPI = order.isProjectInstallation();
-        boolean flagMS = order.isManagedService();
-        if (flagPI) {
+        if (isOrderPIExist(order)) {
             projectInstallation.setIdOrder(order);
             projectInstallation.setPercentage(0.00F);
             projectInstallation.setClose(false);
             projectInstallation.setDateClosedPI(null);
             projectInstallationService.addOrderPI(projectInstallation);
         }
-        if (flagMS) {
+        if (isOrderMSExist(order)) {
             managedServices.setIdOrder(order);
             managedServices.setActivated(false);
             managedServices.setDateClosedMS(null);
             managedServices.setTimeRemaining(managedServicesService.setTimeRem(managedServices));
             managedServicesService.addOrderMS(managedServices);
-            services.setIdOrderMS(managedServices);
-            servicesService.addServices(services);
+        }
+        if (isOrderMSExist(order)) {
+            String[] serviceName = request.getParameterValues("name");
+            for (int i = 0; i < serviceName.length; i++) {
+                managedServices.addService(serviceName[i]);
+                ServicesModel service = new ServicesModel();
+                service.setName(serviceName[i]);
+                service.setIdOrderMS(managedServices);
+                servicesService.addServices(service);
+            }
         }
 
         return "display-success";
@@ -168,5 +177,13 @@ public class OrderController {
 
     private boolean isOrderExist(Long idOrder) {
         return orderService.getOrderById(idOrder).isPresent();
+    }
+
+    private boolean isOrderPIExist(OrderModel order) {
+        return order.isProjectInstallation();
+    }
+
+    private boolean isOrderMSExist(OrderModel order) {
+        return order.isManagedService();
     }
 }

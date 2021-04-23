@@ -1,0 +1,15 @@
+package propen.impl.sipel.service;
+
+import propen.impl.sipel.model.OrderModel;
+
+import java.util.List;
+
+public interface OrderRestService {
+    OrderModel createOrder(OrderModel order);
+
+    List<OrderModel> retrieveListOrder();
+
+    OrderModel getOrderById(Long idOrder);
+
+    OrderModel changeOrder(Long idOrder, OrderModel orderUpdate);
+}

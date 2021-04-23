@@ -7,8 +7,8 @@ import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.repository.ManagedServicesDb;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 
@@ -41,8 +41,9 @@ public class ManagedServicesServiceImpl implements ManagedServicesService {
         Date endPeriod = managedServices.getActualEnd();
         LocalDate ldStartPeriod = startPeriod.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate ldEndPeriod = endPeriod.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Period gap = Period.between(ldStartPeriod, ldEndPeriod);
-        Long days = Long.valueOf(gap.getDays());
+        LocalDate dateStart = LocalDate.of(ldStartPeriod.getYear(), ldStartPeriod.getMonth(), ldStartPeriod.getDayOfMonth());
+        LocalDate dateEnd = LocalDate.of(ldEndPeriod.getYear(), ldEndPeriod.getMonth(), ldEndPeriod.getDayOfMonth());
+        Long days = ChronoUnit.DAYS.between(dateStart, dateEnd);
 
         return days;
     }

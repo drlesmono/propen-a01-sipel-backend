@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class ManagedServicesModel implements Serializable{
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private List<ServicesModel> listService;
+    private List<ServicesModel> listService = new ArrayList<>();
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -146,5 +147,9 @@ public class ManagedServicesModel implements Serializable{
 
     public void setDateClosedMS(Date dateClosedMS) {
         this.dateClosedMS = dateClosedMS;
+    }
+
+    public void addService(String name) {
+        this.listService.add(new ServicesModel(name, this));
     }
 }
