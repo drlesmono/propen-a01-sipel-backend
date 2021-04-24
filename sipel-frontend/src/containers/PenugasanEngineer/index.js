@@ -22,8 +22,10 @@ class PenugasanEngineer extends Component {
             picEngineerMs: null,
             servicesEngineer: [],
             isReport: false,
-            isNotif: false,
-            isError: false
+            // isNotif: false,
+            // isError: false,
+            orderFiltered: [],
+            isFiltered: false
             // listService: [],
             // services: [],
         };
@@ -32,6 +34,8 @@ class PenugasanEngineer extends Component {
         this.handleChangeField = this.handleChangeField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleReport = this.handleReport.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
+        // this.handleCloseNotif = this.handleCloseNotif.bind(this);
     }
     
     componentDidMount() {
@@ -104,8 +108,8 @@ class PenugasanEngineer extends Component {
             }
             this.loadData();
         } catch (error) {
-            // alert("Penugasan Engineer gagal disimpan");
-            this.setState({ isError: true });
+            alert("Penugasan Engineer gagal disimpan");
+            // this.setState({ isError: true });
             console.log(error);
         }
         this.handleReport(event);
@@ -121,7 +125,9 @@ class PenugasanEngineer extends Component {
 
     handleReport(event){
         event.preventDefault();
-        this.setState({isEdit: false, isReport: true, isNotif: true});
+        // this.setState({isEdit: false, isReport: true, isNotif: true});
+        this.setState({isEdit: false, isReport: true});
+        alert("Penugasan Engineer berhasil disimpan");
     }
 
     checkTypeOrder(pi, ms){
@@ -139,12 +145,13 @@ class PenugasanEngineer extends Component {
             order => order.idOrder === idOrder
         );
         let pi = orderTarget.map(order => {return order.idOrderPi});
+        // console.log(pi[0]);
+        // console.log(orderTarget !== null && pi[0] !== null);
     
         if(orderTarget !== null && pi[0] !== null){
-            let user = orderTarget.map(order => order.idOrderPi.idUserEng)[0];
-            console.log(user);
+            let user = orderTarget.map(order => order.idOrderPi.idUserEng);
             if(user !== null){
-                let pic = user.fullname;
+                let pic = orderTarget.map(order => order.idOrderPi.idUserEng.fullname);
                 return pic;
             }
         }
@@ -162,8 +169,6 @@ class PenugasanEngineer extends Component {
             let user = orderTarget.map(order => order.idOrderMs.idUserPic);
             if(user !== null){
                 let pic = orderTarget.map(order => order.idOrderMs.idUserPic.fullname);
-                // let listService = ms[0].listService;
-                // this.setState({ listService: listService });
                 return pic;
             }
         }
@@ -204,8 +209,13 @@ class PenugasanEngineer extends Component {
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({isEdit: false, isReport: false, isNotif: false, isError: false});
+        this.setState({isEdit: false, isReport: false});
     }
+
+    // handleCloseNotif(event){
+    //     event.preventDefault();
+    //     this.setState({isNotif: false, isError: false});
+    // }
 
     handleChangeField(event) {
         const { name, value } = event.target;
@@ -235,19 +245,50 @@ class PenugasanEngineer extends Component {
         }
     }
 
+    handleFilter(event){
+        let newOrderList = this.state.ordersVerified;
+        const { value } = event.target;
+        if( value !== "" ){
+            console.log(this.checkTypeOrder(this.state.ordersVerified[0].projectInstallation, this.state.ordersVerified[0].managedService).toLowerCase());
+            console.log(this.getPICPI(this.state.ordersVerified[0].idOrder)[0]);
+            // newOrderList = this.state.ordersVerified.filter(order => {
+            //     return order.noPO !== null ? order.noPO.toLowerCase().includes(value.toLowerCase()) : "".toLowerCase().includes(value.toLowerCase()) || 
+            //     order.orderName.toLowerCase().includes(value.toLowerCase()) ||
+            //     this.checkTypeOrder(order.projectInstallation, order.managedService).toLowerCase().includes(value.toLowerCase()) ||
+            //     order.idOrderPi !== null ? this.getPICPI(order.idOrder)[0].toLowerCase().includes(value.toLowerCase())
+            //     : "".toLowerCase().includes(value.toLowerCase()) ||
+            //     order.idOrderMs !== null ? this.getPICMS(order.idOrder)[0].toLowerCase().includes(value.toLowerCase()) : "".toLowerCase().includes(value.toLowerCase())
+            // });
+            newOrderList = this.state.ordersVerified.filter(order => {
+                return order.orderName.toLowerCase().includes(value.toLowerCase())
+            });
+            // console.log( this.state.ordersVerified[2].orderName.toLowerCase().includes(value.toLowerCase()))
+            this.setState({ isFiltered : true });
+        }else{
+            this.setState({ isFiltered : false });
+        }
+        this.setState({ orderFiltered : newOrderList });
+    }
+
     render() {
         const { ordersVerified, isEdit, orderTarget, users, picEngineerPi,
-             picEngineerMs, servicesEngineer, isReport, isNotif, isError } = this.state;
+             picEngineerMs, servicesEngineer, isReport, isNotif, isError, orderFiltered, isFiltered } = this.state;
         console.log(orderTarget);
         console.log(picEngineerPi);
         console.log(servicesEngineer);
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
-        const tableRows = ordersVerified.map((order) =>
+        const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
                         <CustomizedButtons variant="contained" size="small" color="#FD693E"
-                        onClick={() => this.handleEdit(order)}>perbarui</CustomizedButtons>]);
+                        onClick={() => this.handleEdit(order)}>perbarui</CustomizedButtons>])
+                        : ordersVerified.map((order) =>
+                        [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
+                        this.checkTypeOrder(order.projectInstallation, order.managedService), 
+                        this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
+                        <CustomizedButtons variant="contained" size="small" color="#FD693E"
+                        onClick={() => this.handleEdit(order)}>perbarui</CustomizedButtons>])
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
@@ -268,14 +309,23 @@ class PenugasanEngineer extends Component {
         const notification = isError ? "Penugasan Engineer Gagal disimpan" : "Penugasan Engineer Berhasil disimpan";
 
         return (
-            <div>
-                <h1>Daftar Order</h1>
-                <CustomizedTables headers={tableHeaders} rows={tableRows}/>
-                <Modal show={isNotif} handleCloseModal={this.handleCancel}>
+            <div style={{justifyContent: "space-around"}}>
+                <div>
+                    {/* <tr> */}
+                        <div><h1>Daftar Order</h1></div>
+                        <div><Form.Control type="text" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div>
+                    {/* </tr> */}
+                </div>
+                <div style={{width: 1300}}><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
+                {/* <Modal show={isNotif} style={{modal : {zIndex: 900}}}>
                     {notification}
-                </Modal>
-                <Modal show={isEdit || isReport} handleCloseModal={this.handleCancel}>
-                    <div><h3 id='titleform' >Form Penugasan Engineer</h3></div>
+                    <a href="#" class="close" onClick={()=>this.handleCloseNotif}>x</a>
+                    {console.log(isEdit, isReport, isNotif)}
+                </Modal> */}
+                <Modal show={isEdit || isReport} style={{modal : {zIndex: 200}}}>
+                    <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div>
+                    <h3 id='titleform' >Form Penugasan Engineer</h3>
+                    {console.log(isEdit, isReport, isNotif)}
                     {orderTarget !== null ?
                         <><Form>
                             <table>
@@ -340,7 +390,7 @@ class PenugasanEngineer extends Component {
                         </Form></>
                     : <></> }
                 </Modal>
-            </div>
+        </div>
         );
     }
 }
