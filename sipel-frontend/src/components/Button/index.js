@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function CustomizedButtons(props) {
-    const { onClick, children, variant, color, key, id, size } = props;
+    const { onClick, children, variant, color, key, id, size, value } = props;
     const classes = useStyles();
 
     return (
@@ -23,6 +23,7 @@ export default function CustomizedButtons(props) {
             variant={variant}
             color={color}
             size={size}
+            value={value}
             className={classes.margin}
             >
             {children}
