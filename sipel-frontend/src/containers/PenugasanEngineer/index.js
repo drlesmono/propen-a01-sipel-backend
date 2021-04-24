@@ -21,6 +21,9 @@ class PenugasanEngineer extends Component {
             picEngineerPi: null,
             picEngineerMs: null,
             servicesEngineer: [],
+            isReport: false,
+            isNotif: false,
+            isError: false
             // listService: [],
             // services: [],
         };
@@ -28,6 +31,7 @@ class PenugasanEngineer extends Component {
         this.handleCancel = this.handleCancel.bind(this);
         this.handleChangeField = this.handleChangeField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleReport = this.handleReport.bind(this);
     }
     
     componentDidMount() {
@@ -45,6 +49,7 @@ class PenugasanEngineer extends Component {
             
         } catch (error) {
             alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
             console.log(error);
         }
     }
@@ -65,6 +70,7 @@ class PenugasanEngineer extends Component {
                 }
                 // console.log(dataPi);
                 await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updatePIC`, dataPi);
+                // const dataResponsePi = await responsePi.json();
             }
             if(this.state.orderTarget.managedService === true){
                 const ms = this.state.orderTarget.idOrderMs;
@@ -98,17 +104,24 @@ class PenugasanEngineer extends Component {
             }
             this.loadData();
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            // alert("Penugasan Engineer gagal disimpan");
+            this.setState({ isError: true });
             console.log(error);
         }
-        this.handleCancel(event);
-        this.setState({ 
-            orderTarget: null,
-            users: [],
-            picEngineerPi: null,
-            picEngineerMs: null,
-            servicesEngineer: []
-        });
+        this.handleReport(event);
+        // this.handleCancel(event);
+        // this.setState({ 
+        //     orderTarget: null,
+        //     users: [],
+        //     picEngineerPi: null,
+        //     picEngineerMs: null,
+        //     servicesEngineer: []
+        // });
+    }
+
+    handleReport(event){
+        event.preventDefault();
+        this.setState({isEdit: false, isReport: true, isNotif: true});
     }
 
     checkTypeOrder(pi, ms){
@@ -156,6 +169,11 @@ class PenugasanEngineer extends Component {
         }
         return "Belum ditugaskan";
     }
+
+    getPICService(service){
+        if(service.idUser !== null) return service.idUser.fullname;
+        return "Belum ditugaskan";
+    }
     
     handleEdit(order) {
         // const { value } = event.target;
@@ -186,7 +204,7 @@ class PenugasanEngineer extends Component {
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({isEdit: false});
+        this.setState({isEdit: false, isReport: false, isNotif: false, isError: false});
     }
 
     handleChangeField(event) {
@@ -218,13 +236,14 @@ class PenugasanEngineer extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, orderTarget, users, picEngineerPi, picEngineerMs, servicesEngineer} = this.state;
+        const { ordersVerified, isEdit, orderTarget, users, picEngineerPi,
+             picEngineerMs, servicesEngineer, isReport, isNotif, isError } = this.state;
         console.log(orderTarget);
         console.log(picEngineerPi);
         console.log(servicesEngineer);
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
         const tableRows = ordersVerified.map((order) =>
-                        [order.idOrder, order.noPO, order.orderName, 
+                        [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
                         <CustomizedButtons variant="contained" size="small" color="#FD693E"
@@ -237,7 +256,7 @@ class PenugasanEngineer extends Component {
             }
             if(orderTarget.idOrderMs !== null){
                 tableServiceRows = orderTarget.idOrderMs.listService.map((service, index) =>
-                                        [service.name, 
+                                        [service.name, isReport ? this.getPICService(service) :
                                         <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
                                         value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
                                         onChange={this.handleChangeField}>
@@ -246,11 +265,16 @@ class PenugasanEngineer extends Component {
             }
         }
 
+        const notification = isError ? "Penugasan Engineer Gagal disimpan" : "Penugasan Engineer Berhasil disimpan";
+
         return (
             <div>
                 <h1>Daftar Order</h1>
                 <CustomizedTables headers={tableHeaders} rows={tableRows}/>
-                <Modal show={isEdit} handleCloseModal={this.handleCancel}>
+                <Modal show={isNotif} handleCloseModal={this.handleCancel}>
+                    {notification}
+                </Modal>
+                <Modal show={isEdit || isReport} handleCloseModal={this.handleCancel}>
                     <div><h3 id='titleform' >Form Penugasan Engineer</h3></div>
                     {orderTarget !== null ?
                         <><Form>
@@ -276,16 +300,18 @@ class PenugasanEngineer extends Component {
                                     <td>{this.checkTypeOrder(orderTarget.projectInstallation, orderTarget.managedService)}</td>
                                 </tr>
                                 { orderTarget.projectInstallation ?
-                                <><tr>
-                                    <td style={{fontWeight: 'bold'}}>Project Installation</td>
-                                </tr>
-                                <tr>
-                                    <td>PIC Engineer</td>
-                                    {/* {console.log(picEngineerPi.id === null), console.log(users[0].id), console.log(picEngineerPi), console.log(users[0].id === picEngineerPi)} */}
-                                    <td><Form.Control as="select" size="lg" name="picEngineerPi" value={picEngineerPi === null ? users[0].id : picEngineerPi} onChange={this.handleChangeField}>
-                                            {users.map((user, index) => <option key={index} value={user.id}>{user.fullname}</option>)}
-                                        </Form.Control></td>
-                                </tr></>
+                                    <><tr>
+                                        <td style={{fontWeight: 'bold'}}>Project Installation</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PIC Engineer</td>
+                                        {/* {console.log(picEngineerPi.id === null), console.log(users[0].id), console.log(picEngineerPi), console.log(users[0].id === picEngineerPi)} */}
+                                        {isReport ?
+                                        <td>: {this.getPICPI(orderTarget.idOrder)}</td> :
+                                        <td><Form.Control as="select" size="lg" name="picEngineerPi" value={picEngineerPi === null ? users[0].id : picEngineerPi} onChange={this.handleChangeField}>
+                                                {users.map((user, index) => <option key={index} value={user.id}>{user.fullname}</option>)}
+                                            </Form.Control></td>}
+                                    </tr></>
                                 : <></>}
                                 { orderTarget.managedService ?
                                 <><tr>
@@ -299,10 +325,12 @@ class PenugasanEngineer extends Component {
                                 </tr>
                                 <tr>
                                     <td>PIC Engineer</td>
+                                    {isReport ?
+                                        <td>: {this.getPICMS(orderTarget.idOrder)}</td> :
                                     <td><Form.Control as="select" size="lg" name="picEngineerMs" value={picEngineerMs === null ? users[0].id : picEngineerMs} onChange={this.handleChangeField}>
                                             {/* {listServiceEngineerNew.map(user =><option value={user[1]}>{user[2]}</option>)} */}
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                                        </Form.Control></td>
+                                        </Form.Control></td>}
                                 </tr></>
                                 : <></>}
                             </table>

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import propen.impl.sipel.model.UserModel;
 
 @Repository
-public interface UserDb extends JpaRepository<UserModel,Long> {
+public interface UserDb extends JpaRepository<UserModel,String> {
 }

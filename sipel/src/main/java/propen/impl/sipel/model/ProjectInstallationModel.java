@@ -29,10 +29,9 @@ public class ProjectInstallationModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderPi;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private UserModel idUserEng;
 
     @NotNull

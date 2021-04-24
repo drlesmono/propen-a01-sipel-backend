@@ -29,10 +29,9 @@ public class ManagedServicesModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private UserModel idUserPic;
 
     @NotNull
@@ -49,14 +48,14 @@ public class ManagedServicesModel implements Serializable{
     @Column(name = "isActivated", nullable = false)
     private Boolean isActivated;
 
-    @NotNull
+//    @NotNull
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="timeRemaining", nullable = false)
+    @Column(name="timeRemaining", nullable = true)
     private Long timeRemaining;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private List<ServicesModel> listService;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
