@@ -128,9 +128,10 @@ class PenugasanEngineer extends Component {
         let pi = orderTarget.map(order => {return order.idOrderPi});
     
         if(orderTarget !== null && pi[0] !== null){
-            let user = orderTarget.map(order => order.idOrderPi.idUserEng);
+            let user = orderTarget.map(order => order.idOrderPi.idUserEng)[0];
+            console.log(user);
             if(user !== null){
-                let pic = orderTarget.map(order => order.idOrderPi.idUserEng.fullname);
+                let pic = user.fullname;
                 return pic;
             }
         }
@@ -161,19 +162,23 @@ class PenugasanEngineer extends Component {
         // console.log(event.target);
         // console.log(value);
         // const order = this.getOrder(value);
-        let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
         this.setState({
             isEdit: true,
             orderTarget: order
         });
         if(order.idOrderPi !== null){
-            this.setState({picEngineerPi: order.idOrderPi.idUserEng.id});
+            if(order.idOrderPi.idUserEng !== null){
+                this.setState({picEngineerPi: order.idOrderPi.idUserEng.id});
+            }
         }
         if(order.idOrderMs !== null){
-            this.setState({
-                picEngineerMs: order.idOrderMs.idUserPic.id, 
-                servicesEngineer: servicesEngineer
-            });
+            if(order.idOrderMs.idUserPic !== null){
+                let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
+                this.setState({
+                    picEngineerMs: order.idOrderMs.idUserPic.id, 
+                    servicesEngineer: servicesEngineer
+                });
+            }
         }
         // console.log(this.state.orderTarget);
         // console.log(this.state.picEngineerPi);
@@ -279,7 +284,7 @@ class PenugasanEngineer extends Component {
                                     {/* {console.log(picEngineerPi.id === null), console.log(users[0].id), console.log(picEngineerPi), console.log(users[0].id === picEngineerPi)} */}
                                     <td><Form.Control as="select" size="lg" name="picEngineerPi" value={picEngineerPi === null ? users[0].id : picEngineerPi} onChange={this.handleChangeField}>
                                             {users.map((user, index) => <option key={index} value={user.id}>{user.fullname}</option>)}
-                                        </Form.Control></td>}
+                                        </Form.Control></td>
                                 </tr></>
                                 : <></>}
                                 { orderTarget.managedService ?
