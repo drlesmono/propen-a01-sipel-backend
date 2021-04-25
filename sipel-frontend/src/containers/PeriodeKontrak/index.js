@@ -19,6 +19,7 @@ class PeriodeKontrak extends Component {
             picEngineerMs: null,
             servicesEngineer: [],
             isReport: false,
+            isReportExtend: false,
             orderFiltered: [],
             isFiltered: false,
             currentDateTime: new Date(),
@@ -200,10 +201,9 @@ class PeriodeKontrak extends Component {
                     <a href="#" class="close" onClick={()=>this.handleCloseNotif}>x</a>
                     {console.log(isEdit, isReport, isNotif)}
                 </Modal> */}
-                <Modal show={isEdit || isReport} style={{modal : {zIndex: 200}}}>
+                <Modal show={isEdit || isReport || isExtend || isReportExtend} style={{modal : {zIndex: 200}}}>
                     <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div>
                     <h3 id='titleform' >Form Penugasan Engineer</h3>
-                    {console.log(isEdit, isReport)}
                     {orderTarget !== null ?
                         <Form>
                             <table>
@@ -240,6 +240,22 @@ class PeriodeKontrak extends Component {
                                             {/* {listServiceEngineerNew.map(user =><option value={user[1]}>{user[2]}</option>)} */}
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control></td>}
+                                </tr>
+                                <tr>
+                                    <td>Periode Mulai</td>
+                                    {isReport ? :
+                                    <td>: {orderTarget.actualStart}</td> :
+                                    <td><Form.Control type="text" placeholder={orderTarget.actualStart}/></td> }
+                                </tr>
+                                <tr>
+                                    <td>Periode Berakhir</td>
+                                    {isReport ? :
+                                    <td>: {orderTarget.actualEnd}</td> :
+                                    <td><Form.Control type="text" placeholder={orderTarget.actualEnd}/></td> }
+                                </tr>
+                                <tr>
+                                    <td>Waktu Tersisa</td>
+                                    <td>: {this.getTimeRemaining(orderTarget.actualStart, orderTarget.actualEnd)}</td>
                                 </tr>
                             </table>
                             {isReport ? <></> :
