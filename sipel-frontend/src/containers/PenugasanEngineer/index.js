@@ -335,7 +335,7 @@ class PenugasanEngineer extends Component {
                                 </tr>
                                 <tr>
                                     <td>Nomor PO</td>
-                                    <td>: {orderTarget.noPO}</td>
+                                    <td>: {orderTarget.noPO === null? "-" : orderTarget.noPO}</td>
                                 </tr>
                                 <tr>
                                     <td>Nama Order</td>
