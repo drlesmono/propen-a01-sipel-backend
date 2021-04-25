@@ -35,13 +35,29 @@ public class  OrderRestController {
     private ServicesRestService servicesRestService;
 
     @PostMapping(value = "/order/tambah")
-    private Object createOrder(
+    public OrderModel createOrder(
             @Valid
             @RequestBody OrderModel order,
-            @RequestBody ProjectInstallationModel projectInstallation,
-            @RequestBody ManagedServicesModel managedServices,
-            @RequestBody ServicesModel services,
-            HttpServletRequest request,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
+            );
+        }
+        else {
+            return orderRestService.createOrder(order);
+        }
+    }
+
+    /*@PostMapping(value = "/order/tambah")
+    private OrderModel createOrder(
+            @Valid
+            @RequestBody OrderModel order,
+            //@RequestBody ProjectInstallationModel projectInstallation,
+            //@RequestBody ManagedServicesModel managedServices,
+            //@RequestBody ServicesModel services,
+            //HttpServletRequest request,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
@@ -53,16 +69,26 @@ public class  OrderRestController {
             Date today = new Date();
             order.setDateOrder(today);
             order.setVerified(false);
-            if (order.isProjectInstallation()) {
+            return orderRestService.createOrder(order);
+            *//*String[] valPI = request.getParameterValues("isProjectInstallation");
+            boolean flagPI = false;
+            for (int k = 0; k < valPI.length; k++) {
+                flagPI = Boolean.parseBoolean(valPI[k]);
+            }
+            String[] valMS = request.getParameterValues("isManagedServices");
+            boolean flagMS = false;
+            for (int j = 0; j < valMS.length; j++) {
+                flagMS = Boolean.parseBoolean(valMS[j]);
+            }
+            if (flagPI) {
                 projectInstallation.setIdOrder(order);
                 return projectInstallationRestService.createOrderPI(projectInstallation);
             }
-            if (order.isManagedService()) {
+            if (flagMS) {
                 managedServices.setIdOrder(order);
-                manageServices(managedServices);
                 return managedServicesRestService.createOrderMS(managedServices);
             }
-            if (order.isManagedService()) {
+            if (flagMS) {
                 String[] serviceName = request.getParameterValues("name");
                 for (int i = 0; i < serviceName.length; i++) {
                     managedServices.addService(serviceName[i]);
@@ -71,13 +97,26 @@ public class  OrderRestController {
                     service.setIdOrderMS(managedServices);
                     return servicesRestService.createServices(service);
                 }
-            }
+            }*//*
+        }
+        //return order;
+    }*/
 
-            return orderRestService.createOrder(order);
+    @GetMapping(value = "/order/detail/{idOrder}")
+    private OrderModel retrieveOrder(
+            @PathVariable(value = "idOrder") Long idOrder
+    ) {
+        try {
+            return orderRestService.getOrderById(idOrder);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrder) + " not found!"
+            );
         }
     }
 
-    @GetMapping(value = "/order/detail/{idOrder}")
+    /*@GetMapping(value = "/order/detail/{idOrder}")
     private Object retrieveOrder(
             @PathVariable(value = "idOrder") Long idOrder
     ) {
@@ -102,9 +141,24 @@ public class  OrderRestController {
                     HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrder) + " not found!"
             );
         }
-    }
+    }*/
 
     @PutMapping(value = "/order/ubah/{idOrder}")
+    private OrderModel updateOrder(
+            @PathVariable(value = "idOrder") Long idOrder,
+            @RequestBody OrderModel order
+    ) {
+        try {
+            return orderRestService.changeOrder(idOrder, order);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrder) + " not found!"
+            );
+        }
+    }
+
+    /*@PutMapping(value = "/order/ubah/{idOrder}")
     private Object updateOrder(
             @PathVariable(value = "idOrder") Long idOrder,
             @RequestBody OrderModel order,
@@ -135,9 +189,14 @@ public class  OrderRestController {
                     HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrder) + " not found!"
             );
         }
+    }*/
+
+    @GetMapping(value = "/order")
+    private List<OrderModel> retrieveListOrder() {
+        return orderRestService.retrieveListOrder();
     }
 
-    private List<ServicesModel> manageServices(ManagedServicesModel managedServices) {
+    /*private List<ServicesModel> manageServices(ManagedServicesModel managedServices) {
         List<ServicesModel> listServices = new ArrayList<ServicesModel>();
         if (managedServices.getListService() != null) {
             for (Iterator<ServicesModel> i = managedServices.getListService().iterator(); i.hasNext();) {
@@ -161,5 +220,5 @@ public class  OrderRestController {
             }
         }
         return listServices;
-    }
+    }*/
 }

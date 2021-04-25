@@ -1,0 +1,22 @@
+.modal {
+    position: fixed;
+    z-index: 500;
+    background-color: #fff;
+    width: 60%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    margin: 48px auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+    transform: translateY(-50vh);
+    opacity: 0;
+}
+.show {
+    transform: translateY(0);
+    opacity: 1;
+}   

@@ -23,6 +23,9 @@ public class OrderRestServiceImpl implements OrderRestService {
 
     @Override
     public OrderModel createOrder(OrderModel order) {
+        Date today = new Date();
+        order.setDateOrder(today);
+        order.setVerified(false);
         return orderDb.save(order);
     }
 
