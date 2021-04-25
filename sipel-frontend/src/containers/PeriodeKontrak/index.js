@@ -21,8 +21,7 @@ class PeriodeKontrak extends Component {
             isReport: false,
             orderFiltered: [],
             isFiltered: false,
-            currentDateTime: Date(),
-            timeRemaining: "",
+            currentDateTime: new Date(),
             button: "1"
         };
         // this.handleEdit = this.handleEdit.bind(this);
@@ -55,105 +54,70 @@ class PeriodeKontrak extends Component {
         return newDate;
     }
 
-    // getTimeRemaining(actualStart, timeRemaining){
-        // const current = this.state.currentDateTime;
-        // let gapYear;
-        // let gapMonth;
-        // let gapDate;
-        // let start = actualStart.split("/");
-        // let date1 = new Date(actualStart);
-        // console.log(date1);
-        // let start = moment(actualStart);
-        // const current = moment(this.state.currentDateTime);
-        // let diff = start.diff(current);
-        // let diffDuration = moment.duration(diff);
-        // console.log(start, curret, diff, diffDuration);
-        // return (diffDuration.asMilliseconds(), diffDuration.days(), diffDuration.months(), diffDuration.years());
-        // if(timeRemaining !== null){
-        //     if(timeRemaining === 0){
-        //         return "Habis";
-        //     }
-        // }else{
-        //     gapYear = Number(current.getFullYear()) - Number(start[2]); 
-        //     gapMonth = Number(current.getMonth()) - Number(start[1]));
-        //     gapDate = Number(current.getDate() - Number(start[0]));          
-        //     if(gapYear > 0){
-        //         return "Belum mulai";
-        //     }else if(gapMonth > 0){
-        //         return "Belum mulai";
-        //     }else if(gapDate > 0){
-        //         return "Belum mulai";
-        //     }
-        // }
-        
-        // gapYear = Number(current.getFullYear()) - Number(start[2]); 
-        // gapMonth = Number(current.getMonth()) - Number(start[1]));
-        // gapDate = Number(current.getDate() - Number(start[0]));
-        // if(gapYear > 0){
-        //     if(gapYear>0){
-        //         if(gapMonth>0){
-        //             return gapYear+" tahun "+gapMonth+" bulan ";
-        //         }
-        //     }
-        // }
-    // }
-
     getTimeRemaining(actualStart, actualEnd){
         const startDate = new Date(actualStart);
         const endDate = new Date(actualEnd);
         let currentDate = this.state.currentDateTime;
 
+        console.log(currentDate);
+        console.log(startDate);
+
         if ( startDate > currentDate) {
-            console.log(startDate > currentDateTime);
+            console.log(startDate > currentDate);
             return "Belum mulai";
         } else if ( currentDate > endDate ){
             console.log( currentDate > endDate );
             return "Habis";
         }
         
-        var startYear = currentDate.getFullYear();
-        var startMonth = currentDate.getMonth();
-        var startDay = currentDate.getDate();
+        let startYear = currentDate.getFullYear();
+        let startMonth = currentDate.getMonth();
+        let startDay = currentDate.getDate();
         
-        var endYear = endDate.getFullYear();
-        var endMonth = endDate.getMonth();
-        var endDay = endDate.getDate();
+        let endYear = endDate.getFullYear();
+        let endMonth = endDate.getMonth();
+        let endDay = endDate.getDate();
         
         // We calculate February based on end year as it might be a leep year which might influence the number of days.
-        var february = (endYear % 4 == 0 && endYear % 100 != 0) || endYear % 400 == 0 ? 29 : 28;
-        var daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        let february = (((endYear % 4 === 0) && (endYear % 100 !== 0)) || (endYear % 400 === 0)) ? 29 : 28;
+        console.log(february);
+        let daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
-        var startDateNotPassedInEndYear = (endMonth < startMonth) || endMonth == startMonth && endDay < startDay;
-        var years = endYear - startYear - (startDateNotPassedInEndYear ? 1 : 0);
+        let startDateNotPassedInEndYear = ((endMonth < startMonth) || (endMonth === startMonth )) && (endDay < startDay);
+        console.log(startDateNotPassedInEndYear);
+        let years = endYear - startYear - (startDateNotPassedInEndYear ? 1 : 0);
+        console.log(years);
         
-        var months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
+        let months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
+        console.log(months);
         
         // (12 + ...) % 12 makes sure index is always between 0 and 11
-        var days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
-        
+        let days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
+        console.log(years);
+
         let timeRemaining = "";
         if(years === 0){
             if(months === 0){
-                timeRemaing = days+" hari";
+                timeRemaining = days+" hari";
             }else{
                 if(days === 0){
-                    timeRemaing = months+" bulan";
+                    timeRemaining = months+" bulan";
                 }
-                timeRemaing = months+" bulan "+days+" hari";
+                timeRemaining = months+" bulan "+days+" hari";
             }
         }else{
             if(months === 0){
-                timeRemaing = years+" tahun "+days+" hari";
+                timeRemaining = years+" tahun "+days+" hari";
             }else{
                 if(days === 0){
-                    timeRemaing = years+" tahun "+months+" bulan";
+                    timeRemaining = years+" tahun "+months+" bulan";
                 }
-                timeRemaing = years+" tahun "+months+" bulan "+days+" hari";
+                timeRemaining = years+" tahun "+months+" bulan "+days+" hari";
             }
         }
 
-        this.setState({ timeRemaining: timeRemaining});
-        return timeRemaing;
+        console.log(timeRemaining);
+        return timeRemaining;
     }
 
     handleChangeField(event) {
@@ -186,7 +150,7 @@ class PeriodeKontrak extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, orderTarget, users, timeRemaining,
+        const { ordersVerified, isEdit, isExtend, orderTarget, users, timeRemaining,
              picEngineerMs, servicesEngineer, isReport, isNotif, orderFiltered, isFiltered } = this.state;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         const tableRows = isFiltered ? orderFiltered.map((order) =>
@@ -211,6 +175,7 @@ class PeriodeKontrak extends Component {
                             <option value="2"><CustomizedButtons variant="contained" size="small" color="#FD693E"
                                     onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></option>
                         </Form.Control>])
+        console.log(tableRows);
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
@@ -227,10 +192,8 @@ class PeriodeKontrak extends Component {
         return (
             <div style={{justifyContent: "space-around"}}>
                 <div>
-                    {/* <tr> */}
-                        <div><h1>Daftar Order</h1></div>
-                        <div><Form.Control type="text" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div>
-                    {/* </tr> */}
+                    <div><h1>Daftar Order</h1></div>
+                    <div><Form.Control type="text" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div>
                 </div>
                 <div style={{width: 1300}}><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
                 {/* <Modal show={isNotif} style={{modal : {zIndex: 900}}}>
@@ -241,7 +204,7 @@ class PeriodeKontrak extends Component {
                 <Modal show={isEdit || isReport} style={{modal : {zIndex: 200}}}>
                     <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div>
                     <h3 id='titleform' >Form Penugasan Engineer</h3>
-                    {console.log(isEdit, isReport, isNotif)}
+                    {console.log(isEdit, isReport)}
                     {orderTarget !== null ?
                         <Form>
                             <table>
@@ -280,9 +243,10 @@ class PeriodeKontrak extends Component {
                                         </Form.Control></td>}
                                 </tr>
                             </table>
+                            {isReport ? <></> :
                             <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
                                 simpan
-                            </CustomizedButtons></div>
+                            </CustomizedButtons></div> }
                         </Form>
                     : <></> }
                 </Modal>

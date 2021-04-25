@@ -7,6 +7,7 @@ import propen.impl.sipel.repository.ManagedServicesDb;
 import propen.impl.sipel.repository.UserDb;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -23,5 +24,10 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
         msTarget.setIdUserPic(userDb.findById(idUserPic).get());
         return managedServicesDb.save(msTarget);
+    }
+
+    @Override
+    public List<ManagedServicesModel> msOrderByTimeRemaining() {
+        return managedServicesDb.findByOrderByTimeRemaining();
     }
 }

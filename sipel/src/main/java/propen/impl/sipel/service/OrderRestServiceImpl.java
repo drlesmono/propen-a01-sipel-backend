@@ -29,4 +29,9 @@ public class OrderRestServiceImpl implements OrderRestService{
 
         return listOrderVerified;
     }
+
+    @Override
+    public OrderModel findOrderById(Long idOrder) {
+        return orderDb.findById(idOrder).get();
+    }
 }
