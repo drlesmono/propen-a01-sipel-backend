@@ -384,9 +384,10 @@ class PenugasanEngineer extends Component {
                                 </tr></>
                                 : <></>}
                             </table>
+                            {isReport ? <></> :
                             <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
                                 simpan
-                            </CustomizedButtons></div>
+                            </CustomizedButtons></div>}
                         </Form></>
                     : <></> }
                 </Modal>
