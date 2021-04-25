@@ -4,6 +4,7 @@ import './App.css';
 import React, { Component } from "react";
 import Layout from "./components/Layout";
 import PenugasanEngineer from "./containers/PenugasanEngineer";
+import PeriodeKontrak from "./containers/PeriodeKontrak";
 
 // function App() {
 //   return (
@@ -30,7 +31,8 @@ class App extends Component {
   render() {
     return (
       <Layout>
-        <PenugasanEngineer/>
+        {/* <PenugasanEngineer/> */}
+        <PeriodeKontrak/>
       </Layout>
     );
   }
