@@ -157,24 +157,23 @@ class PeriodeKontrak extends Component {
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
-                        <Form.Control as="select" size="lg" name="button" value={ timeRemaining === "Habis" ? "2" : "1" }
-                        onChange={this.handleChangeField}>
-                            <option value="1"><CustomizedButtons variant="contained" size="small" color="#FD693E"
-                                    onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons></option>
-                            <option value="2"><CustomizedButtons variant="contained" size="small" color="#FD693E"
-                                    onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></option>
-                        </Form.Control>])
+                        <><CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
+                        <CustomizedButtons variant="contained" size="small" color="#FD693E"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
                         : ordersVerified.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
-                        <Form.Control as="select" size="lg" name="button" value={ timeRemaining === "Habis" ? "2" : "1" }
-                        onChange={this.handleChangeField}>
-                            <option value="1"><CustomizedButtons variant="contained" size="small" color="#FD693E"
-                                    onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons></option>
-                            <option value="2"><CustomizedButtons variant="contained" size="small" color="#FD693E"
-                                    onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></option>
-                        </Form.Control>])
+                        <><CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
+                        <CustomizedButtons variant="contained" size="small" color="#FD693E"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
+        
+        // <Form.Control as="select" size="lg" name="button" value={ timeRemaining === "Habis" ? "2" : "1" }
+        //                 onChange={this.handleChangeField}>
+        //                     <option value="1">{<CustomizedButtons variant="contained" size="small" color="#FD693E"
+        //                             onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>}</option>
+        //                     <option value="2">{<CustomizedButtons variant="contained" size="small" color="#FD693E"
+        //                             onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons>}</option>
+        //                 </Form.Control>
+        
         console.log(tableRows);
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
