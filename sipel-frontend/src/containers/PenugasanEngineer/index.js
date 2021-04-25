@@ -306,6 +306,8 @@ class PenugasanEngineer extends Component {
             }
         }
 
+        const title = isReport? "Penugasan Engineer" : "Form Penugasan Engineer";
+
         const notification = isError ? "Penugasan Engineer Gagal disimpan" : "Penugasan Engineer Berhasil disimpan";
 
         return (
@@ -324,7 +326,7 @@ class PenugasanEngineer extends Component {
                 </Modal> */}
                 <Modal show={isEdit || isReport} style={{modal : {zIndex: 200}}}>
                     <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div>
-                    <h3 id='titleform' >Form Penugasan Engineer</h3>
+                    <h3 id='titleform' >{title}</h3>
                     {console.log(isEdit, isReport, isNotif)}
                     {orderTarget !== null ?
                         <><Form>
@@ -335,7 +337,7 @@ class PenugasanEngineer extends Component {
                                 </tr>
                                 <tr>
                                     <td>Nomor PO</td>
-                                    <td>: {orderTarget.noPO}</td>
+                                    <td>: {orderTarget.noPO === null ? "-" : orderTarget.noPO}</td>
                                 </tr>
                                 <tr>
                                     <td>Nama Order</td>

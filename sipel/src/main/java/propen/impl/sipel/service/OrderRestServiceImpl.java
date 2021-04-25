@@ -34,4 +34,17 @@ public class OrderRestServiceImpl implements OrderRestService{
     public OrderModel findOrderById(Long idOrder) {
         return orderDb.findById(idOrder).get();
     }
+
+    @Override
+    public List<OrderModel> retrieveListOrderMs() {
+        List<OrderModel> listOrderVerified = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAllByIsManagedServiceIsTrue()){
+            if (order.getVerified() == true) {
+                listOrderVerified.add(order);
+            }
+        }
+
+        return listOrderVerified;
+    }
 }

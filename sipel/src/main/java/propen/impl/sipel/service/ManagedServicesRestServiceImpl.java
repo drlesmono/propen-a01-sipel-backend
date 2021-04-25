@@ -7,6 +7,7 @@ import propen.impl.sipel.repository.ManagedServicesDb;
 import propen.impl.sipel.repository.UserDb;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,8 +27,16 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         return managedServicesDb.save(msTarget);
     }
 
+//    @Override
+//    public List<ManagedServicesModel> msOrderByTimeRemaining() {
+//        return managedServicesDb.findByOrderByTimeRemaining();
+//    }
+
     @Override
-    public List<ManagedServicesModel> msOrderByTimeRemaining() {
-        return managedServicesDb.findByOrderByTimeRemaining();
+    public ManagedServicesModel updateKontrak(Long idOrderMs, Date actualStart, Date actualEnd) {
+        ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
+        msTarget.setActualStart(actualStart);
+        msTarget.setActualEnd(actualEnd);
+        return managedServicesDb.save(msTarget);
     }
 }

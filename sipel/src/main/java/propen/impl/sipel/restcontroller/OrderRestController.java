@@ -26,17 +26,18 @@ public class OrderRestController {
         return orderRestService.retrieveListOrderVerified();
     }
 
-    @GetMapping(value="/ordersByTimeRemaining")
-    private List<OrderModel> retrieveListOrderByTimeRemaining() {
-        List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByTimeRemaining();
+    @GetMapping(value="/orders/ms")
+    private List<OrderModel> retrieveListOrderMS() {
+//        List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByTimeRemaining();
 
-        List<OrderModel> listOrder = new ArrayList<>();
-        for(ManagedServicesModel ms : listMs){
-            OrderModel order = orderRestService.findOrderById(ms.getIdOrder().getIdOrder());
-            listOrder.add(order);
-        }
+//        List<OrderModel> listOrder = new ArrayList<>();
+//        for(ManagedServicesModel ms : listMs){
+//            OrderModel order = orderRestService.findOrderById(ms.getIdOrder().getIdOrder());
+//            listOrder.add(order);
+//        }
 
-        return listOrder;
+//        return listOrder;
+        return orderRestService.retrieveListOrderMs();
     }
 
 }

@@ -9,4 +9,6 @@ public interface OrderRestService {
     List<OrderModel> retrieveListOrderVerified();
 
     OrderModel findOrderById(Long idOrder);
+
+    List<OrderModel> retrieveListOrderMs();
 }
