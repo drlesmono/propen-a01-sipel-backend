@@ -26,11 +26,11 @@ public class ServicesRestServiceImpl implements ServicesRestService{
     private ManagedServicesDb managedServicesDb;
 
     @Override
-    public void updateService(ServicesDto service) {
+    public ServicesModel updateService(ServicesDto service) {
         ServicesModel serviceTarget = servicesDb.findById(service.getIdService()).get();
         serviceTarget.setName(service.getName());
         serviceTarget.setIdUser(userDb.findById(service.getIdUser()).get());
-        servicesDb.save(serviceTarget);
+        return servicesDb.save(serviceTarget);
     }
 
     @Override

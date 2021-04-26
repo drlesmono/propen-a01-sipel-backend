@@ -23,19 +23,20 @@ public class ServicesRestController {
     private ServicesRestService servicesRestService;
 
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateService")
-    private BaseResponse<ServicesDto> updateService(@Valid @RequestBody ServicesDto service,
+    private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
-        BaseResponse<ServicesDto> response = new BaseResponse<>();
+        BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan
             response.setMessage("Engineer pada service gagal disimpan." );
             response.setStatus(405);
             return response;
         }
+        ServicesModel newService = servicesRestService.updateService(service);;
         response.setStatus(200);
         response.setMessage("Success");
-        response.setResult(service);
-        servicesRestService.updateService(service);
+        response.setResult(newService);
+
         return response;
     }
 

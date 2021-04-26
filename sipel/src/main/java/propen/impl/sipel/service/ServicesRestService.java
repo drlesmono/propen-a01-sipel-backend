@@ -5,7 +5,7 @@ import propen.impl.sipel.rest.ServicesDto;
 
 public interface ServicesRestService {
 
-    void updateService(ServicesDto service);
+    ServicesModel updateService(ServicesDto service);
 
     ServicesModel createService(ServicesDto service, Long idOrderMs);
 
