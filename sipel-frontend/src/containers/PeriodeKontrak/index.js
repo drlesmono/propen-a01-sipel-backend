@@ -30,7 +30,9 @@ class PeriodeKontrak extends Component {
             totalServices: 0,
             listService: [],
             isAdded: false,
-            newNoPO: null
+            newNoPO: null,
+            timeRemaining: null,
+            formValid: false
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -50,7 +52,7 @@ class PeriodeKontrak extends Component {
             const orders = await APIConfig.get("/orders/ms");
             const users = await APIConfig.get("/users");
             this.setState({ ordersVerified: orders.data, users: users.data});
-            console.log(orders.data);
+            // console.log(orders.data);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -59,37 +61,82 @@ class PeriodeKontrak extends Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-        try {
-            const ms = this.state.orderTarget.idOrderMs;
-            console.log(this.state.actualStart, this.state.actualEnd);
-            // console.log(this.convertDateToString(this.state.actualStart), this.convertDateToString(this.state.actualEnd));
-            const dataMs = {
-                idOrderMs: ms.idOrderMs,
-                idUserPic: ms.idUserPic.id,
-                actualStart: this.convertDateToString(this.state.actualStart),
-                actualEnd: this.convertDateToString(this.state.actualEnd),
-                activated: ms.activated,
-                // timeRemaining: ms.timeRemaining,
-                dateClosedMS: ms.dateClosedMS
+        if(this.state.formValid){
+            let newOrder;
+            try {   
+                let response;
+                if(this.state.isExtend){
+                    const order = this.state.orderTarget;
+                    const pi = order.idOrderPi === null ? null : order.idOrderPi.idOrderPi;
+                    const ms = order.idOrderMs.idOrderMs;
+                    const dataOrder = {
+                        idOrder: order.idOrder,
+                        orderName: order.orderName,
+                        clientName: order.clientName,
+                        clientOrg: order.clientOrg,
+                        clientDiv: order.clientDiv,
+                        clientPIC: order.clientPIC,
+                        clientEmail: order.clientEmail,
+                        clientPhone: order.clientPhone,
+                        dateOrder: order.dateOrder,
+                        noPO: this.state.newNoPO,
+                        noSPH: order.noSPH,
+                        description: order.description,
+                        verified: order.verified,
+                        projectInstallation: order.projectInstallation,
+                        managedService: order.managedService,
+                        idOrderPi: pi,
+                        idOrderMs: ms
+                    }
+                    console.log(dataOrder);
+                    response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
+                    newOrder = response.data.result;
+                    console.log(newOrder);
+                }
+                const ms = this.state.extend ? newOrder.idOrderMs : this.state.orderTarget.idOrderMs;
+                console.log(ms);
+                const dataMs = {
+                    idOrderMs: ms.idOrderMs,
+                    idUserPic: this.state.picEngineerMs,
+                    actualStart: this.convertDateToString(this.state.actualStart),
+                    actualEnd: this.convertDateToString(this.state.actualEnd),
+                    activated: ms.activated,
+                    dateClosedMS: ms.dateClosedMS
+                }
+                console.log(dataMs);
+                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
+                if(this.state.isExtend){
+                    let listServiceName = this.state.servicesEngineerName;
+                    let listService = this.state.servicesEngineer;
+                    console.log(listServiceName);
+                    console.log(listService);
+                    for(let i=0; i<listService.length; i++){
+                        const dataService = {
+                            name: listServiceName[i],
+                            idUser: listService[i]
+                        }
+                        console.log(dataService);
+                        await APIConfig.post(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
+                    }
+                }
+                this.loadData();   
+            } catch (error) {
+                if(this.state.isExtend){
+                    alert("Perpanjangan Periode Kontrak gagal disimpan");
+                }else{
+                    alert("Periode Kontrak gagal disimpan");
+                }
+                console.log(error);
             }
-            console.log(dataMs);
-            await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
-            // let listService = this.getListService(this.state.orderTarget);
-            // for(let i=0; i<this.state.servicesEngineer.length; i++){
-            //     let service = listService[i];
-            //     const dataService = {
-            //         idService: service.idService,
-            //         name: service.name,
-            //         idUser: this.state.servicesEngineer[i]
-            //     }
-            //     await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/service/${service.idService}/updateEngineer`, dataService);
-            // }
-            this.loadData();
-        } catch (error) {
-            alert("Periode Kontrak gagal disimpan");
-            console.log(error);
-        }
-        this.handleReport(event);
+            if(this.state.isExtend){
+                this.setState({ orderTarget: newOrder});
+                this.handleReportExtend(event);
+            }else{
+                this.handleReport(event);
+            }
+        }else{
+            this.handleValidation(event);
+        } 
     }
 
     handleReport(event){
@@ -105,7 +152,7 @@ class PeriodeKontrak extends Component {
     }
 
     getDate(value){
-        console.log(typeof(value));
+        // console.log(typeof(value));
         let date;
         if(value.includes("T")){
             const valueSplit = value.split("T");
@@ -123,8 +170,8 @@ class PeriodeKontrak extends Component {
         const endDate = new Date(actualEnd);
         let currentDate = this.state.currentDateTime;
 
-        console.log(currentDate);
-        console.log(startDate);
+        // console.log(currentDate);
+        // console.log(startDate);
 
         if ( startDate > currentDate) {
             console.log(startDate > currentDate);
@@ -144,20 +191,20 @@ class PeriodeKontrak extends Component {
         
         // We calculate February based on end year as it might be a leep year which might influence the number of days.
         let february = (((endYear % 4 === 0) && (endYear % 100 !== 0)) || (endYear % 400 === 0)) ? 29 : 28;
-        console.log(february);
+        // console.log(february);
         let daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
         let startDateNotPassedInEndYear = ((endMonth < startMonth) || (endMonth === startMonth )) && (endDay < startDay);
-        console.log(startDateNotPassedInEndYear);
+        // console.log(startDateNotPassedInEndYear);
         let years = endYear - startYear - (startDateNotPassedInEndYear ? 1 : 0);
-        console.log(years);
+        // console.log(years);
         
         let months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
-        console.log(months);
+        // console.log(months);
         
         // (12 + ...) % 12 makes sure index is always between 0 and 11
         let days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
-        console.log(years);
+        // console.log(years);
 
         let timeRemaining = "";
         if(years === 0){
@@ -183,33 +230,50 @@ class PeriodeKontrak extends Component {
             }
         }
 
-        console.log(timeRemaining);
+        // console.log(timeRemaining);
         return timeRemaining;
     }
 
     handleChangeField(event) {
         const { name, value } = event.target;
-        console.log(name, value);
+        // console.log(name, value);
         const servicesEngineerNew = this.state.servicesEngineer;
         const servicesEngineerNameNew = this.state.servicesEngineerName;
+
         if( name.substring(0,16) === "servicesEngineer"){
             let index = Number(name.substring(16));
             servicesEngineerNew[index] = value;
-            this.setState({ servicesEngineer: servicesEngineerNew});
+            console.log(servicesEngineerNew);
+            this.setState({ servicesEngineer: servicesEngineerNew, formValid: true });
         }else if( name.substring(0,11) === "serviceName" ){
             let index = Number(name.substring(11));
             servicesEngineerNameNew[index] = value;
-            this.setState({ servicesEngineerName: servicesEngineerNameNew});
+            console.log(servicesEngineerNameNew);
+            this.setState({ servicesEngineerName: servicesEngineerNameNew, formValid: true });
         }else{
-            this.setState({ [name]: value});
+            if(this.state.isExtend){
+                if( name === "newNoP0"){
+                    if( value === null){
+                        this.handleValidation(event);
+                    }else{
+                        this.setState({ formValid: true });
+                    } 
+                }
+            }
+            this.setState({ [name]: value, formValid: true});
         }
+    }
+
+    handleValidation(event){
+        this.setState({ formValid: false });
+        alert("Nomor PO baru harus diisi");
     }
 
     handleEdit(order, typeEdit) {
         let actualStart = order.idOrderMs.actualStart.split("T");
         let actualEnd = order.idOrderMs.actualEnd.split("T");
         if(typeEdit === "perbarui"){
-            this.setState({ isEdit: true });
+            this.setState({ isEdit: true , formValid: true});
         }else{
             this.setState({ isExtend: true });
         }
@@ -218,21 +282,39 @@ class PeriodeKontrak extends Component {
             orderTarget: order,
             actualStart: actualStart[0],
             actualEnd: actualEnd[0],
-            totalServices: order.idOrderMs.listService.length  
+            totalServices: order.idOrderMs.listService.length,
+            timeRemaining: this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd)  
         });
         
         if(order.idOrderMs.idUserPic !== null){
             let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
+            let servicesEngineerName = order.idOrderMs.listService.map(service => service.name);
+            console.log(servicesEngineer);
             this.setState({
                 picEngineerMs: order.idOrderMs.idUserPic.id, 
-                servicesEngineer: servicesEngineer
+                servicesEngineer: servicesEngineer,
+                servicesEngineerName: servicesEngineerName
             });
         }
     }
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({isEdit: false, isReport: false, isExtend: false, isReportExtend: false});
+        this.setState({
+            isEdit: false, 
+            isReport: false, 
+            isExtend: false, 
+            isReportExtend: false, 
+            totalServices: 0,
+            isAdded: false,
+            timeRemaining: null,
+            serviceEngineer: [],
+            listService: [],
+            orderTarget: null,
+            picEngineerMs: null,
+            formValid: false
+        });
+        this.loadData();
     }
 
     getPICMS(idOrder){
@@ -268,10 +350,7 @@ class PeriodeKontrak extends Component {
                 return listOrderSorted;
             }
             let a = listOrder[i][5];
-            console.log(a);
             let b = listOrder[i+1][5];
-            // let a = this.getTimeRemaining(order1.idOrderMs.actualStart, order1.idOrderMs.actualEnd);
-            // let b = this.getTimeRemaining(order2.idOrderMs.actualStart, order2.idOrderMs.actualEnd);
             if( (a !== "Habis") && (b === "Habis") ){
                 listOrderSorted[i] = listOrder[i+1];
                 listOrderSorted[i+1] = listOrder[i];
@@ -319,11 +398,7 @@ class PeriodeKontrak extends Component {
     }
 
     handleFilter(event){
-        // let ordersSorted = this.sortByTimeRemaining(this.state.ordersVerified);
-        // let newOrderList = ordersSorted;
-        console.log(this.state.ordersVerified);
         let newOrderList = this.state.ordersVerified;
-        console.log(newOrderList);
         const { value } = event.target;
         if( value !== "" ){
             newOrderList = newOrderList.filter(order => {
@@ -337,30 +412,30 @@ class PeriodeKontrak extends Component {
     }
 
     handleAddServices(listService){
-        const initialTotal = this.state.totalServices;
-        const totalServicesNew = this.state.totalServices + 1;
+        this.setState({isAdded: true});
+        let listServiceNew = [[...listService]];
+        let servicesEngineer = [...this.state.servicesEngineer];
+        let initialTotal = listService.length;
+        const totalServicesNew = initialTotal+1;
         this.setState({ totalServices: totalServicesNew });
-        let listServiceNew = listService.map(service => service);
-        console.log(listServiceNew);
-        for(let i=initialTotal; i<totalServicesNew; i++){
-            listServiceNew.add([<Form.Control type="text" name={"serviceName"+i} 
+        servicesEngineer = servicesEngineer.concat(null);
+        this.setState({serviceEngineer: servicesEngineer});
+        listServiceNew = listService.concat([[<Form.Control type="text" name={"serviceName"+initialTotal} 
                             placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-                            <Form.Control as="select" size="lg" key={i} name={"servicesEngineer"+i} 
-                             value={this.state.servicesEngineer[i] === null ? this.state.users[0].id : this.state.servicesEngineer[i]}
+                            <Form.Control as="select" size="lg" key={initialTotal} name={"servicesEngineer"+initialTotal} 
+                            value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
                             onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                            </Form.Control>]);
-        }
+                            </Form.Control>]]);
 
-        this.setState({isAdded: true, listService: listServiceNew});
+        this.setState({listService: listServiceNew});
     }
 
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded,
+        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService } = this.state;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         console.log(ordersVerified);
-        // const ordersSorted = this.sortByTimeRemaining(ordersVerified);
-        // console.log(ordersSorted);
+  
         const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
@@ -374,26 +449,14 @@ class PeriodeKontrak extends Component {
                         <><CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
                         <CustomizedButtons variant="contained" size="small" color="#FD693E"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
         const orderSorted = this.sortByTimeRemaining(tableRows);
-        console.log(orderSorted);
-        console.log(orderSorted[0]);
-        
-        // <Form.Control as="select" size="lg" name="button" value={ timeRemaining === "Habis" ? "2" : "1" }
-        //                 onChange={this.handleChangeField}>
-        //                     <option value="1">{<CustomizedButtons variant="contained" size="small" color="#FD693E"
-        //                             onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>}</option>
-        //                     <option value="2">{<CustomizedButtons variant="contained" size="small" color="#FD693E"
-        //                             onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons>}</option>
-        //                 </Form.Control>
-        
-        console.log(tableRows);
+ 
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
-        // let tableServiceRowsExtend;
 
         if(orderTarget !== null){
             tableServiceRows = isAdded ? listService : orderTarget.idOrderMs.listService.map((service, index) =>
                                 [isExtend? <Form.Control type="text" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
-                                service.name : servicesEngineerName[index]} onChange={this.handleChangeField}/>
+                                service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
                                 : service.name, (isReport || isEdit) ? this.getPICService(service) :
                                 <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
                                 value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
@@ -401,16 +464,6 @@ class PeriodeKontrak extends Component {
                                 {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                 </Form.Control>]);
             console.log(tableServiceRows);
-            // let totalServices = orderTarget.idOrderMs.listService.length;
-            // for(let i=0; i<=)
-            //     tableServiceRows.add([<Form.Control type="text" name={"serviceName"+totalServices} 
-            //                             placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-            //                             <Form.Control as="select" size="lg" key={totalServices} name={"servicesEngineer"+totalServices} 
-            //                             value={servicesEngineer[totalServices] === null ? users[0].id : servicesEngineer[totalServices]}
-            //                             onChange={this.handleChangeField}>{users.map(user =><option value={user.id}>{user.fullname}</option>)}
-            //                             </Form.Control>]);
-            //     totalServices++;
-            // }
         }
 
         const titleExtend = isReportExtend? "Perpanjangan Periode Kontrak" : "Form Perpanjangan Periode Kontrak";
@@ -452,7 +505,7 @@ class PeriodeKontrak extends Component {
                                 </tr>
                                 <tr>
                                     <td style={{fontWeight: 'bold'}}>Managed Service</td>
-                                    {isExtend ? <td><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleAddServices(tableServiceRows)}>
+                                    {isExtend ? <td><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAddServices(tableServiceRows)}>
                                         + Tambah Services
                                         </CustomizedButtons></td>
                                         : <></>}
@@ -475,7 +528,7 @@ class PeriodeKontrak extends Component {
                                 <tr>
                                     { isExtend ? <>
                                     <td>Nomor PO Baru</td>
-                                    <Form.Control type="date" name="newNoPO" onChange={this.handleChangeField}/></> : <></> } 
+                                    <Form.Control type="text" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></> : <></> } 
                                 </tr>
                                 <tr>
                                     <td>Periode Mulai</td>
@@ -490,11 +543,11 @@ class PeriodeKontrak extends Component {
                                     <td><Form.Control type="text" type="date" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
                                 </tr>
                                 <tr>
-                                    <td>Waktu Tersisa</td>
-                                    <td>: {this.getTimeRemaining(orderTarget.idOrderMs.actualStart, orderTarget.idOrderMs.actualEnd)}</td>
+                                    <td>Waktu Tersisa</td> 
+                                    <td>: {timeRemaining}</td> 
                                 </tr>
                             </table>
-                            {isReport ? <></> :
+                            {isReport || isReportExtend ? <></> :
                             <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
                                 simpan
                             </CustomizedButtons></div> }
