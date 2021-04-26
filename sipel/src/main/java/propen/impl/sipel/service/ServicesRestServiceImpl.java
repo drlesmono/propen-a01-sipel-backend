@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.repository.ServicesDb;
 import propen.impl.sipel.repository.UserDb;
+import propen.impl.sipel.rest.ServicesDto;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -20,9 +21,10 @@ public class ServicesRestServiceImpl implements ServicesRestService{
     private UserDb userDb;
 
     @Override
-    public ServicesModel updateEngineer(Long idService, String idUser) {
-        ServicesModel serviceTarget = servicesDb.findById(idService).get();
-        serviceTarget.setIdUser(userDb.findById(idUser).get());
+    public ServicesModel updateService(ServicesDto service) {
+        ServicesModel serviceTarget = servicesDb.findById(service.getIdService()).get();
+        serviceTarget.setName(service.getName());
+        serviceTarget.setIdUser(userDb.findById(service.getIdUser()).get());
         return servicesDb.save(serviceTarget);
     }
 

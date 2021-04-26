@@ -50,8 +50,8 @@ public class ManagedServicesModel implements Serializable{
 
 //    @NotNull
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="timeRemaining", nullable = true)
-    private Long timeRemaining;
+//    @Column(name="timeRemaining", nullable = true)
+//    private Long timeRemaining;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -115,13 +115,13 @@ public class ManagedServicesModel implements Serializable{
         isActivated = activated;
     }
 
-    public Long getTimeRemaining() {
-        return timeRemaining;
-    }
-
-    public void setTimeRemaining(Long timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
+//    public Long getTimeRemaining() {
+//        return timeRemaining;
+//    }
+//
+//    public void setTimeRemaining(Long timeRemaining) {
+//        this.timeRemaining = timeRemaining;
+//    }
 
     public List<ServicesModel> getListService() {
         return listService;
