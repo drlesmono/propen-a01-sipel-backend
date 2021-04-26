@@ -36,9 +36,13 @@ public class DocumentOrderModel implements Serializable{
     @Column(name="uploadedDate", nullable = false)
     private Date uploadedDate;
 
-    @NotNull
+    /*@NotNull
     @Column(name="docType", nullable = false)
-    private String docType;
+    private String docType;*/
+
+    @NotNull
+    @Column(name="size", nullable = false)
+    private Long size;
 
     public void setIdDoc(Long idDoc) {
         this.idDoc = idDoc;
@@ -56,9 +60,9 @@ public class DocumentOrderModel implements Serializable{
         this.uploadedDate = uploadedDate;
     }
 
-    public void setDocType(String docType) {
+    /*public void setDocType(String docType) {
         this.docType = docType;
-    }
+    }*/
 
     public Long getIdDoc() {
         return idDoc;
@@ -76,7 +80,15 @@ public class DocumentOrderModel implements Serializable{
         return uploadedDate;
     }
 
-    public String getDocType() {
+    /*public String getDocType() {
         return docType;
+    }*/
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
     }
 }

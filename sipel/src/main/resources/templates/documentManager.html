@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th = "http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Document Manager</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
 </head>
 <body>
-
+<div class="container-fluid text-center">
+    <div>
+        <h1>Document Manager</h1>
+    </div>
+    <div class="text-success">
+        <h3>[[${message}]]</h3>
+    </div>
+    <form th:action="@{/order/detail-order/upload}" method="post" enctype="multipart/form-data" style="max-width: 600px; margin: 0 auto">
+        <div class="border rounded m-3">
+            <h2>Upload Your Files:</h2>
+            <p>
+                <input type="file" name="document" required />
+            </p>
+            <p>
+                <button type="submit" value="Submit" class="btn btn-primary">Upload</button>
+            </p>
+        </div>
+    </form>
+</div>
 </body>
 </html>
