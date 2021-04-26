@@ -22,8 +22,8 @@ public class ServicesRestController {
     @Autowired
     private ServicesRestService servicesRestService;
 
-    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateEngineer")
-    private BaseResponse<ServicesDto> updateEngineer(@Valid @RequestBody ServicesDto service,
+    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateService")
+    private BaseResponse<ServicesDto> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesDto> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -35,8 +35,27 @@ public class ServicesRestController {
         response.setStatus(200);
         response.setMessage("Success");
         response.setResult(service);
-        servicesRestService.updateEngineer(service.getIdService(), service.getIdUser());
+        servicesRestService.updateService(service);
         return response;
     }
 
+    @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/service")
+    private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
+                                                    @PathVariable("idOrderMs") Long idOrderMs,
+                                                     BindingResult bindingResult){
+        BaseResponse<ServicesModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Engineer pada service gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        ServicesModel newService = servicesRestService.createService(service, idOrderMs);
+
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newService);
+
+        return response;
+    }
 }

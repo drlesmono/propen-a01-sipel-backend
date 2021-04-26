@@ -11,5 +11,5 @@ public interface ManagedServicesRestService{
 
 //    List<ManagedServicesModel> msOrderByTimeRemaining();
 
-    ManagedServicesModel updateKontrak(Long idOrderMs, Date actualStart, Date actualEnd);
+    ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd);
 }

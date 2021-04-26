@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(allowGetters = true)
 public class ManagedServicesDto {
 
-    @NotNull
     private Long idOrderMs;
 
     private String idUserPic;

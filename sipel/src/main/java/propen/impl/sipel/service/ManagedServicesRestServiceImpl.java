@@ -3,6 +3,7 @@ package propen.impl.sipel.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.UserModel;
 import propen.impl.sipel.repository.ManagedServicesDb;
 import propen.impl.sipel.repository.UserDb;
 
@@ -33,10 +34,11 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
 //    }
 
     @Override
-    public ManagedServicesModel updateKontrak(Long idOrderMs, Date actualStart, Date actualEnd) {
+    public ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd) {
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
         msTarget.setActualStart(actualStart);
         msTarget.setActualEnd(actualEnd);
+        msTarget.setIdUserPic(userDb.findById(idUserPic).get());
         return managedServicesDb.save(msTarget);
     }
 }
