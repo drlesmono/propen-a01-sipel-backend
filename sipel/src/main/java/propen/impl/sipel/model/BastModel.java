@@ -52,14 +52,12 @@ public class BastModel implements Serializable{
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
-    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="startPeriod", nullable = false)
+    @Column(name="startPeriod", nullable = true)
     private Date startPeriod;
 
-    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="endPeriod", nullable = false)
+    @Column(name="endPeriod", nullable = true)
     private Date endPeriod;
 
 //    public void setIdReport(ReportModel idReport) {
@@ -90,6 +88,7 @@ public class BastModel implements Serializable{
         return idMaintenance;
     }
 
+    public String getBastNum () { return bastNum; }
     public void setBastNum(String bastNum) {
         this.bastNum = bastNum;
     }

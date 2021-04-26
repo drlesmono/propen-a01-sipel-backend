@@ -19,10 +19,6 @@ public class TaskModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTask;
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long idTask;
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
