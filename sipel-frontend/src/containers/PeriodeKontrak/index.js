@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
-import Modal from "../../components/Modal";
+// import CustomizedModal from "../../components/Modal";
 import { Form } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class PeriodeKontrak extends Component {
     constructor(props) {
@@ -30,6 +32,7 @@ class PeriodeKontrak extends Component {
             isAdded: false,
             newNoPO: null,
             timeRemaining: null,
+            isHide: true
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -49,7 +52,6 @@ class PeriodeKontrak extends Component {
             const orders = await APIConfig.get("/orders/ms");
             const users = await APIConfig.get("/users");
             this.setState({ ordersVerified: orders.data, users: users.data});
-            // console.log(orders.data);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -85,13 +87,10 @@ class PeriodeKontrak extends Component {
                         idOrderPi: pi,
                         idOrderMs: ms
                     }
-                    // console.log(dataOrder);
                     response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
                     newOrder = response.data.result;
-                    // console.log(newOrder);
                 }
                 const ms = this.state.isExtend ? newOrder.idOrderMs : this.state.orderTarget.idOrderMs;
-                // console.log(ms);
                 const dataMs = {
                     idOrderMs: ms.idOrderMs,
                     idUserPic: this.state.picEngineerMs,
@@ -101,14 +100,9 @@ class PeriodeKontrak extends Component {
                     dateClosedMS: ms.dateClosedMS
                 }
                 const newMs = await APIConfig.put(`/order/${this.state.isExtend? newOrder.idOrder : this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
-                // console.log(newMs);
                 if(this.state.isExtend){
                     let listServiceName = this.state.servicesEngineerName;
                     let listService = this.state.servicesEngineer;
-                    // console.log(listServiceName);
-                    // console.log(listService);
-                    // let service;
-                    // let listServiceNew = new Array(listService.length);
                     for(let i=0; i<listService.length; i++){
                         const dataService = {
                             name: listServiceName[i],
@@ -117,9 +111,7 @@ class PeriodeKontrak extends Component {
                         console.log(dataService);
                         await APIConfig.post(`/order/${newOrder.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
                         this.loadData();
-                        // listServiceNew[i] = service.data.result;
                     }
-                    // this.setState({ listServiceBeforeLoad : listServiceNew });
                 }
                 this.loadData();
                 this.setState({ orderTarget: newOrder });   
@@ -298,7 +290,8 @@ class PeriodeKontrak extends Component {
             listService: [],
             orderTarget: null,
             picEngineerMs: null,
-            formValid: false
+            formValid: false,
+            isHide: true
         });
         this.loadData();
     }
@@ -374,9 +367,9 @@ class PeriodeKontrak extends Component {
         this.setState({ totalServices: totalServicesNew });
         servicesEngineer = servicesEngineer.concat(null);
         this.setState({serviceEngineer: servicesEngineer});
-        listServiceNew = listService.concat([[<Form.Control type="text" name={"serviceName"+initialTotal} 
+        listServiceNew = listService.concat([[<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
                             placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-                            <Form.Control as="select" size="lg" key={initialTotal} name={"servicesEngineer"+initialTotal} 
+                            <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
                             value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
                             onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
                             </Form.Control>]]);
@@ -385,7 +378,7 @@ class PeriodeKontrak extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, listServiceBeforeLoad,
+        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isHide,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService } = this.state;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         console.log(ordersVerified);
@@ -395,41 +388,28 @@ class PeriodeKontrak extends Component {
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
-                        <><CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
-                        <CustomizedButtons variant="contained" size="small" color="#FD693E"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
+                        <><CustomizedButtons variant="contained" size="small" color="primary" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
+                        <CustomizedButtons variant="contained" size="small" color="secondary"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
                         : ordersVerified.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
-                        <><CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
-                        <CustomizedButtons variant="contained" size="small" color="#FD693E"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
+                        <><CustomizedButtons variant="contained" size="small" color="primary" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
+                        <CustomizedButtons variant="contained" size="small" color="secondary"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
  
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
         if(orderTarget !== null){
-            // if(orderTarget.idOrderMs.listService !== null){
                 tableServiceRows = isAdded ? listService : orderTarget.idOrderMs.listService.map((service, index) =>
-                                    [isExtend? <Form.Control type="text" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
+                                    [isExtend? <Form.Control type="text" size="sm" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
                                     service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
                                     : service.name, (isReport || isEdit) ? this.getPICService(service) :
-                                    <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
+                                    <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
                                     value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
                                     onChange={this.handleChangeField}>
                                     {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                 </Form.Control>]);
-            // }else{
-            //     tableServiceRows = isAdded ? listService : listServiceBeforeLoad.map((service, index) =>
-            //                         [isExtend? <Form.Control type="text" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
-            //                         service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
-            //                         : service.name, (isReport || isEdit) ? this.getPICService(service) :
-            //                         <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
-            //                         value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
-            //                         onChange={this.handleChangeField}>
-            //                         {users.map(user =><option value={user.id}>{user.fullname}</option>)}
-            //                     </Form.Control>]);
-            // }
-            // console.log(tableServiceRows);
         }
 
         const titleExtend = isReportExtend? "Perpanjangan Periode Kontrak" : "Form Perpanjangan Periode Kontrak";
@@ -439,86 +419,100 @@ class PeriodeKontrak extends Component {
             <div style={{justifyContent: "space-around"}}>
                 <div>
                     <div><h1>Daftar Order</h1></div>
-                    <div><Form.Control type="text" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div>
+                    <div><div style={{width: 200}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div></div>
                 </div>
-                <div style={{width: 1300}}><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
-                {/* <Modal show={isNotif} style={{modal : {zIndex: 900}}}>
-                    {notification}
-                    <a href="#" class="close" onClick={()=>this.handleCloseNotif}>x</a>
-                    {console.log(isEdit, isReport, isNotif)}
-                </Modal> */}
-                <Modal show={isEdit || isReport || isExtend || isReportExtend} style={{modal : {zIndex: 200}}}>
-                    <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div>
-                    <h3 id='titleform' >{isEdit? title : titleExtend}</h3>
-                    {orderTarget !== null ?
-                        <Form>
-                            <table>
-                                <tr>
-                                    <td>Id Order</td>
-                                    <td>: {orderTarget.idOrder}</td>
-                                </tr>
-                                <tr>
-                                    <td>Nomor PO</td>
-                                    <td>: {orderTarget.noPO === null ? "-" : orderTarget.noPO}</td>
-                                </tr>
-                                <tr>
-                                    <td>Nama Order</td>
-                                    <td>: {orderTarget.orderName}</td>
-                                </tr>
-                                <tr>
-                                    <td>Perusahaan</td>
-                                    <td>: {orderTarget.clientOrg}</td>
-                                </tr>
-                                <tr>
-                                    <td style={{fontWeight: 'bold'}}>Managed Service</td>
-                                    {isExtend ? <td><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAddServices(tableServiceRows)}>
-                                        + Tambah Services
-                                        </CustomizedButtons></td>
-                                        : <></>}
-                                </tr>
-                                <tr>
-                                    <td>Services</td>
-                                    <td>
-                                        <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>PIC Engineer</td>
-                                    {isExtend ?
-                                    <td><Form.Control as="select" size="lg" name="picEngineerMs" value={picEngineerMs === null ? users[0].id : picEngineerMs} onChange={this.handleChangeField}>
-                                            {users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                                        </Form.Control></td>
-                                    : <td>: {this.getPICMS(orderTarget.idOrder)}</td>}
-                                </tr>
-                                <tr>
-                                    { isExtend ? <>
-                                    <td>Nomor PO Baru</td>
-                                    <Form.Control type="text" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></> : <></> } 
-                                </tr>
-                                <tr>
-                                    <td>Periode Mulai</td>
-                                    {isReport ? 
-                                    <td>: {actualStart}</td> :
-                                    <td><Form.Control type="date" name="actualStart" value={actualStart} onChange={this.handleChangeField}/></td> }
-                                </tr>
-                                <tr>
-                                    <td>Periode Berakhir</td>
-                                    {isReport ? 
-                                    <td>: {actualEnd}</td> :
-                                    <td><Form.Control type="text" type="date" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
-                                </tr>
-                                <tr>
-                                    <td>Waktu Tersisa</td> 
-                                    <td>: {timeRemaining}</td> 
-                                </tr>
-                            </table>
-                            {isReport || isReportExtend ? <></> :
-                            <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
-                                simpan
-                            </CustomizedButtons></div> }
-                        </Form>
-                    : <></> }
+                <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
+                <Modal
+                    show={isEdit || isReport || isExtend || isReportExtend}
+                    onHide={isHide}
+                    dialogClassName="modal-90w"
+                    aria-labelledby="contained-modal-title-vcenter"
+                >
+                    <Modal.Header closeButton onClick={this.handleCancel}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            {isEdit? title : titleExtend}
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                            <p>
+                                { orderTarget !== null ?
+                                <Form>
+                                    <table>
+                                        <tr>
+                                            <td>Id Order</td>
+                                            <td>: {orderTarget.idOrder}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nomor PO</td>
+                                            <td>: {orderTarget.noPO === null ? "-" : orderTarget.noPO}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Nama Order</td>
+                                            <td>: {orderTarget.orderName}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Perusahaan</td>
+                                            <td>: {orderTarget.clientOrg}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{fontWeight: 'bold'}}>Managed Service</td>
+                                            {isExtend ? <td><CustomizedButtons variant="contained" size="small" color="secondary" onClick={() => this.handleAddServices(tableServiceRows)}>
+                                                + Tambah Services
+                                                </CustomizedButtons></td>
+                                                : <></>}
+                                        </tr>
+                                        <tr>
+                                            <td>Services</td>
+                                            <td>
+                                                <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>PIC Engineer</td>
+                                            {isExtend ?
+                                            <td><Form.Control as="select" size="sm" name="picEngineerMs" value={picEngineerMs === null ? users[0].id : picEngineerMs} onChange={this.handleChangeField}>
+                                                    {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                                                </Form.Control></td>
+                                            : <td>: {this.getPICMS(orderTarget.idOrder)}</td>}
+                                        </tr>
+                                        <tr>
+                                            { isExtend ? <>
+                                            <td>Nomor PO Baru</td>
+                                            <Form.Control type="text" size="sm" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></> : <></> } 
+                                        </tr>
+                                        <tr>
+                                            <td>Periode Mulai</td>
+                                            {isReport ? 
+                                            <td>: {actualStart}</td> :
+                                            <td><Form.Control type="date" size="sm" name="actualStart" value={actualStart} onChange={this.handleChangeField}/></td> }
+                                        </tr>
+                                        <tr>
+                                            <td>Periode Berakhir</td>
+                                            {isReport ? 
+                                            <td>: {actualEnd}</td> :
+                                            <td><Form.Control type="text" type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
+                                        </tr>
+                                        <tr>
+                                            <td>Waktu Tersisa</td> 
+                                            <td>: {timeRemaining}</td> 
+                                        </tr>
+                                    </table>
+                                    {isReport || isReportExtend ? <></> :
+                                    <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
+                                        simpan
+                                    </CustomizedButtons></div> }
+                                </Form> : <></>}
+                            </p>
+                    </Modal.Body>
                 </Modal>
+                {/* <CustomizedModal show={isEdit || isReport || isExtend || isReportExtend} title={isEdit? title : titleExtend}
+                children={
+                    orderTarget !== null ?
+                        
+                }
+                /> */}
+                {/* <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div> */}
+                    {/* <h3 id='titleform' >{isEdit? title : titleExtend}</h3> */}
         </div>
         );
     }
