@@ -8,7 +8,7 @@ import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.repository.OrderDb;
 
 import javax.transaction.Transactional;
-import java.util.List
+import java.util.List;
 
 @Service
 @Transactional

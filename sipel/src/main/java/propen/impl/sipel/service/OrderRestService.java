@@ -9,6 +9,8 @@ public interface OrderRestService {
     //Method untuk mencari list order
     List<OrderModel> getOrderList();
 
+    List<OrderModel> retrieveListOrderVerified();
+
     //method untuk mencari order berdasarkan id
     OrderModel getOrderByIdOrder(Long idOrder);
 

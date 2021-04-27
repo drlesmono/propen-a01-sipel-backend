@@ -29,15 +29,18 @@ public class ProjectInstallationModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderPi;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private UserModel idUserEng;
 
     @NotNull
     @Column(name="percentage", nullable = false)
     private Float percentage;
+
+    @NotNull
+    @Column(name="status", nullable = false)
+    private String status;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -158,5 +161,13 @@ public class ProjectInstallationModel implements Serializable{
 
     public void setDateClosedPI(Date dateClosedPI) {
         this.dateClosedPI = dateClosedPI;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

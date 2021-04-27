@@ -4,3 +4,7 @@ h3#titleModal{
    text-align: center;
    justify-content: center;
 }
+
+div#head{
+   display: flex;
+}

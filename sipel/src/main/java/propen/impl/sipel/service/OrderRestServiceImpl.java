@@ -9,7 +9,9 @@ import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.repository.OrderDb;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,6 +25,19 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Override
     public List<OrderModel> getOrderList(){
         return orderDb.findAll(Sort.by("idOrder").descending());
+    }
+
+    @Override
+    public List<OrderModel> retrieveListOrderVerified() {
+        List<OrderModel> listOrderVerified = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAll()){
+            if (order.getVerified() == true) {
+                listOrderVerified.add(order);
+            }
+        }
+
+        return listOrderVerified;
     }
 
     @Override

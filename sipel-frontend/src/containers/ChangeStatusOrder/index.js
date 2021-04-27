@@ -17,7 +17,9 @@ class ChangeStatusOrder extends Component {
             listService: [],
 
         };
-
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleChangeField = this.handleChangeField.bind(this);
     }
 
     componentDidMount() {
@@ -49,6 +51,15 @@ class ChangeStatusOrder extends Component {
         }
     }
 
+    checkStatus(order){
+        if (order.projectInstallation === true){
+            return order.idOrderPi.status;
+        }
+        else if (order.managedService === true){
+            return order.idOrderMs.status;
+        }
+    }
+
     handleEdit(order, listService) {
         this.setState({isEdit: true, orderTarget: order, listService: listService});
     }
@@ -56,6 +67,12 @@ class ChangeStatusOrder extends Component {
     handleCancel(event) {
         event.preventDefault();
         this.setState({isEdit: false});
+    }
+
+    handleChangeField(event) {
+        const { name, value } = event.target;
+        console.log(name, value);
+        this.setState({ [name]: value});
     }
 
     render() {
@@ -67,7 +84,7 @@ class ChangeStatusOrder extends Component {
             order.noPO,
             order.clientName,
             this.checkTypeOrder(order.projectInstallation, order.managedService),
-            /*this.checkStatus,*/order.idOrderMs.isActive,
+            this.checkStatus(order),
             <CustomizedButtons
                 variant="contained"
                 size="small"
@@ -86,6 +103,15 @@ class ChangeStatusOrder extends Component {
                 const ordersMs = ordersVerified.filter(order => order.idOrderMs !== null && order.idOrderMs === orderTarget.idOrderMs);
                 tableServiceRows = ordersMs[0].idOrderMs.listService.map((service, index) => [
                     service.name,
+                    <Form.Control
+                        as="select"
+                        size="lg"
+                        name="statusPi"
+                        value={ this.checkStatus(orderTarget) }
+                        onChange={this.handleChangeField}>
+                            <option value="Not Maintained">Not Maintained</option>
+                            <option value="Maintained">Maintained</option>
+                    </Form.Control>
                 ]);
                 listService = ordersMs[0].idOrderMs.listService.map((service) => service.idService);
             }
@@ -118,7 +144,17 @@ class ChangeStatusOrder extends Component {
                                     </tr>
                                         <tr>
                                             <td>Status</td>
-                                            <td></td>
+                                            <td><Form.Control
+                                                as="select"
+                                                size="lg"
+                                                name="statusPi"
+                                                value={ this.checkStatus(orderTarget) }
+                                                onChange={this.handleChangeField}>
+                                                    <option value="Inactive">Inactive</option>
+                                                    <option value="In Progress">In Progress</option>
+                                                    <option value="On Hold">On Hold</option>
+                                                    <option value="Closed">Closed</option>
+                                            </Form.Control></td>
                                         </tr></>
                                     : <></>}
                                 { orderTarget.managedService ?
@@ -136,12 +172,21 @@ class ChangeStatusOrder extends Component {
                                         </tr>
                                         <tr>
                                             <td>Status</td>
-                                            <td></td>
+                                            <td><Form.Control
+                                                as="select"
+                                                size="lg"
+                                                name="statusPi"
+                                                value={ this.checkStatus(orderTarget) }
+                                                onChange={this.handleChangeField}>
+                                                <option value="Inactive">Inactive</option>
+                                                <option value="Active">Active</option>
+                                                <option value="Closed">Closed</option>
+                                            </Form.Control></td>
                                         </tr></>
                                     : <></>}
                             </table>
                             <div style={{alignItems:'right'}}>
-                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancel()}>
+                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancel}>
                                     Simpan
                                 </CustomizedButtons>
                             </div>
@@ -151,8 +196,6 @@ class ChangeStatusOrder extends Component {
             </div>
         )
     }
-
-
 
 
 }
