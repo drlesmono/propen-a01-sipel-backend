@@ -45,6 +45,12 @@ public class OrderRestServiceImpl implements OrderRestService{
         return listOrderVerified;
     }
 
+
+    @Override
+    public OrderModel findOrderById(Long idOrder) {
+        return orderDb.findById(idOrder).get();
+    }
+
     @Override
     public List<OrderModel> retrieveListOrderMs() {
         List<OrderModel> listOrderVerified = new ArrayList<>();
@@ -63,18 +69,26 @@ public class OrderRestServiceImpl implements OrderRestService{
         OrderModel order = orderDb.findById(idOrder).get();
         OrderModel newOrder = new OrderModel();
         String orderName = order.getOrderName();
-        List<String> orderNameSplit = new ArrayList<>();
+        List<String> orderNameSplit;
 
-        if(orderName.contains(" ver.")) {
-            List<OrderModel> listOrderSameOrg = orderDb.findAllByClientOrg(order.getClientOrg());
-            int i = 1;
+        if(orderName.contains("ver.")) {
             String orderNameTarget = order.getOrderName();
-            Boolean condition = listOrderSameOrg.get(i).getOrderName().contains(orderNameTarget);
-            while(condition){
-                orderNameSplit = Arrays.asList(orderNameTarget.split(" ver."));
-                orderNameTarget = orderNameSplit.get(0) + " ver." + (Long.parseLong(orderNameSplit.get(1)) + 1);
-                i++;
+            List<OrderModel> listOrderSameOrg = orderDb.findAllByClientOrg(order.getClientOrg());
+            List<String> listOrderSameName = new ArrayList<>();
+            orderNameSplit = Arrays.asList(orderNameTarget.split(" ver."));
+            for(OrderModel orderOrg : listOrderSameOrg){
+                if(orderOrg.getOrderName().contains(orderNameSplit.get(0))){
+                    listOrderSameName.add(orderOrg.getOrderName());
+                }
             }
+
+            int i = 3;
+            orderNameTarget = orderNameSplit.get(0) + " ver." + i;
+            while(listOrderSameName.contains(orderNameTarget)){
+                i++;
+                orderNameTarget = orderNameSplit.get(0) + " ver." + i;
+            }
+
             newOrder.setOrderName(orderNameTarget);
         }else{
             newOrder.setOrderName(orderName + " ver.2");

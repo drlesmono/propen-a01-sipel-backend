@@ -9,8 +9,7 @@ class PeriodeKontrak extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ordersVerified: [ 
-            ],
+            ordersVerified: [],
             isLoading: false,
             isEdit: false,
             isExtend: false,
@@ -24,7 +23,6 @@ class PeriodeKontrak extends Component {
             orderFiltered: [],
             isFiltered: false,
             currentDateTime: new Date(),
-            button: "1",
             actualStart: null,
             actualEnd: null,
             totalServices: 0,
@@ -32,7 +30,6 @@ class PeriodeKontrak extends Component {
             isAdded: false,
             newNoPO: null,
             timeRemaining: null,
-            formValid: false
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -88,13 +85,13 @@ class PeriodeKontrak extends Component {
                         idOrderPi: pi,
                         idOrderMs: ms
                     }
-                    console.log(dataOrder);
+                    // console.log(dataOrder);
                     response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
                     newOrder = response.data.result;
-                    console.log(newOrder);
+                    // console.log(newOrder);
                 }
-                const ms = this.state.extend ? newOrder.idOrderMs : this.state.orderTarget.idOrderMs;
-                console.log(ms);
+                const ms = this.state.isExtend ? newOrder.idOrderMs : this.state.orderTarget.idOrderMs;
+                // console.log(ms);
                 const dataMs = {
                     idOrderMs: ms.idOrderMs,
                     idUserPic: this.state.picEngineerMs,
@@ -103,23 +100,29 @@ class PeriodeKontrak extends Component {
                     activated: ms.activated,
                     dateClosedMS: ms.dateClosedMS
                 }
-                console.log(dataMs);
-                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
+                const newMs = await APIConfig.put(`/order/${this.state.isExtend? newOrder.idOrder : this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
+                // console.log(newMs);
                 if(this.state.isExtend){
                     let listServiceName = this.state.servicesEngineerName;
                     let listService = this.state.servicesEngineer;
-                    console.log(listServiceName);
-                    console.log(listService);
+                    // console.log(listServiceName);
+                    // console.log(listService);
+                    // let service;
+                    // let listServiceNew = new Array(listService.length);
                     for(let i=0; i<listService.length; i++){
                         const dataService = {
                             name: listServiceName[i],
                             idUser: listService[i]
                         }
                         console.log(dataService);
-                        await APIConfig.post(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
+                        await APIConfig.post(`/order/${newOrder.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
+                        this.loadData();
+                        // listServiceNew[i] = service.data.result;
                     }
+                    // this.setState({ listServiceBeforeLoad : listServiceNew });
                 }
-                this.loadData();   
+                this.loadData();
+                this.setState({ orderTarget: newOrder });   
             } catch (error) {
                 if(this.state.isExtend){
                     alert("Perpanjangan Periode Kontrak gagal disimpan");
@@ -128,31 +131,23 @@ class PeriodeKontrak extends Component {
                 }
                 console.log(error);
             }
-            if(this.state.isExtend){
-                this.setState({ orderTarget: newOrder});
-                this.handleReportExtend(event);
-            }else{
-                this.handleReport(event);
-            }
+            this.handleReport();
         }else{
             this.handleValidation(event);
         } 
     }
 
-    handleReport(event){
-        event.preventDefault();
-        this.setState({isEdit: false, isReport: true});
-        alert("Periode kontrak berhasil disimpan");
-    }
-
-    handleReportExtend(event){
-        event.preventDefault();
-        this.setState({isExtend: false, isReportExtend: true});
-        alert("Perpanjangan periode kontrak berhasil disimpan");
+    handleReport(){
+        if(this.state.isExtend){
+            this.setState({isExtend: false, isReportExtend: true});
+            alert("Perpanjangan periode kontrak berhasil disimpan");
+        }else{
+            this.setState({isEdit: false, isReport: true});
+            alert("Periode kontrak berhasil disimpan");
+        }
     }
 
     getDate(value){
-        // console.log(typeof(value));
         let date;
         if(value.includes("T")){
             const valueSplit = value.split("T");
@@ -169,9 +164,6 @@ class PeriodeKontrak extends Component {
         const startDate = new Date(actualStart);
         const endDate = new Date(actualEnd);
         let currentDate = this.state.currentDateTime;
-
-        // console.log(currentDate);
-        // console.log(startDate);
 
         if ( startDate > currentDate) {
             console.log(startDate > currentDate);
@@ -195,16 +187,12 @@ class PeriodeKontrak extends Component {
         let daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
         let startDateNotPassedInEndYear = ((endMonth < startMonth) || (endMonth === startMonth )) && (endDay < startDay);
-        // console.log(startDateNotPassedInEndYear);
         let years = endYear - startYear - (startDateNotPassedInEndYear ? 1 : 0);
-        // console.log(years);
         
         let months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
-        // console.log(months);
         
         // (12 + ...) % 12 makes sure index is always between 0 and 11
         let days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
-        // console.log(years);
 
         let timeRemaining = "";
         if(years === 0){
@@ -230,13 +218,11 @@ class PeriodeKontrak extends Component {
             }
         }
 
-        // console.log(timeRemaining);
         return timeRemaining;
     }
 
     handleChangeField(event) {
         const { name, value } = event.target;
-        // console.log(name, value);
         const servicesEngineerNew = this.state.servicesEngineer;
         const servicesEngineerNameNew = this.state.servicesEngineerName;
 
@@ -264,7 +250,7 @@ class PeriodeKontrak extends Component {
         }
     }
 
-    handleValidation(event){
+    handleValidation(){
         this.setState({ formValid: false });
         alert("Nomor PO baru harus diisi");
     }
@@ -342,41 +328,9 @@ class PeriodeKontrak extends Component {
         return date+"T17:00:00.000+00:00";
     }
 
-    sortByTimeRemaining(listOrder){
-        console.log(listOrder);
-        let listOrderSorted = listOrder.map(order => order);
-        for(let i=0; i<listOrder.length; i++){
-            if(i+1 === listOrder.length){
-                return listOrderSorted;
-            }
-            let a = listOrder[i][5];
-            let b = listOrder[i+1][5];
-            if( (a !== "Habis") && (b === "Habis") ){
-                listOrderSorted[i] = listOrder[i+1];
-                listOrderSorted[i+1] = listOrder[i];
-            }else if( (a === "Belum mulai") && ((b !== "Habis") || (b !== "Belum mulai")) ){
-                listOrderSorted[i] = listOrder[i+1];
-                listOrderSorted[i+1] = listOrder[i];
-            }else if( ((a !== "Habis") || (a !== "Belum mulai")) && ((b !== "Habis") || (b !== "Belum mulai")) ){
-                let calculateA = this.getDaysMonthsYears(a);
-                let calculateB = this.getDaysMonthsYears(b);
-                if(calculateA[0] === calculateB[0]){
-                    if(calculateA[1] === calculateB[1]){
-                        if(calculateA[2] > calculateB[2]){
-                            listOrderSorted[i] = listOrder[i+1];
-                            listOrderSorted[i+1] = listOrder[i];
-                        }
-                    }else if(calculateA[1] > calculateB[1]){
-                        listOrderSorted[i] = listOrder[i+1];
-                        listOrderSorted[i+1] = listOrder[i];
-                    }
-                }else if(calculateA[0] > calculateB[0]){
-                    listOrderSorted[i] = listOrder[i+1];
-                    listOrderSorted[i+1] = listOrder[i];
-                }
-            }
-        }
-        return listOrderSorted
+    changeDateFormat(date){
+        let dateSplit = date.split("/");
+        return dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
     }
 
     getDaysMonthsYears(date){
@@ -431,10 +385,11 @@ class PeriodeKontrak extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining,
+        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, listServiceBeforeLoad,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService } = this.state;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         console.log(ordersVerified);
+        console.log(orderTarget);
   
         const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
@@ -448,22 +403,33 @@ class PeriodeKontrak extends Component {
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
                         <><CustomizedButtons variant="contained" size="small" color="#FD693E" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
                         <CustomizedButtons variant="contained" size="small" color="#FD693E"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
-        const orderSorted = this.sortByTimeRemaining(tableRows);
  
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
         if(orderTarget !== null){
-            tableServiceRows = isAdded ? listService : orderTarget.idOrderMs.listService.map((service, index) =>
-                                [isExtend? <Form.Control type="text" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
-                                service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
-                                : service.name, (isReport || isEdit) ? this.getPICService(service) :
-                                <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
-                                value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
-                                onChange={this.handleChangeField}>
-                                {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+            // if(orderTarget.idOrderMs.listService !== null){
+                tableServiceRows = isAdded ? listService : orderTarget.idOrderMs.listService.map((service, index) =>
+                                    [isExtend? <Form.Control type="text" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
+                                    service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
+                                    : service.name, (isReport || isEdit) ? this.getPICService(service) :
+                                    <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
+                                    value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
+                                    onChange={this.handleChangeField}>
+                                    {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                 </Form.Control>]);
-            console.log(tableServiceRows);
+            // }else{
+            //     tableServiceRows = isAdded ? listService : listServiceBeforeLoad.map((service, index) =>
+            //                         [isExtend? <Form.Control type="text" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
+            //                         service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
+            //                         : service.name, (isReport || isEdit) ? this.getPICService(service) :
+            //                         <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
+            //                         value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
+            //                         onChange={this.handleChangeField}>
+            //                         {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+            //                     </Form.Control>]);
+            // }
+            // console.log(tableServiceRows);
         }
 
         const titleExtend = isReportExtend? "Perpanjangan Periode Kontrak" : "Form Perpanjangan Periode Kontrak";
@@ -475,7 +441,7 @@ class PeriodeKontrak extends Component {
                     <div><h1>Daftar Order</h1></div>
                     <div><Form.Control type="text" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div>
                 </div>
-                <div style={{width: 1300}}><CustomizedTables headers={tableHeaders} rows={orderSorted}/></div>
+                <div style={{width: 1300}}><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
                 {/* <Modal show={isNotif} style={{modal : {zIndex: 900}}}>
                     {notification}
                     <a href="#" class="close" onClick={()=>this.handleCloseNotif}>x</a>
@@ -520,7 +486,6 @@ class PeriodeKontrak extends Component {
                                     <td>PIC Engineer</td>
                                     {isExtend ?
                                     <td><Form.Control as="select" size="lg" name="picEngineerMs" value={picEngineerMs === null ? users[0].id : picEngineerMs} onChange={this.handleChangeField}>
-                                            {/* {listServiceEngineerNew.map(user =><option value={user[1]}>{user[2]}</option>)} */}
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control></td>
                                     : <td>: {this.getPICMS(orderTarget.idOrder)}</td>}

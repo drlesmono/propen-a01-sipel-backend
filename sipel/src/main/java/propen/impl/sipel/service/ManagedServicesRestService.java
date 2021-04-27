@@ -9,7 +9,7 @@ public interface ManagedServicesRestService{
 
     ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic);
 
-//    List<ManagedServicesModel> msOrderByTimeRemaining();
+    List<ManagedServicesModel> msOrderByActualEnd();
 
     ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd);
 }

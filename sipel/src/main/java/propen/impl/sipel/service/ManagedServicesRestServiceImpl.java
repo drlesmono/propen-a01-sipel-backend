@@ -28,10 +28,10 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         return managedServicesDb.save(msTarget);
     }
 
-//    @Override
-//    public List<ManagedServicesModel> msOrderByTimeRemaining() {
-//        return managedServicesDb.findByOrderByTimeRemaining();
-//    }
+    @Override
+    public List<ManagedServicesModel> msOrderByActualEnd() {
+        return managedServicesDb.findByOrderByActualEnd();
+    }
 
     @Override
     public ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd) {
