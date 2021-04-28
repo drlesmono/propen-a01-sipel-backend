@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import InstallationProjectService from "../../services/InstallationProjectService";
+//import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class CreateTaskComponent extends Component {
     constructor(props) {
@@ -59,7 +60,6 @@ class CreateTaskComponent extends Component {
                                         <input placeholder="Deskripsi Task" name="description" className="form-control" 
                                             value={this.state.description} onChange={this.changeDescriptionHandler}/>
                                     </div>
-
                                     <button className="btn btn-success" onClick={this.saveTask}>Simpan</button>
                                     <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{marginLeft: "10px"}}>Batal</button>
 
