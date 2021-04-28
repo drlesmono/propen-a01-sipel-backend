@@ -71,7 +71,7 @@ class ListTaskComponent extends Component {
                                         <td>{task.percentage}</td>
                                         <td>
                                             <button onClick = { () => this.editTask(this.state.id, task.idTask)} className="btn btn-info">Ubah Task</button>
-                                            <button onClick = { () => this.editProgres(this.state.id, task.idTask)} className="btn btn-secondary">Ubah Progres</button>
+                                            <button onClick = { () => this.editProgres(this.state.id, task.idTask)} className="btn btn-secondary" style={{marginLeft: "10px"}}>Ubah Progres</button>
                                         </td>
 
                                     </tr>
