@@ -20,4 +20,11 @@ public class OrderRestController {
         return orderRestService.retrieveListOrderVerified();
     }
 
+    @GetMapping(value="/order-verification")
+    private List<OrderModel> getAllNotVerifiedOrders(){
+        //List<OrderModel> listNotVerifiedOrder = 
+
+        return orderRestService.retrieveListNotVerifiedOrder();
+    }
+
 }

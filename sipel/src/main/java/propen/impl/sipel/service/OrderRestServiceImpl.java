@@ -29,4 +29,17 @@ public class OrderRestServiceImpl implements OrderRestService{
 
         return listOrderVerified;
     }
+
+    @Override
+    public List<OrderModel> retrieveListNotVerifiedOrder(){
+        List<OrderModel> listNotVerifiedOrer = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAll()){
+            if (order.getVerified() == false) {
+                listNotVerifiedOrer.add(order);
+            }
+        }
+
+        return listNotVerifiedOrer;
+    }
 }

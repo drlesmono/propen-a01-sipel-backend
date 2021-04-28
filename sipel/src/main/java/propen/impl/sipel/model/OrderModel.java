@@ -81,7 +81,6 @@ public class OrderModel implements Serializable{
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)

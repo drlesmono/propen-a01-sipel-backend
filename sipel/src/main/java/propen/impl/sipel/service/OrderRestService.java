@@ -7,5 +7,6 @@ import java.util.List;
 public interface OrderRestService {
 
     List<OrderModel> retrieveListOrderVerified();
+    List<OrderModel> retrieveListNotVerifiedOrder();
 
 }
