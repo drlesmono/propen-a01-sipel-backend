@@ -14,12 +14,16 @@ class ChangeStatusOrder extends Component {
             isEdit: false,
             orderTarget: null,
             users: [],
-            listService: [],
+            //listMaintenance: [],
+            statusMaintenances: [],
+            statusMs: "",
+            statusPi: ""
 
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleChangeField = this.handleChangeField.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -41,6 +45,67 @@ class ChangeStatusOrder extends Component {
         }
     }
 
+    async handleSubmit(event) {
+        event.preventDefault();
+        console.log(this.state.orderTarget);
+        try {
+            if(this.state.orderTarget.projectInstallation === true){
+                // console.log(this.state.orderTarget.idOrderPi);
+                const pi = this.state.orderTarget.idOrderPi;
+                const dataPi = {
+                    idOrderPi: pi.idOrderPi,
+                    idUserEng: pi.picEngineerPi,
+                    percentage: pi.percentage,
+                    startPI: pi.startPI,
+                    deadline: pi.deadline,
+                    dateClosedPI: pi.dateClosedPI,
+                    status: this.state.statusPi
+                }
+                console.log(dataPi);
+                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updateStatus`, dataPi);
+                // const dataResponsePi = await responsePi.json();
+            }
+            if(this.state.orderTarget.managedService === true){
+                const ms = this.state.orderTarget.idOrderMs;
+                const dataMs = {
+                    idOrderMs: ms.idOrderMs,
+                    idUserPic: ms.picEngineerMs,
+                    actualStart: ms.actualStart,
+                    actualEnd: ms.actualEnd,
+                    activated: ms.activated,
+                    timeRemaining: ms.timeRemaining,
+                    dateClosedMS: ms.dateClosedMS,
+                    status: this.state.statusMs
+                }
+                // console.log(dataMs);
+                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/updateStatus`, dataMs);
+                let listMaintenance = this.state.orderTarget.idOrderMs.listMaintenance;
+                for(let i=0; i<listMaintenance.length; i++){
+                    console.log(i);
+                    let maintenance = listMaintenance[i];
+                    let booleanStatus = false;
+                    if (this.state.statusMaintenances[i] === "Maintained"){
+                        booleanStatus = true;
+                    }
+                    const dataMaintenance = {
+                        idMaintenance: maintenance.idMaintenance,
+                        dateMn: maintenance.dateMn,
+                        maintained: booleanStatus
+                    }
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/maintenance/${maintenance.idMaintenance}/updateStatus`, dataMaintenance);
+
+                }
+            }
+            await this.loadData()
+            this.setState({isEdit: false});
+        } catch (error) {
+            alert("Perubahan status order gagal disimpan");
+            // this.setState({ isError: true });
+            console.log(error);
+        }
+
+    }
+
     checkTypeOrder(pi, ms){
         if(pi === true && ms === true){
             return "Project Installation, Managed Service";
@@ -60,8 +125,29 @@ class ChangeStatusOrder extends Component {
         }
     }
 
-    handleEdit(order, listService) {
-        this.setState({isEdit: true, orderTarget: order, listService: listService});
+    handleEdit(order, listMaintenance) {
+        this.setState({isEdit: true, orderTarget: order, listMaintenance: listMaintenance});
+        const statusMaintenancesUpdated = this.state.statusMaintenances;
+        if (order.projectInstallation === true){
+            this.setState({statusPi: order.idOrderPi.status});
+        }
+        else if (order.managedService === true){
+            this.setState({statusMs: order.idOrderMs.status});
+            listMaintenance = order.idOrderMs.listMaintenance;
+            for(let i=0; i<listMaintenance.length; i++){
+                console.log(i);
+                let maintenance = listMaintenance[i];
+                if (maintenance.Maintained === true){
+                    statusMaintenancesUpdated[i] = "Maintained";
+                    this.setState({statusMaintenances: statusMaintenancesUpdated})
+                } else {
+                    statusMaintenancesUpdated[i] = "Not Maintained";
+                    this.setState({statusMaintenances: statusMaintenancesUpdated})
+                }
+
+
+            }
+        }
     }
 
     handleCancel(event) {
@@ -72,12 +158,19 @@ class ChangeStatusOrder extends Component {
     handleChangeField(event) {
         const { name, value } = event.target;
         console.log(name, value);
-        this.setState({ [name]: value});
+        const statusMaintenancesUpdated = this.state.statusMaintenances;
+        if( name.substring(0,17) === "statusMaintenance"){
+            let index = Number(name.substring(17));
+            statusMaintenancesUpdated[index] = value;
+            this.setState({ statusMaintenances: statusMaintenancesUpdated});
+        }else{
+            this.setState({ [name]: value});
+        }
     }
 
     render() {
-        const { ordersVerified, isEdit, orderTarget, users} = this.state;
-        let listService;
+        const { ordersVerified, isEdit, orderTarget, statusMaintenances, statusMs, statusPi} = this.state;
+        let listMaintenance;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Perusahaan', 'Tipe', 'Status','Aksi'];
         const tableRows = ordersVerified.map((order) => [
             order.idOrder,
@@ -89,31 +182,33 @@ class ChangeStatusOrder extends Component {
                 variant="contained"
                 size="small"
                 color="#FD693E"
-                onClick={() => this.handleEdit(order, listService)}>
+                onClick={() => this.handleEdit(order, listMaintenance)}>
                     Ubah
             </CustomizedButtons>
         ]);
-        const tableServiceHeaders = ['No.', 'Nama Service', 'Status'];
-        let tableServiceRows;
+        const tableMaintenanceHeaders = ['No.', 'Tanggal Maintenance', 'Status'];
+        let tableMaintenanceRows;
+
 
         if(orderTarget !== null){
             if(orderTarget.idOrderPi !== null){
             }
             if(orderTarget.idOrderMs !== null){
-                const ordersMs = ordersVerified.filter(order => order.idOrderMs !== null && order.idOrderMs === orderTarget.idOrderMs);
-                tableServiceRows = ordersMs[0].idOrderMs.listService.map((service, index) => [
-                    service.name,
+                console.log(orderTarget.idOrderMs);
+                tableMaintenanceRows = orderTarget.idOrderMs.listMaintenance.map((maintenance, index) => [
+                    maintenance.dateMn,
                     <Form.Control
                         as="select"
                         size="lg"
-                        name="statusPi"
-                        value={ this.checkStatus(orderTarget) }
+                        key={index}
+                        name={"statusMaintenance" + index}
+                        value={ statusMaintenances[index] }
                         onChange={this.handleChangeField}>
                             <option value="Not Maintained">Not Maintained</option>
                             <option value="Maintained">Maintained</option>
                     </Form.Control>
                 ]);
-                listService = ordersMs[0].idOrderMs.listService.map((service) => service.idService);
+                listMaintenance = orderTarget.idOrderMs.listMaintenance.map((maintenance) => maintenance.idMaintenance);
             }
         }
 
@@ -122,7 +217,7 @@ class ChangeStatusOrder extends Component {
                 <h1>Daftar Order</h1>
                 <CustomizedTables headers={tableHeaders} rows={tableRows}/>
                 <Modal show={isEdit} handleCloseModal={this.handleCancel}>
-                    <div><h3 id='titleform' >Form Penugasan Engineer</h3></div>
+                    <div><h3 id='titleform' >Form Ubah Status Order</h3></div>
                     {orderTarget !== null ?
                         <><Form>
                             <table>
@@ -148,7 +243,7 @@ class ChangeStatusOrder extends Component {
                                                 as="select"
                                                 size="lg"
                                                 name="statusPi"
-                                                value={ this.checkStatus(orderTarget) }
+                                                value={ this.state.statusPi }
                                                 onChange={this.handleChangeField}>
                                                     <option value="Inactive">Inactive</option>
                                                     <option value="In Progress">In Progress</option>
@@ -162,11 +257,11 @@ class ChangeStatusOrder extends Component {
                                         <td style={{fontWeight: 'bold'}}>Managed Service</td>
                                     </tr>
                                         <tr>
-                                            <td>Services</td>
+                                            <td>Maintenances</td>
                                             <td>
                                                 <><CustomizedTables
-                                                    headers={tableServiceHeaders}
-                                                    rows={tableServiceRows}>
+                                                    headers={tableMaintenanceHeaders}
+                                                    rows={tableMaintenanceRows}>
                                                 </CustomizedTables></>
                                             </td>
                                         </tr>
@@ -175,8 +270,8 @@ class ChangeStatusOrder extends Component {
                                             <td><Form.Control
                                                 as="select"
                                                 size="lg"
-                                                name="statusPi"
-                                                value={ this.checkStatus(orderTarget) }
+                                                name="statusMs"
+                                                value={ this.state.statusMs }
                                                 onChange={this.handleChangeField}>
                                                 <option value="Inactive">Inactive</option>
                                                 <option value="Active">Active</option>
@@ -186,7 +281,7 @@ class ChangeStatusOrder extends Component {
                                     : <></>}
                             </table>
                             <div style={{alignItems:'right'}}>
-                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancel}>
+                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
                                     Simpan
                                 </CustomizedButtons>
                             </div>

@@ -298,9 +298,13 @@ class PenugasanEngineer extends Component {
             if(orderTarget.idOrderMs !== null){
                 tableServiceRows = orderTarget.idOrderMs.listService.map((service, index) =>
                                         [service.name, isReport ? this.getPICService(service) :
-                                        <Form.Control as="select" size="lg" key={index} name={"servicesEngineer"+index} 
-                                        value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
-                                        onChange={this.handleChangeField}>
+                                        <Form.Control
+                                            as="select"
+                                            size="lg"
+                                            key={index}
+                                            name={"servicesEngineer"+index}
+                                            value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
+                                            onChange={this.handleChangeField}>
                                             {users.map(user =><option value={user.id}>{user.fullname}</option>)}
                                         </Form.Control>]);
             }

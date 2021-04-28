@@ -64,7 +64,7 @@ public class ManagedServicesModel implements Serializable{
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+
     private List<MaintenanceModel> listMaintenance;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
