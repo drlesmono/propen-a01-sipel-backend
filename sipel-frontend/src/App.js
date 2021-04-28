@@ -1,39 +1,36 @@
 // import logo from './logo.svg';
 import './App.css';
-// import { render } from '@testing-library/react';
 import React, { Component } from "react";
-import Layout from "./components/Layout";
-import PenugasanEngineer from "./containers/PenugasanEngineer";
+import ListVerifiedPiOrder from "./components/VerifiedPiOrder/ListVerifiedPiOrder";
+import HeaderComponent from './components/Header/HeaderComponent';
+import FooterComponent from './components/Footer/FooterComponent';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import LandingPage from './components/LandingPage';
+import ListTaskComponent from './components/ListTask/ListTaskComponent';
+import CreateTaskComponent from './components/ListTask/CreateTaskComponent';
+import UpdateTaskComponent from './components/ListTask/UpdateTaskComponent';
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-class App extends Component {
-  render() {
+function App() {
     return (
-      <Layout>
-        <PenugasanEngineer/>
-      </Layout>
+      <Router>
+        <div>
+          <HeaderComponent/>
+                <div className="container">
+                  <Switch>
+                    <Route path = "/" exact component = {LandingPage}></Route>
+                    <Route path = "/delivery-progress" component = {ListVerifiedPiOrder}></Route>
+                    <Route path = "/list-task/:id" component = {ListTaskComponent}></Route>
+                    <Route path = "/add-task/:id" component = {CreateTaskComponent}></Route>
+                    <Route path = "/update-task/:idPi/:idTask" component = {UpdateTaskComponent}></Route>
+                    <ListVerifiedPiOrder/>
+                    <ListTaskComponent/>  
+                    
+                  </Switch>
+                </div>
+          <FooterComponent/>
+        </div>
+      </Router>
     );
-  }
 }
 
 export default App;

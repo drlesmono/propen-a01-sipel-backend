@@ -72,12 +72,6 @@ public class UserModel implements Serializable {
     @JsonIgnore
     private List<ServicesModel> listService;
 
-    @OneToMany(mappedBy = "idUserPic", fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private List<TaskModel> listTask;
-
-
     public void setId(String id){
         this.id = id;
     }
@@ -148,14 +142,6 @@ public class UserModel implements Serializable {
 
     public List<ServicesModel> getListService() {
         return listService;
-    }
-
-    public void setListTask(List<TaskModel> listTask) {
-        this.listTask = listTask;
-    }
-
-    public List<TaskModel> getListTask() {
-        return listTask;
     }
 
 //    public void setListOrder(List<OrderModel> listOrder) {

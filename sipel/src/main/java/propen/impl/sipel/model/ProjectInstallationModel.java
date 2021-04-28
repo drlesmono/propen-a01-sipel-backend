@@ -18,7 +18,7 @@ import java.util.List;
 //@IdClass(OrderModel.class)
 public class ProjectInstallationModel implements Serializable{
 
-//    @Id
+    //    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -36,7 +36,10 @@ public class ProjectInstallationModel implements Serializable{
 
     @NotNull
     @Column(name="percentage", nullable = false)
-    private Float percentage;
+    private Integer percentage;
+
+    @Column(name="orderName", nullable = true)
+    private String orderName;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -58,7 +61,6 @@ public class ProjectInstallationModel implements Serializable{
 
     @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private List<TaskModel> listTask;
 
     @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
@@ -95,11 +97,11 @@ public class ProjectInstallationModel implements Serializable{
         this.idUserEng = idUserEng;
     }
 
-    public Float getPercentage() {
+    public Integer getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Float percentage) {
+    public void setPercentage(Integer percentage) {
         this.percentage = percentage;
     }
 
@@ -157,5 +159,13 @@ public class ProjectInstallationModel implements Serializable{
 
     public void setDateClosedPI(Date dateClosedPI) {
         this.dateClosedPI = dateClosedPI;
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
     }
 }

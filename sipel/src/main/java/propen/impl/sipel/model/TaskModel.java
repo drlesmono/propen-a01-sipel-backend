@@ -1,6 +1,7 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -29,15 +30,19 @@ public class TaskModel implements Serializable{
     @Column(name="taskName", nullable = false)
     private String taskName;
 
-    @NotNull
-    @Column(name="percentage", nullable = false)
-    private Float percentage;
+    @Column(name="percentage", nullable = true)
+    private Integer percentage;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private UserModel idUserPic;
+    @Column(name="description", nullable = true)
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Long getIdTask() {
         return idTask;
@@ -63,19 +68,12 @@ public class TaskModel implements Serializable{
         this.taskName = taskName;
     }
 
-    public Float getPercentage() {
+    public Integer getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Float percentage) {
+    public void setPercentage(Integer percentage) {
         this.percentage = percentage;
     }
 
-    public UserModel getIdUserPic() {
-        return idUserPic;
-    }
-
-    public void setIdUserPic(UserModel idUserPic) {
-        this.idUserPic = idUserPic;
-    }
 }
