@@ -7,6 +7,7 @@ import PenugasanEngineer from "./containers/PenugasanEngineer";
 import PeriodeKontrak from "./containers/PeriodeKontrak";
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import homepage from "./assets/homepage.png";
 
 // function App() {
 //   return (
@@ -110,14 +111,29 @@ class App extends Component {
               <Nav.Link href="#halamanAdmin">Halaman Admin</Nav.Link>
             </Nav>
             <Nav>
-              <Nav.Link href="#deets">More deets</Nav.Link>
-              <Nav.Link eventKey={2} href="#memes">
+              <Nav.Link href="#deets">name_here</Nav.Link>
+              {/* <Nav.Link eventKey={2} href="#memes">
                 Dank memes
-              </Nav.Link>
+              </Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        { isHome ? <></> : <></> }
+        { isHome ? 
+        <div> 
+          <div style={{ margin: 75 }}>
+            <table>
+              <tr>
+                <td>
+                  <div style={{ margin: 30 }}>
+                    <h3 style={{ color: '#F7873F' }}>Hello, name_here</h3>
+                    <h1 style={{ color: '#2F3F58' }}>Selamat Datang di Sistem Informasi Pengelolaan Layanan</h1>
+                  </div>
+                </td>
+                <td><img src={homepage} alt="homepage"/></td>
+              </tr>
+            </table>
+          </div>
+        </div> : <></> }
         { isPenugasan ? <PenugasanEngineer/> : <></> }
         { isPeriodeKontrak ? <PeriodeKontrak/> : <></> }
       </Layout>
