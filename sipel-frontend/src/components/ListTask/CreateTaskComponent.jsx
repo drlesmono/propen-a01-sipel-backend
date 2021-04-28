@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import InstallationProjectService from "../../services/InstallationProjectService";
-//import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+//import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 class CreateTaskComponent extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class CreateTaskComponent extends Component {
         this.changeTaskNameHandler = this.changeTaskNameHandler.bind(this);
         this.changeDescriptionHandler = this.changeDescriptionHandler.bind(this);
         this.saveTask = this.saveTask.bind(this);
+        
     }
 
     changeTaskNameHandler= (event) => {
@@ -24,15 +26,21 @@ class CreateTaskComponent extends Component {
     changeDescriptionHandler= (event) => {
         this.setState({description: event.target.value});
     }
+
     
     saveTask = (e) => {
         e.preventDefault();
         let task = {taskName: this.state.taskName, description: this.state.description};
         console.log('task => ' + JSON.stringify(task));
 
-        InstallationProjectService.createTask(task,this.state.id).then(res =>{
-            this.props.history.push(`/list-task/${this.state.id}`);
-        }); 
+        try{
+            InstallationProjectService.createTask(task,this.state.id).then(res =>{
+                this.props.history.push(`/list-task/${this.state.id}`);
+            }); 
+            alert("Penambahan Task Berhasil");
+        } catch {
+            alert("Gagal Menambahkan Task")
+        }
     }
 
     cancel(){
