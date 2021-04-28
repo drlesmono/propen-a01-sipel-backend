@@ -32,7 +32,6 @@ public class ProjectInstallationRestController {
             @Valid
             @RequestBody ProjectInstallationModel projectInstallation,
             @PathVariable ("idOrder") Long idOrder,
-            HttpServletRequest request,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
@@ -41,7 +40,6 @@ public class ProjectInstallationRestController {
             );
         }
         else {
-            //OrderModel order = orderRestService.getOrderById(idOrder);
             projectInstallation.setIdOrder(orderRestService.getOrderById(idOrder));
             return projectInstallationRestService.createOrderPI(projectInstallation);
         }

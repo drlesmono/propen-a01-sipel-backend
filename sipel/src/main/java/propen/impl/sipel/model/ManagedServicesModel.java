@@ -21,7 +21,7 @@ public class ManagedServicesModel implements Serializable{
 
 //    @Id
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder")
+    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;

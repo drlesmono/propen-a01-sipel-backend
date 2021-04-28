@@ -10,6 +10,7 @@ import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.service.ManagedServicesRestService;
+import propen.impl.sipel.service.OrderRestService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -23,11 +24,14 @@ public class ManagedServicesRestController {
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
 
-    @PostMapping(value = "/order/tambah/MS")
+    @Autowired
+    private OrderRestService orderRestService;
+
+    @PostMapping(value = "/order/tambah/MS/{idOrder}")
     private ManagedServicesModel createOrderMS(
             @Valid
             @RequestBody ManagedServicesModel managedServices,
-            OrderModel order,
+            @PathVariable ("idOrder") Long idOrder,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
@@ -36,7 +40,7 @@ public class ManagedServicesRestController {
             );
         }
         else {
-            managedServices.setIdOrder(order);
+            managedServices.setIdOrder(orderRestService.getOrderById(idOrder));
             return managedServicesRestService.createOrderMS(managedServices);
         }
     }
