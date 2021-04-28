@@ -154,8 +154,8 @@ class PeriodeKontrak extends Component {
     }
 
     getTimeRemaining(actualStart, actualEnd){
-        const startDate = new Date(actualStart);
-        const endDate = new Date(actualEnd);
+        const startDate = new Date(actualStart.replace(/-/g, '\/').replace(/T.+/, ''));
+        const endDate = new Date(actualEnd.replace(/-/g, '\/').replace(/T.+/, ''));
         let currentDate = this.state.currentDateTime;
 
         if ( startDate > currentDate) {

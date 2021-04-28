@@ -36,7 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-#collasible-nav-dropdown::after{
-  display: none;
-}
