@@ -51,6 +51,7 @@ class InputDataOrder extends React.Component {
         this.state = {
             idOrder: null,
             idOrderMs: null,
+            idOrderPi: null,
             noPO: "",
             noSPH: "",
             orderName: "",
@@ -88,6 +89,7 @@ class InputDataOrder extends React.Component {
             ordersMS: [],
             isUpload: false,
             selectedFile: null,
+            isEditableChild: false,
             child: {
                 orderNameSubmit: "",
                 noPOSubmit: "",
@@ -128,6 +130,7 @@ class InputDataOrder extends React.Component {
         this.handleSubmitTambahPIMS = this.handleSubmitTambahPIMS.bind(this);
         this.handleClickUnggah = this.handleClickUnggah.bind(this);
         this.handleUploadDokumen = this.handleUploadDokumen.bind(this);
+        this.handleCancelEdit = this.handleCancelEdit.bind(this);
     }
   
     handleChange = (e) => {
@@ -171,6 +174,11 @@ class InputDataOrder extends React.Component {
         this.setState({ isCreate: false, isEdit: false , ...initState });
     }
 
+    //handleCancelEdit(event) {
+//    event.preventDefault();
+  //      this.setState({ isCreate: false, isEdit: false , ...editState });
+// }
+
     componentDidMount() {
         this.loadData();
     }
@@ -178,8 +186,6 @@ class InputDataOrder extends React.Component {
     handleAfterLoad() {
         this.setState({ child: {idOrder: this.state.orders[this.state.orders.length - 1].idOrder}});
         console.log(this.state.child.idOrder);
-        //this.setState({ finishLoad: true });
-        //this.handleAfterSubmitOrder();
     }
 
     async loadData() {
@@ -194,8 +200,6 @@ class InputDataOrder extends React.Component {
             console.log(error);
         }
         this.setState({ finishLoad: true });
-        //this.handleAfterLoad();
-        //this.handleAfterSubmitOrder();
     }
 
     async handleSubmitTambahOrder(event) {
@@ -245,6 +249,12 @@ class InputDataOrder extends React.Component {
             }
             await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data);
             this.loadData();
+            if (projectInstallation) {
+                this.handleEditPI(order.idOrderPi);
+            }
+            if (managedService) {
+                this.handleEditMS(order.idOrderMs)
+            }
         } catch (error) {
             alert("Order Gagal Diperbarui. Coba Kembali!");
             console.log(error);
@@ -286,6 +296,27 @@ class InputDataOrder extends React.Component {
                 close: this.state.close,
             }
             console.log(this.state.idOrder);
+            await APIConfig.post(`/order/ubah/PI/${this.state.idOrder}`, data);
+            this.loadData();
+            this.handleReportSubmitPI(event);
+            console.log(event);
+        } catch (error) {
+            alert("Data Project Installation gagal disimpan! Masukkan kembali tanggal mulai dan selesai project!");
+            console.log(error);
+        }
+        this.handleCancel(event);
+    }
+
+    async handleSubmitEditPI(event) {
+        event.preventDefault();
+        try {
+            const data = {
+                startPI: this.state.startPI,
+                deadline: this.state.deadline,
+                percentage: this.state.percentage,
+                close: this.state.close,
+            }
+            console.log(this.state.idOrder);
             await APIConfig.post(`/order/tambah/PI/${this.state.idOrder}`, data);
             this.loadData();
             this.handleReportSubmitPI(event);
@@ -306,6 +337,24 @@ class InputDataOrder extends React.Component {
                 activated: this.state.activated,
             };
             await APIConfig.post(`/order/tambah/MS/${this.state.idOrder}`, data);
+            this.loadData();
+            this.handleToService(event);
+        } catch (error) {
+            alert("Data Managed Service gagal disimpan! Masukkan kembali tanggal periode kontrak!");
+            console.log(error);
+        }
+        this.handleCancel(event);
+    }
+
+    async handleEditTambahMS(event) {
+        event.preventDefault();
+        try {
+            const data = {
+                actualStart: this.state.actualStart,
+                actualEnd: this.state.actualEnd,
+                activated: this.state.activated,
+            };
+            await APIConfig.post(`/order/ubah/MS/${this.state.idOrder}`, data);
             this.loadData();
             this.handleToService(event);
         } catch (error) {
@@ -347,6 +396,25 @@ class InputDataOrder extends React.Component {
     }
 
     async handleSubmitTambahService(event) {
+        event.preventDefault();
+        try {
+            for (let i=0; i<this.state.listService.length;i++) {
+                const data = {
+                    name: this.state.listService[i].name,
+                };
+                console.log(this.state.listService[i].name);
+                await APIConfig.post(`/order/tambah/MS/${this.state.idOrderMs}/Service`, data);
+                this.loadData();
+            }
+            this.handleReportSubmitMS(event);
+        } catch (error) {
+            alert("Oops terjadi masalah pada server");
+            console.log(error);
+        }
+        this.handleCancel(event);
+    }
+
+    async handleSubmitEditService(event) {
         event.preventDefault();
         try {
             for (let i=0; i<this.state.listService.length;i++) {
@@ -455,19 +523,22 @@ class InputDataOrder extends React.Component {
 
     handleEditPI(pi) {
         this.setState({
-            isEdit: true,
+            isEditableChild: true,
             idOrder: pi.idOrderPi,
             startPI:pi.startPI,
             deadline: pi.deadline,
+            percentage: pi.percentage,
+            close: pi.close,
         })
     }
 
     handleEditMS(ms) {
         this.setState({
-            isEdit: true,
+            isEditableChild: true,
             idOrder: ms.idOrderPi,
             actualStart: ms.actualStart,
             actualEnd: ms.actualEnd,
+            activated: ms.activated,
         })
     }
 
@@ -782,9 +853,9 @@ class InputDataOrder extends React.Component {
                 </form>
             </Modal>
         
-           <Modal show={this.state.child.isProjectInstallation && !this.state.child.isManagedService && this.state.child.isSubmitOrder} handleCloseModal={this.handleCancel}>
+           <Modal show={this.state.child.isProjectInstallation && !this.state.child.isManagedService && this.state.child.isSubmitOrder || this.state.isEditableChild} handleCloseModal={this.handleCancel}>
                     <NotificationContainer />
-                    <form onSubmit={this.handleSubmitTambahPI} onChange={this.handleChange} >
+                    <form onChange={this.handleChange} >
                         <div className="row" style={{ marginTop: 20 }}>
                         <div className="col-sm-1"></div>
                         <div className="col-sm-10">
@@ -831,7 +902,8 @@ class InputDataOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI}>
+                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.state.child.isSubmitOrder 
+                                    ? this.handleSubmitTambahPI : this.handleSubmitEditPI} >
                                         Simpan Data PI
                                     </CustomizedButtons>
                                 </div>

@@ -33,7 +33,7 @@ public class DocumentOrderRestController {
     public ResponseEntity<String> uploadDocument(
             @PathVariable("idOrder") Long idOrder,
             @RequestParam("document") MultipartFile file,
-            @RequestBody DocumentOrderModel document,
+            @RequestBody(required=false)DocumentOrderModel document,
             BindingResult bindingResult
     ) throws Exception {
         if (bindingResult.hasFieldErrors()) {
