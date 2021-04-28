@@ -51,11 +51,15 @@ public class TaskRestController {
     @PutMapping("list-task/{idTask}")
     public TaskModel updateTaskModel(@PathVariable Long idTask, @RequestBody TaskModel task){
         TaskModel targetedTask = taskDb.findByIdTask(idTask);//.orElseThrow(( -> new ResourceNotFoundException("Task not exist wth id :" + idTask)));
-        targetedTask.setTaskName(task.getTaskName());
-        targetedTask.setDescription(task.getDescription());
-
+        
+        if(task.getPercentage()==null){
+            targetedTask.setTaskName(task.getTaskName());
+            targetedTask.setDescription(task.getDescription());
+        } else {
+            targetedTask.setPercentage(task.getPercentage());
+        }
+        
         TaskModel updatedTask = taskDb.save(targetedTask);
-
         return updatedTask; //ResponseEntity.ok(updatedTask);
 
 

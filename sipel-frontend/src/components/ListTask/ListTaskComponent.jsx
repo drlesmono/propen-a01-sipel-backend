@@ -24,7 +24,7 @@ class ListTaskComponent extends Component {
     }
 
     editProgres(id, idTask){
-        this.props.history.push(`/add-progres/${id}/${idTask}`);
+        this.props.history.push(`/add-progress/${id}/${idTask}`);
     }
 
 
@@ -71,7 +71,7 @@ class ListTaskComponent extends Component {
                                         <td>{task.percentage}</td>
                                         <td>
                                             <button onClick = { () => this.editTask(this.state.id, task.idTask)} className="btn btn-info">Ubah Task</button>
-                                            <button onClick = { () => this.editProgres(this.state.id, task.idTask)} className="btn btn-secondary">Tambah Progres</button>
+                                            <button onClick = { () => this.editProgres(this.state.id, task.idTask)} className="btn btn-secondary">Ubah Progres</button>
                                         </td>
 
                                     </tr>
