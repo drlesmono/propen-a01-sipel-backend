@@ -3,6 +3,7 @@ package propen.impl.sipel.restcontroller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.service.ManagedServicesRestService;
@@ -16,6 +17,11 @@ public class ManagedServicesRestController {
 
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
+    
+    @GetMapping(value="/order/{idOrder}/ms/{idOrderMs}")
+    private ManagedServicesModel getManagedServiceById(@PathVariable("idOrderMs") Long idOrderMs){
+        return managedServicesRestService.getMsById(idOrderMs);
+    }
 
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updatePIC")
     private BaseResponse<ManagedServicesDto> updatePIC(@Valid @RequestBody ManagedServicesDto ms,

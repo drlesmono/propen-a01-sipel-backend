@@ -12,6 +12,9 @@ class ChangeStatusOrder extends Component {
             ordersVerified: [],
             isLoading: false,
             isEdit: false,
+            isSubmitted: false,
+            isErrorMsClosed: false,
+            isErrorPiClosed: false,
             orderTarget: null,
             users: [],
             //listMaintenance: [],
@@ -24,6 +27,9 @@ class ChangeStatusOrder extends Component {
         this.handleCancel = this.handleCancel.bind(this);
         this.handleChangeField = this.handleChangeField.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleErrorMsClosed = this.handleErrorMsClosed.bind(this);
+        this.handleErrorPiClosed = this.handleErrorPiClosed.bind(this);
+        this.handleSubmitted = this.handleSubmitted.bind(this)
     }
 
     componentDidMount() {
@@ -52,58 +58,144 @@ class ChangeStatusOrder extends Component {
             if(this.state.orderTarget.projectInstallation === true){
                 // console.log(this.state.orderTarget.idOrderPi);
                 const pi = this.state.orderTarget.idOrderPi;
-                const dataPi = {
-                    idOrderPi: pi.idOrderPi,
-                    idUserEng: pi.picEngineerPi,
-                    percentage: pi.percentage,
-                    startPI: pi.startPI,
-                    deadline: pi.deadline,
-                    dateClosedPI: pi.dateClosedPI,
-                    status: this.state.statusPi
+                if (this.state.statusPi === "Closed"){
+                    if (pi.percentage === 100){
+                        const dataPi = {
+                            idOrderPi: pi.idOrderPi,
+                            idUserEng: pi.picEngineerPi,
+                            percentage: pi.percentage,
+                            startPI: pi.startPI,
+                            deadline: pi.deadline,
+                            dateClosedPI: pi.dateClosedPI,
+                            status: this.state.statusPi
+                        }
+                        console.log(dataPi);
+                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updateStatus`, dataPi);
+                        this.handleSubmitted(event, this.state.orderTarget)
+                        this.setState({isEdit: false});
+                    } else {
+                        this.handleErrorPiClosed(event);
+                    }
+                } else {
+                    const dataPi = {
+                        idOrderPi: pi.idOrderPi,
+                        idUserEng: pi.picEngineerPi,
+                        percentage: pi.percentage,
+                        startPI: pi.startPI,
+                        deadline: pi.deadline,
+                        dateClosedPI: pi.dateClosedPI,
+                        status: this.state.statusPi
+                    }
+                    console.log(dataPi);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updateStatus`, dataPi);
+                    this.handleSubmitted(event, this.state.orderTarget)
+                    this.setState({isEdit: false});
                 }
-                console.log(dataPi);
-                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${this.state.orderTarget.idOrderPi.idOrderPi}/updateStatus`, dataPi);
-                // const dataResponsePi = await responsePi.json();
             }
             if(this.state.orderTarget.managedService === true){
                 const ms = this.state.orderTarget.idOrderMs;
-                const dataMs = {
-                    idOrderMs: ms.idOrderMs,
-                    idUserPic: ms.picEngineerMs,
-                    actualStart: ms.actualStart,
-                    actualEnd: ms.actualEnd,
-                    activated: ms.activated,
-                    timeRemaining: ms.timeRemaining,
-                    dateClosedMS: ms.dateClosedMS,
-                    status: this.state.statusMs
-                }
-                // console.log(dataMs);
-                await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/updateStatus`, dataMs);
-                let listMaintenance = this.state.orderTarget.idOrderMs.listMaintenance;
-                for(let i=0; i<listMaintenance.length; i++){
-                    console.log(i);
-                    let maintenance = listMaintenance[i];
-                    let booleanStatus = false;
-                    if (this.state.statusMaintenances[i] === "Maintained"){
-                        booleanStatus = true;
+                if (this.state.statusMs === "Closed"){
+                    let listMaintenance = this.state.orderTarget.idOrderMs.listMaintenance;
+                    for(let i=0; i<listMaintenance.length; i++){
+                        let maintenance = listMaintenance[i];
+                        let booleanStatus = false;
+                        if (this.state.statusMaintenances[i] === "Maintained"){
+                            booleanStatus = true;
+                        }
+                        const dataMaintenance = {
+                            idMaintenance: maintenance.idMaintenance,
+                            dateMn: maintenance.dateMn,
+                            maintained: booleanStatus
+                        }
+                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/maintenance/${maintenance.idMaintenance}/updateStatus`, dataMaintenance);
                     }
-                    const dataMaintenance = {
-                        idMaintenance: maintenance.idMaintenance,
-                        dateMn: maintenance.dateMn,
-                        maintained: booleanStatus
+                    console.log(ms.listMaintenance);
+                    const msUpdated = await APIConfig.get(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}`);
+                    console.log(msUpdated.data.listMaintenance);
+                    let statusAllMaintenance = true;
+                    let listMaintenanceChecked = msUpdated.data.listMaintenance;
+                    for(let i=0; i<listMaintenanceChecked.length; i++){
+                        let maintenanceCheck = listMaintenanceChecked[i];
+                        if (maintenanceCheck.maintained === false){
+                            statusAllMaintenance = false;
+                        }
                     }
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/maintenance/${maintenance.idMaintenance}/updateStatus`, dataMaintenance);
+                    if (statusAllMaintenance === true) {
 
+
+                        const dataMs = {
+                            idOrderMs: ms.idOrderMs,
+                            idUserPic: ms.picEngineerMs,
+                            actualStart: ms.actualStart,
+                            actualEnd: ms.actualEnd,
+                            activated: ms.activated,
+                            timeRemaining: ms.timeRemaining,
+                            dateClosedMS: ms.dateClosedMS,
+                            status: this.state.statusMs
+                        }
+                        // console.log(dataMs);
+                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/updateStatus`, dataMs);
+                        this.handleSubmitted(event, this.state.orderTarget)
+                        this.setState({isEdit: false});
+                    } else {
+                        this.handleErrorMsClosed(event);
+                    }
+                } else {
+                    let listMaintenance = this.state.orderTarget.idOrderMs.listMaintenance;
+                    for(let i=0; i<listMaintenance.length; i++){
+                        let maintenance = listMaintenance[i];
+                        let booleanStatus = false;
+                        if (this.state.statusMaintenances[i] === "Maintained"){
+                            booleanStatus = true;
+                        }
+                        const dataMaintenance = {
+                            idMaintenance: maintenance.idMaintenance,
+                            dateMn: maintenance.dateMn,
+                            maintained: booleanStatus
+                        }
+                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/maintenance/${maintenance.idMaintenance}/updateStatus`, dataMaintenance);
+                    }
+
+                    const dataMs = {
+                        idOrderMs: ms.idOrderMs,
+                        idUserPic: ms.picEngineerMs,
+                        actualStart: ms.actualStart,
+                        actualEnd: ms.actualEnd,
+                        activated: ms.activated,
+                        timeRemaining: ms.timeRemaining,
+                        dateClosedMS: ms.dateClosedMS,
+                        status: this.state.statusMs
+                    }
+                    // console.log(dataMs);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${this.state.orderTarget.idOrderMs.idOrderMs}/updateStatus`, dataMs);
+                    this.handleSubmitted(event, this.state.orderTarget)
+                    this.setState({isEdit: false});
                 }
+
             }
             await this.loadData()
-            this.setState({isEdit: false});
+
+
         } catch (error) {
             alert("Perubahan status order gagal disimpan");
             // this.setState({ isError: true });
             console.log(error);
         }
+    }
 
+    handleErrorMsClosed(event) {
+        event.preventDefault();
+        this.setState({isErrorMsClosed: true});
+    }
+
+    handleErrorPiClosed(event) {
+        event.preventDefault();
+        this.setState({isErrorPiClosed: true});
+    }
+
+    handleSubmitted(event, order) {
+        event.preventDefault();
+        this.setState({isSubmitted: true, orderTarget: order});
     }
 
     checkTypeOrder(pi, ms){
@@ -135,24 +227,27 @@ class ChangeStatusOrder extends Component {
             this.setState({statusMs: order.idOrderMs.status});
             listMaintenance = order.idOrderMs.listMaintenance;
             for(let i=0; i<listMaintenance.length; i++){
-                console.log(i);
+
                 let maintenance = listMaintenance[i];
-                if (maintenance.Maintained === true){
+                if (maintenance.maintained === true){
                     statusMaintenancesUpdated[i] = "Maintained";
-                    this.setState({statusMaintenances: statusMaintenancesUpdated})
                 } else {
                     statusMaintenancesUpdated[i] = "Not Maintained";
-                    this.setState({statusMaintenances: statusMaintenancesUpdated})
                 }
-
-
             }
+            console.log(statusMaintenancesUpdated);
+            this.setState({statusMaintenances: statusMaintenancesUpdated})
         }
     }
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({isEdit: false});
+        this.setState({
+            isEdit: false,
+            isErrorMsClosed: false,
+            isErrorPiClosed: false,
+            isSubmitted: false
+        });
     }
 
     handleChangeField(event) {
@@ -169,7 +264,17 @@ class ChangeStatusOrder extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, orderTarget, statusMaintenances, statusMs, statusPi} = this.state;
+        const {
+            ordersVerified,
+            isEdit,
+            isErrorMsClosed,
+            isErrorPiClosed,
+            isSubmitted,
+            orderTarget,
+            statusMaintenances,
+            statusMs,
+            statusPi,
+        } = this.state;
         let listMaintenance;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Perusahaan', 'Tipe', 'Status','Aksi'];
         const tableRows = ordersVerified.map((order) => [
@@ -194,7 +299,6 @@ class ChangeStatusOrder extends Component {
             if(orderTarget.idOrderPi !== null){
             }
             if(orderTarget.idOrderMs !== null){
-                console.log(orderTarget.idOrderMs);
                 tableMaintenanceRows = orderTarget.idOrderMs.listMaintenance.map((maintenance, index) => [
                     maintenance.dateMn,
                     <Form.Control
@@ -250,8 +354,12 @@ class ChangeStatusOrder extends Component {
                                                     <option value="On Hold">On Hold</option>
                                                     <option value="Closed">Closed</option>
                                             </Form.Control></td>
-                                        </tr></>
-                                    : <></>}
+                                        </tr>
+                                    { this.state.isErrorPiClosed ?
+                                        <><tr>
+                                        <td style={{fontWeight: 'bold', color: "#FD693E"}}>Progress order belum 100%</td>
+                                    </tr></> : <></>}
+                                    </> : <></>}
                                 { orderTarget.managedService ?
                                     <><tr>
                                         <td style={{fontWeight: 'bold'}}>Managed Service</td>
@@ -277,8 +385,12 @@ class ChangeStatusOrder extends Component {
                                                 <option value="Active">Active</option>
                                                 <option value="Closed">Closed</option>
                                             </Form.Control></td>
-                                        </tr></>
-                                    : <></>}
+                                        </tr>
+                                        { this.state.isErrorMsClosed ?
+                                            <><tr>
+                                                <td style={{fontWeight: 'bold', color: "#FD693E"}}>Masih ada maintenance yang belum di-maintain</td>
+                                            </tr></> : <></>}
+                                    </>: <></>}
                             </table>
                             <div style={{alignItems:'right'}}>
                                 <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
@@ -287,6 +399,21 @@ class ChangeStatusOrder extends Component {
                             </div>
                         </Form></>
                         : <></> }
+                </Modal>
+                <Modal show={isSubmitted} handleCloseModal={this.handleCancel}>
+                    {orderTarget !== null ? <>
+                        <div>
+                            <h3 id='titleform' >
+                                Status Order dengan nomor {orderTarget.noPO} berhasil diubah menjadi
+                                {orderTarget.projectInstallation ? " " + this.state.statusPi : <></>}
+                                {orderTarget.managedService ? " " + this.state.statusMs : <></>}
+                            </h3>
+                        </div></> : <></>}
+                    <div style={{alignItems:'right'}}>
+                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancel}>
+                            Ok
+                        </CustomizedButtons>
+                    </div>
                 </Modal>
             </div>
         )

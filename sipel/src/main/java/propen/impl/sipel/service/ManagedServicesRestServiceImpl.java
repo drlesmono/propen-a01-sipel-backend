@@ -31,4 +31,9 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         msTarget.setStatus(status);
         return managedServicesDb.save(msTarget);
     }
+
+    @Override
+    public ManagedServicesModel getMsById(Long idOrderMs){
+        return managedServicesDb.findById(idOrderMs).get();
+    }
 }
