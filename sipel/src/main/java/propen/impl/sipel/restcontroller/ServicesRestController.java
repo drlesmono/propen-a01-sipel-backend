@@ -32,7 +32,8 @@ public class ServicesRestController {
             response.setStatus(405);
             return response;
         }
-        ServicesModel newService = servicesRestService.updateService(service);;
+        ServicesModel newService = servicesRestService.updateService(service);
+
         response.setStatus(200);
         response.setMessage("Success");
         response.setResult(newService);
