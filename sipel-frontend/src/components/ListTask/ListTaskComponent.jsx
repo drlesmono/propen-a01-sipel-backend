@@ -16,7 +16,14 @@ class ListTaskComponent extends Component {
         this.addTask = this.addTask.bind(this);
         this.editTask = this.editTask.bind(this);
         this.editProgres = this.editProgres.bind(this);
+        this.deleteTask = this.deleteTask.bind(this);
         
+    }
+
+    deleteTask(idTask){
+        InstallationProjectService.deleteTask(idTask).then( res => {
+            this.setState({listTask: this.state.listTask.filter(task => task.idTask !== idTask)})
+        })
     }
 
     editTask(id, idTask){
@@ -68,10 +75,11 @@ class ListTaskComponent extends Component {
                                     <tr key = {task.idTask}>
                                         <td>{task.taskName}</td>
                                         <td>{task.description}</td>
-                                        <td>{task.percentage}</td>
+                                        <td>{task.percentage + "%"}</td>
                                         <td>
                                             <button onClick = { () => this.editTask(this.state.id, task.idTask)} className="btn btn-info">Ubah Task</button>
-                                            <button onClick = { () => this.editProgres(this.state.id, task.idTask)} className="btn btn-secondary" style={{marginLeft: "10px"}}>Ubah Progres</button>
+                                            <button onClick = { () => this.editProgres(this.state.id, task.idTask)} className="btn btn-warning" style={{marginLeft: "10px"}}>Ubah Progres</button>
+                                            <button onClick = { () => this.deleteTask(task.idTask)} className="btn btn-danger" style={{marginLeft: "10px"}}>Hapus Task</button>
                                         </td>
 
                                     </tr>

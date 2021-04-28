@@ -27,6 +27,10 @@ class InstallationProjectService {
         return axios.put(LIST_TASK_API_BASE_URL+'/'+idTask, task);
     }
 
+    deleteTask(idTask){
+        return axios.delete(LIST_TASK_API_BASE_URL+'/'+idTask);
+    }
+
 }
 
 export default new InstallationProjectService()

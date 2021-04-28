@@ -49,7 +49,7 @@ class ListVerifiedPiOrder extends Component {
                                     <tr key = {piOrder.idOrderPi}>
                                         <td>{piOrder.orderName}</td>
                                         <td>{piOrder.deadline}</td>
-                                        <td>{piOrder.percentage}</td>
+                                        <td>{piOrder.percentage + "%"}</td>
                                         <td>
                                             <button onClick = { () => this.retrieveListTask(piOrder.idOrderPi) } className="btn btn-info">Lihat Task</button>
                                         </td>

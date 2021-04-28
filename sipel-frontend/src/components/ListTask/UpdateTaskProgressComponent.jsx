@@ -50,6 +50,7 @@ class UpdateTaskProgressComponent extends Component {
                             <br/>
                             <h3 className="text-center">Ubah Progres Task</h3>
                             <div className = "card-body">
+                                                                
                                 <form>
 
                                     <div className="form-group">

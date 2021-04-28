@@ -17,7 +17,10 @@ import propen.impl.sipel.service.ProjectInstallationRestService;
 import propen.impl.sipel.service.TaskRestService;
 
 import javax.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -61,8 +64,15 @@ public class TaskRestController {
         
         TaskModel updatedTask = taskDb.save(targetedTask);
         return updatedTask; //ResponseEntity.ok(updatedTask);
+    }
 
-
+    @DeleteMapping("/list-task/{idTask}")
+    public ResponseEntity<Map<String, Boolean>> deleteTask(@PathVariable Long idTask){
+        TaskModel task = taskDb.findByIdTask(idTask);
+        taskDb.delete(task);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
     
 }
