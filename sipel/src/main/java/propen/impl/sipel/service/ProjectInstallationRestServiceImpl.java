@@ -8,6 +8,7 @@ import propen.impl.sipel.repository.ProjectInstallationDb;
 import propen.impl.sipel.rest.Setting;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -21,9 +22,10 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
 
     @Override
     public ProjectInstallationModel createOrderPI(ProjectInstallationModel projectInstallation) {
-        projectInstallation.setPercentage(0.00F);
-        projectInstallation.setClose(false);
-        projectInstallation.setDateClosedPI(null);
+        //projectInstallation.setPercentage(0.00F);
+        //projectInstallation.setClose(false);
+        //projectInstallation.setDateClosedPI(null);
+
         return projectInstallationDb.save(projectInstallation);
     }
 
@@ -48,6 +50,11 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         else {
             throw new NoSuchElementException();
         }
+    }
+
+    @Override
+    public List<ProjectInstallationModel> retrievePI() {
+        return projectInstallationDb.findAll();
     }
 
     public ProjectInstallationRestServiceImpl(WebClient.Builder webClientBuilder) {

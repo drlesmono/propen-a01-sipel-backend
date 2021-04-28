@@ -69,4 +69,9 @@ public class ManagedServicesRestController {
             );
         }
     }
+
+    @GetMapping(value = "/orderMS")
+    public List<ManagedServicesModel> retrieveMS() {
+        return managedServicesRestService.retrieveMS();
+    }
 }

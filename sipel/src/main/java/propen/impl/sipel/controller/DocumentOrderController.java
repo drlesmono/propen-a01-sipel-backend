@@ -11,6 +11,7 @@ import propen.impl.sipel.model.DocumentOrderModel;
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.repository.DocumentOrderDb;
 import propen.impl.sipel.service.OrderService;
+//import propen.impl.sipel.service.OrderService;
 
 import java.util.Date;
 
@@ -43,7 +44,7 @@ public class DocumentOrderController {
             RedirectAttributes ra
     ) {
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        document.setIdOrder(order);
+        //document.setIdOrder(order);
         document.setDocName(fileName);
         document.setSize(multipartFile.getSize());
         document.setUploadedDate(new Date());

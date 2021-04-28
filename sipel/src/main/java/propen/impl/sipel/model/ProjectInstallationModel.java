@@ -14,14 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "projectInstallation")
+@Table(name = "project_Installation")
 //@IdClass(OrderModel.class)
 public class ProjectInstallationModel implements Serializable{
 
 //    @Id
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
 

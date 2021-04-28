@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -65,6 +66,11 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         Long days = ChronoUnit.DAYS.between(dateStart, dateEnd);
 
         return days;
+    }
+
+    @Override
+    public List<ManagedServicesModel> retrieveMS() {
+        return managedServicesDb.findAll();
     }
 
     public ManagedServicesRestServiceImpl(WebClient.Builder webClientBuilder) {

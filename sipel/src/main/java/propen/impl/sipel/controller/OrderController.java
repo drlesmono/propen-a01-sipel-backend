@@ -1,3 +1,4 @@
+/*
 package propen.impl.sipel.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,14 +63,14 @@ public class OrderController {
 
         order.setManagedService(true);
         if (isOrderPIExist(order)) {
-            projectInstallation.setIdOrder(order);
+            //projectInstallation.setIdOrder(order);
             projectInstallation.setPercentage(0.00F);
             projectInstallation.setClose(false);
             projectInstallation.setDateClosedPI(null);
             projectInstallationService.addOrderPI(projectInstallation);
         }
         if (isOrderMSExist(order)) {
-            managedServices.setIdOrder(order);
+            //managedServices.setIdOrder(order);
             managedServices.setActivated(false);
             managedServices.setDateClosedMS(null);
             managedServices.setTimeRemaining(managedServicesService.setTimeRem(managedServices));
@@ -187,3 +188,4 @@ public class OrderController {
         return order.isManagedService();
     }
 }
+*/

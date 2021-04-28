@@ -2,6 +2,8 @@ package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.ManagedServicesModel;
 
+import java.util.List;
+
 public interface ManagedServicesRestService {
     ManagedServicesModel createOrderMS(ManagedServicesModel managedServices);
 
@@ -10,4 +12,6 @@ public interface ManagedServicesRestService {
     ManagedServicesModel getMSOrderById(Long idOrderMS);
 
     Long setRem(ManagedServicesModel managedServices);
+
+    List<ManagedServicesModel> retrieveMS();
 }

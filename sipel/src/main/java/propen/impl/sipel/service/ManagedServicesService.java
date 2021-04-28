@@ -1,7 +1,6 @@
 package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.ManagedServicesModel;
-import propen.impl.sipel.model.ServicesModel;
 
 import java.util.List;
 import java.util.Optional;

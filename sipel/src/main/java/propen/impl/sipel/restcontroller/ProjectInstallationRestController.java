@@ -9,6 +9,7 @@ import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.ServicesModel;
+import propen.impl.sipel.service.OrderRestService;
 import propen.impl.sipel.service.ProjectInstallationRestService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +24,15 @@ public class ProjectInstallationRestController {
     @Autowired
     private ProjectInstallationRestService projectInstallationRestService;
 
-    @PostMapping(value = "/order/tambah/PI")
+    @Autowired
+    private OrderRestService orderRestService;
+
+    @PostMapping(value = "/order/tambah/PI/{idOrder}")
     private ProjectInstallationModel createOrderPI(
             @Valid
             @RequestBody ProjectInstallationModel projectInstallation,
-            OrderModel order,
+            @PathVariable ("idOrder") Long idOrder,
+            HttpServletRequest request,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
@@ -36,7 +41,8 @@ public class ProjectInstallationRestController {
             );
         }
         else {
-            projectInstallation.setIdOrder(order);
+            //OrderModel order = orderRestService.getOrderById(idOrder);
+            projectInstallation.setIdOrder(orderRestService.getOrderById(idOrder));
             return projectInstallationRestService.createOrderPI(projectInstallation);
         }
     }
@@ -68,5 +74,10 @@ public class ProjectInstallationRestController {
                     HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrderPi) + " not found!"
             );
         }
+    }
+
+    @GetMapping(value = "/orderPI")
+    private List<ProjectInstallationModel> retrievePI() {
+        return projectInstallationRestService.retrievePI();
     }
 }

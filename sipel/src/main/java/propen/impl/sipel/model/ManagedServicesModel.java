@@ -20,8 +20,8 @@ import java.util.List;
 public class ManagedServicesModel implements Serializable{
 
 //    @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "idOrder", referencedColumnName = "idOrder")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private OrderModel idOrder;
@@ -50,19 +50,17 @@ public class ManagedServicesModel implements Serializable{
     @Column(name = "isActivated", nullable = false)
     private Boolean isActivated;
 
-    @NotNull
+    //@NotNull
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="timeRemaining", nullable = false)
+    @Column(name="timeRemaining", nullable = true)
     private Long timeRemaining;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private List<ServicesModel> listService = new ArrayList<>();
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private List<MaintenanceModel> listMaintenance;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
