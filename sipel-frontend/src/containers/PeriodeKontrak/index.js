@@ -101,6 +101,7 @@ class PeriodeKontrak extends Component {
                     dateClosedMS: ms.dateClosedMS
                 }
                 const newMs = await APIConfig.put(`/order/${this.state.isExtend? newOrder.idOrder : this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
+                console.log(newMs);
                 if(this.state.isExtend){
                     let listServiceName = this.state.servicesEngineerName;
                     let listService = this.state.servicesEngineer;
