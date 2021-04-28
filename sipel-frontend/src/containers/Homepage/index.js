@@ -36,31 +36,18 @@ class Homepage extends Component {
                     <NavDropdown.Divider />
                     <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                     </NavDropdown>
-                    <NavDropdown title="Produksi" id="collasible-nav-dropdown">
-                    <NavDropdown.Item ><Link to="/Produksi/Penugasan" style={{ textDecoration: 'none' }}>Penugasan</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link to="/Produksi/Penugasan" style={{ textDecoration: 'none' }}>Progress Delivery</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link to="/Produksi/PeriodeKontrak" style={{ textDecoration: 'none' }}>Periode Kontrak</Link></NavDropdown.Item>
-                    <NavDropdown.Item><Link to="/Produksi/Penugasan" style={{ textDecoration: 'none' }}>Maintenance</Link></NavDropdown.Item>
-                        {/* <Nav variant="tabs" defaultActiveKey="/home" id="nav">
-                        <Nav.Item>
-                            <Nav.Link href="/home">Active</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="link-1">Option 2</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="disabled" disabled>
-                            Disabled
-                            </Nav.Link>
-                        </Nav.Item>
-                        </Nav> */}
+                        <NavDropdown title="Produksi" id="collasible-nav-dropdown">
+                        <NavDropdown.Item ><Link to="/PenugasanEngineer" style={{ textDecoration: 'none' }}>Penugasan</Link></NavDropdown.Item>
+                        <NavDropdown.Item><Link to="/Produksi/ProgressDelivery" style={{ textDecoration: 'none' }}>Progress Delivery</Link></NavDropdown.Item>
+                        <NavDropdown.Item><Link to="/PeriodeKontrak" style={{ textDecoration: 'none' }}>Periode Kontrak</Link></NavDropdown.Item>
+                        <NavDropdown.Item><Link to="/Produksi/ProgressDelivery" style={{ textDecoration: 'none' }}>Maintenance</Link></NavDropdown.Item>
                     </NavDropdown>
                     <NavDropdown title="Laporan" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                     </NavDropdown>
                     <Nav.Link href="#halamanAdmin">Halaman Admin</Nav.Link>
                 </Nav>
@@ -73,28 +60,28 @@ class Homepage extends Component {
                 </Navbar.Collapse>
             </Navbar>
             <Switch>
-                <Route path="/Produksi/Penugasan">
-                <PenugasanEngineer/>
+                <Route path="/PenugasanEngineer">
+                    <PenugasanEngineer/>
                 </Route>
-                <Route path="/Produksi/PeriodeKontrak">
-                <PeriodeKontrak/>
+                <Route path="/PeriodeKontrak">
+                    <PeriodeKontrak/>
                 </Route>
                 <Route path="/">
-                <div> 
-                <div style={{ margin: 75 }}>
-                    <table>
-                    <tr>
-                        <td>
-                        <div style={{ margin: 30 }}>
-                            <h3 style={{ color: '#F7873F' }}>Hello, name_here</h3>
-                            <h1 style={{ color: '#2F3F58' }}>Selamat Datang di Sistem Informasi Pengelolaan Layanan</h1>
-                        </div>
-                        </td>
-                        <td><img src={homepage} alt="homepage"/></td>
-                    </tr>
-                    </table>
-                </div>
-                </div>
+                    <div> 
+                    <div style={{ margin: 75 }}>
+                        <table>
+                        <tr>
+                            <td>
+                            <div style={{ margin: 30 }}>
+                                <h3 style={{ color: '#F7873F' }}>Hello, name_here</h3>
+                                <h1 style={{ color: '#2F3F58' }}>Selamat Datang di Sistem Informasi Pengelolaan Layanan</h1>
+                            </div>
+                            </td>
+                            <td><img src={homepage} alt="homepage"/></td>
+                        </tr>
+                        </table>
+                    </div>
+                    </div>
                 </Route>
             </Switch>
             </Layout>
