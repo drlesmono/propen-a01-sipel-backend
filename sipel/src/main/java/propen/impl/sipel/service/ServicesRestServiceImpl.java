@@ -23,17 +23,9 @@ public class ServicesRestServiceImpl implements ServicesRestService {
     private ServicesDb servicesDb;
 
     @Override
-    public List<ServicesModel> createServices(String[] serviceName, ServicesModel services, ManagedServicesModel managedServices) {
-        List<ServicesModel> listService = new ArrayList<>();
-        for (int i = 0; i < serviceName.length; i++) {
-            managedServices.addService(serviceName[i]);
-            ServicesModel service = new ServicesModel();
-            service.setName(serviceName[i]);
-            service.setIdOrderMS(managedServices);
-            servicesDb.save(services);
-            listService.add(services);
-        }
-        return listService;
+    public ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices) {
+        services.setIdOrderMS(managedServices);
+        return servicesDb.save(services);
     }
 
     @Override

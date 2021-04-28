@@ -6,9 +6,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.ManagedServicesModel;
-import propen.impl.sipel.model.OrderModel;
-import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.ServicesModel;
+import propen.impl.sipel.service.ManagedServicesRestService;
 import propen.impl.sipel.service.ServicesRestService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,12 +22,14 @@ public class ServiceRestController {
     @Autowired
     private ServicesRestService servicesRestService;
 
-    @PostMapping(value = "/order/tambah/Services")
-    private List<ServicesModel> createServices(
+    @Autowired
+    private ManagedServicesRestService managedServicesRestService;
+
+    @PostMapping(value = "/order/tambah/MS/{idOrderMs}/Service")
+    private ServicesModel createServices(
             @Valid
             @RequestBody ServicesModel services,
-            ManagedServicesModel managedServices,
-            HttpServletRequest request,
+            @PathVariable ("idOrderMs") Long idOrderMs,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasFieldErrors()) {
@@ -37,8 +38,8 @@ public class ServiceRestController {
             );
         }
         else {
-            String[] serviceName = request.getParameterValues("name");
-            return servicesRestService.createServices(serviceName, services, managedServices);
+            ManagedServicesModel managedServices = managedServicesRestService.getMSOrderById(idOrderMs);
+            return servicesRestService.createServices(services, managedServices);
         }
     }
 
