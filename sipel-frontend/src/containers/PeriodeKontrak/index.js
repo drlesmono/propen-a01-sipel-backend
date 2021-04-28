@@ -89,6 +89,7 @@ class PeriodeKontrak extends Component {
                     }
                     response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
                     newOrder = response.data.result;
+                    this.loadData();  
                 }
                 const ms = this.state.isExtend ? newOrder.idOrderMs : this.state.orderTarget.idOrderMs;
                 const dataMs = {
@@ -114,7 +115,9 @@ class PeriodeKontrak extends Component {
                     }
                 }
                 this.loadData();
-                this.setState({ orderTarget: newOrder });   
+                if(this.state.extend) {
+                    this.setState({ orderTarget: newOrder });
+                }
             } catch (error) {
                 if(this.state.isExtend){
                     alert("Perpanjangan Periode Kontrak gagal disimpan");
@@ -505,14 +508,6 @@ class PeriodeKontrak extends Component {
                             </p>
                     </Modal.Body>
                 </Modal>
-                {/* <CustomizedModal show={isEdit || isReport || isExtend || isReportExtend} title={isEdit? title : titleExtend}
-                children={
-                    orderTarget !== null ?
-                        
-                }
-                /> */}
-                {/* <div style={{ justifyContent: "end"}}><a href="#" class="close" onClick={this.handleCancel}>x</a></div> */}
-                    {/* <h3 id='titleform' >{isEdit? title : titleExtend}</h3> */}
         </div>
         );
     }
