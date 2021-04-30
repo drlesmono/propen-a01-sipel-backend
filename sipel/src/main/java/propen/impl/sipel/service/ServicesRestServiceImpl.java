@@ -22,6 +22,9 @@ public class ServicesRestServiceImpl implements ServicesRestService {
     @Autowired
     private ServicesDb servicesDb;
 
+    @Autowired
+    private ManagedServicesRestService managedServicesRestService;
+
     @Override
     public ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices) {
         services.setIdOrderMS(managedServices);
@@ -29,28 +32,13 @@ public class ServicesRestServiceImpl implements ServicesRestService {
     }
 
     @Override
-    public List<ServicesModel> changeServices(String[] serviceName, ManagedServicesModel managedServices) {
-        List<ServicesModel> list = managedServices.getListService();
-        if (list.size() == serviceName.length) {
-            for (int i = 0; i < serviceName.length; i++) {
-                ServicesModel service = list.get(i);
-                service.setName(serviceName[i]);
-                servicesDb.save(service);
-            }
+    public List<ServicesModel> changeServices(Long idOrderMs, ServicesModel service) {
+        List<ServicesModel> services = servicesDb.findAllByIdOrderMS(idOrderMs);
+        for (int j = 0; j < services.size(); j++){
+            services.get(j).setName(service.getName());
+            servicesDb.save(services.get(j));
         }
-        else if (list.size() < serviceName.length) {
-            int j = serviceName.length - list.size();
-            int k = list.size();
-            for (int i = 0; i < j; i++) {
-                ServicesModel s = new ServicesModel();
-                s.setName(serviceName[k]);
-                s.setIdOrderMS(managedServices);
-                servicesDb.save(s);
-                list.add(s);
-                k++;
-            }
-        }
-        return list;
+        return services;
     }
 
     @Override

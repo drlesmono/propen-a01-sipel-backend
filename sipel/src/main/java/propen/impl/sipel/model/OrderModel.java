@@ -102,7 +102,7 @@ public class OrderModel implements Serializable{
 //    @JsonIgnore
 //    private ReportModel report;
 
-//    public void setIdUser(Long idUser) {
+//   public void setIdUser(Long idUser) {
 //        this.idUser = idUser;
 //    }
 

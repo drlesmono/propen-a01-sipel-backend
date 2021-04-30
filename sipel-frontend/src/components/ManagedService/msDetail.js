@@ -5,24 +5,33 @@ import Order from "../Order/orderDetail";
 
 const ManagedService = (props) => {
     const { 
-        idOrder,
         idOrderMs,
         actualStart,
         actualEnd,
         listService } = props;
     return (
-        <div className={classes.managedService}>
-            <p>{`Order ${ <Order 
-                idOrder={Order.idOrder}/> }`}</p>
-            <p>{`ID MS ${idOrderMs}`}</p>
-            <p>{`Periode Mulai: ${actualStart}`}</p>
-            <p>{`Periode Selesai: ${actualEnd}`}</p>
-            <p>{listService.map((service) => (
-                <ServiceList 
-                    name={service.name}
-                />
-            ))}</p>
+        <div>
+            <div className="row">
+                <div className="col-sm-4">
+                    <div className="form-group">
+                        <p>{`ID Order MS: ${idOrderMs}`}</p>
+                    </div>
+                </div>
+                <div className="col-sm-4">
+                    <div className="form-group">
+                        <p>{`Periode Mulai: ${actualStart}`}</p>
+                    </div>
+                </div>
+                <div className="col-sm-4">
+                    <div className="form-group">
+                        <p>{`Periode Selesai: ${actualEnd}`}</p>
+                    </div>
+                </div>
+            </div>
         </div>
+       /*  {/* </div>
+        <p>{listService.map((service) => (<ServiceList name={service.name} />))}</p>
+        </div> */
     );
 };
 

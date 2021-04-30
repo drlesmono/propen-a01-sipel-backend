@@ -8,7 +8,7 @@ import java.util.List;
 public interface ServicesRestService {
     ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices);
 
-    List<ServicesModel> changeServices(String[] serviceName, ManagedServicesModel managedServices);
+    List<ServicesModel> changeServices(Long idOrderMs, ServicesModel service);
 
     ServicesModel getServiceById(Long idServices);
 }

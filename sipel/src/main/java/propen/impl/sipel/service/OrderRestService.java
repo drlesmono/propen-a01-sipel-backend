@@ -7,7 +7,7 @@ import java.util.List;
 public interface OrderRestService {
     OrderModel createOrder(OrderModel order);
 
-    List<OrderModel> retrieveListOrder();
+    List<OrderModel> retrieveOrder();
 
     OrderModel getOrderById(Long idOrder);
 

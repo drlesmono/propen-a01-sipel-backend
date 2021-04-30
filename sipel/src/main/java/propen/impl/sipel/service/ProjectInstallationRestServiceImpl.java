@@ -3,6 +3,7 @@ package propen.impl.sipel.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.repository.ProjectInstallationDb;
 import propen.impl.sipel.rest.Setting;
@@ -29,9 +30,9 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         return projectInstallationDb.save(projectInstallation);
     }
 
-    @Override
-    public ProjectInstallationModel changeOrderPI(Long idOrderPI, ProjectInstallationModel orderPIUpdate) {
-        ProjectInstallationModel orderPI = getPIOrderById(idOrderPI);
+    /* @Override
+    public ProjectInstallationModel changeOrderPI(OrderModel order, Long idOrder, ProjectInstallationModel orderPIUpdate) {
+        ProjectInstallationModel orderPI = order.getIdOrderPi();
         orderPI.setStartPI(orderPIUpdate.getStartPI());
         orderPI.setDeadline(orderPIUpdate.getDeadline());
         orderPI.setPercentage(orderPIUpdate.getPercentage());
@@ -39,7 +40,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         orderPI.setClose(false);
         orderPI.setDateClosedPI(null);
         return projectInstallationDb.save(orderPI);
-    }
+    } */
 
     @Override
     public ProjectInstallationModel getPIOrderById(Long idOrderPI) {

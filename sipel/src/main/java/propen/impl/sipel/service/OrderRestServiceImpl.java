@@ -30,7 +30,7 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public List<OrderModel> retrieveListOrder() {
+    public List<OrderModel> retrieveOrder() {
         return orderDb.findAll();
     }
 

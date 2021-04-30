@@ -9,6 +9,7 @@ import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.ServicesModel;
+import propen.impl.sipel.repository.OrderDb;
 import propen.impl.sipel.service.ManagedServicesRestService;
 import propen.impl.sipel.service.OrderRestService;
 import propen.impl.sipel.service.ProjectInstallationRestService;
@@ -33,6 +34,9 @@ public class  OrderRestController {
 
     @Autowired
     private ServicesRestService servicesRestService;
+
+    @Autowired
+    private OrderDb orderDb;
 
     @PostMapping(value = "/order/tambah")
     public OrderModel createOrder(
@@ -191,9 +195,9 @@ public class  OrderRestController {
         }
     }*/
 
-    @GetMapping(value = "/order")
+    @GetMapping(value = "/orderList")
     private List<OrderModel> retrieveListOrder() {
-        return orderRestService.retrieveListOrder();
+        return orderRestService.retrieveOrder();
     }
 
     /*private List<ServicesModel> manageServices(ManagedServicesModel managedServices) {

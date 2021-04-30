@@ -4,14 +4,12 @@ import Order from "../../components/Order/orderDetail";
 import ProjectInstallation from "../../components/ProjectInstallation/piDetail";
 import ManagedService from "../../components/ManagedService/msDetail";
 import Service from "../../components/Services/serviceDetail";
-import axios from 'axios';
 import APIConfig from "../../APIConfig";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
 import Modal from "../../components/Modal";
 import classes from "./styles.module.css";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Form } from "react-bootstrap";
 
 const initState = {
@@ -40,9 +38,6 @@ const initState = {
     isEdit: false,
     isCreate: false,
     isUpload: false,
-    child: {
-        isSubmitOrderMS: false,
-    }
 }
 
 class InputDataOrder extends React.Component {
@@ -104,6 +99,10 @@ class InputDataOrder extends React.Component {
                 clientPhoneSubmit: "",
                 clientEmailSubmit: "",
                 dateOrderSubmit: "",
+                startPISubmit: "",
+                deadlineSubmit: "",
+                actualStartSubmit: "",
+                actualEndSubmit: "",
                 isSubmitOrder: false,
                 isCreateChild: false,
                 isSubmitOrderMS: false,
@@ -112,25 +111,24 @@ class InputDataOrder extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleTambahOrder = this.handleTambahOrder.bind(this);
+        this.handleEditOrder = this.handleEditOrder.bind(this);
+        //this.handleDetailOrder = this.handleDetailOrder.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.addNewRow = this.addNewRow.bind(this);
         this.deleteRow = this.deleteRow.bind(this);
         this.handleReportSubmitPI = this.handleReportSubmitPI.bind(this);
         this.handleAfterSubmitOrder = this.handleAfterSubmitOrder.bind(this);
-        this.handleClickSumbit = this.handleClickSumbit.bind(this);
         this.handleSubmitTambahOrder = this.handleSubmitTambahOrder.bind(this);
         this.clickOnDelete = this.clickOnDelete.bind(this);
         this.handleSubmitTambahPI = this.handleSubmitTambahPI.bind(this);
         this.handleSubmitTambahMS = this.handleSubmitTambahMS.bind(this);
         this.handleSubmitTambahService = this.handleSubmitTambahService.bind(this);
-        this.handleAfterLoad = this.handleAfterLoad.bind(this);
         this.handleSubmitEditOrder = this.handleSubmitEditOrder.bind(this);
         this.handleReportSubmitMS = this.handleReportSubmitMS.bind(this);
         this.handleToService = this.handleToService.bind(this);
-        this.handleSubmitTambahPIMS = this.handleSubmitTambahPIMS.bind(this);
+        //this.handleSubmitTambahPIMS = this.handleSubmitTambahPIMS.bind(this);
         this.handleClickUnggah = this.handleClickUnggah.bind(this);
         this.handleUploadDokumen = this.handleUploadDokumen.bind(this);
-        this.handleCancelEdit = this.handleCancelEdit.bind(this);
     }
   
     handleChange = (e) => {
@@ -165,41 +163,33 @@ class InputDataOrder extends React.Component {
         this.setState({ isCreate: true });
     }
 
-    handleClickSumbit() {
-        this.setState({ isSubmit: true });
-    }
-
     handleCancel(event) {
         event.preventDefault();
-        this.setState({ isCreate: false, isEdit: false , ...initState });
+        this.setState({ isCreate: false, isEdit: false , isEditableChild: false, isShowDetail: false, ...initState });
     }
-
-    //handleCancelEdit(event) {
-//    event.preventDefault();
-  //      this.setState({ isCreate: false, isEdit: false , ...editState });
-// }
 
     componentDidMount() {
         this.loadData();
     }
 
-    handleAfterLoad() {
+    /* handleAfterLoad() {
         this.setState({ child: {idOrder: this.state.orders[this.state.orders.length - 1].idOrder}});
         console.log(this.state.child.idOrder);
-    }
+    } */
 
     async loadData() {
         try {
-            const listOrder  = await APIConfig.get("/order");
+            const listOrder  = await APIConfig.get("/orderList");
             const listOrderMS  = await APIConfig.get("/orderMS");
             this.setState({ orders: listOrder.data });
             this.setState({ ordersMS: listOrderMS.data });
-            console.log(this.state.ordersMS);
+            //console.log(this.state.ordersMS);
+            //this.handleAfterLoad();
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
         }
-        this.setState({ finishLoad: true });
+        //this.setState({ finishLoad: true });
     }
 
     async handleSubmitTambahOrder(event) {
@@ -221,12 +211,14 @@ class InputDataOrder extends React.Component {
                 dateOrder: this.state.dateOrder,
             }
             await APIConfig.post("/order/tambah", data);
+            this.handleAfterSubmitOrder(event);
             this.loadData();
         } catch (error) {
             alert("Order Gagal Disimpan. Coba Kembali!");
             console.log(error);
         }
-        this.handleAfterSubmitOrder(event);
+        //this.handleAfterSubmitOrder(event);
+        this.handleCancel(event);
     }
 
     async handleSubmitEditOrder(event) {
@@ -249,17 +241,13 @@ class InputDataOrder extends React.Component {
             }
             await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data);
             this.loadData();
-            if (projectInstallation) {
-                this.handleEditPI(order.idOrderPi);
-            }
-            if (managedService) {
-                this.handleEditMS(order.idOrderMs)
-            }
+            this.setState({ isEditableChild: true });
         } catch (error) {
             alert("Order Gagal Diperbarui. Coba Kembali!");
             console.log(error);
         }
         this.handleAfterSubmitOrder(event);
+        this.handleCancel(event);
     }
 
     handleAfterSubmitOrder(event) {
@@ -283,31 +271,10 @@ class InputDataOrder extends React.Component {
                 isCreateChild: true,
             }
         });
-        this.handleCancel(event);
+        //this.handleCancel(event);
     }
 
     async handleSubmitTambahPI(event) {
-        event.preventDefault();
-        try {
-            const data = {
-                startPI: this.state.startPI,
-                deadline: this.state.deadline,
-                percentage: this.state.percentage,
-                close: this.state.close,
-            }
-            console.log(this.state.idOrder);
-            await APIConfig.post(`/order/ubah/PI/${this.state.idOrder}`, data);
-            this.loadData();
-            this.handleReportSubmitPI(event);
-            console.log(event);
-        } catch (error) {
-            alert("Data Project Installation gagal disimpan! Masukkan kembali tanggal mulai dan selesai project!");
-            console.log(error);
-        }
-        this.handleCancel(event);
-    }
-
-    async handleSubmitEditPI(event) {
         event.preventDefault();
         try {
             const data = {
@@ -328,6 +295,27 @@ class InputDataOrder extends React.Component {
         this.handleCancel(event);
     }
 
+    /* async handleSubmitEditPI(event) {
+        event.preventDefault();
+        try {
+            const data = {
+                startPI: this.state.child.startPISubmit,
+                deadline: this.state.child.deadlineSubmit,
+                percentage: this.state.percentage,
+                close: this.state.close,
+            }
+            console.log(this.state.idOrder);
+            await APIConfig.post(`/order/ubah/PI/${this.state.idOrderPi}`, data);
+            this.loadData();
+            this.handleReportSubmitPI(event);
+            console.log(event);
+        } catch (error) {
+            alert("Data Project Installation gagal disimpan! Masukkan kembali tanggal mulai dan selesai project!");
+            console.log(error);
+        }
+        this.handleCancel(event);
+    } */
+
     async handleSubmitTambahMS(event) {
         event.preventDefault();
         try {
@@ -346,7 +334,7 @@ class InputDataOrder extends React.Component {
         this.handleCancel(event);
     }
 
-    async handleEditTambahMS(event) {
+    /* async handleEditTambahMS(event) {
         event.preventDefault();
         try {
             const data = {
@@ -362,9 +350,9 @@ class InputDataOrder extends React.Component {
             console.log(error);
         }
         this.handleCancel(event);
-    }
+    } */
 
-    async handleSubmitTambahPIMS(event) {
+    /* async handleSubmitTambahPIMS(event) {
         event.preventDefault();
         try {
             const dat = {
@@ -388,7 +376,7 @@ class InputDataOrder extends React.Component {
             console.log(error);
         }
         this.handleCancel(event);
-    }
+    } */
 
     handleToService(event){
         event.preventDefault();
@@ -414,7 +402,7 @@ class InputDataOrder extends React.Component {
         this.handleCancel(event);
     }
 
-    async handleSubmitEditService(event) {
+    /* async handleSubmitEditService(event) {
         event.preventDefault();
         try {
             for (let i=0; i<this.state.listService.length;i++) {
@@ -431,7 +419,7 @@ class InputDataOrder extends React.Component {
             console.log(error);
         }
         this.handleCancel(event);
-    }
+    } */
 
     async handleUploadDokumen(event) {
         event.preventDefault();
@@ -439,7 +427,6 @@ class InputDataOrder extends React.Component {
             const formData = {
                 file: this.state.selectedFile,
             };
-            //formData.append('file', this.state.selectedFile);
             await APIConfig.post(`order/${this.state.idOrder}/upload`, formData);
             this.loadData();
             this.setState({ isUpload: false });
@@ -480,12 +467,12 @@ class InputDataOrder extends React.Component {
         }
     }
 
-    getIdOrder(){
+    /* getIdOrder(){
         let newListOrder = this.state.orders;
         newListOrder = this.state.orders[this.state.orders.length - 1].idOrder;
         console.log(newListOrder);
         return newListOrder;
-    }
+    } */
 
     handleFilter(event) {
         let newOrderList = this.state.orders;
@@ -504,6 +491,7 @@ class InputDataOrder extends React.Component {
     handleEditOrder(order) {
         this.setState({
             isEdit: true,
+            //isEditableChild: true,
             idOrder: order.idOrder,
             noPO: order.noPO,
             noSPH: order.noSPH,
@@ -519,9 +507,27 @@ class InputDataOrder extends React.Component {
             managedService: order.managedService,
             dateOrder: order.dateOrder,
         })
+        if (order.projectInstallation) {
+            this.setState({
+                idOrderPi: order.idOrderPi.idOrderPi,
+                child: {
+                    startPISubmit: order.idOrderPi.startPI,
+                    deadlineSubmit: order.idOrderPi.deadline,
+                }
+            });
+        }
+        if (order.managedService) {
+            this.setState({
+                idOrderMs: order.idOrderMs.idOrderMs,
+                child: {
+                    actualStartSubmit: order.idOrderMs.actualStart,
+                    actualEndSubmit: order.idOrderMs.actualEnd,
+                }
+            })
+        }
     }
 
-    handleEditPI(pi) {
+    /* handleEditPI(pi) {
         this.setState({
             isEditableChild: true,
             idOrder: pi.idOrderPi,
@@ -541,10 +547,59 @@ class InputDataOrder extends React.Component {
             activated: ms.activated,
         })
     }
+ */
 
-    handleDetail(order) {
-        this.setState({ isShowDetail: true });
-    }
+    /* async lookUpDetail(order) {
+        try {
+            const orderItem  = await APIConfig.get(`/order/detail/${order.idOrder}`);
+            this.setState({ orderTarget: orderItem.data });
+            //console.log(this.state.orderTarget);
+            //this.setState({ isShowDetail: true });
+            this.handleDetail(this.state.orderTarget);
+        } catch (error) {
+            alert("Oops terjadi masalah pada server");
+            console.log(error);
+        }
+    } */
+
+    /* handleDetail(orderTarget) {
+        console.log(this.state.orderTarget);
+        let order = this.state.orderTarget;
+        console.log(order);
+        this.setState({ 
+            isShowDetail: true,
+            idOrder: order.idOrder,
+            noPO: order.noPO,
+            noSPH: order.noSPH,
+            orderName: order.orderName,
+            description: order.description,
+            clientName: order.clientName,
+            clientDiv: order.clientDiv,
+            clientOrg: order.clientOrg,
+            clientPIC: order.clientPIC,
+            clientPhone: order.clientPhone,
+            clientEmail: order.clientEmail,
+            projectInstallation: order.projectInstallation,
+            managedService: order.managedService,
+            dateOrder: order.dateOrder,
+        });
+        if (order.projectInstallation) {
+            this.setState({
+                idOrderPi: order.idOrderPi.idOrderPi,
+                startPI: order.idOrderPi.startPI,
+                deadline: order.idOrderPi.deadline,
+                percentage: order.idOrderPi.percentage,
+                close: order.idOrderPi.close,
+            })
+        }
+        if (order.managedService) {
+            this.setState({
+                idOrderMs: order.idOrderMs.idOrderMs,
+                actualStart: order.idOrderMs.actualStart,
+                actualEnd: order.idOrderMs.actualEnd
+            })
+        }
+    } */
 
     handleClickUnggah(order) {
         this.setState({ 
@@ -582,7 +637,14 @@ class InputDataOrder extends React.Component {
             orders,
             orderFiltered,
             ordersMS,
-            isFiltered
+            orderTarget,
+            isFiltered,
+            child: {
+                startPISubmit,
+                deadlineSubmit,
+                actualStartSubmit,
+                actualEndSubmit,
+            }
         } = this.state;
 
         let { listService } = this.state;
@@ -606,17 +668,17 @@ class InputDataOrder extends React.Component {
                         this.checkStatusOrder(order.verified),
                         <CustomizedButtons 
                             variant="contained" 
-                            size="medium" 
+                            size="small" 
                             color="#FD693E" 
                             onClick={() => this.handleEditOrder(order)}>Ubah</CustomizedButtons>, 
                         <CustomizedButtons 
                             variant="contained" 
-                            size="medium" 
-                            color="#FD693E" 
-                            onClick={() => this.handleDetailOrder(order)}>Lihat</CustomizedButtons>,
+                            size="small" 
+                            color="#FD693E"
+                            onClick={() => this.lookUpDetail(order)}>Lihat</CustomizedButtons>,
                         <CustomizedButtons 
                             variant="contained" 
-                            size="medium" 
+                            size="small" 
                             color="#FD693E" 
                             onClick={() => this.handleClickUnggah(order)}>Unggah</CustomizedButtons>])
                         : orders.map((order) => [order.idOrder, order.noPO, order.orderName, order.clientName, order.clientOrg,
@@ -624,17 +686,17 @@ class InputDataOrder extends React.Component {
                             this.checkStatusOrder(order.verified),
                             <CustomizedButtons 
                                 variant="contained" 
-                                size="medium" 
+                                size="small" 
                                 color="#FD693E" 
                                 onClick={() => this.handleEditOrder(order)}>Ubah</CustomizedButtons>,
                             <CustomizedButtons 
                                 variant="contained" 
-                                size="medium" 
-                                color="#FD693E" 
-                                onClick={() => this.handleDetailOrder(order)}>Lihat</CustomizedButtons>,
+                                size="small" 
+                                color="#FD693E"
+                                onClick={() => this.lookUpDetail(order)}>Lihat</CustomizedButtons>,
                             <CustomizedButtons 
                                 variant="contained" 
-                                size="medium" 
+                                size="small" 
                                 color="#FD693E" 
                                 onClick={() => this.handleClickUnggah(order)}>Unggah</CustomizedButtons>]);
 
@@ -650,6 +712,7 @@ class InputDataOrder extends React.Component {
                 onClick={this.handleTambahOrder}>Tambah Order</CustomizedButtons>
             <br></br>
             <CustomizedTables headers={tableHeaders} rows={tableRows} />
+
             <Modal show={this.state.isCreate || this.state.isEdit} handleCloseModal={this.handleCancel}>
             <NotificationContainer />
                 <form>
@@ -658,7 +721,7 @@ class InputDataOrder extends React.Component {
                         <div className="col-sm-10">
                             <div className="card">
                                 <div className="card-header text-center">
-                                    {this.state.isCreate ? "Tambah Order" : `Ubah Order dengan Nama ${this.state.orderName}`}
+                                {this.state.isCreate ? "Tambah Order" : `Ubah Data Order ${this.state.child.orderNameSubmit}`}
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
@@ -773,7 +836,8 @@ class InputDataOrder extends React.Component {
                                         <div className="col-sm-4">
                                             <label className="required">Jenis Order</label>
                                             <div className="form-check">
-                                                <input 
+                                                {this.state.isCreate ? 
+                                                <input
                                                     type="checkbox" 
                                                     name="projectInstallation" 
                                                     id="projectInstallation" 
@@ -782,10 +846,21 @@ class InputDataOrder extends React.Component {
                                                     checked={projectInstallation} 
                                                     onChange={(e) => this.setState(prevState => ({
                                                         projectInstallation: !prevState.projectInstallation
-                                                    }))} />
+                                                    }))} /> 
+                                                : <input disabled
+                                                type="checkbox" 
+                                                name="projectInstallation" 
+                                                id="projectInstallation" 
+                                                className="form-check-input" 
+                                                value={projectInstallation}
+                                                checked={projectInstallation} 
+                                                onChange={(e) => this.setState(prevState => ({
+                                                    projectInstallation: !prevState.projectInstallation
+                                                }))} />}
                                                 <label className="form-check-label">Project Installation</label>
                                             </div>
                                             <div className="form-check">
+                                                {this.state.isCreate ? 
                                                 <input 
                                                     type="checkbox" 
                                                     name="managedService" 
@@ -796,6 +871,16 @@ class InputDataOrder extends React.Component {
                                                     onChange={(e) => this.setState(prev => ({
                                                         managedService: !prev.managedService
                                                     }))} />
+                                                : <input disabled
+                                                    type="checkbox" 
+                                                    name="projectInstallation" 
+                                                    id="projectInstallation" 
+                                                    className="form-check-input" 
+                                                    value={projectInstallation}
+                                                    checked={projectInstallation} 
+                                                    onChange={(e) => this.setState(prevState => ({
+                                                        projectInstallation: !prevState.projectInstallation
+                                                    }))} /> }
                                                 <label className="form-check-label">Managed Services</label>
                                             </div>
                                         </div>
@@ -853,7 +938,7 @@ class InputDataOrder extends React.Component {
                 </form>
             </Modal>
         
-           <Modal show={this.state.child.isProjectInstallation && !this.state.child.isManagedService && this.state.child.isSubmitOrder || this.state.isEditableChild} handleCloseModal={this.handleCancel}>
+           <Modal show={this.state.child.isProjectInstallation && !this.state.child.isManagedService && this.state.child.isSubmitOrder} handleCloseModal={this.handleCancel}>
                     <NotificationContainer />
                     <form onChange={this.handleChange} >
                         <div className="row" style={{ marginTop: 20 }}>
@@ -867,8 +952,90 @@ class InputDataOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <label className="required">ID Order</label>
+                                            {this.state.child.isCreateChild ? 
                                             <Form.Control as="select" size="md" name="idOrder" id="idOrder" onChange={this.handleChange}>
                                                 {orders.map(order => <option value={order.idOrder}>{order.idOrder}</option>)}
+                                            </Form.Control>
+                                            : <Form.Control as="select" size="md" name="idOrder" id="idOrder" onChange={this.handleChange} disabled>
+                                            {orders.map(order => <option value={order.idOrder}>{order.idOrder}</option>)}
+                                            </Form.Control>
+                                        }
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <div className="form-group">
+                                                <label className="required">Tanggal Mulai Project</label>
+                                                {this.state.child.isCreateChild ? 
+                                                <input 
+                                                    type="date" 
+                                                    name="startPI" 
+                                                    id="startPI" 
+                                                    className="form-control" 
+                                                    placeholder="Masukkan Tanggal Mulai" 
+                                                    value={startPI} 
+                                                    onChange={this.handleChange} />
+                                                : <input 
+                                                type="date" 
+                                                name="startPISubmit" 
+                                                id="startPISubmit" 
+                                                className="form-control" 
+                                                placeholder="Masukkan Tanggal Mulai" 
+                                                value={this.state.child.startPISubmit} 
+                                                onChange={this.handleChange} />}
+                                            </div>
+                                        </div>
+                                        <div className="col-sm-6">
+                                            <div className="form-group">
+                                                <label className="required">Tanggal Selesai Project</label>
+                                                {this.state.child.isCreateChild ? 
+                                                <input 
+                                                    type="date" 
+                                                    name="deadline" 
+                                                    id="deadline" 
+                                                    className="form-control" 
+                                                    placeholder="Masukkan Tanggal Selesai" 
+                                                    value={deadline} 
+                                                    onChange={this.handleChange} />
+                                                : <input 
+                                                type="date" 
+                                                name="deadline" 
+                                                id="deadline" 
+                                                className="form-control" 
+                                                placeholder="Masukkan Tanggal Selesai" 
+                                                value={this.state.child.deadlineSubmit} 
+                                                onChange={this.handleChange} />}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer text-center">
+                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
+                                        Simpan Data PI
+                                    </CustomizedButtons>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </Modal>
+
+            <Modal show={this.state.isEditableChild} handleCloseModal={this.handleCancel}>
+                    <NotificationContainer />
+                    <form onChange={this.handleChange} >
+                        <div className="row" style={{ marginTop: 20 }}>
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-10">
+                            <div className="card">
+                                <div className="card-header text-center">
+                                    {this.state.child.isCreateChild ? "Tambah Data PI" : `Ubah Data Order PI ${this.state.child.orderNameSubmit}`}
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <label className="required">ID Order</label>
+                                            <Form.Control as="select" size="md" name="idOrder" id="idOrder" onChange={this.handleChange} disabled>
+                                            {orders.map(order => <option value={order.idOrder}>{order.idOrder}</option>)}
                                             </Form.Control>
                                         </div>
                                     </div>
@@ -878,11 +1045,11 @@ class InputDataOrder extends React.Component {
                                                 <label className="required">Tanggal Mulai Project</label>
                                                 <input 
                                                     type="date" 
-                                                    name="startPI" 
-                                                    id="startPI" 
+                                                    name="startPISubmit" 
+                                                    id="startPISubmit" 
                                                     className="form-control" 
                                                     placeholder="Masukkan Tanggal Mulai" 
-                                                    value={startPI} 
+                                                    value={this.state.child.startPISubmit} 
                                                     onChange={this.handleChange} />
                                             </div>
                                         </div>
@@ -895,15 +1062,14 @@ class InputDataOrder extends React.Component {
                                                     id="deadline" 
                                                     className="form-control" 
                                                     placeholder="Masukkan Tanggal Selesai" 
-                                                    value={deadline} 
+                                                    value={this.state.child.deadlineSubmit} 
                                                     onChange={this.handleChange} />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.state.child.isSubmitOrder 
-                                    ? this.handleSubmitTambahPI : this.handleSubmitEditPI} >
+                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
                                         Simpan Data PI
                                     </CustomizedButtons>
                                 </div>
@@ -1018,92 +1184,68 @@ class InputDataOrder extends React.Component {
                     </form>
                 </Modal>
 
-                <Modal show={this.state.child.isManagedService && this.state.child.isProjectInstallation && this.state.child.isSubmitOrder} handleCloseModal={this.handleCancel} >
+            {/* <Modal show={this.state.isShowDetail} handleCloseModal={this.handleCancel} >
                 <NotificationContainer />
-                <form onSubmit={this.handleSubmitTambahPIMS} onChange={this.handleChange} >
-                    <div className="row" style={{ marginTop: 20 }}>
+                    <div className="row" style={{ marginTop: 5 }}>
                     <div className="col-sm-1"></div>
                     <div className="col-sm-10">
                         <div className="card">
                             <div className="card-header text-center">
-                                {this.state.isCreate ? "Tambah Data PI-MS" : `Ubah Data Order MS ${this.state.orderName}`}
+                                Detail Order
                             </div>
                             <div className="card-body">
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <label className="required">ID Order</label>
-                                        <Form.Control as="select" size="md" name="idOrder" id="idOrder" onChange={this.handleChange}>
-                                            {orders.map(order => <option value={order.idOrder}>{order.idOrder}</option>)}
-                                        </Form.Control>
-                                    </div>
+                                <Order
+                                    key={this.state.idOrder}
+                                    idOrder={this.state.idOrder}
+                                    noPO={this.state.noPO}
+                                    noSPH={this.state.noSPH}
+                                    orderName={this.state.orderName}
+                                    description={this.state.description}
+                                    projectInstallation={this.state.projectInstallation}
+                                    managedService={this.state.managedService}
+                                    clientName={this.state.clientName}
+                                    clientDiv={this.state.clientDiv}
+                                    clientPIC={this.state.clientPIC}
+                                    clientOrg={this.state.clientOrg}
+                                    clientPhone={this.state.clientPhone}
+                                    clientEmail={this.state.clientEmail}
+                                    dateOrder={this.state.dateOrder}
+                                    verified={this.state.verified}
+                                />
+                            </div> 
+                                <div className="card-header text-center">
+                                    Detail Project Installation
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Periode Mulai Managed</label>
-                                            <input 
-                                                type="date" 
-                                                name="actualStart" 
-                                                id="actualStart" 
-                                                className="form-control" 
-                                                placeholder="Masukkan Periode Mulai" 
-                                                value={actualStart} 
-                                                onChange={this.handleChange} />
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label className="required">Tanggal Mulai Project</label>
-                                            <input 
-                                                type="date" 
-                                                name="startPI" 
-                                                id="startPI" 
-                                                className="form-control" 
-                                                placeholder="Masukkan Tanggal Mulai" 
-                                                value={startPI} 
-                                                onChange={this.handleChange} />
-                                        </div>
-                                    </div>
+                                <div className="card-body">
+                                    <ProjectInstallation 
+                                        key={this.state.idOrderPi}
+                                        idOrderPi={this.state.idOrderPi}
+                                        startPI={this.state.startPI}
+                                        deadline={this.state.deadline}
+                                        percentage={this.state.percentage}
+                                        close={this.state.close}
+                                    />
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label>Periode Selesai Managed</label>
-                                            <input 
-                                                type="date" 
-                                                name="actualEnd" 
-                                                id="actualEnd" 
-                                                className="form-control" 
-                                                placeholder="Masukkan Periode Selesai" 
-                                                value={actualEnd} 
-                                                onChange={this.handleChange} />
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <label className="required">Tanggal Selesai Project</label>
-                                            <input 
-                                                type="date" 
-                                                name="deadline" 
-                                                id="deadline" 
-                                                className="form-control" 
-                                                placeholder="Masukkan Tanggal Selesai" 
-                                                value={deadline} 
-                                                onChange={this.handleChange} />
-                                        </div>
-                                    </div>
+                                 <div className="card-header text-center">
+                                    Detail Managed Service
                                 </div>
+                                <div className="card-body">
+                                    <ManagedService 
+                                        key={this.state.idOrderMs}
+                                        idOrderMs={this.state.idOrderMs}
+                                        actualStart={this.state.actualStart}
+                                        actualEnd={this.state.actualEnd}
+                                    />
+                                </div>
+                            <div className="card-footer text-center">
+                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancel}>
+                                    Kembali
+                                </CustomizedButtons>
                             </div>
-                        <div className="card-footer text-center">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPIMS}>
-                                Simpan Data PI-MS
-                            </CustomizedButtons>
-                        </div>
                         </div>                                            
                     </div>
                     </div>
-                </form>
-            </Modal>
+            </Modal> */}
 
             <Modal show={this.state.isUpload} handleCloseModal={this.handleCancel} >
                 <NotificationContainer />

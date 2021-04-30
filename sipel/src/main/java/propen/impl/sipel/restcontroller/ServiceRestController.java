@@ -64,20 +64,17 @@ public class ServiceRestController {
         return managedServices.getListService();
     }
 
-    @PutMapping(value = "/order/ubah/{idService}")
+    @PutMapping(value = "/order/ubah/service/{idOrderMs}")
     private List<ServicesModel> updateService(
-            @PathVariable(value = "idOrder") Long idService,
-            @RequestBody ServicesModel services,
-            HttpServletRequest request,
-            ManagedServicesModel managedServices
+            @PathVariable(value = "idOrderMs") Long idOrderMs,
+            @RequestBody ServicesModel services
     ) {
         try {
-            String[] serviceName = request.getParameterValues("name");
-            return servicesRestService.changeServices(serviceName, managedServices);
+            return servicesRestService.changeServices(idOrderMs, services);
         }
         catch (NoSuchElementException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idService) + " not found!"
+                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrderMs) + " not found!"
             );
         }
     }
