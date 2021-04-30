@@ -30,7 +30,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         return projectInstallationDb.save(projectInstallation);
     }
 
-    /* @Override
+    @Override
     public ProjectInstallationModel changeOrderPI(OrderModel order, Long idOrder, ProjectInstallationModel orderPIUpdate) {
         ProjectInstallationModel orderPI = order.getIdOrderPi();
         orderPI.setStartPI(orderPIUpdate.getStartPI());
@@ -40,7 +40,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         orderPI.setClose(false);
         orderPI.setDateClosedPI(null);
         return projectInstallationDb.save(orderPI);
-    } */
+    }
 
     @Override
     public ProjectInstallationModel getPIOrderById(Long idOrderPI) {

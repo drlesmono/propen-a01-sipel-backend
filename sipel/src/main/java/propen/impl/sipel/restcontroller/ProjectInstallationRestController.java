@@ -59,7 +59,7 @@ public class ProjectInstallationRestController {
         }
     }
 
-    /* @PutMapping(value = "/order/ubah/PI/{idOrder}")
+    @PutMapping(value = "/order/ubah/PI/{idOrder}")
     private ProjectInstallationModel updateOrderPI(
             @PathVariable(value = "idOrder") Long idOrder,
             @RequestBody ProjectInstallationModel projectInstallation,
@@ -73,7 +73,7 @@ public class ProjectInstallationRestController {
                     HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrder) + " not found!"
             );
         }
-    } */
+    }
 
     @GetMapping(value = "/orderPI")
     private List<ProjectInstallationModel> retrievePI() {
