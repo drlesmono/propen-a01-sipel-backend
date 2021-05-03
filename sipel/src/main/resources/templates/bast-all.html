@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <title>Home</title>
+    <head th:fragment="css">
+        <link rel=”stylesheet” href=”https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css”rel=”nofollow”
+              integrity=”sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm” crossorigin=”anonymous”>
+    </head>
+
+    <head th:fragment="js">
+        <script
+                src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"
+        ></script>
+        <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+        <script src=”https://code.jquery.com/jquery-3.2.1.slim.min.js” integrity=”sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN” crossorigin=”anonymous”></script>
+
+        <script src=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js integrity=”sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q” crossorigin=”anonymous”></script>
+
+        <script src=”https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js” integrity=”sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl” crossorigin=”anonymous”></script>
+    </head>
+</head>
+<body>
+<div class="container-fluid">
+    <br>
+
+    <div class="card mb-3" style="color:#0D4A71; background-color:#FFFFFF;">
+        <div class="card-header" style="font-weight: bold;">
+            <h2>Daftar Seluruh BAST</h2>
+        </div>
+        <div class="card-body">
+            <table class="table" style="background-color:#0D47A1; font-size: small;">
+                <thead style="color:#FFFFFF;font-weight:bold;">
+                <tr>
+                    <th>Nomor BAST</th>
+                    <th>Tanggal Penyerahan</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody style="background-color:#FFFFFF;">
+                <tr th:each="bast, iterationStatus : ${bastList}">
+                    <td th:text="${bast.bastNum}"></td>
+                    <td th:text="${bast.dateHandover}"></td>
+                    <td>
+                        <a th:href="@{/laporan/bast/accept/}+${bast.idBast}" class="btn btn-primary">Setujui</a>
+                        <a th:href="@{/laporan/bast/reject/}+${bast.idBast}" class="btn btn-danger">Tolak</a>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

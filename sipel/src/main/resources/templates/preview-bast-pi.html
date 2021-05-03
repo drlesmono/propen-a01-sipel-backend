@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <title>Home</title>
+    <head th:fragment="css">
+        <link rel=”stylesheet” href=”https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css”rel=”nofollow”
+              integrity=”sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm” crossorigin=”anonymous”>
+    </head>
+
+    <head th:fragment="js">
+        <script
+                src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"
+        ></script>
+        <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+        <script src=”https://code.jquery.com/jquery-3.2.1.slim.min.js” integrity=”sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN” crossorigin=”anonymous”></script>
+
+        <script src=https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js integrity=”sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q” crossorigin=”anonymous”></script>
+
+        <script src=”https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js” integrity=”sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl” crossorigin=”anonymous”></script>
+    </head>
+</head>
+<body>
+<div class="container-fluid">
+    <br>
+    <div class="card mb-3" style="color:#0D4A71; background-color:#FFFFFF;">
+        <div class="card-header" style="font-weight: bold;">
+        </div>
+        <div class="card-body">
+                <h2 th:text="'Nomor Permintaan: ' + ${bast.bastNum}"></h2>
+                <h2 th:text="'Nomor Permintaan: ' + ${bast.dateHandover}"></h2>
+                <h2 th:text="'Bertempat di Jakarta'"></h2>
+                <h2 th:text="'Kami yang bertanda tangan di bawah ini'"></h2>
+                <h2 th:text="'Pihak Pertama'"></h2>
+                <h2 th:text="'Pihak Kedua'"></h2>
+                <h2 th:text="'Bahwa Pihak Pertama telah menjelaskan '+ ${order.orderName}+' kepada Pihak Kedua. Dan Pihak Kedua menyetujui hasil ' + ${order.orderName}+ ' yang dijelaskan oleh Pihak Pertama'"></h2>
+                <h2 th:text="'No.PO: ' + ${order.noPO}"></h2>
+
+
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>
