@@ -3,9 +3,10 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
 // import CustomizedModal from "../../components/Modal";
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import classes from "./styles.module.css";
 
 class PeriodeKontrak extends Component {
     constructor(props) {
@@ -135,7 +136,7 @@ class PeriodeKontrak extends Component {
 
     handleReport(){
         if(this.state.isExtend){
-            this.setState({isExtend: false, isReportExtend: true});
+            this.setState({isExtend: false, isReportExtend: true, isAdded: false});
             alert("Perpanjangan periode kontrak berhasil disimpan");
         }else{
             this.setState({isEdit: false, isReport: true});
@@ -392,14 +393,14 @@ class PeriodeKontrak extends Component {
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
-                        <><CustomizedButtons variant="contained" size="small" color="primary" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
-                        <CustomizedButtons variant="contained" size="small" color="secondary"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
+                        <div className="justify-content-between"><Button className={classes.button1} onClick={() => this.handleEdit(order, "perbarui")}>perbarui</Button>
+                        <Button className={classes.button2} onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</Button></div>])
                         : ordersVerified.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
                         this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
-                        <><CustomizedButtons variant="contained" size="small" color="primary" onClick={() => this.handleEdit(order, "perbarui")}>perbarui</CustomizedButtons>
-                        <CustomizedButtons variant="contained" size="small" color="secondary"onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</CustomizedButtons></>])
+                        <div className="justify-content-between"><Button className={classes.button1} onClick={() => this.handleEdit(order, "perbarui")}>perbarui</Button>
+                        <Button className={classes.button2} onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</Button></div>])
  
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
@@ -408,7 +409,7 @@ class PeriodeKontrak extends Component {
                 tableServiceRows = isAdded ? listService : orderTarget.idOrderMs.listService.map((service, index) =>
                                     [isExtend? <Form.Control type="text" size="sm" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
                                     service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
-                                    : service.name, (isReport || isEdit) ? this.getPICService(service) :
+                                    : service.name, (isReport || isEdit || isReportExtend ) ? this.getPICService(service) :
                                     <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
                                     value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
                                     onChange={this.handleChangeField}>
@@ -421,10 +422,8 @@ class PeriodeKontrak extends Component {
 
         return (
             <div style={{justifyContent: "space-around"}}>
-                <div>
-                    <div><h1>Daftar Order</h1></div>
-                    <div><div style={{width: 200}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div></div>
-                </div>
+                <div><h1 className="text-center">Daftar Order</h1></div>
+                <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
                 <Modal
                     show={isEdit || isReport || isExtend || isReportExtend}
@@ -440,7 +439,7 @@ class PeriodeKontrak extends Component {
                     <Modal.Body>
                             <p>
                                 { orderTarget !== null ?
-                                <Form>
+                                <Form style={{ marginLeft: 25 }}>
                                     <table>
                                         <tr>
                                             <td>Id Order</td>
@@ -460,9 +459,10 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                         <tr>
                                             <td style={{fontWeight: 'bold'}}>Managed Service</td>
-                                            {isExtend ? <td><CustomizedButtons variant="contained" size="small" color="secondary" onClick={() => this.handleAddServices(tableServiceRows)}>
+                                            {isExtend ? <td className="d-flex justify-content-end">
+                                            <Button className={classes.button1} onClick={() => this.handleAddServices(tableServiceRows)}>
                                                 + Tambah Services
-                                                </CustomizedButtons></td>
+                                                </Button></td>
                                                 : <></>}
                                         </tr>
                                         <tr>
@@ -486,13 +486,13 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                         <tr>
                                             <td>Periode Mulai</td>
-                                            {isReport ? 
+                                            {isReport || isReportExtend ? 
                                             <td>: {actualStart}</td> :
                                             <td><Form.Control type="date" size="sm" name="actualStart" value={actualStart} onChange={this.handleChangeField}/></td> }
                                         </tr>
                                         <tr>
                                             <td>Periode Berakhir</td>
-                                            {isReport ? 
+                                            {isReport || isReportExtend  ? 
                                             <td>: {actualEnd}</td> :
                                             <td><Form.Control type="text" type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
                                         </tr>
@@ -502,9 +502,9 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                     </table>
                                     {isReport || isReportExtend ? <></> :
-                                    <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmit}>
+                                    <div className="d-flex justify-content-end" style={{ marginRight: 40 }}><Button className={classes.button1} onClick={this.handleSubmit}>
                                         simpan
-                                    </CustomizedButtons></div> }
+                                    </Button></div> }
                                 </Form> : <></>}
                             </p>
                     </Modal.Body>

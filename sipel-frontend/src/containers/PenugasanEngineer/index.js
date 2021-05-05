@@ -3,9 +3,10 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
 // import Modal from "../../components/Modal";
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import classes from "./styles.module.css";
 
 class PenugasanEngineer extends Component {
     constructor(props) {
@@ -233,14 +234,14 @@ class PenugasanEngineer extends Component {
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
-                        <CustomizedButtons variant="contained" size="small" color="primary"
-                        onClick={() => this.handleEdit(order)}>perbarui</CustomizedButtons>])
+                        <div className="d-flex justify-content-center"><Button className={classes.button1}
+                        onClick={() => this.handleEdit(order)}>perbarui</Button></div>])
                         : ordersVerified.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
-                        <CustomizedButtons variant="contained" size="small" color="primary"
-                        onClick={() => this.handleEdit(order)}>perbarui</CustomizedButtons>])
+                        <div className="d-flex justify-content-center"><Button className={classes.button1}
+                        onClick={() => this.handleEdit(order)}>perbarui</Button></div>])
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
@@ -264,12 +265,8 @@ class PenugasanEngineer extends Component {
 
         return (
             <div style={{justifyContent: "space-around"}}>
-                <div>
-                    {/* <tr> */}
-                        <div><h1>Daftar Order</h1></div>
-                        <div><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} id="search"/></div>
-                    {/* </tr> */}
-                </div>
+                <div><h1 className="text-center">Daftar Order</h1></div>
+                <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
                 <Modal
                     show={isEdit || isReport}
@@ -343,9 +340,9 @@ class PenugasanEngineer extends Component {
                                         : <></>}
                                     </table>
                                     {isReport ? <></> :
-                                    <div style={{alignItems:'right'}}><CustomizedButtons variant="contained" size="medium" color="primary" onClick={this.handleSubmit}>
+                                    <><br/><div className="d-flex justify-content-end" style={{ marginRight: 35 }}><Button variant="primary" className={classes.button1} onClick={this.handleSubmit}>
                                         simpan
-                                    </CustomizedButtons></div>}
+                                    </Button></div></>}
                                 </Form></>
                                 : <></> }
                             </p>

@@ -2,7 +2,6 @@
 import { useRoutes, A } from "hookrouter";
 // import routes from "./router";
 import './App.css';
-import React, { Component } from "react";
 import Layout from "./components/Layout";
 import PenugasanEngineer from "./containers/PenugasanEngineer";
 import PeriodeKontrak from "./containers/PeriodeKontrak";
@@ -36,7 +35,7 @@ function App(){
   const routeResult = useRoutes(routes);
 
     return (
-        <Layout>
+        <>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" id="navbar">
             <Navbar.Brand href="/" style={{ textDecoration: 'none', color: '#F7873F' }}>SIPEL</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -56,7 +55,7 @@ function App(){
                   <NavDropdown.Item href="/produksi/periodeKontrak">Periode Kontrak</NavDropdown.Item>
                   <NavDropdown.Item href="#produksi/maintenance">Maintenance</NavDropdown.Item>
                 </NavDropdown>
-                <NavDropdown title="Laporan" id="collasible-nav-dropdown">
+                <NavDropdown title="Laporan"  id="collasible-nav-dropdown">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
@@ -73,8 +72,10 @@ function App(){
               </Nav>
             </Navbar.Collapse>
           </Navbar>
+          <Layout>
             { routeResult }
           </Layout>
+        </>
     );
 }
 

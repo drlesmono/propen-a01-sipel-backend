@@ -1,0 +1,35 @@
+.search {
+    width: 20%;
+}
+
+.button1{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F !important;
+}
+
+.button1:hover{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F!important;
+}
+
+.button1:focus{
+    box-shadow: none !important;
+}
+
+.button2{
+    background-color: #2F3F58 !important;
+    outline-color:  #2F3F58 !important;
+    border-color:  #2F3F58 !important;
+}
+
+.button2:hover{
+    background-color: #2F3F58 !important;
+    outline-color:  #2F3F58 !important;
+    border-color:  #2F3F58!important;
+}
+
+.button2:focus{
+    box-shadow: none !important;
+}
