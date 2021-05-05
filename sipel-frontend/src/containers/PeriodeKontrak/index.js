@@ -7,6 +7,7 @@ import { Form, Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
+import moment from "moment";
 
 class PeriodeKontrak extends Component {
     constructor(props) {
@@ -145,16 +146,11 @@ class PeriodeKontrak extends Component {
     }
 
     getDate(value){
-        let date;
-        if(value.includes("T")){
-            const valueSplit = value.split("T");
-            date = valueSplit[0].split("-");
-        }else{
-            date = value.split("-");
-        }
+        let date = new Date(value);
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        const newDate = date[2]+"/"+date[1]+"/"+date[0];
-        return newDate;
+        return date.getDate()+" "+monthNames[date.getMonth()]+" "+date.getFullYear();
     }
 
     getTimeRemaining(actualStart, actualEnd){
@@ -243,6 +239,7 @@ class PeriodeKontrak extends Component {
                     } 
                 }
             }
+            
             this.setState({ [name]: value, formValid: true});
         }
     }
@@ -253,8 +250,8 @@ class PeriodeKontrak extends Component {
     }
 
     handleEdit(order, typeEdit) {
-        let actualStart = order.idOrderMs.actualStart.split("T");
-        let actualEnd = order.idOrderMs.actualEnd.split("T");
+        let actualStart = moment(new Date(order.idOrderMs.actualStart)).format("YYYY-MM-DD");
+        let actualEnd = moment(new Date(order.idOrderMs.actualEnd)).format("YYYY-MM-DD");
         if(typeEdit === "perbarui"){
             this.setState({ isEdit: true , formValid: true});
         }else{
@@ -263,11 +260,16 @@ class PeriodeKontrak extends Component {
 
         this.setState({  
             orderTarget: order,
-            actualStart: actualStart[0],
-            actualEnd: actualEnd[0],
+            actualStart: actualStart,
+            actualEnd: actualEnd,
             totalServices: order.idOrderMs.listService.length,
             timeRemaining: this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd)  
         });
+
+        // console.log(actualStart.getFullYear()+"-"+actualStart.getMonth()+"-"+actualStart.getDate());
+        // console.log(actualStart.toISOString());
+        // console.log(actualEnd.getFullYear()+"-"+actualEnd.getMonth()+"-"+actualEnd.getDate());
+        // console.log(actualEnd.toISOString());
         
         if(order.idOrderMs.idUserPic !== null){
             let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
@@ -326,10 +328,10 @@ class PeriodeKontrak extends Component {
         return date+"T17:00:00.000+00:00";
     }
 
-    changeDateFormat(date){
-        let dateSplit = date.split("/");
-        return dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
-    }
+    // changeDateFormat(date){
+    //     let dateSplit = date.split("/");
+    //     return dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
+    // }
 
     getDaysMonthsYears(date){
         const dateSplit = date.split(" ");
@@ -372,14 +374,20 @@ class PeriodeKontrak extends Component {
         this.setState({ totalServices: totalServicesNew });
         servicesEngineer = servicesEngineer.concat(null);
         this.setState({serviceEngineer: servicesEngineer});
-        listServiceNew = listService.concat([[<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
-                            placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-                            <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
-                            value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
-                            onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                            </Form.Control>]]);
+        // listServiceNew = listService.concat([[<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
+        //                     placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
+        //                     <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
+        //                     value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
+        //                     onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+        //                     </Form.Control>]]);
 
-        this.setState({listService: listServiceNew});
+        // this.setState({listService: listServiceNew});
+        this.setState({listService: [...this.state.listService, [<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
+        placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
+        <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
+        value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
+        onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+        </Form.Control>]]});
     }
 
     render() {
@@ -487,13 +495,13 @@ class PeriodeKontrak extends Component {
                                         <tr>
                                             <td>Periode Mulai</td>
                                             {isReport || isReportExtend ? 
-                                            <td>: {actualStart}</td> :
+                                            <td>: {this.getDate(actualStart)}</td> :
                                             <td><Form.Control type="date" size="sm" name="actualStart" value={actualStart} onChange={this.handleChangeField}/></td> }
                                         </tr>
                                         <tr>
                                             <td>Periode Berakhir</td>
                                             {isReport || isReportExtend  ? 
-                                            <td>: {actualEnd}</td> :
+                                            <td>: {this.getDate(actualEnd)}</td> :
                                             <td><Form.Control type="text" type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
                                         </tr>
                                         <tr>
