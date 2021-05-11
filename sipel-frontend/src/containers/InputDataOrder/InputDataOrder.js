@@ -129,6 +129,7 @@ class InputDataOrder extends React.Component {
         //this.handleSubmitTambahPIMS = this.handleSubmitTambahPIMS.bind(this);
         this.handleClickUnggah = this.handleClickUnggah.bind(this);
         this.handleUploadDokumen = this.handleUploadDokumen.bind(this);
+        this.handleSubmitEditPI = this.handleSubmitEditPI.bind(this);
     }
   
     handleChange = (e) => {
@@ -295,7 +296,7 @@ class InputDataOrder extends React.Component {
         this.handleCancel(event);
     }
 
-    /* async handleSubmitEditPI(event) {
+    async handleSubmitEditPI(event) {
         event.preventDefault();
         try {
             const data = {
@@ -314,7 +315,7 @@ class InputDataOrder extends React.Component {
             console.log(error);
         }
         this.handleCancel(event);
-    } */
+    }
 
     async handleSubmitTambahMS(event) {
         event.preventDefault();
@@ -549,7 +550,7 @@ class InputDataOrder extends React.Component {
     }
  */
 
-    /* async lookUpDetail(order) {
+    async lookUpDetail(order) {
         try {
             const orderItem  = await APIConfig.get(`/order/detail/${order.idOrder}`);
             this.setState({ orderTarget: orderItem.data });
@@ -560,9 +561,9 @@ class InputDataOrder extends React.Component {
             alert("Oops terjadi masalah pada server");
             console.log(error);
         }
-    } */
+    }
 
-    /* handleDetail(orderTarget) {
+    handleDetail(orderTarget) {
         console.log(this.state.orderTarget);
         let order = this.state.orderTarget;
         console.log(order);
@@ -599,7 +600,7 @@ class InputDataOrder extends React.Component {
                 actualEnd: order.idOrderMs.actualEnd
             })
         }
-    } */
+    }
 
     handleClickUnggah(order) {
         this.setState({ 
@@ -1028,7 +1029,7 @@ class InputDataOrder extends React.Component {
                         <div className="col-sm-10">
                             <div className="card">
                                 <div className="card-header text-center">
-                                    {this.state.child.isCreateChild ? "Tambah Data PI" : `Ubah Data Order PI ${this.state.child.orderNameSubmit}`}
+                                    Ubah Data Order PI
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
@@ -1069,8 +1070,8 @@ class InputDataOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
-                                        Simpan Data PI
+                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitEditPI} >
+                                        Simpan Perubahan
                                     </CustomizedButtons>
                                 </div>
                             </div>
@@ -1245,7 +1246,7 @@ class InputDataOrder extends React.Component {
                         </div>                                            
                     </div>
                     </div>
-            </Modal> */}
+            </Modal> */} 
 
             <Modal show={this.state.isUpload} handleCloseModal={this.handleCancel} >
                 <NotificationContainer />

@@ -59,18 +59,17 @@ public class ProjectInstallationRestController {
         }
     }
 
-    @PutMapping(value = "/order/ubah/PI/{idOrder}")
+    @PutMapping(value = "/order/ubah/PI/{idOrderPi}")
     private ProjectInstallationModel updateOrderPI(
-            @PathVariable(value = "idOrder") Long idOrder,
-            @RequestBody ProjectInstallationModel projectInstallation,
-            OrderModel order
+            @PathVariable(value = "idOrderPi") Long idOrderPi,
+            @RequestBody ProjectInstallationModel projectInstallation
     ) {
         try {
-            return projectInstallationRestService.changeOrderPI(order, idOrder, projectInstallation);
+            return projectInstallationRestService.changeOrderPI(idOrderPi, projectInstallation);
         }
         catch (NoSuchElementException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrder) + " not found!"
+                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrderPi) + " not found!"
             );
         }
     }

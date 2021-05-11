@@ -30,9 +30,21 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         return projectInstallationDb.save(projectInstallation);
     }
 
-    @Override
+    /* @Override
     public ProjectInstallationModel changeOrderPI(OrderModel order, Long idOrder, ProjectInstallationModel orderPIUpdate) {
         ProjectInstallationModel orderPI = order.getIdOrderPi();
+        orderPI.setStartPI(orderPIUpdate.getStartPI());
+        orderPI.setDeadline(orderPIUpdate.getDeadline());
+        orderPI.setPercentage(orderPIUpdate.getPercentage());
+        orderPI.setIdUserEng(orderPIUpdate.getIdUserEng());
+        orderPI.setClose(false);
+        orderPI.setDateClosedPI(null);
+        return projectInstallationDb.save(orderPI);
+    } */
+
+    @Override
+    public ProjectInstallationModel changeOrderPI(Long idOrderPi, ProjectInstallationModel orderPIUpdate) {
+        ProjectInstallationModel orderPI = getPIOrderById(idOrderPi);
         orderPI.setStartPI(orderPIUpdate.getStartPI());
         orderPI.setDeadline(orderPIUpdate.getDeadline());
         orderPI.setPercentage(orderPIUpdate.getPercentage());
