@@ -33,3 +33,33 @@
 .button2:focus{
     box-shadow: none !important;
 }
+
+.card{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F !important;
+    color: white;
+}
+
+.closeButton{
+    border: none !important;
+    background-color: none !important;
+    outline-color:  none !important;
+    border-color:  none !important;
+}
+
+.closeButton::after{
+    background-color: none !important;
+    border-color:  none !important;
+}
+
+.closeButton:focus{
+    border: none !important;
+    outline: none !important;
+}
+
+.closeButton:hover{
+    background-color: none !important;
+    outline-color:  none !important;
+    border-color:  none !important;
+}

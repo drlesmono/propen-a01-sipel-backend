@@ -3,7 +3,7 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
 // import CustomizedModal from "../../components/Modal";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
@@ -34,7 +34,10 @@ class PeriodeKontrak extends Component {
             isAdded: false,
             newNoPO: null,
             timeRemaining: null,
-            isHide: true
+            isFailed: false,
+            isError: false,
+            isSuccess: false,
+            isValid: true
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -43,6 +46,7 @@ class PeriodeKontrak extends Component {
         this.handleReport = this.handleReport.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
         this.handleAddServices = this.handleAddServices.bind(this);
+        this.handleCloseNotif = this.handleCloseNotif.bind(this);
     }
     
     componentDidMount() {
@@ -55,94 +59,137 @@ class PeriodeKontrak extends Component {
             const users = await APIConfig.get("/users");
             this.setState({ ordersVerified: orders.data, users: users.data});
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            // alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
             console.log(error);
         }
     }
 
     async handleSubmit(event) {
         event.preventDefault();
-        if(this.state.formValid){
-            let newOrder;
-            try {   
-                let response;
-                if(this.state.isExtend){
-                    const order = this.state.orderTarget;
-                    const pi = order.idOrderPi === null ? null : order.idOrderPi.idOrderPi;
-                    const ms = order.idOrderMs.idOrderMs;
-                    const dataOrder = {
-                        idOrder: order.idOrder,
-                        orderName: order.orderName,
-                        clientName: order.clientName,
-                        clientOrg: order.clientOrg,
-                        clientDiv: order.clientDiv,
-                        clientPIC: order.clientPIC,
-                        clientEmail: order.clientEmail,
-                        clientPhone: order.clientPhone,
-                        dateOrder: order.dateOrder,
-                        noPO: this.state.newNoPO,
-                        noSPH: order.noSPH,
-                        description: order.description,
-                        verified: order.verified,
-                        projectInstallation: order.projectInstallation,
-                        managedService: order.managedService,
-                        idOrderPi: pi,
-                        idOrderMs: ms
-                    }
-                    response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
-                    newOrder = response.data.result;
-                    this.loadData();  
-                }
-                const ms = this.state.isExtend ? newOrder.idOrderMs : this.state.orderTarget.idOrderMs;
-                const dataMs = {
-                    idOrderMs: ms.idOrderMs,
-                    idUserPic: this.state.picEngineerMs,
-                    actualStart: this.convertDateToString(this.state.actualStart),
-                    actualEnd: this.convertDateToString(this.state.actualEnd),
-                    activated: ms.activated,
-                    dateClosedMS: ms.dateClosedMS
-                }
-                const newMs = await APIConfig.put(`/order/${this.state.isExtend? newOrder.idOrder : this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
-                console.log(newMs);
-                if(this.state.isExtend){
-                    let listServiceName = this.state.servicesEngineerName;
-                    let listService = this.state.servicesEngineer;
-                    for(let i=0; i<listService.length; i++){
-                        const dataService = {
-                            name: listServiceName[i],
-                            idUser: listService[i]
+        if(this.state.isExtend){
+            if(this.state.newNoPO !== null){
+                console.log(this.state.newNoPO);
+                let newOrder;
+                if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
+                    console.log(new Date(this.state.actualEnd) > new Date(this.state.actualStart));
+                    try {   
+                        let response;
+                        // if(this.state.isExtend){
+                            const order = this.state.orderTarget;
+                            const pi = order.idOrderPi === null ? null : order.idOrderPi.idOrderPi;
+                            const ms = order.idOrderMs.idOrderMs;
+                            const dataOrder = {
+                                idOrder: order.idOrder,
+                                orderName: order.orderName,
+                                clientName: order.clientName,
+                                clientOrg: order.clientOrg,
+                                clientDiv: order.clientDiv,
+                                clientPIC: order.clientPIC,
+                                clientEmail: order.clientEmail,
+                                clientPhone: order.clientPhone,
+                                dateOrder: order.dateOrder,
+                                noPO: this.state.newNoPO,
+                                noSPH: order.noSPH,
+                                description: order.description,
+                                verified: order.verified,
+                                projectInstallation: order.projectInstallation,
+                                managedService: order.managedService,
+                                idOrderPi: pi,
+                                idOrderMs: ms
+                            }
+                            response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
+                            newOrder = response.data.result;
+                            this.loadData();  
+                        // }
+                        ms = newOrder.idOrderMs;
+                        const dataMs = {
+                            idOrderMs: ms.idOrderMs,
+                            idUserPic: this.state.picEngineerMs,
+                            actualStart: this.convertDateToString(this.state.actualStart),
+                            actualEnd: this.convertDateToString(this.state.actualEnd),
+                            activated: ms.activated,
+                            dateClosedMS: ms.dateClosedMS
                         }
-                        console.log(dataService);
-                        await APIConfig.post(`/order/${newOrder.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
+                        const newMs = await APIConfig.put(`/order/${ newOrder.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
+                        console.log(newMs);
+                        // if(this.state.isExtend){
+                            let listServiceName = this.state.servicesEngineerName;
+                            let listService = this.state.servicesEngineer;
+                            for(let i=0; i<listService.length; i++){
+                                const dataService = {
+                                    name: listServiceName[i],
+                                    idUser: listService[i]
+                                }
+                                console.log(dataService);
+                                await APIConfig.post(`/order/${newOrder.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
+                                this.loadData();
+                            }
+                        // }
                         this.loadData();
+                        // if(this.state.extend) {
+                        //     this.setState({ orderTarget: newOrder });
+                        // }
+                        // this.setState({ orderTarget: newOrder, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
+                    } catch (error) {
+                        // if(this.state.isExtend){
+                        //     alert("Perpanjangan Periode Kontrak gagal disimpan");
+                        // }else{
+                        //     alert("Periode Kontrak gagal disimpan");
+                        // }
+                        console.log(error);
+                        return this.setState({isFailed: true, isValid: true});
                     }
-                }
-                this.loadData();
-                if(this.state.extend) {
-                    this.setState({ orderTarget: newOrder });
-                }
-            } catch (error) {
-                if(this.state.isExtend){
-                    alert("Perpanjangan Periode Kontrak gagal disimpan");
+                    // this.handleReport();
+                    return this.setState({isFailed: false, isValid: true, isSuccess: true, isExtend: false, orderTarget: newOrder, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
                 }else{
-                    alert("Periode Kontrak gagal disimpan");
+                    // this.handleValidation("period");
+                    return this.setState({isFailed: true, isValid: false});
                 }
-                console.log(error);
+            }else{
+                // this.handleValidation("noPO");
+                return this.setState({isFailed: true, isValid: false});
             }
-            this.handleReport();
         }else{
-            this.handleValidation(event);
+            // let newOrder;
+            console.log(this.state.actualStart);
+            console.log(this.state.actualEnd);
+            // console.log(this.findDayDifference(this.state.actualStart, this.state.actualEnd));
+                if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
+                    try {   
+                        const ms = this.state.orderTarget.idOrderMs;
+                        const dataMs = {
+                            idOrderMs: ms.idOrderMs,
+                            idUserPic: this.state.picEngineerMs,
+                            actualStart: this.convertDateToString(this.state.actualStart),
+                            actualEnd: this.convertDateToString(this.state.actualEnd),
+                            activated: ms.activated,
+                            dateClosedMS: ms.dateClosedMS
+                        }
+                        const newMs = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
+                        this.loadData();
+                    } catch (error) {
+                        console.log(error);
+                        return this.setState({isFailed: true, isValid: true});
+                    }
+                    return this.setState({isFailed: false,  isValid: true, isSuccess: true, isEdit: false, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
+                }else{
+                    // this.handleValidation("period");
+                    return this.setState({isFailed: true, isValid: false});
+                }
         } 
     }
 
     handleReport(){
         if(this.state.isExtend){
-            this.setState({isExtend: false, isReportExtend: true, isAdded: false});
-            alert("Perpanjangan periode kontrak berhasil disimpan");
+            this.setState({isReportExtend: true, isAdded: false});
+            // alert("Perpanjangan periode kontrak berhasil disimpan");
         }else{
-            this.setState({isEdit: false, isReport: true});
-            alert("Periode kontrak berhasil disimpan");
+            this.setState({isReport: true});
+            // alert("Periode kontrak berhasil disimpan");
         }
+
+        this.setState({isSuccess: false, isFailed: false, isValid: true});
     }
 
     getDate(value){
@@ -157,6 +204,7 @@ class PeriodeKontrak extends Component {
         const startDate = new Date(actualStart);
         const endDate = new Date(actualEnd);
         let currentDate = this.state.currentDateTime;
+        console.log(currentDate);
 
         if ( startDate > currentDate) {
             console.log(startDate > currentDate);
@@ -223,31 +271,30 @@ class PeriodeKontrak extends Component {
             let index = Number(name.substring(16));
             servicesEngineerNew[index] = value;
             console.log(servicesEngineerNew);
-            this.setState({ servicesEngineer: servicesEngineerNew, formValid: true });
+            this.setState({ servicesEngineer: servicesEngineerNew});
         }else if( name.substring(0,11) === "serviceName" ){
             let index = Number(name.substring(11));
             servicesEngineerNameNew[index] = value;
             console.log(servicesEngineerNameNew);
-            this.setState({ servicesEngineerName: servicesEngineerNameNew, formValid: true });
+            this.setState({ servicesEngineerName: servicesEngineerNameNew});
         }else{
-            if(this.state.isExtend){
-                if( name === "newNoP0"){
-                    if( value === null){
-                        this.handleValidation(event);
-                    }else{
-                        this.setState({ formValid: true });
-                    } 
+            if( name === "newNoPO"){
+                if(value === null){
+                    return this.setState({ [name]: value });
                 }
             }
-            
-            this.setState({ [name]: value, formValid: true});
+            this.setState({ [name]: value });
         }
     }
 
-    handleValidation(){
-        this.setState({ formValid: false });
-        alert("Nomor PO baru harus diisi");
-    }
+    // handleValidation(type){
+    //     if(type === "noPO"){
+    //         alert("Nomor PO baru harus diisi");
+    //         this.setState({isNoPO})
+    //     }else{
+    //         alert("Periode mulai harus lebih awal dari periode akhir");
+    //     }
+    // }
 
     handleEdit(order, typeEdit) {
         let actualStart = moment(new Date(order.idOrderMs.actualStart)).format("YYYY-MM-DD");
@@ -265,11 +312,6 @@ class PeriodeKontrak extends Component {
             totalServices: order.idOrderMs.listService.length,
             timeRemaining: this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd)  
         });
-
-        // console.log(actualStart.getFullYear()+"-"+actualStart.getMonth()+"-"+actualStart.getDate());
-        // console.log(actualStart.toISOString());
-        // console.log(actualEnd.getFullYear()+"-"+actualEnd.getMonth()+"-"+actualEnd.getDate());
-        // console.log(actualEnd.toISOString());
         
         if(order.idOrderMs.idUserPic !== null){
             let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
@@ -297,8 +339,13 @@ class PeriodeKontrak extends Component {
             listService: [],
             orderTarget: null,
             picEngineerMs: null,
-            formValid: false,
-            isHide: true
+            newNoPO: null,
+            actualStart: null,
+            actualEnd: null,
+            isFailed: false,
+            isSuccess: false,
+            isError: false,
+            isValid: true
         });
         this.loadData();
     }
@@ -327,11 +374,6 @@ class PeriodeKontrak extends Component {
     convertDateToString(date){
         return date+"T17:00:00.000+00:00";
     }
-
-    // changeDateFormat(date){
-    //     let dateSplit = date.split("/");
-    //     return dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
-    // }
 
     getDaysMonthsYears(date){
         const dateSplit = date.split(" ");
@@ -390,8 +432,12 @@ class PeriodeKontrak extends Component {
         </Form.Control>]]});
     }
 
+    handleCloseNotif(){
+        this.setState({ isFailed: false, isValid: true });
+    }
+
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isHide,
+        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, isValid, newNoPO,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService } = this.state;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         console.log(ordersVerified);
@@ -435,7 +481,6 @@ class PeriodeKontrak extends Component {
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
                 <Modal
                     show={isEdit || isReport || isExtend || isReportExtend}
-                    onHide={isHide}
                     dialogClassName="modal-90w"
                     aria-labelledby="contained-modal-title-vcenter"
                 >
@@ -445,6 +490,19 @@ class PeriodeKontrak extends Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                            { isFailed ? 
+                               <Card body className={classes.card}>
+                                   <div className="d-flex justify-content-between">
+                                        {isEdit?
+                                            <div>{isValid? "Periode Kontrak" : "Periode mulai harus lebih awal dari periode akhir"} Gagal disimpan.</div> :
+                                            isValid ?
+                                                <div>Perpanjangan Periode Kontrak Gagal disimpan.</div> :
+                                                <div>{newNoPO === null? "Nomor PO wajib diisi" : "Periode mulai harus lebih awal dari periode akhir"}</div>
+                                        }
+                                        <Button size="sm" className="bg-transparent border border-0 border-transparent" onClick={this.handleCloseNotif}>x</Button>
+                                    </div>
+                                </Card>
+                            : <></> }
                             <p>
                                 { orderTarget !== null ?
                                 <Form style={{ marginLeft: 25 }}>
@@ -515,6 +573,36 @@ class PeriodeKontrak extends Component {
                                     </Button></div> }
                                 </Form> : <></>}
                             </p>
+                    </Modal.Body>
+                </Modal>
+                <Modal
+                    show={isSuccess || isError}
+                    dialogClassName="modal-90w"
+                    aria-labelledby="contained-modal-title-vcenter"
+                >
+                     <Modal.Header closeButton onClick={this.handleCancel}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Notification
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {isSuccess?
+                        <>
+                            <div className="d-flex justify-content-center">{isEdit? "Periode Kontrak" : "Perpanjangan Periode Kontrak"} berhasil disimpan.</div><br></br>
+                            <div className="d-flex justify-content-center">
+                                <Button variant="primary" className={classes.button1} onClick={this.handleReport}>
+                                    Kembali
+                                </Button>
+                            </div>
+                        </> :
+                        <>
+                        <div className="d-flex justify-content-center">Oops terjadi masalah pada server</div><br></br>
+                        <div className="d-flex justify-content-center">
+                            <Button variant="primary" className={classes.button1} onClick={this.handleCancel}>
+                                Kembali
+                            </Button>
+                        </div>
+                        </>}
                     </Modal.Body>
                 </Modal>
         </div>

@@ -3,7 +3,7 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
 // import Modal from "../../components/Modal";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
@@ -23,7 +23,9 @@ class PenugasanEngineer extends Component {
             isReport: false,
             orderFiltered: [],
             isFiltered: false,
-            isHide: false
+            isError: false,
+            isSuccess: false,
+            isFailed: false
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -31,6 +33,7 @@ class PenugasanEngineer extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleReport = this.handleReport.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
+        this.handleCloseNotif = this.handleCloseNotif.bind(this);
     }
     
     componentDidMount() {
@@ -46,7 +49,7 @@ class PenugasanEngineer extends Component {
             this.setState({ ordersVerified: orders.data, users: users.data});
             
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            // alert("Oops terjadi masalah pada server");
             this.setState({ isError: true });
             console.log(error);
         }
@@ -95,16 +98,18 @@ class PenugasanEngineer extends Component {
             }
             this.loadData();
         } catch (error) {
-            alert("Penugasan Engineer gagal disimpan");
+            // alert("Penugasan Engineer gagal disimpan");
             console.log(error);
+            return this.setState({isFailed: true});
         }
-        this.handleReport(event);
+        // this.handleReport(event);
+        this.setState({isSuccess: true, isEdit: false});
     }
 
     handleReport(event){
         event.preventDefault();
-        this.setState({isEdit: false, isReport: true});
-        alert("Penugasan Engineer berhasil disimpan");
+        this.setState({isSuccess: false, isReport: true});
+        // alert("Penugasan Engineer berhasil disimpan");
     }
 
     checkTypeOrder(pi, ms){
@@ -178,7 +183,13 @@ class PenugasanEngineer extends Component {
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({isEdit: false, isReport: false, isHide: true});
+        this.setState({
+            isEdit: false, 
+            isReport: false, 
+            isError: false, 
+            isSuccess: false,
+            isFailed: false
+        });
     }
 
     handleChangeField(event) {
@@ -223,9 +234,13 @@ class PenugasanEngineer extends Component {
         this.setState({ orderFiltered : newOrderList });
     }
 
+    handleCloseNotif(){
+        this.setState({ isFailed: false });
+    }
+
     render() {
-        const { ordersVerified, isEdit, orderTarget, users, picEngineerPi, isHide,
-             picEngineerMs, servicesEngineer, isReport, isNotif, isError, orderFiltered, isFiltered } = this.state;
+        const { ordersVerified, isEdit, orderTarget, users, picEngineerPi, isFailed,
+             picEngineerMs, servicesEngineer, isReport, isError, isSuccess, orderFiltered, isFiltered } = this.state;
         console.log(orderTarget);
         console.log(picEngineerPi);
         console.log(servicesEngineer);
@@ -261,8 +276,6 @@ class PenugasanEngineer extends Component {
 
         const title = isReport? "Penugasan Engineer" : "Form Penugasan Engineer";
 
-        const notification = isError ? "Penugasan Engineer Gagal disimpan" : "Penugasan Engineer Berhasil disimpan";
-
         return (
             <div style={{justifyContent: "space-around"}}>
                 <div><h1 className="text-center">Daftar Order</h1></div>
@@ -270,7 +283,6 @@ class PenugasanEngineer extends Component {
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
                 <Modal
                     show={isEdit || isReport}
-                    onHide={isHide}
                     dialogClassName="modal-90w"
                     aria-labelledby="contained-modal-title-vcenter"
                 >
@@ -280,6 +292,14 @@ class PenugasanEngineer extends Component {
                         </Modal.Title>
                     </Modal.Header>
                         <Modal.Body>
+                               { isFailed ? 
+                               <Card body className={classes.card}>
+                                   <div className="d-flex justify-content-between">
+                                        <div>Penugasan Engineer Gagal disimpan</div>
+                                        <Button size="sm" className="bg-transparent border border-0 border-transparent" onClick={this.handleCloseNotif}>x</Button>
+                                    </div>
+                                </Card>
+                               : <></> }
                             <p>
                                 {orderTarget !== null ?
                                 <><Form>
@@ -346,6 +366,36 @@ class PenugasanEngineer extends Component {
                                 </Form></>
                                 : <></> }
                             </p>
+                    </Modal.Body>
+                </Modal>
+                <Modal
+                    show={isSuccess || isError}
+                    dialogClassName="modal-90w"
+                    aria-labelledby="contained-modal-title-vcenter"
+                >
+                     <Modal.Header closeButton onClick={this.handleCancel}>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Notification
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {isSuccess?
+                        <>
+                            <div className="d-flex justify-content-center">Penugasan Engineer berhasil disimpan.</div><br></br>
+                            <div className="d-flex justify-content-center">
+                                <Button variant="primary" className={classes.button1} onClick={this.handleReport}>
+                                    Kembali
+                                </Button>
+                            </div>
+                        </> :
+                        <>
+                        <div className="d-flex justify-content-center">Oops terjadi masalah pada server</div><br></br>
+                        <div className="d-flex justify-content-center">
+                            <Button variant="primary" className={classes.button1} onClick={this.handleCancel}>
+                                Kembali
+                            </Button>
+                        </div>
+                        </>}
                     </Modal.Body>
                 </Modal>
         </div>
