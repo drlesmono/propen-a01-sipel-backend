@@ -244,15 +244,15 @@ class PenugasanEngineer extends Component {
         console.log(orderTarget);
         console.log(picEngineerPi);
         console.log(servicesEngineer);
-        const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
+        const tableHeaders = ['No.', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
         const tableRows = isFiltered ? orderFiltered.map((order) =>
-                        [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
+                        [ order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
                         <div className="d-flex justify-content-center"><Button className={classes.button1}
                         onClick={() => this.handleEdit(order)}>perbarui</Button></div>])
                         : ordersVerified.map((order) =>
-                        [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
+                        [order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.getPICPI(order.idOrder), this.getPICMS(order.idOrder),
                         <div className="d-flex justify-content-center"><Button className={classes.button1}
@@ -304,10 +304,10 @@ class PenugasanEngineer extends Component {
                                 {orderTarget !== null ?
                                 <><Form>
                                     <Table borderless responsive="xl" size="sm">
-                                        <tr>
+                                        {/* <tr>
                                             <td>Id Order</td>
                                             <td>: {orderTarget.idOrder}</td>
-                                        </tr>
+                                        </tr> */}
                                         <tr>
                                             <td>Nomor PO</td>
                                             <td>: {orderTarget.noPO === null? "-" : orderTarget.noPO}</td>
