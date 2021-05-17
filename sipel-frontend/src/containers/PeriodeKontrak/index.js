@@ -367,7 +367,8 @@ class PeriodeKontrak extends Component {
         const { value } = event.target;
         if( value !== "" ){
             newOrderList = newOrderList.filter(order => {
-                return order.orderName.toLowerCase().includes(value.toLowerCase())
+                return (order.orderName.toLowerCase().includes(value.toLowerCase()) ||
+                order.noPO.toLowerCase().includes(value.toLowerCase()))
             });
             this.setState({ isFiltered : true });
         }else{
