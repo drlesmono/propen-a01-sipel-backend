@@ -63,3 +63,8 @@
     outline-color:  none !important;
     border-color:  none !important;
 }
+
+.container{
+    padding: 2%;
+    background-color: white;
+}

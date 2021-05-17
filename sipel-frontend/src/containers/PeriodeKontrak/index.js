@@ -433,7 +433,7 @@ class PeriodeKontrak extends Component {
         const title = isReport? "Rincian Periode Kontrak" : "Form Perbarui Periode Kontrak";
 
         return (
-            <div>
+            <div className={classes.container}>
                 <div><h1 className="text-center">Daftar Order</h1></div>
                 <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
@@ -483,7 +483,7 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                         <tr>
                                             <td style={{fontWeight: 'bold'}}>Managed Service</td>
-                                            {isExtend ? <td className="d-flex justify-content-end w-auto">
+                                            {isExtend ? <td className="d-flex justify-content-end">
                                             <Button className={classes.button1} onClick={() => this.handleAddServices(tableServiceRows)}>
                                                 + Tambah Services
                                                 </Button></td>
@@ -505,7 +505,7 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                         <tr>
                                             { isExtend ? <>
-                                            <td>Nomor PO Baru</td>
+                                            <td className="d-flex"><p>Nomor PO Baru</p><p style={{color: "red"}}>*</p></td>
                                             <td><Form.Control type="text" size="sm" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></td></> : <></> } 
                                         </tr>
                                         <tr>
@@ -526,7 +526,7 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                         {isReport || isReportExtend ? <></> :
                                         <tr>
-                                            <td></td>
+                                            <td style={{color: "red"}}>*Wajib diisi</td>
                                             <td className="d-flex justify-content-end">
                                                 <Button className={classes.button1} onClick={this.handleSubmit}>
                                                     simpan

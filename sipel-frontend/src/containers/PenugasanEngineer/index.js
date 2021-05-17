@@ -277,7 +277,7 @@ class PenugasanEngineer extends Component {
         const title = isReport? "Penugasan Engineer" : "Form Penugasan Engineer";
 
         return (
-            <div style={{justifyContent: "space-around"}}>
+            <div className={classes.container}>
                 <div><h1 className="text-center">Daftar Order</h1></div>
                 <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
