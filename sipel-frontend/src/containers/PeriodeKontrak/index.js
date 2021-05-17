@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
-import CustomizedButtons from "../../components/Button";
+// import CustomizedButtons from "../../components/Button";
 // import CustomizedModal from "../../components/Modal";
 import { Form, Button, Card } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -18,6 +18,7 @@ class PeriodeKontrak extends Component {
             isEdit: false,
             isExtend: false,
             orderTarget: null,
+            orderTargetUpdated: null,
             users: [],
             picEngineerMs: null,
             servicesEngineer: [],
@@ -31,6 +32,7 @@ class PeriodeKontrak extends Component {
             actualEnd: null,
             totalServices: 0,
             listService: [],
+            services: [],
             isAdded: false,
             newNoPO: null,
             timeRemaining: null,
@@ -69,13 +71,12 @@ class PeriodeKontrak extends Component {
         event.preventDefault();
         if(this.state.isExtend){
             if(this.state.newNoPO !== null){
-                console.log(this.state.newNoPO);
-                let newOrder;
-                if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
-                    console.log(new Date(this.state.actualEnd) > new Date(this.state.actualStart));
-                    try {   
-                        let response;
-                        // if(this.state.isExtend){
+                if(this.state.newNoPO !== ""){
+                    let newOrder;
+                    let services;
+                    if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
+                        try {   
+                            let response;
                             const order = this.state.orderTarget;
                             const pi = order.idOrderPi === null ? null : order.idOrderPi.idOrderPi;
                             const ms = order.idOrderMs.idOrderMs;
@@ -101,60 +102,48 @@ class PeriodeKontrak extends Component {
                             response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
                             newOrder = response.data.result;
                             this.loadData();  
-                        // }
-                        ms = newOrder.idOrderMs;
-                        const dataMs = {
-                            idOrderMs: ms.idOrderMs,
-                            idUserPic: this.state.picEngineerMs,
-                            actualStart: this.convertDateToString(this.state.actualStart),
-                            actualEnd: this.convertDateToString(this.state.actualEnd),
-                            activated: ms.activated,
-                            dateClosedMS: ms.dateClosedMS
-                        }
-                        const newMs = await APIConfig.put(`/order/${ newOrder.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
-                        console.log(newMs);
-                        // if(this.state.isExtend){
+
+                            const newMs = newOrder.idOrderMs;
+                            const dataMs = {
+                                idOrderMs: newMs.idOrderMs,
+                                idUserPic: this.state.picEngineerMs,
+                                actualStart: this.convertDateToString(this.state.actualStart),
+                                actualEnd: this.convertDateToString(this.state.actualEnd),
+                                activated: newMs.activated,
+                                dateClosedMS: newMs.dateClosedMS
+                            }
+                            response = await APIConfig.put(`/order/${newOrder.idOrder}/ms/${newMs.idOrderMs}/updateKontrak`, dataMs);
+                            const newMsUpdated = response.data.result;
+                            
                             let listServiceName = this.state.servicesEngineerName;
                             let listService = this.state.servicesEngineer;
+                            services = new Array(listService.length);
                             for(let i=0; i<listService.length; i++){
                                 const dataService = {
                                     name: listServiceName[i],
                                     idUser: listService[i]
                                 }
-                                console.log(dataService);
-                                await APIConfig.post(`/order/${newOrder.idOrder}/ms/${ms.idOrderMs}/service`, dataService);
+                                response = await APIConfig.post(`/order/${newOrder.idOrder}/ms/${newMsUpdated.idOrderMs}/service`, dataService);
+                                const service = response.data.result;
+                                services[i] = service;
                                 this.loadData();
                             }
-                        // }
-                        this.loadData();
-                        // if(this.state.extend) {
-                        //     this.setState({ orderTarget: newOrder });
-                        // }
-                        // this.setState({ orderTarget: newOrder, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
-                    } catch (error) {
-                        // if(this.state.isExtend){
-                        //     alert("Perpanjangan Periode Kontrak gagal disimpan");
-                        // }else{
-                        //     alert("Periode Kontrak gagal disimpan");
-                        // }
-                        console.log(error);
-                        return this.setState({isFailed: true, isValid: true});
+                            this.loadData();
+                        } catch (error) {
+                            console.log(error);
+                            return this.setState({isFailed: true, isValid: true});
+                        }
+                        return this.setState({isFailed: false, isValid: true, isSuccess: true, isExtend: false, orderTarget: newOrder, services: services, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
+                    }else{
+                        return this.setState({isFailed: true, isValid: false});
                     }
-                    // this.handleReport();
-                    return this.setState({isFailed: false, isValid: true, isSuccess: true, isExtend: false, orderTarget: newOrder, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
                 }else{
-                    // this.handleValidation("period");
                     return this.setState({isFailed: true, isValid: false});
                 }
             }else{
-                // this.handleValidation("noPO");
                 return this.setState({isFailed: true, isValid: false});
             }
         }else{
-            // let newOrder;
-            console.log(this.state.actualStart);
-            console.log(this.state.actualEnd);
-            // console.log(this.findDayDifference(this.state.actualStart, this.state.actualEnd));
                 if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
                     try {   
                         const ms = this.state.orderTarget.idOrderMs;
@@ -174,19 +163,17 @@ class PeriodeKontrak extends Component {
                     }
                     return this.setState({isFailed: false,  isValid: true, isSuccess: true, isEdit: false, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
                 }else{
-                    // this.handleValidation("period");
                     return this.setState({isFailed: true, isValid: false});
                 }
         } 
     }
 
-    handleReport(){
+    handleReport(event){
+        event.preventDefault();
         if(this.state.isExtend){
             this.setState({isReportExtend: true, isAdded: false});
-            // alert("Perpanjangan periode kontrak berhasil disimpan");
         }else{
             this.setState({isReport: true});
-            // alert("Periode kontrak berhasil disimpan");
         }
 
         this.setState({isSuccess: false, isFailed: false, isValid: true});
@@ -204,13 +191,10 @@ class PeriodeKontrak extends Component {
         const startDate = new Date(actualStart);
         const endDate = new Date(actualEnd);
         let currentDate = this.state.currentDateTime;
-        console.log(currentDate);
 
         if ( startDate > currentDate) {
-            console.log(startDate > currentDate);
             return "Belum mulai";
         } else if ( currentDate > endDate ){
-            console.log( currentDate > endDate );
             return "Habis";
         }
         
@@ -224,7 +208,6 @@ class PeriodeKontrak extends Component {
         
         // We calculate February based on end year as it might be a leep year which might influence the number of days.
         let february = (((endYear % 4 === 0) && (endYear % 100 !== 0)) || (endYear % 400 === 0)) ? 29 : 28;
-        // console.log(february);
         let daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
         let startDateNotPassedInEndYear = ((endMonth < startMonth) || (endMonth === startMonth )) && (endDay < startDay);
@@ -270,31 +253,15 @@ class PeriodeKontrak extends Component {
         if( name.substring(0,16) === "servicesEngineer"){
             let index = Number(name.substring(16));
             servicesEngineerNew[index] = value;
-            console.log(servicesEngineerNew);
             this.setState({ servicesEngineer: servicesEngineerNew});
         }else if( name.substring(0,11) === "serviceName" ){
             let index = Number(name.substring(11));
             servicesEngineerNameNew[index] = value;
-            console.log(servicesEngineerNameNew);
             this.setState({ servicesEngineerName: servicesEngineerNameNew});
         }else{
-            if( name === "newNoPO"){
-                if(value === null){
-                    return this.setState({ [name]: value });
-                }
-            }
             this.setState({ [name]: value });
         }
     }
-
-    // handleValidation(type){
-    //     if(type === "noPO"){
-    //         alert("Nomor PO baru harus diisi");
-    //         this.setState({isNoPO})
-    //     }else{
-    //         alert("Periode mulai harus lebih awal dari periode akhir");
-    //     }
-    // }
 
     handleEdit(order, typeEdit) {
         let actualStart = moment(new Date(order.idOrderMs.actualStart)).format("YYYY-MM-DD");
@@ -316,11 +283,11 @@ class PeriodeKontrak extends Component {
         if(order.idOrderMs.idUserPic !== null){
             let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
             let servicesEngineerName = order.idOrderMs.listService.map(service => service.name);
-            console.log(servicesEngineer);
             this.setState({
                 picEngineerMs: order.idOrderMs.idUserPic.id, 
                 servicesEngineer: servicesEngineer,
-                servicesEngineerName: servicesEngineerName
+                servicesEngineerName: servicesEngineerName,
+                services: order.idOrderMs.listService
             });
         }
     }
@@ -337,7 +304,9 @@ class PeriodeKontrak extends Component {
             timeRemaining: null,
             serviceEngineer: [],
             listService: [],
+            services: [],
             orderTarget: null,
+            orderTargetUpdated: null,
             picEngineerMs: null,
             newNoPO: null,
             actualStart: null,
@@ -409,21 +378,12 @@ class PeriodeKontrak extends Component {
 
     handleAddServices(listService){
         this.setState({isAdded: true});
-        let listServiceNew = [[...listService]];
         let servicesEngineer = [...this.state.servicesEngineer];
         let initialTotal = listService.length;
         const totalServicesNew = initialTotal+1;
         this.setState({ totalServices: totalServicesNew });
         servicesEngineer = servicesEngineer.concat(null);
         this.setState({serviceEngineer: servicesEngineer});
-        // listServiceNew = listService.concat([[<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
-        //                     placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-        //                     <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
-        //                     value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
-        //                     onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
-        //                     </Form.Control>]]);
-
-        // this.setState({listService: listServiceNew});
         this.setState({listService: [...this.state.listService, [<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
         placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
         <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
@@ -438,11 +398,9 @@ class PeriodeKontrak extends Component {
 
     render() {
         const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, isValid, newNoPO,
-            servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService } = this.state;
+            servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService, services } = this.state;
         const tableHeaders = ['No.', 'Id Order', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
-        console.log(ordersVerified);
-        console.log(orderTarget);
-  
+        
         const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [order.idOrder, order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
@@ -460,7 +418,7 @@ class PeriodeKontrak extends Component {
         let tableServiceRows;
 
         if(orderTarget !== null){
-                tableServiceRows = isAdded ? listService : orderTarget.idOrderMs.listService.map((service, index) =>
+                tableServiceRows = isAdded ? listService : services.map((service, index) =>
                                     [isExtend? <Form.Control type="text" size="sm" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
                                     service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
                                     : service.name, (isReport || isEdit || isReportExtend ) ? this.getPICService(service) :
@@ -497,7 +455,7 @@ class PeriodeKontrak extends Component {
                                             <div>{isValid? "Periode Kontrak" : "Periode mulai harus lebih awal dari periode akhir"} Gagal disimpan.</div> :
                                             isValid ?
                                                 <div>Perpanjangan Periode Kontrak Gagal disimpan.</div> :
-                                                <div>{newNoPO === null? "Nomor PO wajib diisi" : "Periode mulai harus lebih awal dari periode akhir"}</div>
+                                                <div>{newNoPO === null || newNoPO === ""? "Nomor PO wajib diisi" : "Periode mulai harus lebih awal dari periode akhir"}</div>
                                         }
                                         <Button size="sm" className="bg-transparent border border-0 border-transparent" onClick={this.handleCloseNotif}>x</Button>
                                     </div>
