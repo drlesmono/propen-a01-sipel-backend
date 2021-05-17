@@ -3,7 +3,7 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 // import CustomizedButtons from "../../components/Button";
 // import CustomizedModal from "../../components/Modal";
-import { Form, Button, Card } from "react-bootstrap";
+import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
@@ -433,7 +433,7 @@ class PeriodeKontrak extends Component {
         const title = isReport? "Rincian Periode Kontrak" : "Form Perbarui Periode Kontrak";
 
         return (
-            <div style={{justifyContent: "space-around"}}>
+            <div>
                 <div><h1 className="text-center">Daftar Order</h1></div>
                 <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
@@ -463,8 +463,8 @@ class PeriodeKontrak extends Component {
                             : <></> }
                             <p>
                                 { orderTarget !== null ?
-                                <Form style={{ marginLeft: 25 }}>
-                                    <table>
+                                <Form>
+                                    <Table borderless responsive="xl" size="sm">
                                         <tr>
                                             <td>Id Order</td>
                                             <td>: {orderTarget.idOrder}</td>
@@ -483,7 +483,7 @@ class PeriodeKontrak extends Component {
                                         </tr>
                                         <tr>
                                             <td style={{fontWeight: 'bold'}}>Managed Service</td>
-                                            {isExtend ? <td className="d-flex justify-content-end">
+                                            {isExtend ? <td className="d-flex justify-content-end w-auto">
                                             <Button className={classes.button1} onClick={() => this.handleAddServices(tableServiceRows)}>
                                                 + Tambah Services
                                                 </Button></td>
@@ -506,7 +506,7 @@ class PeriodeKontrak extends Component {
                                         <tr>
                                             { isExtend ? <>
                                             <td>Nomor PO Baru</td>
-                                            <Form.Control type="text" size="sm" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></> : <></> } 
+                                            <td><Form.Control type="text" size="sm" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></td></> : <></> } 
                                         </tr>
                                         <tr>
                                             <td>Periode Mulai</td>
@@ -518,17 +518,22 @@ class PeriodeKontrak extends Component {
                                             <td>Periode Berakhir</td>
                                             {isReport || isReportExtend  ? 
                                             <td>: {this.getDate(actualEnd)}</td> :
-                                            <td><Form.Control type="text" type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
+                                            <td><Form.Control type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
                                         </tr>
                                         <tr>
                                             <td>Waktu Tersisa</td> 
                                             <td>: {timeRemaining}</td> 
                                         </tr>
-                                    </table>
-                                    {isReport || isReportExtend ? <></> :
-                                    <div className="d-flex justify-content-end" style={{ marginRight: 40 }}><Button className={classes.button1} onClick={this.handleSubmit}>
-                                        simpan
-                                    </Button></div> }
+                                        {isReport || isReportExtend ? <></> :
+                                        <tr>
+                                            <td></td>
+                                            <td className="d-flex justify-content-end">
+                                                <Button className={classes.button1} onClick={this.handleSubmit}>
+                                                    simpan
+                                                </Button>
+                                            </td>
+                                        </tr> }
+                                    </Table>
                                 </Form> : <></>}
                             </p>
                     </Modal.Body>

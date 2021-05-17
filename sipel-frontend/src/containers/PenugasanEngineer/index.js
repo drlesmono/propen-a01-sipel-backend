@@ -3,7 +3,7 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import CustomizedButtons from "../../components/Button";
 // import Modal from "../../components/Modal";
-import { Form, Button, Card } from "react-bootstrap";
+import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
@@ -303,7 +303,7 @@ class PenugasanEngineer extends Component {
                             <p>
                                 {orderTarget !== null ?
                                 <><Form>
-                                    <table>
+                                    <Table borderless responsive="xl" size="sm">
                                         <tr>
                                             <td>Id Order</td>
                                             <td>: {orderTarget.idOrder}</td>
@@ -358,11 +358,16 @@ class PenugasanEngineer extends Component {
                                                 </Form.Control></td>}
                                         </tr></>
                                         : <></>}
-                                    </table>
-                                    {isReport ? <></> :
-                                    <><br/><div className="d-flex justify-content-end" style={{ marginRight: 35 }}><Button variant="primary" className={classes.button1} onClick={this.handleSubmit}>
-                                        simpan
-                                    </Button></div></>}
+                                        {isReport ? <></> :
+                                        <tr>
+                                            <td></td>
+                                            <td className="d-flex justify-content-end">
+                                                <Button variant="primary" className={classes.button1} onClick={this.handleSubmit}>
+                                                    simpan
+                                                </Button>
+                                            </td>
+                                        </tr>}
+                                    </Table>
                                 </Form></>
                                 : <></> }
                             </p>
