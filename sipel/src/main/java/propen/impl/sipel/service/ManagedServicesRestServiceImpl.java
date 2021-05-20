@@ -11,10 +11,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -71,6 +68,18 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     @Override
     public List<ManagedServicesModel> retrieveMS() {
         return managedServicesDb.findAll();
+    }
+
+    @Override
+    public List<ManagedServicesModel> retrieveMSassigned() {
+        List<ManagedServicesModel> msList = retrieveMS();
+        List<ManagedServicesModel> msListAssigned = new ArrayList<ManagedServicesModel>();
+        for (ManagedServicesModel i : msList) {
+            if (i.getIdUserPic() != null && i.getTimeRemaining() != 0) {
+                msListAssigned.add(i);
+            }
+        }
+        return msListAssigned;
     }
 
     public ManagedServicesRestServiceImpl(WebClient.Builder webClientBuilder) {

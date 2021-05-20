@@ -14,4 +14,6 @@ public interface ManagedServicesRestService {
     Long setRem(ManagedServicesModel managedServices);
 
     List<ManagedServicesModel> retrieveMS();
+
+    List<ManagedServicesModel> retrieveMSassigned();
 }

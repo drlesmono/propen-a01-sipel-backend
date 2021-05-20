@@ -33,7 +33,7 @@ public class ManagedServicesModel implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+    //@JsonIgnore
     private UserModel idUserPic;
 
     @NotNull

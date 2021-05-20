@@ -200,6 +200,11 @@ public class  OrderRestController {
         return orderRestService.retrieveOrder();
     }
 
+    @GetMapping(value = "/orderListIsMS")
+    private List<OrderModel> retrieveOrdListMS() {
+        return orderRestService.retrieveOrderIsMS();
+    }
+
     /*private List<ServicesModel> manageServices(ManagedServicesModel managedServices) {
         List<ServicesModel> listServices = new ArrayList<ServicesModel>();
         if (managedServices.getListService() != null) {

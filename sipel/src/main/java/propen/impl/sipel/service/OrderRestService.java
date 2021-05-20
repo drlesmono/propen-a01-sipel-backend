@@ -12,4 +12,6 @@ public interface OrderRestService {
     OrderModel getOrderById(Long idOrder);
 
     OrderModel changeOrder(Long idOrder, OrderModel orderUpdate);
+
+    List<OrderModel> retrieveOrderIsMS();
 }

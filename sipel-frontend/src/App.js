@@ -24,6 +24,8 @@ import InputDataOrder from "./containers/InputDataOrder/InputDataOrder";
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import homepage from "./assets/homepage.png";
+import PenjadwalanMaintenance from "./containers/PenjadwalanMaintenance/PenjadwalanMaintenance";
+import CreateMaintenance from "./containers/CreateMaintenance/CreateMaintenance";
 
 const routes = {
   "/": () => 
@@ -43,6 +45,8 @@ const routes = {
               </div>
             </div>,
   "/order/order": () => <InputDataOrder/>,
+  "/produksi/maintenance": () => <PenjadwalanMaintenance />,
+  "/produksi/maintenance/create" : () => <CreateMaintenance />,
 };
 
 function App(){
@@ -68,7 +72,7 @@ function App(){
                   <NavDropdown.Item href="#action/3.1">Penugasan</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.1">Progress Delivery</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.1">Periode Kontrak</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.1">Maintenance</NavDropdown.Item>
+                  <NavDropdown.Item href="produksi/maintenance">Maintenance</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="Laporan" id="collasible-nav-dropdown">
                   <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

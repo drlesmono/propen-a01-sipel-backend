@@ -8,10 +8,7 @@ import propen.impl.sipel.repository.OrderDb;
 import propen.impl.sipel.rest.Setting;
 
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -32,6 +29,18 @@ public class OrderRestServiceImpl implements OrderRestService {
     @Override
     public List<OrderModel> retrieveOrder() {
         return orderDb.findAll();
+    }
+
+    @Override
+    public List<OrderModel> retrieveOrderIsMS() {
+        List<OrderModel> ordList = retrieveOrder();
+        List<OrderModel> ordMSList = new ArrayList<OrderModel>();
+        for (OrderModel i : ordList) {
+            if (i.isManagedService() && i.getIdOrderMs().getIdUserPic() != null) {
+                ordMSList.add(i);
+            }
+        }
+        return ordMSList;
     }
 
     @Override

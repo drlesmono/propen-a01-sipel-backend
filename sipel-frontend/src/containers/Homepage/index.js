@@ -3,6 +3,7 @@ import Layout from "./../../components/Layout";
 import PenugasanEngineer from "../PenugasanEngineer";
 import PeriodeKontrak from "../PeriodeKontrak";
 import InputDataOrder from "../InputDataOrder";
+import PenjadwalanMaintenance from "../PenjadwalanMaintenance";
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import homepage from "./../../assets/homepage.png";
@@ -41,7 +42,7 @@ class Homepage extends Component {
                         <NavDropdown.Item href="#action/3.2">Penugasan</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Progress Delivery</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Periode kontrak</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Maintenance</NavDropdown.Item>
+                        <NavDropdown.Item><Link to="/PenjadwalanMaintenance" style={{ textDecoration: 'none' }}>Maintenance</Link></NavDropdown.Item>
                     </NavDropdown>
                     <NavDropdown title="Laporan" id="collasible-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -63,6 +64,9 @@ class Homepage extends Component {
             <Switch>
                 <Route path="/InputDataOrder">
                     <InputDataOrder/>
+                </Route>
+                <Route path="/PenjadwalanMaintenance">
+                    <PenjadwalanMaintenance/>
                 </Route>
                 <Route path="/">
                     <div> 
