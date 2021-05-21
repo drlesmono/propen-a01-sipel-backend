@@ -3,15 +3,15 @@
 }
 
 .button1{
-    background-color: #F7873F !important;
-    outline-color:  #F7873F !important;
-    border-color:  #F7873F !important;
+    background-color: #FD693E !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E !important;
 }
 
 .button1:hover{
-    background-color: #F7873F !important;
-    outline-color:  #F7873F !important;
-    border-color:  #F7873F!important;
+    background-color: #FD693E !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E!important;
 }
 
 .button1:focus{
@@ -19,9 +19,9 @@
 }
 
 .card{
-    background-color: #F7873F !important;
-    outline-color:  #F7873F !important;
-    border-color:  #F7873F !important;
+    background-color: #FD693E !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E !important;
     color: white;
 }
 
