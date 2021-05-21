@@ -26,14 +26,14 @@ public class MaintenanceModel implements Serializable{
     @Column(name="dateMn", nullable = false)
     private Date dateMn;
 
-    @NotNull
-    @Column(name = "isMaintained", nullable = false)
+    //@NotNull
+    @Column(name = "isMaintained", nullable = true)
     private Boolean isMaintained;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderMS", referencedColumnName = "idOrderMS", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    //@JsonIgnore
+    @JsonIgnore
     private ManagedServicesModel idOrderMS;
 
     @OneToOne(fetch = FetchType.LAZY)

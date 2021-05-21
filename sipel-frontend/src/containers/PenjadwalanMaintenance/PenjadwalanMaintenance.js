@@ -3,6 +3,10 @@ import CustomizedTables from "../../components/Table";
 import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
+import { Link } from 'react-router-dom';
+//import { useHistory } from "react-router-dom";
+//import { browserHistory } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class PenjadwalanMaintenance extends React.Component {
     constructor(props) {
@@ -19,7 +23,7 @@ class PenjadwalanMaintenance extends React.Component {
             isFiltered: false,
             isAssigned: false,
         };
-        this.handleFilter = this.handleFilter.bind(this);
+        this.handleCreateSchedule = this.handleCreateSchedule.bind(this);
     }
 
     componentDidMount() {
@@ -45,20 +49,6 @@ class PenjadwalanMaintenance extends React.Component {
         }
     }
 
-    handleFilter(event) {
-        let newOrderList = this.state.orders;
-        const { value } = event.target;
-        if(value !== "") {
-            newOrderList = this.state.orders.filter(order => {
-                return order.orderName.toLowerCase().includes(value.toLowerCase())
-            });
-            this.setState({ isFiltered: true });
-        } else {
-            this.setState({ isFiltered: false });
-        }
-        this.setState({ orderFiltered: newOrderList });
-    }
-
     checkTypeOrder(pi, ms) {
         if(pi === true && ms === true){
             return "Project Installation, Managed Service";
@@ -69,130 +59,30 @@ class PenjadwalanMaintenance extends React.Component {
         }
     }
 
-    /* getNoPO(idMs) {
-        console.log(idMs);
-        console.log(this.state.orders)
-        const orderTarget = this.state.orders.filter(order => order.idOrderMs.idOrderMs === idMs);
-        console.log(orderTarget);
-        const noPOnya = orderTarget.map(order => order.noPO);
-        return noPOnya;
-    }
-
-    getClientName(idMs) {
-        let orderTarget = this.state.orders.filter(order => order.idOrderMs.idOrderMs === idMs);
-        let clientNamenya = orderTarget.map(order => order.clientName);
-        return clientNamenya;
-    }
-
-    getClientOrg(idMs) {
-        let orderTarget = this.state.orders.filter(order => order.idOrderMs.idOrderMs === idMs);
-        let clientOrgnya = orderTarget.map(order => order.clientOrg);
-        return clientOrgnya;
-    }
-
-    getManagedService(idMs) {
-        let orderTarget = this.state.orders.filter(order => order.idOrderMs.idOrderMs === idMs);
-        let managedServiceOrd = orderTarget.map(order => order.managedService);
-        return managedServiceOrd;
-    }
-
-    getProjectInstallation(idMs) {
-        let orderTarget = this.state.orders.filter(order => order.idOrderMs.idOrderMs === idMs);
-        let projectInstallationOrd = orderTarget.map(order => order.projectInstallation);
-        return projectInstallationOrd;
+    /* handleCreateSchedule(order) {
+        //<Link to={"/produksi/maintenance/tambah/"+order.idOrder} style={{ textDecoration: 'none' }}></Link>
+        this.props.history.push(`/produksi/maintenance/tambah/${order.idOrder}`);
     } */
+
+    /* handleCreateSchedule = (order) => {
+        browserHistory.push(`/produksi/maintenance/tambah/${order.idOrder}`);
+    } */
+
+    handleCreateSchedule = (order) => {
+        this.props.history.push(`/produksi/maintenance/tambah/${order.idOrder}`);
+    }
 
     render() {
         const {
-            datemn,
-            ordersMS,
-            orders,
-            isFiltered,
-            orderFiltered,
             ordMSTerassignFromOrdersList,
-            ordersTerassign,
         } = this.state;
 
         let{ listMaintenance } = this.state;
 
         const tableHeaders = [
-            'No',
-            'Id Managed Service',
-            'Nomor PO',
-            'Nama Pelanggan',
-            'Perusahaan Pelanggan',
-            'Jenis Order',
-            'PIC Engineer',
-            'Buat Penjadwalan',
-            'Lihat Penjadwalan',
+            'No','Id Managed Service','Nomor PO','Nama Pelanggan','Perusahaan Pelanggan',
+            'Jenis Order','PIC Engineer','Buat Penjadwalan','Lihat Penjadwalan',
         ];
-
-        /* const tableRows = isFiltered ? orderFiltered.map((order) => order.timeRemaining !== 0 && order.idUserPic !== null ?
-                        [order.idOrderMs, this.getNoPO(order.idOrderMs), this.getClientName(order.idOrderMs), this.getClientOrg(order.idOrderMs), 
-                        this.checkTypeOrder(this.getProjectInstallation(order.idOrderMs), this.getManagedService(order.idOrderMs)),
-                        order.idUserPic.fullname,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E" 
-                            onClick={() => this.handleMakeSchedule(order)}>Buat Jadwal</CustomizedButtons>,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E"
-                            onClick={() => this.handleLookSchedule(order)}>Lihat Jadwal</CustomizedButtons>
-                        ]
-                        : [])
-                        : ordersMS.map((order) => order.timeRemaining !== 0 && order.idUserPic !== null ?
-                        [order.idOrderMs, this.getNoPO(order.idOrderMs), this.getClientName(order.idOrderMs), this.getClientOrg(order.idOrderMs), 
-                        this.checkTypeOrder(this.getProjectInstallation(order.idOrderMs), this.getManagedService(order.idOrderMs)),
-                        order.idUserPic.fullname,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E" 
-                            onClick={() => this.handleMakeSchedule(order)}>Buat Jadwal</CustomizedButtons>,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E"
-                            onClick={() => this.handleLookSchedule(order)}>Lihat Jadwal</CustomizedButtons>
-                        ]
-                        : []
-                        ); */
-
-        /* const tableRows = isFiltered ? orderFiltered.map((order) => order.managedService ?
-                        [order.idOrderMs.idOrderMs, order.noPO, order.clientName, order.clientOrg, 
-                        this.checkTypeOrder(order.projectInstallation, order.managedService),
-                        order.idOrderMs.idUserPic.fullname,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E" 
-                            onClick={() => this.handleMakeSchedule(order)}>Buat Jadwal</CustomizedButtons>,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E"
-                            onClick={() => this.handleLookSchedule(order)}>Lihat Jadwal</CustomizedButtons>
-                        ] : []
-                       )
-                        : orders.map((order) => order.managedService ? order.idOrderMs.idUserPic !== null ?
-                        [order.idOrderMs.idOrderMs, order.noPO, order.clientName, order.clientOrg, 
-                        this.checkTypeOrder(order.projectInstallation, order.managedService),
-                        order.idOrderMs.idUserPic.fullname,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E" 
-                            onClick={() => this.handleMakeSchedule(order)}>Buat Jadwal</CustomizedButtons>,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E"
-                            onClick={() => this.handleLookSchedule(order)}>Lihat Jadwal</CustomizedButtons>
-                        ] : [] : []
-                        ); */
 
         const tableRows = ordMSTerassignFromOrdersList.map((order) => order.idOrderMs.idUserPic !== null ?
                         [order.idOrderMs.idOrderMs, order.noPO, order.clientName, order.clientOrg, 
@@ -202,7 +92,7 @@ class PenjadwalanMaintenance extends React.Component {
                             variant="contained" 
                             size="small" 
                             color="#FD693E" 
-                            onClick={() => {this.props.history.push("/produksi/maintenance/create")}}>Buat Jadwal</CustomizedButtons>,
+                            onClick={() => this.handleCreateSchedule(order)}>Buat Jadwal</CustomizedButtons>,
                         <CustomizedButtons 
                             variant="contained" 
                             size="small" 
@@ -222,4 +112,4 @@ class PenjadwalanMaintenance extends React.Component {
     }
 }
 
-export default PenjadwalanMaintenance;
+export default withRouter(PenjadwalanMaintenance);

@@ -26,6 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import homepage from "./assets/homepage.png";
 import PenjadwalanMaintenance from "./containers/PenjadwalanMaintenance/PenjadwalanMaintenance";
 import CreateMaintenance from "./containers/CreateMaintenance/CreateMaintenance";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 const routes = {
   "/": () => 
@@ -46,7 +47,7 @@ const routes = {
             </div>,
   "/order/order": () => <InputDataOrder/>,
   "/produksi/maintenance": () => <PenjadwalanMaintenance />,
-  "/produksi/maintenance/create" : () => <CreateMaintenance />,
+  //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
 };
 
 function App(){
@@ -55,6 +56,7 @@ function App(){
 
     return (
         <Layout>
+          <Router>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" id="navbar">
             <Navbar.Brand href="/" style={{ textDecoration: 'none', color: '#F7873F' }}>SIPEL</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -92,6 +94,11 @@ function App(){
             </Navbar.Collapse>
           </Navbar>
             { routeResult }
+          {/* <Router> */}
+            <Switch>
+              <Route exact path="/produksi/maintenance/tambah/:id" component={CreateMaintenance} />
+            </Switch>
+          </Router>
           </Layout>
     );
 }
