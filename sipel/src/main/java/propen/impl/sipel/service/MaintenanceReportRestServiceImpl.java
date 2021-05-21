@@ -1,2 +1,60 @@
-package propen.impl.sipel.service;public class MaintenanceReportRestServiceImpl {
+package propen.impl.sipel.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import propen.impl.sipel.model.*;
+import propen.impl.sipel.repository.MaintenanceDb;
+import propen.impl.sipel.repository.MaintenanceReportDb;
+import propen.impl.sipel.repository.ReportDb;
+import propen.impl.sipel.rest.MaintenanceReportDto;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+@Service
+@Transactional
+public class MaintenanceReportRestServiceImpl implements MaintenanceReportRestService{
+
+    @Autowired
+    MaintenanceReportDb maintenanceReportDb;
+
+    @Autowired
+    ReportDb reportDb;
+
+    @Autowired
+    MaintenanceDb maintenanceDb;
+
+    @Override
+    public String createMrNum(MaintenanceReportModel mr) {
+        ReportModel report = reportDb.findByIdMaintenanceReport(mr.getIdMaintenanceReport());
+
+        String nomorMr = "";
+        String pemisah = "/";
+        String docId = "LMD-REPORT";
+        LocalDate dateCurrent = LocalDate.now();
+        Date dateCurrentParsed = Date.from(dateCurrent.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        report.setUploadedDate(dateCurrentParsed);
+        String date = dateCurrent.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String[] dateSplit = String.valueOf(date).split("-");
+        String seqOrder = "0000" + String.valueOf(report.getIdReport());
+        seqOrder = seqOrder.substring(seqOrder.length() - 3);
+
+        nomorMr = nomorMr + seqOrder + pemisah + docId + pemisah + "020" + pemisah + dateSplit[1] + pemisah + dateSplit[2];
+
+        return nomorMr;
+    }
+
+    @Override
+    public MaintenanceReportModel updateMr(MaintenanceReportDto mr) {
+        MaintenanceReportModel newMr = maintenanceReportDb.findById(mr.getIdMaintenanceReport()).get();
+        MaintenanceModel maintenance = maintenanceDb.findById(mr.getIdMaintenance()).get();
+
+        newMr.setMrNum(createMrNum(newMr));
+        newMr.setNotes(mr.getNotes());
+        newMr.setIdMaintenance(maintenance);
+        return maintenanceReportDb.save(newMr);
+    }
 }

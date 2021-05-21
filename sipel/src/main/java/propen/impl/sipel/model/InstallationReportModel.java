@@ -29,10 +29,17 @@ public class InstallationReportModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idInstallationReport;
 
+    @NotNull
+    @Column(name="irNum", nullable = false)
+    private String irNum;
+
+    @Column(name = "notes", nullable = true)
+    private String notes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
 //    public ReportModel getIdReportInstallation() {
@@ -57,6 +64,22 @@ public class InstallationReportModel implements Serializable{
 
     public void setIdInstallationReport(Long idInstallationReport) {
         this.idInstallationReport = idInstallationReport;
+    }
+
+    public String getIrNum() {
+        return irNum;
+    }
+
+    public void setIrNum(String irNum) {
+        this.irNum = irNum;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public ProjectInstallationModel getIdOrderPi() {

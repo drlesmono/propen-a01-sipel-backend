@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class ServicesRestController {
 
@@ -48,7 +48,7 @@ public class ServicesRestController {
         BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan
-            response.setMessage("Engineer pada service gagal disimpan." );
+            response.setMessage("Service gagal disimpan." );
             response.setStatus(405);
             return response;
         }

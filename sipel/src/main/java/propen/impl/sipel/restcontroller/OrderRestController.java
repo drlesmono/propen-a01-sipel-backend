@@ -1,6 +1,7 @@
 package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.ManagedServicesModel;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class OrderRestController {
 
@@ -45,6 +46,20 @@ public class OrderRestController {
 
         return listOrder;
 //        return orderRestService.retrieveListOrderMs();
+    }
+
+    @GetMapping(value="/ordersVerifiedReport")
+    private List<OrderModel> retrieveListOrderVerifiedReport(){
+        List<OrderModel> listOrder = orderRestService.retrieveListOrderVerified();
+
+        List<OrderModel> listOrderFiltered = new ArrayList<>();
+        for(OrderModel order : listOrder){
+            if(order.getNoPO() != null){
+                listOrderFiltered.add(order);
+            }
+        }
+
+        return listOrder;
     }
 
     @PutMapping(value="/order/{idOrder}/perpanjangKontrak")

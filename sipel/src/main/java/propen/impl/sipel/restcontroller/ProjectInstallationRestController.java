@@ -11,7 +11,7 @@ import propen.impl.sipel.service.ProjectInstallationRestService;
 import javax.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class ProjectInstallationRestController {
 

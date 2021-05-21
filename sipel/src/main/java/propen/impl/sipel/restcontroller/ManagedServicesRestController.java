@@ -16,7 +16,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class ManagedServicesRestController {
 
