@@ -22,7 +22,7 @@ public class ManagedServicesModel implements Serializable{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private OrderModel idOrder;
 
     @Id

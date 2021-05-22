@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface ProjectInstallationRestService {
 
+    List<ProjectInstallationModel> retrieveListPi();
+
     ProjectInstallationModel updatePIC(Long idOrderPi, String idUserEng);
 }

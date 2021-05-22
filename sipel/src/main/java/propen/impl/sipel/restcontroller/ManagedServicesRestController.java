@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.service.ManagedServicesRestService;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -22,6 +24,11 @@ public class ManagedServicesRestController {
 
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
+
+    @GetMapping(value="/order/ms")
+    private List<ManagedServicesModel> retrieveListMs(){
+        return managedServicesRestService.retrieveListMs();
+    }
 
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updatePIC")
     private BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,

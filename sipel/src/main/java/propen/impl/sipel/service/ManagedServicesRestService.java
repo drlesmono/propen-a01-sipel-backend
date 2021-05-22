@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ManagedServicesRestService{
 
+    List<ManagedServicesModel> retrieveListMs();
+
     ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic);
 
     List<ManagedServicesModel> msOrderByActualEnd();

@@ -7,6 +7,7 @@ import propen.impl.sipel.repository.ProjectInstallationDb;
 import propen.impl.sipel.repository.UserDb;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,6 +18,11 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
 
     @Autowired
     private UserDb userDb;
+
+    @Override
+    public List<ProjectInstallationModel> retrieveListPi() {
+        return projectInstallationDb.findAll();
+    }
 
     @Override
     public ProjectInstallationModel updatePIC(Long idOrderPi, String idUserEng) {

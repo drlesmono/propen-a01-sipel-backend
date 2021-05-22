@@ -3,6 +3,7 @@ package propen.impl.sipel.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.UserModel;
 import propen.impl.sipel.repository.ManagedServicesDb;
 import propen.impl.sipel.repository.UserDb;
@@ -20,6 +21,11 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
 
     @Autowired
     private UserDb userDb;
+
+    @Override
+    public List<ManagedServicesModel> retrieveListMs() {
+        return managedServicesDb.findAll();
+    }
 
     @Override
     public ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic) {
