@@ -14,7 +14,7 @@ const ManagedService = (props) => {
             <div className="row">
                 <div className="col-sm-4">
                     <div className="form-group">
-                        <p>{`ID Order MS: ${idOrderMs}`}</p>
+                        <p>{`ID Managed Service: ${idOrderMs}`}</p>
                     </div>
                 </div>
                 <div className="col-sm-4">

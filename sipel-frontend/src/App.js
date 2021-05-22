@@ -46,7 +46,7 @@ const routes = {
               </div>
             </div>,
   "/order/order": () => <InputDataOrder/>,
-  "/produksi/maintenance": () => <PenjadwalanMaintenance />,
+  //"/produksi/maintenance": () => <PenjadwalanMaintenance />,
   //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
 };
 
@@ -56,7 +56,6 @@ function App(){
 
     return (
         <Layout>
-          <Router>
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" id="navbar">
             <Navbar.Brand href="/" style={{ textDecoration: 'none', color: '#F7873F' }}>SIPEL</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -94,9 +93,10 @@ function App(){
             </Navbar.Collapse>
           </Navbar>
             { routeResult }
-          {/* <Router> */}
+          <Router>
             <Switch>
-              <Route exact path="/produksi/maintenance/tambah/:id" component={CreateMaintenance} />
+              <Route exact path="/produksi/maintenance" component={PenjadwalanMaintenance} />
+              <Route exact path="/produksi/maintenance/create/:id" component={CreateMaintenance} />
             </Switch>
           </Router>
           </Layout>

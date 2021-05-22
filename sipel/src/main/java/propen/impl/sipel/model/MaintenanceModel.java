@@ -26,8 +26,8 @@ public class MaintenanceModel implements Serializable{
     @Column(name="dateMn", nullable = false)
     private Date dateMn;
 
-    //@NotNull
-    @Column(name = "isMaintained", nullable = true)
+    @NotNull
+    @Column(name = "isMaintained", nullable = false)
     private Boolean isMaintained;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

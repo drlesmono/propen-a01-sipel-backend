@@ -3,9 +3,6 @@ import CustomizedTables from "../../components/Table";
 import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
-import { Link } from 'react-router-dom';
-//import { useHistory } from "react-router-dom";
-//import { browserHistory } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 
 class PenjadwalanMaintenance extends React.Component {
@@ -14,8 +11,6 @@ class PenjadwalanMaintenance extends React.Component {
         this.state = {
             idOrderMs: "",
             ordersMS: [],
-            datemn: "",
-            listMaintenance: [{ index: Math.random(), datemn: ""}],
             orderFiltered: [],
             orders: [],
             ordersTerassign: [],
@@ -59,25 +54,14 @@ class PenjadwalanMaintenance extends React.Component {
         }
     }
 
-    /* handleCreateSchedule(order) {
-        //<Link to={"/produksi/maintenance/tambah/"+order.idOrder} style={{ textDecoration: 'none' }}></Link>
-        this.props.history.push(`/produksi/maintenance/tambah/${order.idOrder}`);
-    } */
-
-    /* handleCreateSchedule = (order) => {
-        browserHistory.push(`/produksi/maintenance/tambah/${order.idOrder}`);
-    } */
-
     handleCreateSchedule = (order) => {
-        this.props.history.push(`/produksi/maintenance/tambah/${order.idOrder}`);
+        this.props.history.push(`/produksi/maintenance/create/${order.idOrder}`);
     }
 
     render() {
         const {
             ordMSTerassignFromOrdersList,
         } = this.state;
-
-        let{ listMaintenance } = this.state;
 
         const tableHeaders = [
             'No','Id Managed Service','Nomor PO','Nama Pelanggan','Perusahaan Pelanggan',
