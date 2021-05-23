@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.service.ManagedServicesRestService;
+import propen.impl.sipel.service.OrderRestService;
 
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -25,7 +27,10 @@ public class ManagedServicesRestController {
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
 
-    @GetMapping(value="/order/ms")
+    @Autowired
+    private OrderRestService orderRestService;
+
+    @GetMapping(value="/orders/ms")
     private List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
@@ -48,8 +53,9 @@ public class ManagedServicesRestController {
         return response;
     }
 
-    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updateKontrak")
+    @PutMapping(value="/order/{idOrder}/ms/updateKontrak")
     private BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
+                                                             @PathVariable("idOrder") Long idOrder,
                                                              BindingResult bindingResult){
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -58,11 +64,13 @@ public class ManagedServicesRestController {
             response.setStatus(405);
             return response;
         }
+        OrderModel order = orderRestService.findOrderById(idOrder);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date actualStart = formatter.parse(ms.getActualStart());
             Date actualEnd = formatter.parse(ms.getActualEnd());
-            ManagedServicesModel newMs = managedServicesRestService.updateKontrak(ms.getIdOrderMs(), ms.getIdUserPic(), actualStart, actualEnd);
+            ManagedServicesModel newMs = managedServicesRestService.updateKontrak(order.getIdOrderMs().getIdOrderMs(),
+                                        ms.getIdUserPic(), actualStart, actualEnd);
             response.setStatus(200);
             response.setMessage("Success");
             response.setResult(newMs);

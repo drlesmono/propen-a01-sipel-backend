@@ -41,7 +41,7 @@ public class ServicesRestController {
         return response;
     }
 
-    @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/service")
+    @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/createService")
     private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){

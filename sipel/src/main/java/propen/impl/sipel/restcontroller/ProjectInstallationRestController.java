@@ -20,7 +20,7 @@ public class ProjectInstallationRestController {
     @Autowired
     private ProjectInstallationRestService projectInstallationRestService;
 
-    @GetMapping(value="/order/pi")
+    @GetMapping(value="/orders/pi")
     private List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }

@@ -70,28 +70,38 @@ public class OrderRestServiceImpl implements OrderRestService{
         OrderModel newOrder = new OrderModel();
         String orderName = order.getOrderName();
         List<String> orderNameSplit;
+        List<OrderModel> listOrderSameOrg = orderDb.findAllByClientOrg(order.getClientOrg());
+        List<String> listOrderSameName = new ArrayList<>();
+        orderNameSplit = Arrays.asList(orderName.split(" ver."));
+        for(OrderModel orderOrg : listOrderSameOrg){
+            if(orderOrg.getOrderName().contains(orderNameSplit.get(0))){
+                listOrderSameName.add(orderOrg.getOrderName());
+            }
+        }
 
         if(orderName.contains("ver.")) {
-            String orderNameTarget = order.getOrderName();
-            List<OrderModel> listOrderSameOrg = orderDb.findAllByClientOrg(order.getClientOrg());
-            List<String> listOrderSameName = new ArrayList<>();
-            orderNameSplit = Arrays.asList(orderNameTarget.split(" ver."));
-            for(OrderModel orderOrg : listOrderSameOrg){
-                if(orderOrg.getOrderName().contains(orderNameSplit.get(0))){
-                    listOrderSameName.add(orderOrg.getOrderName());
-                }
-            }
-
+//            String orderNameTarget = order.getOrderName();
             int i = 3;
-            orderNameTarget = orderNameSplit.get(0) + " ver." + i;
-            while(listOrderSameName.contains(orderNameTarget)){
+            orderName = orderNameSplit.get(0) + " ver." + i;
+            while(listOrderSameName.contains(orderName)){
                 i++;
-                orderNameTarget = orderNameSplit.get(0) + " ver." + i;
+                orderName = orderNameSplit.get(0) + " ver." + i;
             }
 
-            newOrder.setOrderName(orderNameTarget);
+            newOrder.setOrderName(orderName);
         }else{
-            newOrder.setOrderName(orderName + " ver.2");
+            if(listOrderSameName.size() == 0) {
+                newOrder.setOrderName(orderName + " ver.2");
+            }else{
+                int i = 3;
+                orderName = orderNameSplit.get(0) + " ver." + i;
+                while(listOrderSameName.contains(orderName)){
+                    i++;
+                    orderName = orderNameSplit.get(0) + " ver." + i;
+                }
+
+                newOrder.setOrderName(orderName);
+            }
         }
 
         // default time zone

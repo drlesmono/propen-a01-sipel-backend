@@ -43,6 +43,6 @@
 
 #root{
     background-color: lightgray;
-    overflow: hidden;
+    overflow: scroll;
     min-height: 100% !important;
 }

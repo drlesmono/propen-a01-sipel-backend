@@ -39,7 +39,9 @@ class PeriodeKontrak extends Component {
             isFailed: false,
             isError: false,
             isSuccess: false,
-            isValid: true
+            listPi: [],
+            listMs: [],
+            messageError: null
         };
         this.handleEdit = this.handleEdit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -48,7 +50,9 @@ class PeriodeKontrak extends Component {
         this.handleReport = this.handleReport.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
         this.handleAddServices = this.handleAddServices.bind(this);
+        this.handleChangeListService = this.handleChangeListService.bind(this);
         this.handleCloseNotif = this.handleCloseNotif.bind(this);
+        this.handleValidation = this.handleValidation.bind(this);
     }
     
     componentDidMount() {
@@ -57,9 +61,11 @@ class PeriodeKontrak extends Component {
     
     async loadData() {
         try {
-            const orders = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerified/ms");
             const users = await APIConfig.get("/users");
-            this.setState({ ordersVerified: orders.data, users: users.data});
+            const listPi = await APIConfig.get("/orders/pi");
+            const listMs = await APIConfig.get("/orders/ms");
+            this.setState({ ordersVerified: orders.data, users: users.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
             // alert("Oops terjadi masalah pada server");
             this.setState({ isError: true });
@@ -69,103 +75,111 @@ class PeriodeKontrak extends Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-        if(this.state.isExtend){
-            if(this.state.newNoPO !== null){
-                if(this.state.newNoPO !== ""){
-                    let newOrder;
-                    let services;
-                    if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
-                        try {   
-                            let response;
-                            const order = this.state.orderTarget;
-                            const pi = order.idOrderPi === null ? null : order.idOrderPi.idOrderPi;
-                            const ms = order.idOrderMs.idOrderMs;
-                            const dataOrder = {
-                                idOrder: order.idOrder,
-                                orderName: order.orderName,
-                                clientName: order.clientName,
-                                clientOrg: order.clientOrg,
-                                clientDiv: order.clientDiv,
-                                clientPIC: order.clientPIC,
-                                clientEmail: order.clientEmail,
-                                clientPhone: order.clientPhone,
-                                dateOrder: order.dateOrder,
-                                noPO: this.state.newNoPO,
-                                noSPH: order.noSPH,
-                                description: order.description,
-                                verified: order.verified,
-                                projectInstallation: order.projectInstallation,
-                                managedService: order.managedService,
-                                idOrderPi: pi,
-                                idOrderMs: ms
-                            }
-                            response = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/perpanjangKontrak`, dataOrder);
-                            newOrder = response.data.result;
-                            this.loadData();  
-
-                            const newMs = newOrder.idOrderMs;
-                            const dataMs = {
-                                idOrderMs: newMs.idOrderMs,
-                                idUserPic: this.state.picEngineerMs,
-                                actualStart: this.convertDateToString(this.state.actualStart),
-                                actualEnd: this.convertDateToString(this.state.actualEnd),
-                                activated: newMs.activated,
-                                dateClosedMS: newMs.dateClosedMS
-                            }
-                            response = await APIConfig.put(`/order/${newOrder.idOrder}/ms/${newMs.idOrderMs}/updateKontrak`, dataMs);
-                            const newMsUpdated = response.data.result;
-                            
-                            let listServiceName = this.state.servicesEngineerName;
-                            let listService = this.state.servicesEngineer;
-                            services = new Array(listService.length);
-                            for(let i=0; i<listService.length; i++){
-                                const dataService = {
-                                    name: listServiceName[i],
-                                    idUser: listService[i]
-                                }
-                                response = await APIConfig.post(`/order/${newOrder.idOrder}/ms/${newMsUpdated.idOrderMs}/service`, dataService);
-                                const service = response.data.result;
-                                services[i] = service;
-                                this.loadData();
-                            }
-                            this.loadData();
-                        } catch (error) {
-                            console.log(error);
-                            return this.setState({isFailed: true, isValid: true});
-                        }
-                        return this.setState({isFailed: false, isValid: true, isSuccess: true, isExtend: false, orderTarget: newOrder, services: services, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
-                    }else{
-                        return this.setState({isFailed: true, isValid: false});
-                    }
-                }else{
-                    return this.setState({isFailed: true, isValid: false});
+        let response;
+        let order;
+        let pi;
+        let ms;
+        let newOrder;
+        let services;
+        try {
+            order = this.state.orderTarget;
+            pi = order.projectInstallation === false ? null : this.getPi(order.idOrder).idOrderPi;
+            ms = this.getMs(order.idOrder);   
+            if(this.state.isExtend){
+                const dataOrder = {
+                    idOrder: order.idOrder,
+                    orderName: order.orderName,
+                    clientName: order.clientName,
+                    clientOrg: order.clientOrg,
+                    clientDiv: order.clientDiv,
+                    clientPIC: order.clientPIC,
+                    clientEmail: order.clientEmail,
+                    clientPhone: order.clientPhone,
+                    dateOrder: order.dateOrder,
+                    noPO: this.state.newNoPO,
+                    noSPH: order.noSPH,
+                    description: order.description,
+                    verified: order.verified,
+                    projectInstallation: order.projectInstallation,
+                    managedService: order.managedService,
+                    idOrderPi: pi,
+                    idOrderMs: ms.idOrderMs
                 }
-            }else{
-                return this.setState({isFailed: true, isValid: false});
+                response = await APIConfig.put(`/order/${order.idOrder}/perpanjangKontrak`, dataOrder);
+                newOrder = response.data.result;
+                this.loadData();
             }
-        }else{
-                if(new Date(this.state.actualEnd) > new Date(this.state.actualStart)){
-                    try {   
-                        const ms = this.state.orderTarget.idOrderMs;
-                        const dataMs = {
-                            idOrderMs: ms.idOrderMs,
-                            idUserPic: this.state.picEngineerMs,
-                            actualStart: this.convertDateToString(this.state.actualStart),
-                            actualEnd: this.convertDateToString(this.state.actualEnd),
-                            activated: ms.activated,
-                            dateClosedMS: ms.dateClosedMS
-                        }
-                        const newMs = await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updateKontrak`, dataMs);
-                        this.loadData();
-                    } catch (error) {
-                        console.log(error);
-                        return this.setState({isFailed: true, isValid: true});
+            
+            console.log(this.state.listMs);
+            console.log(newOrder);
+            const dataMs = {
+                idOrderMs: this.state.isExtend ? null : ms.idOrderMs,
+                idUserPic: this.state.picEngineerMs,
+                actualStart: this.convertDateToString(this.state.actualStart),
+                actualEnd: this.convertDateToString(this.state.actualEnd),
+                activated: ms.activated,
+                dateClosedMS: null
+            }
+            response = await APIConfig.put(`/order/${this.state.isExtend ? newOrder.idOrder : order.idOrder}/ms/updateKontrak`, dataMs);
+            const newMsUpdated = response.data.result;
+            
+            if(this.state.isExtend){
+                let listServiceName = this.state.servicesEngineerName;
+                let listService = this.state.servicesEngineer;
+                services = new Array(listService.length);
+                for(let i=0; i<listService.length; i++){
+                    const dataService = {
+                    name: listServiceName[i],
+                    idUser: listService[i]
                     }
-                    return this.setState({isFailed: false,  isValid: true, isSuccess: true, isEdit: false, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
-                }else{
-                    return this.setState({isFailed: true, isValid: false});
+                    response = await APIConfig.post(`/order/${newOrder.idOrder}/ms/${newMsUpdated.idOrderMs}/createService`, dataService);
+                    const service = response.data.result;
+                    services[i] = service;
+                    this.loadData();
                 }
-        } 
+            }
+            this.loadData();
+        } catch (error) {
+            console.log(error);
+            return this.setState({isFailed: true, messageError: this.state.isExtend? "Perpanjangan periode kontrak gagal disimpan." : "Periode kontrak gagal disimpan."});
+        }
+
+        if(this.state.isExtend){
+            this.setState({orderTarget: newOrder, services: services})
+        }
+        
+        this.setState({isFailed: false, isValid: true, isSuccess: true, isExtend: false, isEdit: false, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
+    }
+
+    handleValidation(event){
+        event.preventDefault();
+        if(this.state.isExtend){
+            let listServiceName = this.state.servicesEngineerName;
+            let listService = this.state.servicesEngineer;
+            for(let i=0; i<listService.length; i++){
+                if(listServiceName[i] === null || listServiceName[i] === ""){
+                    return this.setState({isFailed: true, messageError: "Semua service wajib diisi"});
+                }
+                if(listService[i] === null || listService[i] === ""){
+                    return this.setState({isFailed: true, messageError: "Semua Engineer Service wajib diisi"});
+                }
+            }
+
+            if((this.state.picEngineerMs === null || this.state.picEngineerMs === "")){
+                return this.setState({isFailed: true, messageError: "PIC Engineer Managed Service wajib diisi"});
+            }
+
+            if(this.state.newNoPO === null || this.state.newNoPO === ""){
+                return this.setState({isFailed: true, messageError: "Nomor PO baru wajib diisi"});
+            }
+        }
+
+        if(new Date(this.state.actualEnd) < new Date(this.state.actualStart)){
+            return this.setState({isFailed: true, messageError: "Periode mulai harus lebih awal dari periode akhir"});
+        }else{
+            this.setState({isFailed: false, messageError: null});
+            this.handleSubmit(event);
+        }
     }
 
     handleReport(event){
@@ -260,12 +274,17 @@ class PeriodeKontrak extends Component {
             this.setState({ servicesEngineerName: servicesEngineerNameNew});
         }else{
             this.setState({ [name]: value });
+            console.log(name);
+            console.log(value);
         }
     }
 
     handleEdit(order, typeEdit) {
-        let actualStart = moment(new Date(order.idOrderMs.actualStart)).format("YYYY-MM-DD");
-        let actualEnd = moment(new Date(order.idOrderMs.actualEnd)).format("YYYY-MM-DD");
+        let ms = this.getMs(order.idOrder);
+        let actualStart = moment(new Date(ms.actualStart)).format("YYYY-MM-DD");
+        let actualEnd = moment(new Date(ms.actualEnd)).format("YYYY-MM-DD");
+        console.log(actualStart);
+        console.log(actualEnd);
         if(typeEdit === "perbarui"){
             this.setState({ isEdit: true , formValid: true});
         }else{
@@ -276,18 +295,18 @@ class PeriodeKontrak extends Component {
             orderTarget: order,
             actualStart: actualStart,
             actualEnd: actualEnd,
-            totalServices: order.idOrderMs.listService.length,
-            timeRemaining: this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd)  
+            totalServices: ms.listService.length,
+            timeRemaining: this.getTimeRemaining(ms.actualStart, ms.actualEnd)  
         });
         
-        if(order.idOrderMs.idUserPic !== null){
-            let servicesEngineer = order.idOrderMs.listService.map(service => service.idUser.id);
-            let servicesEngineerName = order.idOrderMs.listService.map(service => service.name);
+        if(ms.idUserPic !== null){
+            let servicesEngineer = ms.listService.map(service => service.idUser.id);
+            let servicesEngineerName = ms.listService.map(service => service.name);
             this.setState({
-                picEngineerMs: order.idOrderMs.idUserPic.id, 
+                picEngineerMs: ms.idUserPic.id, 
                 servicesEngineer: servicesEngineer,
                 servicesEngineerName: servicesEngineerName,
-                services: order.idOrderMs.listService
+                services: ms.listService
             });
         }
     }
@@ -314,30 +333,50 @@ class PeriodeKontrak extends Component {
             isFailed: false,
             isSuccess: false,
             isError: false,
-            isValid: true
+            messageError: null
         });
         this.loadData();
     }
 
+    getMs(idOrder){
+        let ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === idOrder);
+        if (ms.length !== 0) {
+            // console.log(ms[0]);
+            return ms[0];
+        }
+        return null;
+    }
+
+    getPi(idOrder){
+        console.log(idOrder);
+        // console.log(this.state.listPi);
+        let pi = this.state.listPi.filter(pi => pi.idOrder.idOrder === idOrder );
+        // console.log(pi.length);
+        if (pi.length !== 0) {
+            console.log(pi[0]);
+            return pi[0];
+        }
+        return null;
+    }
+
     getPICMS(idOrder){
-        let orderTarget = this.state.ordersVerified.filter(
-            order => order.idOrder === idOrder
-        );
-        let ms = orderTarget.map(order => {return order.idOrderMs});
-    
-        if(orderTarget !== null && ms[0] !== null){
-            let user = orderTarget.map(order => order.idOrderMs.idUserPic);
+        let ms = this.getMs(idOrder);
+        
+        if(ms !== null){
+            let user = ms.idUserPic;
             if(user !== null){
-                let pic = orderTarget.map(order => order.idOrderMs.idUserPic.fullname);
-                return pic;
+                return user;
             }
         }
-        return "Belum ditugaskan";
+        return null;
     }
 
     getPICService(service){
-        if(service.idUser !== null) return service.idUser.fullname;
-        return "Belum ditugaskan";
+        if(service.idUser !== null){
+            console.log(service.idUser.fullname);
+            return service.idUser.fullname;
+        }
+        return <p style={{color: "red"}}>Belum ditugaskan</p>;
     }
 
     convertDateToString(date){
@@ -377,41 +416,62 @@ class PeriodeKontrak extends Component {
         this.setState({ orderFiltered : newOrderList });
     }
 
-    handleAddServices(listService){
+    handleAddServices(){
         this.setState({isAdded: true});
-        let servicesEngineer = [...this.state.servicesEngineer];
-        let initialTotal = listService.length;
+        // let servicesEngineer = [...this.state.servicesEngineer];
+        let initialTotal = this.state.listService.length;
         const totalServicesNew = initialTotal+1;
         this.setState({ totalServices: totalServicesNew });
-        servicesEngineer = servicesEngineer.concat(null);
-        this.setState({serviceEngineer: servicesEngineer});
-        this.setState({listService: [...this.state.listService, [<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
-        placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-        <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
-        value={this.state.servicesEngineer[initialTotal] === null ? this.state.users[0].id : this.state.servicesEngineer[initialTotal]}
-        onChange={this.handleChangeField}>{this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
-        </Form.Control>]]});
+        let servicesEngineer = this.state.servicesEngineer.concat(null);
+        let servicesEngineerName = this.state.servicesEngineerName.concat(null);
+        this.setState({serviceEngineer: servicesEngineer, servicesEngineerName: servicesEngineerName});
+        console.log(this.state.servicesEngineer);
+        
+        let services = [...this.state.services, null];
+        this.setState({services: services});
+        // this.setState({listService: [...this.state.listService, [<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
+        // placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
+        // <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
+        // value={this.state.servicesEngineer[initialTotal] === null ? "": this.state.servicesEngineer[initialTotal]}
+        // onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
+        // {this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+        // </Form.Control>]]});
+        this.loadData();
+    }
+
+    handleChangeListService(){
+        this.handleAddServices();
+        this.setState({listService: this.state.services.map((service, index) => 
+            [<Form.Control type="text" size="sm" name={"serviceName"+index} 
+            value={this.state.servicesEngineerName[index] === null ? service === null ? null : 
+            service.name : this.state.servicesEngineerName[index]} 
+            onChange={this.handleChangeField} placeholder="masukkan service"/>,
+            <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
+            value={this.state.servicesEngineer[index] === null ? "" : this.state.servicesEngineer[index]}
+            onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
+            {this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+            </Form.Control>])});
     }
 
     handleCloseNotif(){
-        this.setState({ isFailed: false, isValid: true });
+        this.setState({ isFailed: false, messageError: null});
     }
 
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, isValid, newNoPO,
+        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, messageError,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService, services } = this.state;
         const tableHeaders = ['No.', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         
         const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [order.noPO === null ? "-" : order.noPO, order.orderName, 
-                        this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
-                        this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
+                        this.getDate(this.getMs(order.idOrder).actualStart), this.getDate(this.getMs(order.idOrder).actualEnd),
+                        this.getTimeRemaining(this.getMs(order.idOrder).actualStart, this.getMs(order.idOrder).actualEnd),
                         <div className="justify-content-between"><Button className={classes.button1} onClick={() => this.handleEdit(order, "perbarui")}>perbarui</Button>
                         <Button className={classes.button2} onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</Button></div>])
                         : ordersVerified.map((order) =>
                         [order.noPO === null ? "-" : order.noPO, order.orderName, 
-                        this.getDate(order.idOrderMs.actualStart), this.getDate(order.idOrderMs.actualEnd),
-                        this.getTimeRemaining(order.idOrderMs.actualStart, order.idOrderMs.actualEnd),
+                        this.getDate(this.getMs(order.idOrder).actualStart), this.getDate(this.getMs(order.idOrder).actualEnd),
+                        this.getTimeRemaining(this.getMs(order.idOrder).actualStart, this.getMs(order.idOrder).actualEnd),
                         <div className="justify-content-between"><Button className={classes.button1} onClick={() => this.handleEdit(order, "perbarui")}>perbarui</Button>
                         <Button className={classes.button2} onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</Button></div>])
  
@@ -419,15 +479,27 @@ class PeriodeKontrak extends Component {
         let tableServiceRows;
 
         if(orderTarget !== null){
-                tableServiceRows = isAdded ? listService : services.map((service, index) =>
-                                    [isExtend? <Form.Control type="text" size="sm" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
-                                    service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder={service.name}/>
-                                    : service.name, (isReport || isEdit || isReportExtend ) ? this.getPICService(service) :
-                                    <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
-                                    value={servicesEngineer[index] === null ? users[0].id : servicesEngineer[index]}
-                                    onChange={this.handleChangeField}>
-                                    {users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                                </Form.Control>]);
+                // tableServiceRows = isAdded ? listService : services.map((service, index) =>
+                //                     [isExtend? <Form.Control type="text" size="sm" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
+                //                     service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder="masukkan service"/>
+                //                     : service.name, (isReport || isEdit || isReportExtend ) ? this.getPICService(service) :
+                //                     <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
+                //                     value={servicesEngineer[index] === null ? "" : servicesEngineer[index]}
+                //                     onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
+                //                     {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                //                 </Form.Control>]);
+                tableServiceRows = isExtend ?  
+                                services.map((service, index) => 
+                                [<Form.Control type="text" size="sm" name={"serviceName"+index} 
+                                value={this.state.servicesEngineerName[index] === null ? service === null ? null : 
+                                service.name : this.state.servicesEngineerName[index]} 
+                                onChange={this.handleChangeField} placeholder="masukkan service"/>,
+                                <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
+                                value={this.state.servicesEngineer[index] === null ? "" : this.state.servicesEngineer[index]}
+                                onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
+                                {this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                                </Form.Control>])
+                                : services.map((service) =>[service.name, this.getPICService(service)]);
         }
 
         const titleExtend = isReportExtend? "Perpanjangan Periode Kontrak" : "Form Perpanjangan Periode Kontrak";
@@ -452,12 +524,7 @@ class PeriodeKontrak extends Component {
                             { isFailed ? 
                                <Card body className={classes.card}>
                                    <div className="d-flex justify-content-between">
-                                        {isEdit?
-                                            <div>{isValid? "Periode Kontrak" : "Periode mulai harus lebih awal dari periode akhir"} Gagal disimpan.</div> :
-                                            isValid ?
-                                                <div>Perpanjangan Periode Kontrak Gagal disimpan.</div> :
-                                                <div>{newNoPO === null || newNoPO === ""? "Nomor PO wajib diisi" : "Periode mulai harus lebih awal dari periode akhir"}</div>
-                                        }
+                                        {messageError}
                                         <Button size="sm" className="bg-transparent border border-0 border-transparent" onClick={this.handleCloseNotif}>x</Button>
                                     </div>
                                 </Card>
@@ -485,41 +552,47 @@ class PeriodeKontrak extends Component {
                                         <tr>
                                             <td style={{fontWeight: 'bold'}}>Managed Service</td>
                                             {isExtend ? <td className="d-flex justify-content-end">
-                                            <Button className={classes.button1} onClick={() => this.handleAddServices(tableServiceRows)}>
+                                            <Button className={classes.button1} onClick={this.handleChangeListService}>
                                                 + Tambah Services
                                                 </Button></td>
                                                 : <></>}
                                         </tr>
                                         <tr>
-                                            <td>Services</td>
+                                            {isExtend ? 
+                                            <td><p className="d-flex">Services<p style={{color: "red"}}>*</p></p></td> 
+                                            : <td>Services</td>}
                                             <td>
                                                 <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>PIC Engineer</td>
                                             {isExtend ?
-                                            <td><Form.Control as="select" size="sm" name="picEngineerMs" value={picEngineerMs === null ? users[0].id : picEngineerMs} onChange={this.handleChangeField}>
+                                            <><td><p className="d-flex">PIC Engineer<p style={{color: "red"}}>*</p></p></td>
+                                            <td><Form.Control as="select" size="sm" name="picEngineerMs" value={picEngineerMs === null ? "" : picEngineerMs} onChange={this.handleChangeField}>
+                                                    <option value="">Belum ditugaskan</option>
                                                     {users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                                                </Form.Control></td>
-                                            : <td>: {this.getPICMS(orderTarget.idOrder)}</td>}
+                                                </Form.Control></td></>
+                                            : <><td>PIC Engineer</td>
+                                            <td>: {this.getPICMS(orderTarget.idOrder) === null? "Belum ditugaskan" : this.getPICMS(orderTarget.idOrder).fullname}</td></>}
                                         </tr>
                                         <tr>
                                             { isExtend ? <>
-                                            <td className="d-flex"><p>Nomor PO Baru</p><p style={{color: "red"}}>*</p></td>
+                                            <td><p className="d-flex">Nomor PO Baru<p style={{color: "red"}}>*</p></p></td>
                                             <td><Form.Control type="text" size="sm" name="newNoPO" onChange={this.handleChangeField} placeholder="masukkan nomor PO baru"/></td></> : <></> } 
                                         </tr>
                                         <tr>
-                                            <td>Periode Mulai</td>
-                                            {isReport || isReportExtend ? 
-                                            <td>: {this.getDate(actualStart)}</td> :
-                                            <td><Form.Control type="date" size="sm" name="actualStart" value={actualStart} onChange={this.handleChangeField}/></td> }
+                                            {isReport || isReportExtend ?
+                                            <><td>Periode Mulai</td> 
+                                            <td>: {this.getDate(actualStart)}</td></> :
+                                            <><td><p className="d-flex">Periode Mulai<p style={{color: "red"}}>*</p></p></td>
+                                            <td><Form.Control type="date" size="sm" name="actualStart" value={actualStart} onChange={this.handleChangeField}/></td></> }
                                         </tr>
                                         <tr>
-                                            <td>Periode Berakhir</td>
                                             {isReport || isReportExtend  ? 
-                                            <td>: {this.getDate(actualEnd)}</td> :
-                                            <td><Form.Control type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td> }
+                                            <><td>Periode Berakhir</td>
+                                            <td>: {this.getDate(actualEnd)}</td></> :
+                                            <><td><p className="d-flex">Periode Berakhir<p style={{color: "red"}}>*</p></p></td>
+                                            <td><Form.Control type="date" size="sm" name="actualEnd" value={actualEnd} onChange={this.handleChangeField}/></td></> }
                                         </tr>
                                         <tr>
                                             <td>Waktu Tersisa</td> 
@@ -529,7 +602,7 @@ class PeriodeKontrak extends Component {
                                         <tr>
                                             <td style={{color: "red"}}>*Wajib diisi</td>
                                             <td className="d-flex justify-content-end">
-                                                <Button className={classes.button1} onClick={this.handleSubmit}>
+                                                <Button className={classes.button1} onClick={this.handleValidation}>
                                                     simpan
                                                 </Button>
                                             </td>

@@ -34,7 +34,7 @@ public class OrderRestController {
         return orderRestService.retrieveListOrderVerified();
     }
 
-    @GetMapping(value="/orders/ms")
+    @GetMapping(value="/ordersVerified/ms")
     private List<OrderModel> retrieveListOrderMS() {
         List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByActualEnd();
 

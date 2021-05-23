@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
-import CustomizedButtons from "../../components/Button";
+// import CustomizedButtons from "../../components/Button";
 // import Modal from "../../components/Modal";
 import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -47,8 +47,8 @@ class PenugasanEngineer extends Component {
         try {
             const orders = await APIConfig.get("/ordersVerified");
             const users = await APIConfig.get("/users");
-            const listPi = await APIConfig.get("/order/pi");
-            const listMs = await APIConfig.get("/order/ms");
+            const listPi = await APIConfig.get("/orders/pi");
+            const listMs = await APIConfig.get("/orders/ms");
             console.log(orders.data);
             console.log(users.data);
             console.log(listPi.data);
@@ -436,7 +436,7 @@ class PenugasanEngineer extends Component {
                                                 {isReport ?
                                                 <><td>PIC Engineer</td>
                                                 <td>: {this.getPICPI(orderTarget.idOrder) === null? <p style={{color: "red"}}>Belum ditugaskan</p> : this.getPICPI(orderTarget.idOrder).fullname}</td></> :
-                                                <><td className="d-flex"><p>PIC Engineer</p><p style={{color: "red"}}>*</p></td>
+                                                <><td><p className="d-flex">PIC Engineer<p style={{color: "red"}}>*</p></p></td>
                                                 <td><Form.Control as="select" size="sm" name="picEngineerPi" value={picEngineerPi === null ? "": picEngineerPi} onChange={this.handleChangeField}>
                                                         <option value="">Belum ditugaskan</option>
                                                         {users.map((user, index) => <option key={index} value={user.id}>{user.fullname}</option>)}
@@ -450,7 +450,7 @@ class PenugasanEngineer extends Component {
                                         <tr>
                                             {isReport ? 
                                             <td>Services</td> :
-                                            <td className="d-flex"><p>Services</p><p style={{color: "red"}}>*</p></td> }
+                                            <td><p className="d-flex">Services<p style={{color: "red"}}>*</p></p></td> }
                                             <td>
                                                 <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>
                                             </td>
@@ -459,7 +459,7 @@ class PenugasanEngineer extends Component {
                                             {isReport ?
                                             <><td>PIC Engineer</td>
                                             <td>: {this.getPICMS(orderTarget.idOrder) === null ? <p style={{color: "red"}}>Belum ditugaskan</p> : this.getPICMS(orderTarget.idOrder).fullname}</td></> :
-                                            <><td className="d-flex"><p>PIC Engineer</p><p style={{color: "red"}}>*</p></td>
+                                            <><td><p className="d-flex">PIC Engineer<p style={{color: "red"}}>*</p></p></td>
                                             <td><Form.Control as="select" size="sm" name="picEngineerMs" value={picEngineerMs === null ? "" : picEngineerMs} onChange={this.handleChangeField}>
                                                     {/* {listServiceEngineerNew.map(user =><option value={user[1]}>{user[2]}</option>)} */}
                                                     <option value="">Belum ditugaskan</option>

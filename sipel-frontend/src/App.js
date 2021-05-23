@@ -1,5 +1,5 @@
 // import logo from './logo.svg';
-import { useRoutes, A } from "hookrouter";
+import { useRoutes} from "hookrouter";
 // import routes from "./router";
 import './App.css';
 import Layout from "./components/Layout";
