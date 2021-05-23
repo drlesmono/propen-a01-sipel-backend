@@ -13,8 +13,6 @@ import java.util.*;
 @Service
 @Transactional
 public class OrderRestServiceImpl implements OrderRestService {
-    private final WebClient webClient;
-
     @Autowired
     private OrderDb orderDb;
 
@@ -36,11 +34,18 @@ public class OrderRestServiceImpl implements OrderRestService {
         List<OrderModel> ordList = retrieveOrder();
         List<OrderModel> ordMSList = new ArrayList<OrderModel>();
         for (OrderModel i : ordList) {
-            if (i.isManagedService() && i.getIdOrderMs().getIdUserPic() != null) {
+            if (i.getManagedService() && i.getIdOrderMs().getIdUserPic() != null) {
                 ordMSList.add(i);
             }
         }
         return ordMSList;
+    }
+
+    @Override
+    public OrderModel getLatestOrder() {
+        List<OrderModel> orders = retrieveOrder();
+        OrderModel order = orders.get(orders.size() - 1);
+        return order;
     }
 
     @Override
@@ -62,8 +67,8 @@ public class OrderRestServiceImpl implements OrderRestService {
         order.setNoSPH(orderUpdate.getNoSPH());
         order.setOrderName(orderUpdate.getOrderName());
         order.setDescription(orderUpdate.getDescription());
-        order.setProjectInstallation(orderUpdate.isProjectInstallation());
-        order.setManagedService(orderUpdate.isManagedService());
+        order.setProjectInstallation(orderUpdate.getProjectInstallation());
+        order.setManagedService(orderUpdate.getManagedService());
         order.setClientName(orderUpdate.getClientName());
         order.setClientDiv(orderUpdate.getClientDiv());
         order.setClientPIC(orderUpdate.getClientPIC());
@@ -73,9 +78,5 @@ public class OrderRestServiceImpl implements OrderRestService {
         order.setDateOrder(today);
         order.setVerified(false);
         return orderDb.save(order);
-    }
-
-    public OrderRestServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(Setting.orderURl).build();
     }
 }

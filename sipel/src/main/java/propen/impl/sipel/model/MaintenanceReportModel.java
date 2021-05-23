@@ -29,10 +29,17 @@ public class MaintenanceReportModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMaintenanceReport;
 
+    @NotNull
+    @Column(name="mrNum", nullable = false)
+    private String mrNum;
+
+    @Column(name = "notes", nullable = true)
+    private String notes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private MaintenanceModel idMaintenance;
 
 //    public ReportModel getIdReportMaintenance() {
@@ -57,6 +64,22 @@ public class MaintenanceReportModel implements Serializable{
 
     public void setIdMaintenanceReport(Long idMaintenanceReport) {
         this.idMaintenanceReport = idMaintenanceReport;
+    }
+
+    public String getMrNum() {
+        return mrNum;
+    }
+
+    public void setMrNum(String mrNum) {
+        this.mrNum = mrNum;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public MaintenanceModel getIdMaintenance() {

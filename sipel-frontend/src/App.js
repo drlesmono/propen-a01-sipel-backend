@@ -27,6 +27,8 @@ import homepage from "./assets/homepage.png";
 import PenjadwalanMaintenance from "./containers/PenjadwalanMaintenance/PenjadwalanMaintenance";
 import CreateMaintenance from "./containers/CreateMaintenance/CreateMaintenance";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import LookUpdateMaintenance from "./containers/LookUpdateMaintenance/LookUpdateMaintenance";
+import CreateOrder from "./containers/CreateOrder/CreateOrder";
 
 const routes = {
   "/": () => 
@@ -45,7 +47,7 @@ const routes = {
                 </table>
               </div>
             </div>,
-  "/order/order": () => <InputDataOrder/>,
+  //"/order/order": () => <InputDataOrder/>,
   //"/produksi/maintenance": () => <PenjadwalanMaintenance />,
   //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
 };
@@ -95,8 +97,11 @@ function App(){
             { routeResult }
           <Router>
             <Switch>
+              <Route exact path="/order/order" component={InputDataOrder} />
               <Route exact path="/produksi/maintenance" component={PenjadwalanMaintenance} />
               <Route exact path="/produksi/maintenance/create/:id" component={CreateMaintenance} />
+              <Route exact path="/produksi/maintenance/look-update/:id/:idMs" component={LookUpdateMaintenance} />
+              <Route exact path="/order/create" component={CreateOrder} />
             </Switch>
           </Router>
           </Layout>

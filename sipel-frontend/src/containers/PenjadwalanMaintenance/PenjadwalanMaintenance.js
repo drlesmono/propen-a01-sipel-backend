@@ -19,6 +19,7 @@ class PenjadwalanMaintenance extends React.Component {
             isAssigned: false,
         };
         this.handleCreateSchedule = this.handleCreateSchedule.bind(this);
+        this.handleLookSchedule = this.handleLookSchedule.bind(this);
     }
 
     componentDidMount() {
@@ -56,6 +57,10 @@ class PenjadwalanMaintenance extends React.Component {
 
     handleCreateSchedule = (order) => {
         this.props.history.push(`/produksi/maintenance/create/${order.idOrder}`);
+    }
+
+    handleLookSchedule = (order) => {
+        this.props.history.push(`/produksi/maintenance/look-update/${order.idOrder}/${order.idOrderMs.idOrderMs}`);
     }
 
     render() {

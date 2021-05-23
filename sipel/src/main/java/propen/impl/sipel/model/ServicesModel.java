@@ -24,7 +24,7 @@ public class ServicesModel implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderMS", referencedColumnName = "idOrderMS", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private ManagedServicesModel idOrderMS;
 
     @NotNull
@@ -34,7 +34,6 @@ public class ServicesModel implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private UserModel idUser;
 
     public Long getIdService() {
@@ -72,6 +71,7 @@ public class ServicesModel implements Serializable{
     public ServicesModel() {
 
     }
+
     public ServicesModel(String name, ManagedServicesModel idOrderMS) {
         this.name = name;
         this.idOrderMS = idOrderMS;

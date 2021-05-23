@@ -68,22 +68,24 @@ public class OrderModel implements Serializable{
 
     @NotNull
     @Column(name="isVerified", nullable = false)
-    private boolean isVerified;
+    private Boolean isVerified;
 
     @NotNull
     @Column(name="isProjectInstallation", nullable = false)
-    private boolean isProjectInstallation;
+    private Boolean isProjectInstallation;
 
     @NotNull
     @Column(name="isManagedService", nullable = false)
-    private boolean isManagedService;
+    private Boolean isManagedService;
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private ManagedServicesModel idOrderMs;
 
 //    @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -190,29 +192,29 @@ public class OrderModel implements Serializable{
         this.description = description;
     }
 
-    /*public boolean getVerified() {
+    public Boolean getVerified() {
         return isVerified;
     }
 
-    public void setVerified(boolean verified) {
+    public void setVerified(Boolean verified) {
         isVerified = verified;
     }
 
-    public boolean getProjectInstallation() {
+    public Boolean getProjectInstallation() {
         return isProjectInstallation;
     }
 
-    public void setProjectInstallation(boolean projectInstallation) {
+    public void setProjectInstallation(Boolean projectInstallation) {
         isProjectInstallation = projectInstallation;
     }
 
-    public boolean getManagedService() {
+    public Boolean getManagedService() {
         return isManagedService;
     }
 
-    public void setManagedService(boolean managedService) {
+    public void setManagedService(Boolean managedService) {
         isManagedService = managedService;
-    }*/
+    }
 
     public ProjectInstallationModel getIdOrderPi() {
         return idOrderPi;
@@ -252,29 +254,5 @@ public class OrderModel implements Serializable{
 
     public void setNoSPH(String noSPH) {
         this.noSPH = noSPH;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
-
-    public boolean isProjectInstallation() {
-        return isProjectInstallation;
-    }
-
-    public void setProjectInstallation(boolean projectInstallation) {
-        isProjectInstallation = projectInstallation;
-    }
-
-    public boolean isManagedService() {
-        return isManagedService;
-    }
-
-    public void setManagedService(boolean managedService) {
-        isManagedService = managedService;
     }
 }

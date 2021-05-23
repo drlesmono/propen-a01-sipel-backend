@@ -23,17 +23,16 @@ public class ManagedServicesModel implements Serializable{
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private OrderModel idOrder;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    //@JsonIgnore
     private UserModel idUserPic;
 
     @NotNull
@@ -57,10 +56,12 @@ public class ManagedServicesModel implements Serializable{
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private List<ServicesModel> listService = new ArrayList<>();
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private List<MaintenanceModel> listMaintenance;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

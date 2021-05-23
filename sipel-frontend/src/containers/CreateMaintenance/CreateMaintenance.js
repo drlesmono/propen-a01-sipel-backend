@@ -89,8 +89,7 @@ class CreateMaintenance extends React.Component {
                     maintained: true,
                 };
                 console.log(this.state.listMaintenance[i].dateMn);
-                await APIConfig.post(`/produksi/maintenance/tambah/${this.state.idOrderMs}`, data).then(res =>
-                    { this.props.history.push(`/produksi/maintenance`)});
+                await APIConfig.post(`/produksi/maintenance/tambah/${this.state.idOrderMs}`, data);
                 this.loadData();
             }
             this.handleReportSubmitMS(event);

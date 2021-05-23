@@ -24,7 +24,7 @@ public class DocumentOrderModel implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private OrderModel idOrder;
 
     @NotNull
