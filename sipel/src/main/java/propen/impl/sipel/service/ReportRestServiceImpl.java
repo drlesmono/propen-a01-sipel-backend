@@ -43,16 +43,16 @@ public class ReportRestServiceImpl implements ReportRestService{
         newReport.setFileType(report.getFileType());
         newReport.setSize(report.getSize());
 
-        if(report.getReportType().equals("installation")) {
-            InstallationReportModel ir = new InstallationReportModel();
-            newReport.setIdInstallationReport(ir);
-        }else if(report.getReportType().equals("maintenance")){
-            MaintenanceReportModel mr = new MaintenanceReportModel();
-            newReport.setIdMaintenanceReport(mr);
-        }else{
-            BastModel bast = new BastModel();
-            newReport.setIdBast(bast);
-        }
+//        if(report.getReportType().equals("installation")) {
+//            InstallationReportModel ir = new InstallationReportModel();
+//            newReport.setIdInstallationReport(ir);
+//        }else if(report.getReportType().equals("maintenance")){
+//            MaintenanceReportModel mr = new MaintenanceReportModel();
+//            newReport.setIdMaintenanceReport(mr);
+//        }else{
+//            BastModel bast = new BastModel();
+//            newReport.setIdBast(bast);
+//        }
 
         return reportDb.save(newReport);
     }
@@ -65,5 +65,10 @@ public class ReportRestServiceImpl implements ReportRestService{
     @Override
     public ReportModel findReportById(Long idReport) {
         return reportDb.findById(idReport).get();
+    }
+
+    @Override
+    public ReportModel findReportByReportName(String reportName) {
+        return reportDb.findByReportName(reportName);
     }
 }

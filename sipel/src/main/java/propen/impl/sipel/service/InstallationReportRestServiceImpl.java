@@ -3,6 +3,7 @@ package propen.impl.sipel.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.InstallationReportModel;
+import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.repository.InstallationReportDb;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -30,18 +32,20 @@ public class InstallationReportRestServiceImpl implements InstallationReportRest
     ProjectInstallationDb projectInstallationDb;
 
     @Override
-    public String createIrNum(InstallationReportModel ir) {
-        ReportModel report = reportDb.findByIdInstallationReport(ir.getIdInstallationReport());
+    public List<InstallationReportModel> retrieveListIr() {
+        return installationReportDb.findAll();
+    }
+
+    @Override
+    public String createIrNum(OrderModel order) {
 
         String nomorIr = "";
         String pemisah = "/";
         String docId = "LMD-BAI";
         LocalDate dateCurrent = LocalDate.now();
-        Date dateCurrentParsed = Date.from(dateCurrent.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        report.setUploadedDate(dateCurrentParsed);
         String date = dateCurrent.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String[] dateSplit = String.valueOf(date).split("-");
-        String seqOrder = "0000" + String.valueOf(report.getIdReport());
+        String seqOrder = "0000" + String.valueOf(order.getIdOrder());
         seqOrder = seqOrder.substring(seqOrder.length() - 3);
 
         nomorIr = nomorIr + seqOrder + pemisah + docId + pemisah + "020" + pemisah + dateSplit[1] + pemisah + dateSplit[2];
@@ -50,11 +54,12 @@ public class InstallationReportRestServiceImpl implements InstallationReportRest
     }
 
     @Override
-    public InstallationReportModel updateIr(InstallationReportDto ir) {
-        InstallationReportModel newIr = installationReportDb.findById(ir.getIdInstallationReport()).get();
+    public InstallationReportModel uploadIr(ReportModel report, InstallationReportDto ir) {
+        InstallationReportModel newIr = new InstallationReportModel();
         ProjectInstallationModel pi = projectInstallationDb.findById(ir.getIdOrderPi()).get();
 
-        newIr.setIrNum(createIrNum(newIr));
+        newIr.setIdReport(report);
+        newIr.setIrNum(createIrNum(pi.getIdOrder()));
         newIr.setNotes(ir.getNotes());
         newIr.setIdOrderPi(pi);
         return installationReportDb.save(newIr);

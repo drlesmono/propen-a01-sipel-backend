@@ -1,12 +1,18 @@
 package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.InstallationReportModel;
+import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.rest.InstallationReportDto;
+
+import java.util.List;
 
 public interface InstallationReportRestService {
 
-    String createIrNum(InstallationReportModel ir);
+    List<InstallationReportModel> retrieveListIr();
 
-    InstallationReportModel updateIr(InstallationReportDto ir);
+    String createIrNum(OrderModel order);
+
+    InstallationReportModel uploadIr(ReportModel report, InstallationReportDto ir);
 
 }

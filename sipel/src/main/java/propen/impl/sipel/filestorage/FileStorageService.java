@@ -31,8 +31,9 @@ public class FileStorageService {
     }
 
     //  Fungsi untuk menyimpan file
-    public String storeFile(MultipartFile file){
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    public String storeFile(MultipartFile file, String fileNameTarget){
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = fileNameTarget;
         try{
            Path targetLocation = this.fileStorageLocation.resolve(fileName);
            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -42,10 +43,16 @@ public class FileStorageService {
         }
     }
 
+    // Fungsi untuk get file path
+    public Path getFilePath(String fileName){
+        return this.fileStorageLocation.resolve(fileName).normalize();
+    }
+
     // Fungsi untuk load file
     public Resource loadFileAsResource(String fileName){
         try{
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+//            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Path filePath = getFilePath(fileName);
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()){
                 return resource;

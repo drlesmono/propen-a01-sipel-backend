@@ -1,5 +1,7 @@
 package propen.impl.sipel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +14,7 @@ import java.util.Date;
 @Entity
 @Table(name = "report")
 //@Inheritance(strategy=InheritanceType.JOINED)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ReportModel implements Serializable{
 
     @Id
@@ -62,19 +65,19 @@ public class ReportModel implements Serializable{
 //    @JsonIgnore
 //    private BastModel Bast;
 
-    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private InstallationReportModel idInstallationReport;
 
-    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private MaintenanceReportModel idMaintenanceReport;
 
-    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private BastModel idBast;
 
     public Long getIdReport() {

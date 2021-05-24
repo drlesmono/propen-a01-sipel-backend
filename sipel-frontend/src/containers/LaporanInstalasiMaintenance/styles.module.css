@@ -37,14 +37,14 @@
 }
 
 .button3{
-    background-color: none !important;
+    background-color: transparent !important;
     outline-color:  #FD693E !important;
     border-color:  #FD693E !important;
     color: #FD693E !important;
 }
 
 .button3:hover{
-    background-color: none !important;
+    background-color: transparent !important;
     outline-color:  #FD693E !important;
     border-color:  #FD693E !important;
     color: #FD693E !important;
@@ -52,6 +52,7 @@
 
 .button3:focus{
     box-shadow: none !important;
+    background-color: transparent !important;
 }
 
 .button4{

@@ -16,4 +16,6 @@ public interface ReportDb extends JpaRepository<ReportModel,Long>, PagingAndSort
     ReportModel findByIdMaintenanceReport(Long idMr);
 
     ReportModel findByIdBast(Long idBast);
+
+    ReportModel findByReportName(String reportName);
 }

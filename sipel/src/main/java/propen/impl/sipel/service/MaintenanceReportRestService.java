@@ -1,12 +1,18 @@
 package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.MaintenanceReportModel;
+import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.rest.MaintenanceReportDto;
+
+import java.util.List;
 
 public interface MaintenanceReportRestService {
 
-    String createMrNum(MaintenanceReportModel mr);
+    List<MaintenanceReportModel> retrieveListMr();
 
-    MaintenanceReportModel updateMr(MaintenanceReportDto mr);
+    String createMrNum(OrderModel order);
+
+    MaintenanceReportModel uploadMr(ReportModel report, MaintenanceReportDto mr);
 
 }

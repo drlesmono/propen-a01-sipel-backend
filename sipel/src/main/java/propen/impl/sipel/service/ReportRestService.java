@@ -15,4 +15,6 @@ public interface ReportRestService {
 
     ReportModel findReportById(Long idReport);
 
+    ReportModel findReportByReportName(String reportName);
+
 }

@@ -1,6 +1,7 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "maintenance")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MaintenanceModel implements Serializable{
 
     @Id
@@ -33,10 +35,10 @@ public class MaintenanceModel implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "idOrderMS", referencedColumnName = "idOrderMS", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private ManagedServicesModel idOrderMS;
 
-    @OneToMany(mappedBy = "idMaintenanceReport", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idMaintenanceReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<MaintenanceReportModel> listMaintenanceReport;
