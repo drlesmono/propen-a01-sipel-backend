@@ -32,13 +32,10 @@ public class ServicesRestServiceImpl implements ServicesRestService {
     }
 
     @Override
-    public List<ServicesModel> changeServices(Long idOrderMs, ServicesModel service) {
-        List<ServicesModel> services = servicesDb.findAllByIdOrderMS(idOrderMs);
-        for (int j = 0; j < services.size(); j++){
-            services.get(j).setName(service.getName());
-            servicesDb.save(services.get(j));
-        }
-        return services;
+    public ServicesModel changeServices(Long idService, ServicesModel service) {
+        ServicesModel srvc = getServiceById(idService);
+        srvc.setName(service.getName());
+        return servicesDb.save(srvc);
     }
 
     @Override
@@ -50,6 +47,29 @@ public class ServicesRestServiceImpl implements ServicesRestService {
         else {
             throw new NoSuchElementException();
         }
+    }
+
+    @Override
+    public List<ServicesModel> getListService(Long idOrderMS) {
+        List<ServicesModel> listServices = retrieveServices();
+        List<ServicesModel> listServicesByIdOrderMS = new ArrayList<ServicesModel>();
+        for (ServicesModel i : listServices) {
+            if (i.getIdOrderMS().getIdOrderMs() == idOrderMS) {
+                listServicesByIdOrderMS.add(i);
+            }
+        }
+        return listServicesByIdOrderMS;
+    }
+
+    @Override
+    public List<ServicesModel> retrieveServices() {
+        return servicesDb.findAll();
+    }
+
+    @Override
+    public void deleteService(Long idService) {
+        ServicesModel service = getServiceById(idService);
+        servicesDb.delete(service);
     }
 
     public ServicesRestServiceImpl(WebClient.Builder webClientBuilder) {

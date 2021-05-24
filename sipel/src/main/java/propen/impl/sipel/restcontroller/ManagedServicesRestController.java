@@ -59,7 +59,7 @@ public class ManagedServicesRestController {
         }
     }
 
-    @PutMapping(value = "/order/ubah/MS/{idOrder}")
+    @PutMapping(value = "/order/ubah/MS/{idOrderMs}")
     private ManagedServicesModel updateOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs,
             @RequestBody ManagedServicesModel managedServices

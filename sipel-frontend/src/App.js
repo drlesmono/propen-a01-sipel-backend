@@ -29,6 +29,10 @@ import CreateMaintenance from "./containers/CreateMaintenance/CreateMaintenance"
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import LookUpdateMaintenance from "./containers/LookUpdateMaintenance/LookUpdateMaintenance";
 import CreateOrder from "./containers/CreateOrder/CreateOrder";
+import DetailOrder from "./containers/DetailOrder/DetailOrder";
+import ChangeOrderPI from "./containers/ChangeOrderPI/ChangeOrderPI";
+import ChangeOrderMS from "./containers/ChangeOrderMS/ChangeOrderMS";
+import ChangeOrderPIMS from "./containers/ChangeOrderPIMS/ChangeOrderPIMS";
 
 const routes = {
   "/": () => 
@@ -102,6 +106,10 @@ function App(){
               <Route exact path="/produksi/maintenance/create/:id" component={CreateMaintenance} />
               <Route exact path="/produksi/maintenance/look-update/:id/:idMs" component={LookUpdateMaintenance} />
               <Route exact path="/order/create" component={CreateOrder} />
+              <Route exact path="/order/detail/:id" component={DetailOrder} />
+              <Route exact path="/orderPI/change/:id/:idPi" component={ChangeOrderPI} />
+              <Route exact path="/orderMS/change/:id/:idMs" component={ChangeOrderMS} />
+              <Route exact path="/orderPIMS/change/:id/:idPi/:idMs" component={ChangeOrderPIMS} />
             </Switch>
           </Router>
           </Layout>

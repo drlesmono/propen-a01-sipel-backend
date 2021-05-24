@@ -37,7 +37,7 @@ class CreateMaintenance extends React.Component {
             const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
             this.setState({ orderTarget: orderItem.data });
             this.handleLookDetail();
-            console.log(this.state.orderTarget);
+            //console.log(this.state.orderTarget);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -88,7 +88,7 @@ class CreateMaintenance extends React.Component {
                     dateMn: this.state.listMaintenance[i].dateMn,
                     maintained: true,
                 };
-                console.log(this.state.listMaintenance[i].dateMn);
+                //console.log(this.state.listMaintenance[i].dateMn);
                 await APIConfig.post(`/produksi/maintenance/tambah/${this.state.idOrderMs}`, data);
                 this.loadData();
             }

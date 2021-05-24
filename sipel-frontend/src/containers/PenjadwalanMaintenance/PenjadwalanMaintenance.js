@@ -36,9 +36,9 @@ class PenjadwalanMaintenance extends React.Component {
             this.setState({ orders: listOrder.data });
             this.setState({ ordersTerassign: listOrderTerassigned.data });
             this.setState({ ordMSTerassignFromOrdersList: listOrdMSfromOrders.data });
-            console.log(this.state.ordersMS);
-            console.log(this.state.orders);
-            console.log(this.state.ordersTerassign);
+            //console.log(this.state.ordersMS);
+            //console.log(this.state.orders);
+            //console.log(this.state.ordersTerassign);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);

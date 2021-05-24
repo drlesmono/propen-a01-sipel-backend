@@ -2,6 +2,7 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,7 +44,7 @@ public class ServiceRestController {
         }
     }
 
-    @GetMapping(value = "/order/detail/Service{idService}")
+    @GetMapping(value = "/order/detail/Service/{idService}")
     private ServicesModel retrieveService(
             @PathVariable(value = "idService") Long idService
     ) {
@@ -64,17 +65,46 @@ public class ServiceRestController {
         return managedServices.getListService();
     }
 
-    @PutMapping(value = "/order/ubah/service/{idOrderMs}")
-    private List<ServicesModel> updateService(
-            @PathVariable(value = "idOrderMs") Long idOrderMs,
+    @PutMapping(value = "/order/ubah/service/{idService}")
+    private ServicesModel updateService(
+            @PathVariable(value = "idService") Long idService,
             @RequestBody ServicesModel services
     ) {
         try {
-            return servicesRestService.changeServices(idOrderMs, services);
+            return servicesRestService.changeServices(idService, services);
         }
         catch (NoSuchElementException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrderMs) + " not found!"
+                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idService) + " not found!"
+            );
+        }
+    }
+
+    @GetMapping(value = "/order/MS/{idOrderMS}/listService")
+    private List<ServicesModel> retrieveListService(
+            @Valid
+            @PathVariable (value = "idOrderMS") Long idOrderMS
+    ) {
+        return servicesRestService.getListService(idOrderMS);
+    }
+
+    @DeleteMapping(value = "order/delete/service/{idService}")
+    private ResponseEntity<String> deleteService(
+            @Valid
+            @PathVariable(value = "idService") Long idService
+    ) {
+        try {
+            servicesRestService.deleteService(idService);
+            return ResponseEntity.ok("Service dengan ID " + String.valueOf(idService) + " berhasil dihapus!");
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Service dengan ID " + String.valueOf(idService) + " tidak ditemukan!"
+            );
+        }
+        catch (UnsupportedOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Service masih terassign engineer, tolong hapus engineer terlebih dahulu"
             );
         }
     }

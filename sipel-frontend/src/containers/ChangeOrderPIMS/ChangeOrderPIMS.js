@@ -3,35 +3,21 @@ import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
 import Modal from "../../components/Modal";
-import ServiceList from "../../components/Services/serviceList";
 import { withRouter } from "react-router-dom";
 
-const initState = {
-    startPI: "",
-    deadline:"",
-    actualStart: "",
-    actualEnd: "",
-    listService: [{ index: Math.random(), name: ""}],
-}
-
-class CreateOrder extends React.Component {
+class ChangeOrderPIMS extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            idOrder: this.props.match.params.id,
+            idPi: this.props.match.params.idPi,
+            idMs: this.props.match.params.idMs,
             noPO: "",
             noSPH: "",
             orderName: "",
             description: "",
             projectInstallation: false,
             managedService: false,
-            startPI: "",
-            deadline:"",
-            close: false,
-            percentage: 0.0,
-            actualStart: "",
-            actualEnd: "",
-            activated: false,
-            listService: [{ index: Math.random(), name: ""}],
             clientName: "",
             clientDiv: "",
             clientPIC: "",
@@ -39,27 +25,23 @@ class CreateOrder extends React.Component {
             clientPhone: "",
             clientEmail: "",
             dateOrder: "",
+            startPI: "",
+            deadline:"",
+            close: false,
+            percentage: 0.0,
+            actualStart: "",
+            actualEnd: "",
+            activated: false,
             orderTarget: null,
-            verified: false,
-            isSubmitOrder: false,
-            isSubmitOrderMS: false,
-            finishSubmitOrder: false,
-            orders: [],
-            ordersMS: [],
+            orderPITarget: null,
             orderMSTarget: null,
+            finishSubmitOrder: false,
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmitTambahOrder = this.handleSubmitTambahOrder.bind(this);
+        this.handleSubmitChangeOrderPIMS = this.handleSubmitChangeOrderPIMS.bind(this);
         this.handleCancelSubmit = this.handleCancelSubmit.bind(this);
         this.handleAfterSubmit = this.handleAfterSubmit.bind(this);
-        this.handleSubmitTambahPI = this.handleSubmitTambahPI.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.addNewRow = this.addNewRow.bind(this);
-        this.deleteRow = this.deleteRow.bind(this);
-        this.clickOnDelete = this.clickOnDelete.bind(this);
-        this.handleSubmitTambahMS = this.handleSubmitTambahMS.bind(this);
-        this.handleSubmitTambahService = this.handleSubmitTambahService.bind(this);
-        this.handleSubmitTambahPIMS = this.handleSubmitTambahPIMS.bind(this);
+        this.handleChangeOrder = this.handleChangeOrder.bind(this);
     }
 
     componentDidMount() {
@@ -68,62 +50,63 @@ class CreateOrder extends React.Component {
 
     async loadData() {
         try {
-            const listOrder  = await APIConfig.get("/orderList");
-            const listOrderMS  = await APIConfig.get("/orderMS");
-            this.setState({ orders: listOrder.data });
-            this.setState({ orderTarget: this.state.orders[this.state.orders.length - 1] });
-            this.setState({ ordersMS: listOrderMS.data });
-            this.setState({ orderMSTarget: this.state.ordersMS[this.state.ordersMS.length - 1] });
-            //console.log(this.state.orderTarget);
-            //console.log(this.state.orderMSTarget);
+            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
+            const orderPIitem = await APIConfig.get(`/order/detail/PI/${this.state.idPi}`);
+            const orderMSitem = await APIConfig.get(`/order/detail/MS/${this.state.idMs}`);
+            this.setState({ orderTarget: orderItem.data });
+            this.setState({ orderPITarget: orderPIitem.data });
+            this.setState({ orderMSTarget: orderMSitem.data });
+            console.log(this.state.orderTarget);
+            console.log(this.state.orderPITarget);
+            console.log(this.state.orderMSTarget);
+            this.handleChangeOrder();
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
 
+    handleChangeOrder() {
+        let ord = this.state.orderTarget;
+        let ordPI = this.state.orderPITarget;
+        let ordMS = this.state.orderMSTarget;
+        this.setState({
+            noPO: ord.noPO,
+            noSPH: ord.noSPH,
+            orderName: ord.orderName,
+            description: ord.description,
+            projectInstallation: ord.projectInstallation,
+            managedService: ord.managedService,
+            clientName: ord.clientName,
+            clientDiv: ord.clientDiv,
+            clientPIC: ord.clientPIC,
+            clientOrg: ord.clientOrg,
+            clientPhone: ord.clientPhone,
+            clientEmail: ord.clientEmail,
+            dateOrder: ord.dateOrder,
+            startPI: ordPI.startPI,
+            deadline: ordPI.deadline,
+            close: ordPI.close,
+            percentage: ordPI.percentage,
+            actualStart: ordMS.actualStart,
+            actualEnd: ordMS.actualEnd,
+            activated: ordMS.activated,
+        })
+    }
+
     handleChange = (e) => {
-        if (["name"].includes(e.target.name)) {
-            let listService = [...this.state.listService]
-            listService[e.target.dataset.id][e.target.name] = e.target.value;
-        }
-        if (e.target.checked !== "projectInstallation" && e.target.checked !== "managedService" && !["name"].includes(e.target.name)) {
-            this.setState({ [e.target.name]: e.target.value });
-        }
-    }
-
-    addNewRow = () => {
-        this.setState((prevState) => ({
-            listService: [...prevState.listService, { index: Math.random(), name: "" }],
-        }));
-    }
-
-    deleteRow = (index) => {
-        this.setState({
-            listService: this.state.listService.filter((s, sindex) => index !== sindex),
-        });
-    }
-
-    clickOnDelete(record) {
-        this.setState({
-            listService: this.state.listService.filter(r => r !== record)
-        });
-    }
-
-    handleCancel(event) {
-        event.preventDefault();
-        this.setState({ isSubmitOrder: false, isSubmitOrderMS: false, ...initState });
+        this.setState({ [e.target.name]: e.target.value });
     }
 
     handleCancelSubmit = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`);
     }
 
     handleAfterSubmit = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`);
     }
 
-    async handleSubmitTambahOrder(event) {
+    async handleSubmitChangeOrderPIMS(event) {
         event.preventDefault();
         try {
             const data = {
@@ -142,55 +125,6 @@ class CreateOrder extends React.Component {
                 dateOrder: this.state.dateOrder,
                 verified: this.state.verified
             }
-            await APIConfig.post("/order/tambah", data);
-            this.loadData();
-            this.setState( { isSubmitOrder: true });
-        } catch (error) {
-            alert("Order Gagal Disimpan. Coba Kembali!");
-            console.log(error);
-        }
-    }
-
-    async handleSubmitTambahPI(event) {
-        event.preventDefault();
-        try {
-            const data = {
-                startPI: this.state.startPI,
-                deadline: this.state.deadline,
-                percentage: this.state.percentage,
-                close: this.state.close,
-            }
-            await APIConfig.post(`/order/tambah/PI/${this.state.orderTarget.idOrder}`, data);
-            this.loadData();
-            this.setState({ finishSubmitOrder: true });
-        } catch (error) {
-            alert("Data Project Installation gagal disimpan! Masukkan kembali tanggal mulai dan selesai project!");
-            console.log(error);
-        }
-        this.handleCancel(event);
-    }
-
-    async handleSubmitTambahMS(event) {
-        event.preventDefault();
-        try {
-            const data = {
-                actualStart: this.state.actualStart,
-                actualEnd: this.state.actualEnd,
-                activated: this.state.activated,
-            };
-            await APIConfig.post(`/order/tambah/MS/${this.state.orderTarget.idOrder}`, data);
-            this.loadData();
-            this.setState({ isSubmitOrderMS: true});
-            this.setState({ isSubmitOrder: false });
-        } catch (error) {
-            alert("Data Managed Service gagal disimpan! Masukkan kembali tanggal periode kontrak!");
-            console.log(error);
-        }
-    }
-
-    async handleSubmitTambahPIMS(event) {
-        event.preventDefault();
-        try {
             const dataPI = {
                 startPI: this.state.startPI,
                 deadline: this.state.deadline,
@@ -201,35 +135,16 @@ class CreateOrder extends React.Component {
                 actualStart: this.state.actualStart,
                 actualEnd: this.state.actualEnd,
                 activated: this.state.activated,
-            };
-            await APIConfig.post(`/order/tambah/PI/${this.state.orderTarget.idOrder}`, dataPI);
-            await APIConfig.post(`/order/tambah/MS/${this.state.orderTarget.idOrder}`, dataMS);
-            this.loadData();
-            this.setState({ isSubmitOrderMS: true});
-            this.setState({ isSubmitOrder: false });
-        } catch (error) {
-            alert("Data PI dan MS gagal disimpan! Masukkan kembali tanggal serta periode mulai dan selesai!");
-            console.log(error);
-        }
-    }
-
-    async handleSubmitTambahService(event) {
-        event.preventDefault();
-        try {
-            for (let i=0; i<this.state.listService.length;i++) {
-                const data = {
-                    name: this.state.listService[i].name,
-                };
-                //console.log(this.state.listService[i].name);
-                await APIConfig.post(`/order/tambah/MS/${this.state.orderMSTarget.idOrderMs}/Service`, data);
-                this.loadData();
-                this.setState({ finishSubmitOrder: true });
             }
+            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data);
+            await APIConfig.put(`/order/ubah/PI/${this.state.idPi}`, dataPI);
+            await APIConfig.put(`/order/ubah/MS/${this.state.idMs}`, dataMS);
+            this.loadData();
+            this.setState({ finishSubmitOrder: true });
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            alert("Order Gagal Disimpan. Coba Kembali!");
             console.log(error);
         }
-        this.handleCancel(event);
     }
 
     render() {
@@ -240,10 +155,6 @@ class CreateOrder extends React.Component {
             description,
             projectInstallation,
             managedService,
-            startPI,
-            deadline,
-            actualStart,
-            actualEnd,
             clientName,
             clientDiv,
             clientPIC,
@@ -251,14 +162,16 @@ class CreateOrder extends React.Component {
             clientPhone,
             clientEmail,
             dateOrder,
+            startPI,
+            deadline,
+            actualStart,
+            actualEnd,
         } = this.state;
-
-        let { listService } = this.state;
 
         return (
             <div className="content">
             <br></br>
-            <h1 className={classes.title}>Tambah Order</h1>
+            <h1 className={classes.title}>Ubah Order</h1>
             <br></br>
                 <form>
                     <div className="row" style={{ marginTop: 10 }}>
@@ -382,7 +295,7 @@ class CreateOrder extends React.Component {
                                         <div className="col-sm-6">
                                             <label className="required">Jenis Order</label>
                                             <div className="form-check"> 
-                                                <input
+                                                <input disabled
                                                     type="checkbox" 
                                                     name="projectInstallation" 
                                                     id="projectInstallation" 
@@ -395,7 +308,7 @@ class CreateOrder extends React.Component {
                                                 <label className="form-check-label">Project Installation</label>
                                             </div>
                                             <div className="form-check">
-                                                <input 
+                                                <input disabled
                                                     type="checkbox" 
                                                     name="managedService" 
                                                     id="managedService" 
@@ -450,9 +363,69 @@ class CreateOrder extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <div className="form-group">
+                                                <label className="required">Tanggal Mulai Project</label>
+                                                <input 
+                                                    type="date" 
+                                                    name="startPI" 
+                                                    id="startPI" 
+                                                    className="form-control" 
+                                                    placeholder="Masukkan Tanggal Mulai" 
+                                                    value={startPI} 
+                                                    onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <div className="form-group">
+                                                <label className="required">Tanggal Selesai Project</label>
+                                                <input 
+                                                    type="date" 
+                                                    name="deadline" 
+                                                    id="deadline" 
+                                                    className="form-control" 
+                                                    placeholder="Masukkan Tanggal Selesai" 
+                                                    value={deadline} 
+                                                    onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <div className="form-group">
+                                                <label className="required">Periode Mulai Managed</label>
+                                                <input 
+                                                    type="date" 
+                                                    name="actualStart" 
+                                                    id="actualStart" 
+                                                    className="form-control" 
+                                                    placeholder="Masukkan Periode Mulai" 
+                                                    value={actualStart} 
+                                                    onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <div className="form-group">
+                                                <label className="required">Periode Selesai Managed</label>
+                                                <input 
+                                                    type="date" 
+                                                    name="actualEnd" 
+                                                    id="actualEnd" 
+                                                    className="form-control" 
+                                                    placeholder="Masukkan Periode Selesai" 
+                                                    value={actualEnd} 
+                                                    onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="card-footer text-right">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahOrder}>
+                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitChangeOrderPIMS}>
                                         Simpan
                                     </CustomizedButtons>
                                     <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
@@ -464,218 +437,10 @@ class CreateOrder extends React.Component {
                     </div>
                 </form>
 
-                <Modal show={this.state.projectInstallation && !this.state.managedService && this.state.isSubmitOrder}>
-                    <form onChange={this.handleChange} >
-                        <div className="row" style={{ marginTop: 10 }}>
-                        <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
-                            <div className="card">
-                                <div className="card-header text-center">
-                                    Tambah Data PI
-                                </div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Tanggal Mulai Project</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="startPI" 
-                                                    id="startPI" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Tanggal Mulai" 
-                                                    value={startPI} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Tanggal Selesai Project</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="deadline" 
-                                                    id="deadline" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Tanggal Selesai" 
-                                                    value={deadline} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
-                                        Simpan Data PI
-                                    </CustomizedButtons>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                </Modal>
-
-                <Modal show={this.state.managedService && !this.state.projectInstallation && this.state.isSubmitOrder} >
-                    <form onChange={this.handleChange} >
-                        <div className="row" style={{ marginTop: 10 }}>
-                        <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
-                            <div className="card">
-                                <div className="card-header text-center">
-                                    Tambah Data MS
-                                </div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Periode Mulai Managed</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="actualStart" 
-                                                    id="actualStart" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Periode Mulai" 
-                                                    value={actualStart} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Periode Selesai Managed</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="actualEnd" 
-                                                    id="actualEnd" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Periode Selesai" 
-                                                    value={actualEnd} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahMS}>
-                                        Simpan Data MS
-                                    </CustomizedButtons>
-                                </div>
-                            </div>                                            
-                        </div>
-                        </div>
-                    </form>
-                </Modal>
-
-                <Modal show={this.state.isSubmitOrderMS} >
-                <form onChange={this.handleChange} >
-                    <div className="row" style={{ marginTop: 20 }}>
-                        <div className="col-sm-1"></div>
-                            <div className="col-sm-10">
-                                <div className="card">
-                                    <div className="card-header text-center">Tambah Services</div>
-                                    <div className="card-body">
-                                        <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th className="required">Nama Services</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ServiceList add={this.addNewRow} delete={this.clickOnDelete} listService={listService} />
-                                        </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="card-footer text-center">
-                                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
-                                            Simpan Data Service
-                                        </CustomizedButtons>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </Modal>
-
-                <Modal show={this.state.managedService && this.state.projectInstallation && this.state.isSubmitOrder} >
-                    <form onChange={this.handleChange} >
-                        <div className="row" style={{ marginTop: 10 }}>
-                        <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
-                            <div className="card">
-                                <div className="card-header text-center">
-                                    Tambah Data PI-MS
-                                </div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Tanggal Mulai Project</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="startPI" 
-                                                    id="startPI" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Tanggal Mulai" 
-                                                    value={startPI} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Periode Mulai Managed</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="actualStart" 
-                                                    id="actualStart" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Periode Mulai" 
-                                                    value={actualStart} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Tanggal Selesai Project</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="deadline" 
-                                                    id="deadline" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Tanggal Selesai" 
-                                                    value={deadline} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <div className="form-group">
-                                                <label className="required">Periode Selesai Managed</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="actualEnd" 
-                                                    id="actualEnd" 
-                                                    className="form-control" 
-                                                    placeholder="Masukkan Periode Selesai" 
-                                                    value={actualEnd} 
-                                                    onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPIMS}>
-                                        Simpan Data PI-MS
-                                    </CustomizedButtons>
-                                </div>
-                            </div>                                            
-                        </div>
-                        </div>
-                    </form>
-                </Modal>
-
                 <Modal show={this.state.finishSubmitOrder}>
                     <div className="card">
                         <div className="card-body text-center">
-                            <h2>{`Order Berhasil Ditambahkan`}</h2>
+                            <h2>{`Order Berhasil Diubah`}</h2>
                         </div>
                         <div className="card-footer text-center">
                             <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
@@ -689,4 +454,4 @@ class CreateOrder extends React.Component {
     }
 }
 
-export default withRouter(CreateOrder);
+export default withRouter(ChangeOrderPIMS);

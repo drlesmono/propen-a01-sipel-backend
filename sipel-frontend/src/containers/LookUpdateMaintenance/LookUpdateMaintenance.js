@@ -6,7 +6,7 @@ import TableMaintenanceDetail from "../../components/Maintenance/mnTableDetail";
 import { withRouter } from "react-router-dom";
 import CustomizedTables from "../../components/Table";
 
-class CreateMaintenance extends React.Component {
+class LookUpdateMaintenance extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,8 +35,8 @@ class CreateMaintenance extends React.Component {
             this.setState({ orderTarget: orderItem.data });
             this.setState({ listMaintenanceTarget: listMaintenance.data });
             this.handleLookDetail();
-            console.log(this.state.orderTarget);
-            console.log(this.state.listMaintenanceTarget);
+            //console.log(this.state.orderTarget);
+            //console.log(this.state.listMaintenanceTarget);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -106,4 +106,4 @@ class CreateMaintenance extends React.Component {
     }
 }
 
-export default withRouter(CreateMaintenance);
+export default withRouter(LookUpdateMaintenance);

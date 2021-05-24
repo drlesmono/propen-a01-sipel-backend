@@ -8,30 +8,39 @@ const ManagedService = (props) => {
         idOrderMs,
         actualStart,
         actualEnd,
-        listService } = props;
+        activated
+    } = props;
     return (
         <div>
             <div className="row">
-                <div className="col-sm-4">
+                <div className="col-sm-6">
                     <div className="form-group">
                         <p>{`ID Managed Service: ${idOrderMs}`}</p>
                     </div>
                 </div>
-                <div className="col-sm-4">
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
                     <div className="form-group">
                         <p>{`Periode Mulai: ${actualStart}`}</p>
                     </div>
                 </div>
-                <div className="col-sm-4">
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
                     <div className="form-group">
                         <p>{`Periode Selesai: ${actualEnd}`}</p>
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="form-group">
+                        <p>{`Status: ${activated}`}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-       /*  {/* </div>
-        <p>{listService.map((service) => (<ServiceList name={service.name} />))}</p>
-        </div> */
     );
 };
 
