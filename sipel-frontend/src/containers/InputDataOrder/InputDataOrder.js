@@ -4,6 +4,7 @@ import CustomizedButtons from "../../components/Button";
 import CustomizedTables from "../../components/Table";
 import classes from "./styles.module.css";
 import { withRouter } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 class InputDataOrder extends React.Component {
     constructor(props) {
@@ -78,27 +79,16 @@ class InputDataOrder extends React.Component {
         const tableRows = orders.map((order) => [order.noPO, order.orderName, order.clientName, order.clientOrg,
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.checkStatusOrder(order.verified),
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E"
-                            onClick={() => this.handleLookUpDetail(order)}>Lihat</CustomizedButtons>,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E" 
-                            onClick={() => this.handleClickUnggah(order)}>Unggah</CustomizedButtons>]);
+                        <Button className={classes.button1} onClick={() => this.handleLookUpDetail(order)}>&nbsp;&nbsp;Lihat&nbsp;&nbsp;&nbsp;</Button>,
+                        <Button className={classes.button2} onClick={() => this.handleClickUnggah(order)}>Unggah</Button>]);
 
         return (
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Daftar Order</h1>
             <br></br>
-            <CustomizedButtons
-                variant="contained"
-                size="medium"
-                color="#FD693E"
-                onClick={() => this.handleTambahOrder()}>+ Tambah Order</CustomizedButtons>
+            <Button className={classes.button2} onClick={() => this.handleTambahOrder()}>+ Tambah Order</Button>
+            <br></br>
             <br></br>
             <CustomizedTables headers={tableHeaders} rows={tableRows} />
             </div>

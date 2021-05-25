@@ -9,6 +9,7 @@ import { withRouter } from "react-router-dom";
 import CustomizedTables from "../../components/Table";
 import Modal from "../../components/Modal";
 import ServiceList from "../../components/Services/serviceList";
+import { Button } from "react-bootstrap";
 
 const initState = {
     name: "",
@@ -390,16 +391,8 @@ class DetailOrder extends React.Component {
         ];
 
         const tableRows = listService.map((service) => [service.name,
-            <CustomizedButtons
-                variant="contained"
-                size="small"
-                color="#FD693E"
-                onClick={() => this.changeService(service.idService)}>Ubah</CustomizedButtons>,
-            <CustomizedButtons
-                variant="contained"
-                size="small"
-                color="#FD693E"
-                onClick={() => this.deleteService(service.idService)}>Hapus</CustomizedButtons>
+            <Button className={classes.button1} onClick={() => this.changeService(service.idService)}>&nbsp;Ubah&nbsp;</Button>, 
+            <Button className={classes.button2} onClick={() => this.deleteService(service.idService)}>Hapus</Button>
         ])
 
         return (
@@ -414,23 +407,26 @@ class DetailOrder extends React.Component {
                         <div className="card-body">
                             {this.state.projectInstallation && !this.state.managedService? 
                             <><div className="text-right">
-                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderPI()}>
+                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderPI()}>
                                     Ubah Order
-                                </CustomizedButtons>
+                                </CustomizedButtons> */}
+                                <Button className={classes.button1} onClick={() => this.handleChangeOrderPI()}>&nbsp;Ubah Order&nbsp;</Button>
                             </div></>
                             : <></>}
                             {this.state.managedService && !this.state.projectInstallation ? 
                             <><div className="text-right">
-                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderMS()}>
+                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderMS()}>
                                     Ubah Order
-                                </CustomizedButtons>
+                                </CustomizedButtons> */}
+                                <Button className={classes.button1} onClick={() => this.handleChangeOrderMS()}>&nbsp;Ubah Order&nbsp;</Button>
                             </div></>
                             : <></>}
                             {this.state.managedService && this.state.projectInstallation ? 
                             <><div className="text-right">
-                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderPIMS()}>
+                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderPIMS()}>
                                     Ubah Order
-                                </CustomizedButtons>
+                                </CustomizedButtons> */}
+                                <Button className={classes.button1} onClick={() => this.handleChangeOrderPIMS()}>&nbsp;Ubah Order&nbsp;</Button>
                             </div></>
                             : <></>}
                             <Order 
@@ -502,20 +498,23 @@ class DetailOrder extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div className="text-right">
-                                <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleTambahService}>
+                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleTambahService}>
                                     + Tambah Services
-                                </CustomizedButtons>
+                                </CustomizedButtons> */}
+                                <Button className={classes.button1} onClick={this.handleTambahService}>+ Tambah Services</Button>
                             </div>
                             </div>
                             </div>
+                            <br></br>
                             <CustomizedTables headers={tableHeaders} rows={tableRows} /><br></br>
                             </>
                             : <></> }
                         </div>
                         <div className="card-footer text-right">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleBack()} >
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleBack()} >
                                 Kembali
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleBack()}>&nbsp;Kembali&nbsp;</Button>
                         </div>
                     </div>
                 </div>
@@ -546,12 +545,15 @@ class DetailOrder extends React.Component {
                                         </div>
                                     </div>
                                     <div className="card-footer text-center">
-                                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitChangeService}>
+                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitChangeService}>
                                             Simpan
-                                        </CustomizedButtons>
-                                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancelSubmit}>
+                                        </CustomizedButtons> */}
+                                        <Button className={classes.button1} onClick={this.handleSubmitChangeService}>Simpan</Button>
+                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancelSubmit}>
                                             Batal
-                                        </CustomizedButtons>
+                                        </CustomizedButtons> */}
+                                        <span>&nbsp;&nbsp;</span>
+                                        <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
                                 </div>
                             </div>
@@ -565,9 +567,10 @@ class DetailOrder extends React.Component {
                             <h2>{`Service Berhasil Diubah`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
                                 Kembali
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                         </div>
                     </div>
                 </Modal>
@@ -578,9 +581,10 @@ class DetailOrder extends React.Component {
                             <h2>{`Service Berhasil Dihapus`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterDelete()} >
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterDelete()} >
                                 Kembali
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
                         </div>
                     </div>
                 </Modal>
@@ -605,12 +609,15 @@ class DetailOrder extends React.Component {
                                         </table>
                                     </div>
                                     <div className="card-footer text-center">
-                                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
+                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
                                             Simpan
-                                        </CustomizedButtons>
-                                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancelSubmit}>
+                                        </CustomizedButtons> */}
+                                        <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan</Button>
+                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancelSubmit}>
                                             Batal
-                                        </CustomizedButtons>
+                                        </CustomizedButtons> */}
+                                        <span>&nbsp;&nbsp;</span>
+                                        <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
                                 </div>
                             </div>
@@ -624,9 +631,10 @@ class DetailOrder extends React.Component {
                             <h2>{`Service Berhasil Ditambahkan`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterAdd()} >
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterAdd()} >
                                 Kembali
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleAfterAdd()}>Kembali</Button>
                         </div>
                     </div>
                 </Modal>

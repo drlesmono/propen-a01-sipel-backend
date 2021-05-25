@@ -5,6 +5,7 @@ import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
 import { withRouter } from "react-router-dom";
 import * as moment from "moment";
+import { Button } from "react-bootstrap";
 
 class PenjadwalanMaintenance extends React.Component {
     constructor(props) {
@@ -104,16 +105,8 @@ class PenjadwalanMaintenance extends React.Component {
                         [order.idOrder.noPO, order.idOrder.clientName, order.idOrder.clientOrg, 
                         this.checkTypeOrder(order.idOrder.projectInstallation, order.idOrder.managedService), 
                         this.getDate(order.actualStart), this.getDate(order.actualEnd), order.idUserPic.fullname,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E" 
-                            onClick={() => this.handleCreateSchedule(order.idOrderMs)}>Buat Jadwal</CustomizedButtons>,
-                        <CustomizedButtons 
-                            variant="contained" 
-                            size="small" 
-                            color="#FD693E"
-                            onClick={() => this.handleLookSchedule(order.idOrderMs)}>Lihat Jadwal</CustomizedButtons>
+                        <Button className={classes.button1} onClick={() => this.handleCreateSchedule(order.idOrderMs)}>Buat Jadwal&nbsp;</Button>,
+                        <Button className={classes.button2} onClick={() => this.handleLookSchedule(order.idOrderMs)}>Lihat Jadwal</Button>
                         ]);
 
         return (

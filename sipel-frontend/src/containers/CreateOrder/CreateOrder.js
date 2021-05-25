@@ -5,6 +5,7 @@ import classes from "./styles.module.css";
 import Modal from "../../components/Modal";
 import ServiceList from "../../components/Services/serviceList";
 import { withRouter } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const initState = {
     startPI: "",
@@ -452,12 +453,15 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-right">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahOrder}>
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahOrder}>
                                         Simpan
-                                    </CustomizedButtons>
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
+                                    </CustomizedButtons> */}
+                                    <Button className={classes.button1} onClick={this.handleSubmitTambahOrder}>Simpan</Button>
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
                                         Batal
-                                    </CustomizedButtons>
+                                    </CustomizedButtons> */}
+                                    <span>&nbsp;&nbsp;</span>
+                                    <Button className={classes.button2} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                 </div> 
                             </div>
                         </div>
@@ -504,9 +508,10 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
                                         Simpan Data PI
-                                    </CustomizedButtons>
+                                    </CustomizedButtons> */}
+                                    <Button className={classes.button1} onClick={this.handleSubmitTambahPI}>Simpan Data PI</Button>
                                 </div>
                             </div>
                         </div>
@@ -554,9 +559,10 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahMS}>
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahMS}>
                                         Simpan Data MS
-                                    </CustomizedButtons>
+                                    </CustomizedButtons> */}
+                                    <Button className={classes.button1} onClick={this.handleSubmitTambahMS}>Simpan Data MS</Button>
                                 </div>
                             </div>                                            
                         </div>
@@ -584,9 +590,10 @@ class CreateOrder extends React.Component {
                                         </table>
                                     </div>
                                     <div className="card-footer text-center">
-                                        <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
+                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
                                             Simpan Data Service
-                                        </CustomizedButtons>
+                                        </CustomizedButtons> */}
+                                        <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan Data Services</Button>
                                     </div>
                                 </div>
                             </div>
@@ -662,9 +669,10 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPIMS}>
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPIMS}>
                                         Simpan Data PI-MS
-                                    </CustomizedButtons>
+                                    </CustomizedButtons> */}
+                                    <Button className={classes.button1} onClick={this.handleSubmitTambahPIMS}>Simpan Data PI-MS</Button>
                                 </div>
                             </div>                                            
                         </div>
@@ -678,9 +686,10 @@ class CreateOrder extends React.Component {
                             <h2>{`Order Berhasil Ditambahkan`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
                                 Kembali
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                         </div>
                     </div>
                 </Modal>

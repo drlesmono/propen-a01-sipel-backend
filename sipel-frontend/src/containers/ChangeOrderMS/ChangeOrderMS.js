@@ -4,6 +4,7 @@ import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
 import Modal from "../../components/Modal";
 import { withRouter } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 class ChangeOrderMS extends React.Component {
     constructor(props) {
@@ -372,12 +373,15 @@ class ChangeOrderMS extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-right">
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitChangeOrderMS}>
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitChangeOrderMS}>
                                         Simpan
-                                    </CustomizedButtons>
-                                    <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
+                                    </CustomizedButtons> */}
+                                    <Button className={classes.button1} onClick={this.handleSubmitChangeOrderMS}>Simpan</Button>
+                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
                                         Batal
-                                    </CustomizedButtons>
+                                    </CustomizedButtons> */}
+                                    <span>&nbsp;&nbsp;</span>
+                                    <Button className={classes.button2} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                 </div> 
                             </div>
                         </div>
@@ -390,9 +394,10 @@ class ChangeOrderMS extends React.Component {
                             <h2>{`Order Berhasil Diubah`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
                                 Kembali
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                         </div>
                     </div>
                 </Modal>
