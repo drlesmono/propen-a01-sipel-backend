@@ -75,7 +75,7 @@ public class OrderRestServiceImpl implements OrderRestService {
         order.setClientOrg(orderUpdate.getClientOrg());
         order.setClientPhone(orderUpdate.getClientPhone());
         order.setClientEmail(orderUpdate.getClientEmail());
-        order.setDateOrder(today);
+        order.setDateOrder(orderUpdate.getDateOrder());
         order.setVerified(false);
         return orderDb.save(order);
     }

@@ -75,7 +75,7 @@ public class ServiceRestController {
         }
         catch (NoSuchElementException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idService) + " not found!"
+                    HttpStatus.NOT_FOUND, "Service with ID " + String.valueOf(idService) + " not found!"
             );
         }
     }

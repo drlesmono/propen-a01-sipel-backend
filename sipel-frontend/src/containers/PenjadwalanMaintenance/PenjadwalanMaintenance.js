@@ -4,17 +4,18 @@ import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
 import { withRouter } from "react-router-dom";
+import * as moment from "moment";
 
 class PenjadwalanMaintenance extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             idOrderMs: "",
-            ordersMS: [],
+            //ordersMS: [],
             orderFiltered: [],
-            orders: [],
+            //orders: [],
             ordersTerassign: [],
-            ordMSTerassignFromOrdersList: [],
+            //ordMSTerassignFromOrdersList: [],
             isFiltered: false,
             isAssigned: false,
         };
@@ -28,14 +29,14 @@ class PenjadwalanMaintenance extends React.Component {
 
     async loadData() {
         try {
-            const listOrderMS  = await APIConfig.get("/orderMS");
-            const listOrder  = await APIConfig.get("/orderList");
+            //const listOrderMS  = await APIConfig.get("/orderMS");
+            //const listOrder  = await APIConfig.get("/orderList");
             const listOrderTerassigned = await APIConfig.get("/orderMSassigned");
-            const listOrdMSfromOrders = await APIConfig.get("/orderListIsMS");
-            this.setState({ ordersMS: listOrderMS.data });
-            this.setState({ orders: listOrder.data });
+            //const listOrdMSfromOrders = await APIConfig.get("/orderListIsMS");
+            //this.setState({ ordersMS: listOrderMS.data });
+            //this.setState({ orders: listOrder.data });
             this.setState({ ordersTerassign: listOrderTerassigned.data });
-            this.setState({ ordMSTerassignFromOrdersList: listOrdMSfromOrders.data });
+            //this.setState({ ordMSTerassignFromOrdersList: listOrdMSfromOrders.data });
             //console.log(this.state.ordersMS);
             //console.log(this.state.orders);
             //console.log(this.state.ordersTerassign);
@@ -55,25 +56,34 @@ class PenjadwalanMaintenance extends React.Component {
         }
     }
 
-    handleCreateSchedule = (order) => {
-        this.props.history.push(`/produksi/maintenance/create/${order.idOrder}`);
+    getDate(date) {
+        let oldDate = new Date(date);
+        const month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return oldDate.getDate() + " " + month[oldDate.getMonth()] + " " + oldDate.getFullYear();
+
     }
 
-    handleLookSchedule = (order) => {
-        this.props.history.push(`/produksi/maintenance/look-update/${order.idOrder}/${order.idOrderMs.idOrderMs}`);
+    handleCreateSchedule = (idOrderMs) => {
+        this.props.history.push(`/produksi/maintenance/create/${idOrderMs}`);
+    }
+
+    handleLookSchedule = (idOrderMs) => {
+        this.props.history.push(`/produksi/maintenance/look-update/${idOrderMs}`);
     }
 
     render() {
         const {
             ordMSTerassignFromOrdersList,
+            ordersTerassign
         } = this.state;
 
         const tableHeaders = [
-            'No','Id Managed Service','Nomor PO','Nama Pelanggan','Perusahaan Pelanggan',
-            'Jenis Order','PIC Engineer','Buat Penjadwalan','Lihat Penjadwalan',
+            'No','Nomor PO','Nama Pelanggan','Perusahaan Pelanggan', 'Jenis Order', 
+            'Periode Mulai', 'Periode Selesai', 'PIC Engineer','Buat Penjadwalan','Lihat Penjadwalan',
         ];
 
-        const tableRows = ordMSTerassignFromOrdersList.map((order) => order.idOrderMs.idUserPic !== null ?
+        /* const tableRows = ordMSTerassignFromOrdersList.map((order) => order.idOrderMs.idUserPic !== null ?
                         [order.idOrderMs.idOrderMs, order.noPO, order.clientName, order.clientOrg, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService),
                         order.idOrderMs.idUserPic.fullname,
@@ -88,7 +98,23 @@ class PenjadwalanMaintenance extends React.Component {
                             color="#FD693E"
                             onClick={() => this.handleLookSchedule(order)}>Lihat Jadwal</CustomizedButtons>
                         ] : []
-                        );
+                        ); */
+
+        const tableRows = ordersTerassign.map((order) =>
+                        [order.idOrder.noPO, order.idOrder.clientName, order.idOrder.clientOrg, 
+                        this.checkTypeOrder(order.idOrder.projectInstallation, order.idOrder.managedService), 
+                        this.getDate(order.actualStart), this.getDate(order.actualEnd), order.idUserPic.fullname,
+                        <CustomizedButtons 
+                            variant="contained" 
+                            size="small" 
+                            color="#FD693E" 
+                            onClick={() => this.handleCreateSchedule(order.idOrderMs)}>Buat Jadwal</CustomizedButtons>,
+                        <CustomizedButtons 
+                            variant="contained" 
+                            size="small" 
+                            color="#FD693E"
+                            onClick={() => this.handleLookSchedule(order.idOrderMs)}>Lihat Jadwal</CustomizedButtons>
+                        ]);
 
         return (
             <div className="content">

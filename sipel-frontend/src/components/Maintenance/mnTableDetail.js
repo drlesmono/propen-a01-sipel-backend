@@ -7,6 +7,8 @@ const TableMaintenanceDetail = (props) => {
         clientName,
         clientOrg,
         fullname,
+        periodeMulai,
+        periodeSelesai,
     } = props;
 
     return (
@@ -44,6 +46,20 @@ const TableMaintenanceDetail = (props) => {
                 <div className="col-sm-6">
                     <div className="form-group">
                         <p>{`PIC Engineer: ${fullname}`}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="form-group">
+                        <p>{`Periode Mulai Managed: ${periodeMulai}`}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="form-group">
+                        <p>{`Periode Selesai Managed: ${periodeSelesai}`}</p>
                     </div>
                 </div>
             </div>

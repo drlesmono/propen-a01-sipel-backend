@@ -3,21 +3,30 @@ import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
 import TableMaintenanceDetail from "../../components/Maintenance/mnTableDetail";
+import Modal from "../../components/Modal";
 import MaintenanceList from "../../components/Maintenance/maintenanceList";
 import { withRouter } from "react-router-dom";
+import * as moment from "moment";
+import ReactNotification from "react-notifications-component";
+import { store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import { Button } from "react-bootstrap";
 
 class CreateMaintenance extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            idOrder: this.props.match.params.id,
+            idOrderMs: this.props.match.params.id,
             listMaintenance: [{ index: Math.random(), dateMn: ""}],
-            orderTarget: null,
-            idOrderMs: "",
+            orderMSTarget: null,
+            actualStart: "",
+            actualEnd: "",
             noPO: "",
             clientName: "",
             clientOrg: "",
             fullname: "",
+            maintained: false,
+            finishedSubmitSchedule: false,
         };
         this.handleLookDetail = this.handleLookDetail.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -26,6 +35,7 @@ class CreateMaintenance extends React.Component {
         this.clickOnDelete = this.clickOnDelete.bind(this);
         this.handleSubmitCreateMaintenance = this.handleSubmitCreateMaintenance.bind(this);
         this.handleCancelSubmit = this.handleCancelSubmit.bind(this);
+        this.handleAfterSubmit = this.handleAfterSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -34,10 +44,9 @@ class CreateMaintenance extends React.Component {
 
     async loadData() {
         try {
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
-            this.setState({ orderTarget: orderItem.data });
+            const orderMSItem = await APIConfig.get(`/order/detail/MS/${this.state.idOrderMs}`);
+            this.setState({ orderMSTarget: orderMSItem.data });
             this.handleLookDetail();
-            //console.log(this.state.orderTarget);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -45,14 +54,23 @@ class CreateMaintenance extends React.Component {
     } 
 
     handleLookDetail() {
-        let order = this.state.orderTarget;
+        let orderMS = this.state.orderMSTarget;
         this.setState({ 
-            idOrderMs: order.idOrderMs.idOrderMs,
-            noPO: order.noPO,
-            clientName: order.clientName,
-            clientOrg: order.clientOrg,
-            fullname: order.idOrderMs.idUserPic.fullname,
+            actualStart: orderMS.actualStart,
+            actualEnd: orderMS.actualEnd,
+            noPO: orderMS.idOrder.noPO,
+            clientName: orderMS.idOrder.clientName,
+            clientOrg: orderMS.idOrder.clientOrg,
+            fullname: orderMS.idUserPic.fullname,
         })
+    }
+
+    getDate(date) {
+        let oldDate = new Date(date);
+        const month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return oldDate.getDate() + " " + month[oldDate.getMonth()] + " " + oldDate.getFullYear();
+
     }
 
     handleChange = (e) => {
@@ -84,15 +102,53 @@ class CreateMaintenance extends React.Component {
         event.preventDefault();
         try {
             for (let i=0; i<this.state.listMaintenance.length;i++) {
+                if(new Date(this.state.listMaintenance[i].dateMn) < new Date(this.state.actualStart)) {
+                    let date = this.state.listMaintenance[i].dateMn;
+                    store.addNotification({
+                        title: "Peringatan!",
+                        message: `Tanggal Maintenance  ${date} tidak boleh lebih awal dari periode mulai`,
+                        type: "warning",
+                        container: "top-left",
+                        insert: "top",
+                        animationIn: ["animated", "fadeIn"],
+                        animationOut: ["animated", "fadeout"],
+                        dismiss: {
+                            duration: 7000,
+                            showIcon: true,
+                        },
+                        width: 600
+                    });
+                    return false;
+                }
+                if(new Date(this.state.listMaintenance[i].dateMn) > new Date(this.state.actualEnd)) {
+                    let date = this.state.listMaintenance[i].dateMn;
+                    store.addNotification({
+                        title: "Peringatan!",
+                        message: `Tanggal Maintenance  ${date} tidak boleh dilakukan setelah periode selesai`,
+                        type: "warning",
+                        container: "top-left",
+                        insert: "top",
+                        animationIn: ["animated", "fadeIn"],
+                        animationOut: ["animated", "fadeout"],
+                        dismiss: {
+                            duration: 7000,
+                            showIcon: true,
+                        },
+                        width: 600
+                    });
+                    return false;
+                }
+            }
+            for (let i=0; i<this.state.listMaintenance.length;i++) {
+                console.log(this.state.listMaintenance[i].dateMn);
                 const data = {
                     dateMn: this.state.listMaintenance[i].dateMn,
-                    maintained: true,
+                    maintained: this.state.maintained,
                 };
-                //console.log(this.state.listMaintenance[i].dateMn);
-                await APIConfig.post(`/produksi/maintenance/tambah/${this.state.idOrderMs}`, data);
+                await APIConfig.post(`/produksi/maintenance/tambah/${this.state.orderMSTarget.idOrderMs}`, data);
                 this.loadData();
+                this.setState({ finishedSubmitSchedule: true });
             }
-            this.handleReportSubmitMS(event);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -100,6 +156,10 @@ class CreateMaintenance extends React.Component {
     }
 
     handleCancelSubmit = () => {
+        this.props.history.push(`/produksi/maintenance`);
+    }
+
+    handleAfterSubmit = () => {
         this.props.history.push(`/produksi/maintenance`);
     }
 
@@ -114,6 +174,7 @@ class CreateMaintenance extends React.Component {
             <div className="row" style={{ marginTop: 10 }}>
                 <div className="col-sm-1"></div>
                 <div className="col-sm-10">
+                <ReactNotification />
                     <div className="card">
                         <div className="card-body">
                             <TableMaintenanceDetail 
@@ -123,8 +184,13 @@ class CreateMaintenance extends React.Component {
                                 clientName={this.state.clientName}
                                 clientOrg={this.state.clientOrg}
                                 fullname={this.state.fullname}
+                                periodeMulai={this.getDate(this.state.actualStart)}
+                                periodeSelesai={this.getDate(this.state.actualEnd)}
                             />
                             <br></br>
+                        </div>
+                        <form onChange={this.handleChange} >
+                        <div className="card-body">
                             <div className="col-sm-6">
                             <table className="table">
                             <thead>
@@ -139,16 +205,34 @@ class CreateMaintenance extends React.Component {
                             </div>
                         </div>
                         <div className="card-footer text-right">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitCreateMaintenance}>
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#F86439" onClick={this.handleSubmitCreateMaintenance}>
                                 Simpan
-                            </CustomizedButtons>
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit}>
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={this.handleSubmitCreateMaintenance}>Simpan</Button>
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
                                 Batal
-                            </CustomizedButtons>
+                            </CustomizedButtons> */}
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <Modal show={this.state.finishedSubmitSchedule}>
+                    <div className="card">
+                        <div className="card-body text-center">
+                            <h2>{`Jadwal Maintenance Berhasil Dibuat`}</h2>
+                        </div>
+                        <div className="card-footer text-center">
+                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
+                                Kembali
+                            </CustomizedButtons> */}
+                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
+                        </div>
+                    </div>
+            </Modal>
             </div>
         );
     }

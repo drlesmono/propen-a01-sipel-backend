@@ -104,7 +104,7 @@ function App(){
               <Route exact path="/order/order" component={InputDataOrder} />
               <Route exact path="/produksi/maintenance" component={PenjadwalanMaintenance} />
               <Route exact path="/produksi/maintenance/create/:id" component={CreateMaintenance} />
-              <Route exact path="/produksi/maintenance/look-update/:id/:idMs" component={LookUpdateMaintenance} />
+              <Route exact path="/produksi/maintenance/look-update/:id" component={LookUpdateMaintenance} />
               <Route exact path="/order/create" component={CreateOrder} />
               <Route exact path="/order/detail/:id" component={DetailOrder} />
               <Route exact path="/orderPI/change/:id/:idPi" component={ChangeOrderPI} />

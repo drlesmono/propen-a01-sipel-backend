@@ -34,7 +34,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         ManagedServicesModel orderMS = getMSOrderById(idOrderMS);
         orderMS.setActivated(orderMSUpdate.getActivated());
         orderMS.setDateClosedMS(null);
-        orderMS.setTimeRemaining(orderMSUpdate.getTimeRemaining());
+        orderMS.setTimeRemaining(setRem(orderMSUpdate));
         orderMS.setActualStart(orderMSUpdate.getActualStart());
         orderMS.setActualEnd(orderMSUpdate.getActualEnd());
         orderMS.setIdUserPic(orderMSUpdate.getIdUserPic());
@@ -75,7 +75,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         List<ManagedServicesModel> msList = retrieveMS();
         List<ManagedServicesModel> msListAssigned = new ArrayList<ManagedServicesModel>();
         for (ManagedServicesModel i : msList) {
-            if (i.getIdUserPic() != null && i.getTimeRemaining() != 0) {
+            if (i.getIdUserPic() != null && i.getTimeRemaining() != 0 && i.getTimeRemaining() != null) {
                 msListAssigned.add(i);
             }
         }
