@@ -46,17 +46,9 @@ public class MaintenanceRestController {
     @GetMapping(value = "/produksi/maintenance/daftar/{idOrderMS}")
     private List<MaintenanceModel> retrieveListMaintenance(
             @Valid
-            @PathVariable ("idOrderMS") Long idOrderMS,
-            BindingResult bindingResult
+            @PathVariable ("idOrderMS") Long idOrderMS
     ) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Request body has invalid type or missing field"
-            );
-        }
-        else {
-            return maintenanceRestService.retrieveMaintenanceMS(idOrderMS);
-        }
+        return maintenanceRestService.retrieveMaintenanceMS(idOrderMS);
     }
 
     @GetMapping(value = "/maintenance/list")

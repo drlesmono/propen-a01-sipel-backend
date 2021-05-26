@@ -10,6 +10,7 @@ import CustomizedTables from "../../components/Table";
 import Modal from "../../components/Modal";
 import ServiceList from "../../components/Services/serviceList";
 import { Button } from "react-bootstrap";
+import * as moment from "moment";
 
 const initState = {
     name: "",
@@ -147,6 +148,14 @@ class DetailOrder extends React.Component {
         } else {
             return "Not Closed";
         }
+    }
+
+    getDate(date) {
+        let oldDate = new Date(date);
+        const month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return oldDate.getDate() + " " + month[oldDate.getMonth()] + " " + oldDate.getFullYear();
+
     }
 
     handleChange = (e) => {
@@ -393,7 +402,7 @@ class DetailOrder extends React.Component {
         const tableRows = listService.map((service) => [service.name,
             <Button className={classes.button1} onClick={() => this.changeService(service.idService)}>&nbsp;Ubah&nbsp;</Button>, 
             <Button className={classes.button2} onClick={() => this.deleteService(service.idService)}>Hapus</Button>
-        ])
+        ]);
 
         return (
             <div className="content">
@@ -442,7 +451,7 @@ class DetailOrder extends React.Component {
                                 clientOrg={this.state.clientOrg}
                                 clientPhone={this.state.clientPhone}
                                 clientEmail={this.state.clientEmail}
-                                dateOrder={this.state.dateOrder}
+                                dateOrder={this.getDate(this.state.dateOrder)}
                                 verified={this.checkStatusOrder(this.state.verified)}
                                 jenis={this.checkTypeOrder(this.state.projectInstallation, this.state.managedService)}
                             />
@@ -462,8 +471,8 @@ class DetailOrder extends React.Component {
                             <ProjectInstallation 
                                 key={this.state.idOrderPi}
                                 idOrderPi={this.state.idOrderPi}
-                                startPI={this.state.startPI}
-                                deadline={this.state.deadline}
+                                startPI={this.getDate(this.state.startPI)}
+                                deadline={this.getDate(this.state.deadline)}
                                 percentage={this.state.percentage}
                                 close={this.checkClosedPI(this.state.close)} /><br></br>
                             </>
@@ -486,8 +495,8 @@ class DetailOrder extends React.Component {
                             <ManagedService 
                                 key={this.state.idOrderMs}
                                 idOrderMs={this.state.idOrderMs}
-                                actualStart={this.state.actualStart}
-                                actualEnd={this.state.actualEnd}
+                                actualStart={this.getDate(this.state.actualStart)}
+                                actualEnd={this.getDate(this.state.actualEnd)}
                                 activated={this.checkActivatedMS(this.state.activated)}/>
                             <br></br>
                             <div className="row">
