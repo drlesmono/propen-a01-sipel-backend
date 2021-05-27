@@ -44,6 +44,14 @@ public class DocumentOrderModel implements Serializable{
     @Column(name="size", nullable = false)
     private Long size;
 
+    @NotNull
+    @Column(name = "urlFile", nullable = false)
+    private String urlFile;
+
+    @NotNull
+    @Column(name = "fileType", nullable = false)
+    private String fileType;
+
     public void setIdDoc(Long idDoc) {
         this.idDoc = idDoc;
     }
@@ -90,5 +98,21 @@ public class DocumentOrderModel implements Serializable{
 
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    public String getUrlFile() {
+        return urlFile;
+    }
+
+    public void setUrlFile(String urlFile) {
+        this.urlFile = urlFile;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }
