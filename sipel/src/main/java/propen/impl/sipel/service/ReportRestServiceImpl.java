@@ -71,4 +71,11 @@ public class ReportRestServiceImpl implements ReportRestService{
     public ReportModel findReportByReportName(String reportName) {
         return reportDb.findByReportName(reportName);
     }
+
+    @Override
+    public ReportModel updateStatus(Long idReport, ReportModel report) {
+        ReportModel rpt = reportDb.findById(idReport).get();
+        rpt.setStatusApproval(report.getStatusApproval());
+        return reportDb.save(rpt);
+    }
 }

@@ -15,4 +15,6 @@ public interface MaintenanceReportRestService {
 
     MaintenanceReportModel uploadMr(ReportModel report, MaintenanceReportDto mr);
 
+    MaintenanceReportModel updateNotes(Long idMaintenanceReport, MaintenanceReportModel maintenanceReport);
+
 }

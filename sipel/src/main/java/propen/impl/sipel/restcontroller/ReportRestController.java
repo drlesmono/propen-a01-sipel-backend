@@ -152,4 +152,19 @@ public class ReportRestController {
             );
         }
     }
+
+    @PutMapping(value = "/api/v1/report/update/{idReport}")
+    private ReportModel updateStatusReport(
+            @PathVariable (value = "idReport") Long idReport,
+            @RequestBody ReportModel report
+    ) {
+        try {
+            return reportRestService.updateStatus(idReport, report);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Report with ID " + String.valueOf(idReport) + " not found!"
+            );
+        }
+    }
 }

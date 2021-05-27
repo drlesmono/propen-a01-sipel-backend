@@ -34,6 +34,7 @@ import ChangeOrderPI from "./containers/ChangeOrderPI/ChangeOrderPI";
 import ChangeOrderMS from "./containers/ChangeOrderMS/ChangeOrderMS";
 import ChangeOrderPIMS from "./containers/ChangeOrderPIMS/ChangeOrderPIMS";
 import LaporanInstalasiMaintenance from "./containers/LaporanInstalasiMaintenance"
+import StatusPersetujuanLaporan from "./containers/StatusPersetujuanLaporan/StatusPersetujuanLaporan";
 
 const routes = {
   "/": () => 
@@ -55,7 +56,8 @@ const routes = {
   //"/order/order": () => <InputDataOrder/>,
   //"/produksi/maintenance": () => <PenjadwalanMaintenance />,
   //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
-  "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />
+  "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />,
+  "/laporan/verifikasiLaporan" : () => <StatusPersetujuanLaporan />,
 };
 
 function App(){
@@ -98,7 +100,7 @@ function App(){
                 <NavDropdown title="Laporan" id="collasible-nav-dropdown">
                   <div className="d-flex justify-content-between">
                     <Nav.Link href="/laporan/daftarLaporan" style={{color: "black"}} className="pl-5 pr-5">Daftar Laporan</Nav.Link>
-                    <Nav.Link href="#laporan/verifikasiLaporan" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/verifikasiLaporan" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Laporan</Nav.Link>
                   </div>
                   {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

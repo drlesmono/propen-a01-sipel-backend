@@ -65,4 +65,10 @@ public class InstallationReportRestServiceImpl implements InstallationReportRest
         return installationReportDb.save(newIr);
     }
 
+    @Override
+    public InstallationReportModel updateNotes(Long idInstallationReport, InstallationReportModel installationReport) {
+        InstallationReportModel newInstallationReport = installationReportDb.findById(idInstallationReport).get();
+        newInstallationReport.setNotes(installationReport.getNotes());
+        return installationReportDb.save(newInstallationReport);
+    }
 }
