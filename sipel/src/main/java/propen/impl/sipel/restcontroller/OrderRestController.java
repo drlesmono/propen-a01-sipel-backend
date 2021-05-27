@@ -97,4 +97,18 @@ public class  OrderRestController {
     private OrderModel retrieveOrderTarget() {
         return orderRestService.getLatestOrder();
     }
+
+    @GetMapping(value="/ordersVerifiedReport")
+    private List<OrderModel> retrieveListOrderVerifiedReport(){
+        List<OrderModel> listOrder = orderRestService.retrieveListOrderVerified();
+
+        List<OrderModel> listOrderFiltered = new ArrayList<>();
+        for(OrderModel order : listOrder){
+            if(order.getNoPO() != null){
+                listOrderFiltered.add(order);
+            }
+        }
+
+        return listOrder;
+    }
 }

@@ -37,7 +37,6 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         orderMS.setTimeRemaining(setRem(orderMSUpdate));
         orderMS.setActualStart(orderMSUpdate.getActualStart());
         orderMS.setActualEnd(orderMSUpdate.getActualEnd());
-        orderMS.setIdUserPic(orderMSUpdate.getIdUserPic());
         return managedServicesDb.save(orderMS);
     }
 
@@ -80,6 +79,11 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
             }
         }
         return msListAssigned;
+    }
+
+    @Override
+    public List<ManagedServicesModel> retrieveListMs() {
+        return managedServicesDb.findAll();
     }
 
     public ManagedServicesRestServiceImpl(WebClient.Builder webClientBuilder) {

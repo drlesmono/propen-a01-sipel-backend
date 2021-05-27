@@ -16,4 +16,6 @@ public interface ManagedServicesRestService {
     List<ManagedServicesModel> retrieveMS();
 
     List<ManagedServicesModel> retrieveMSassigned();
+
+    List<ManagedServicesModel> retrieveListMs();
 }

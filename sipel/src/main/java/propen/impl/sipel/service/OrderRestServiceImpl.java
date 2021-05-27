@@ -79,4 +79,17 @@ public class OrderRestServiceImpl implements OrderRestService {
         order.setVerified(false);
         return orderDb.save(order);
     }
+
+    @Override
+    public List<OrderModel> retrieveListOrderVerified() {
+        List<OrderModel> listOrderVerified = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAll()){
+            if (order.getVerified() == true) {
+                listOrderVerified.add(order);
+            }
+        }
+
+        return listOrderVerified;
+    }
 }

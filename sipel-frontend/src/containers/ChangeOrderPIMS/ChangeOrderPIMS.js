@@ -170,6 +170,7 @@ class ChangeOrderPIMS extends React.Component {
         } = this.state;
 
         return (
+            <div className={classes.container}>
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Ubah Order</h1>
@@ -454,6 +455,7 @@ class ChangeOrderPIMS extends React.Component {
                         </div>
                     </div>
                 </Modal>
+            </div>
             </div>
         );
     }

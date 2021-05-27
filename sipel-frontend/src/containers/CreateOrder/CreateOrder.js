@@ -257,6 +257,7 @@ class CreateOrder extends React.Component {
         let { listService } = this.state;
 
         return (
+            <div className={classes.container}>
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Tambah Order</h1>
@@ -693,6 +694,7 @@ class CreateOrder extends React.Component {
                         </div>
                     </div>
                 </Modal>
+            </div>
             </div>
         );
     }

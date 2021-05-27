@@ -1,6 +1,7 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "managedServices")
 //@IdClass(OrderModel.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ManagedServicesModel implements Serializable{
 
 //    @Id

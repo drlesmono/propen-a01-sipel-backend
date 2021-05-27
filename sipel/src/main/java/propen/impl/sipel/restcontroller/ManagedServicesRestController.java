@@ -83,4 +83,9 @@ public class ManagedServicesRestController {
     public List<ManagedServicesModel> retrieveMSTerassigned() {
         return managedServicesRestService.retrieveMSassigned();
     }
+
+    @GetMapping(value="/orders/ms")
+    private List<ManagedServicesModel> retrieveListMs(){
+        return managedServicesRestService.retrieveListMs();
+    }
 }

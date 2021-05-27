@@ -54,3 +54,7 @@
 .button2:focus {
     box-shadow: none !important;
 }
+.container{
+    padding: 2%;
+    background-color: white;
+}

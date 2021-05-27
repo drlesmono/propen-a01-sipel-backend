@@ -78,4 +78,9 @@ public class ProjectInstallationRestController {
     private List<ProjectInstallationModel> retrievePI() {
         return projectInstallationRestService.retrievePI();
     }
+
+    @GetMapping(value="/orders/pi")
+    private List<ProjectInstallationModel> retrieveListPi(){
+        return projectInstallationRestService.retrieveListPi();
+    }
 }

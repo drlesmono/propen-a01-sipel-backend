@@ -83,6 +83,7 @@ class InputDataOrder extends React.Component {
                         <Button className={classes.button2} onClick={() => this.handleClickUnggah(order)}>Unggah</Button>]);
 
         return (
+            <div className={classes.container}>
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Daftar Order</h1>
@@ -91,6 +92,7 @@ class InputDataOrder extends React.Component {
             <br></br>
             <br></br>
             <CustomizedTables headers={tableHeaders} rows={tableRows} />
+            </div>
             </div>
         );
     }

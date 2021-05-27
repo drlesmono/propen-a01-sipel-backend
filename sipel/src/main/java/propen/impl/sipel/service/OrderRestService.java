@@ -16,4 +16,6 @@ public interface OrderRestService {
     List<OrderModel> retrieveOrderIsMS();
 
     OrderModel getLatestOrder();
+
+    List<OrderModel> retrieveListOrderVerified();
 }

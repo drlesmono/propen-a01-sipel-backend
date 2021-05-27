@@ -48,8 +48,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         orderPI.setStartPI(orderPIUpdate.getStartPI());
         orderPI.setDeadline(orderPIUpdate.getDeadline());
         orderPI.setPercentage(orderPIUpdate.getPercentage());
-        orderPI.setIdUserEng(orderPIUpdate.getIdUserEng());
-        orderPI.setClose(false);
+        orderPI.setClose(orderPIUpdate.getClose());
         orderPI.setDateClosedPI(null);
         return projectInstallationDb.save(orderPI);
     }
@@ -67,6 +66,11 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
 
     @Override
     public List<ProjectInstallationModel> retrievePI() {
+        return projectInstallationDb.findAll();
+    }
+
+    @Override
+    public List<ProjectInstallationModel> retrieveListPi() {
         return projectInstallationDb.findAll();
     }
 

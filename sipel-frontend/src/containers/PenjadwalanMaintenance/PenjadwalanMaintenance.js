@@ -110,11 +110,13 @@ class PenjadwalanMaintenance extends React.Component {
                         ]);
 
         return (
+            <div className={classes.container}>
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Daftar Order</h1>
             <br></br>
             <CustomizedTables headers={tableHeaders} rows={tableRows} />
+            </div>
             </div>
         );
     }

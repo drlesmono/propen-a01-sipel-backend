@@ -405,6 +405,7 @@ class DetailOrder extends React.Component {
         ]);
 
         return (
+            <div className={classes.container}>
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Detail Order</h1>
@@ -647,6 +648,7 @@ class DetailOrder extends React.Component {
                         </div>
                     </div>
                 </Modal>
+            </div>
             </div>
         );
     }

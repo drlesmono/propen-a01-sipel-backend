@@ -167,6 +167,7 @@ class CreateMaintenance extends React.Component {
         let{ listMaintenance } = this.state;
 
         return (
+            <div className={classes.container}>
             <div className="content">
             <br></br>
             <h1 className={classes.title}>Buat Penjadwalan Maintenance</h1>
@@ -233,6 +234,7 @@ class CreateMaintenance extends React.Component {
                         </div>
                     </div>
             </Modal>
+            </div>
             </div>
         );
     }

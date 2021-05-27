@@ -33,6 +33,7 @@ import DetailOrder from "./containers/DetailOrder/DetailOrder";
 import ChangeOrderPI from "./containers/ChangeOrderPI/ChangeOrderPI";
 import ChangeOrderMS from "./containers/ChangeOrderMS/ChangeOrderMS";
 import ChangeOrderPIMS from "./containers/ChangeOrderPIMS/ChangeOrderPIMS";
+import LaporanInstalasiMaintenance from "./containers/LaporanInstalasiMaintenance"
 
 const routes = {
   "/": () => 
@@ -54,6 +55,7 @@ const routes = {
   //"/order/order": () => <InputDataOrder/>,
   //"/produksi/maintenance": () => <PenjadwalanMaintenance />,
   //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
+  "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />
 };
 
 function App(){
@@ -69,24 +71,40 @@ function App(){
               <Nav className="mr-auto">
                 <Nav.Link href="#dashboard">Dashboard</Nav.Link>
                 <NavDropdown title="Order" id="collasible-nav-dropdown">
-                  <NavDropdown.Item href="/order/order">Order</NavDropdown.Item>
+                  <div className="d-flex justify-content-between">
+                    <Nav.Link href="/order/order" style={{color: "black"}} className="pl-5 pr-5">Order</Nav.Link>
+                    <Nav.Link href="#action/3.2" style={{color: "black"}} className="pl-5 pr-5">Another action</Nav.Link>
+                    <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something</Nav.Link>
+                    <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something 2</Nav.Link>
+                  </div>
+                  {/* <NavDropdown.Item href="/order/order">Order</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
                 <NavDropdown title="Produksi" id="collasible-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Penugasan</NavDropdown.Item>
+                  <div className="d-flex justify-content-between">
+                    <Nav.Link href="#produksi/penugasan" style={{color: "black"}} className="pl-5 pr-5">Penugasan</Nav.Link>
+                    <Nav.Link href="#produksi/progress-delivery" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>
+                    <Nav.Link href="#produksi/periodeKontrak" style={{color: "black"}} className="pl-5 pr-5">Periode Kontrak</Nav.Link>
+                    <Nav.Link href="/produksi/maintenance" style={{color: "black"}} className="pl-5 pr-5">Maintenance</Nav.Link>
+                  </div>
+                  {/* <NavDropdown.Item href="#action/3.1">Penugasan</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.1">Progress Delivery</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.1">Periode Kontrak</NavDropdown.Item>
-                  <NavDropdown.Item href="produksi/maintenance">Maintenance</NavDropdown.Item>
+                  <NavDropdown.Item href="produksi/maintenance">Maintenance</NavDropdown.Item> */}
                 </NavDropdown>
                 <NavDropdown title="Laporan" id="collasible-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                  <div className="d-flex justify-content-between">
+                    <Nav.Link href="/laporan/daftarLaporan" style={{color: "black"}} className="pl-5 pr-5">Daftar Laporan</Nav.Link>
+                    <Nav.Link href="#laporan/verifikasiLaporan" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Laporan</Nav.Link>
+                  </div>
+                  {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
                 <Nav.Link href="#halamanAdmin">Halaman Admin</Nav.Link>
               </Nav>

@@ -22,14 +22,14 @@ public class InstallationReportModel implements Serializable{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private ReportModel idReport;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idInstallationReport;
 
-    @NotNull
+//    @NotNull
     @Column(name="irNum", nullable = false)
     private String irNum;
 
