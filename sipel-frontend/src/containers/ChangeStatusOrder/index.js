@@ -16,8 +16,6 @@ class ChangeStatusOrder extends Component {
             isErrorMsClosed: false,
             isErrorPiClosed: false,
             orderTarget: null,
-            users: [],
-            //listMaintenance: [],
             statusMaintenances: [],
             statusMs: "",
             statusPi: ""
@@ -39,11 +37,9 @@ class ChangeStatusOrder extends Component {
     async loadData() {
         try {
             const orders = await APIConfig.get("/ordersVerified");
-            const users = await APIConfig.get("/users");
             // const services = await APIConfig.get("/services");
             console.log(orders.data);
-            console.log(users.data);
-            this.setState({ ordersVerified: orders.data, users: users.data});
+            this.setState({ ordersVerified: orders.data});
 
         } catch (error) {
             alert("Oops terjadi masalah pada server");
