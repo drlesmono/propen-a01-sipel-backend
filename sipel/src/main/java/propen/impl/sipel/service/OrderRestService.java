@@ -6,14 +6,11 @@ import java.util.List;
 
 public interface OrderRestService {
 
-    //Method untuk mencari list order
-    List<OrderModel> getOrderList();
-
     List<OrderModel> retrieveListOrderVerified();
 
-    //method untuk mencari order berdasarkan id
-    OrderModel getOrderByIdOrder(Long idOrder);
+    OrderModel findOrderById(Long idOrder);
 
-    //method untuk mengubah status order
-    OrderModel updateStatusOrder(Long idOrder, OrderModel order);
+    List<OrderModel> retrieveListOrderMs();
+
+    OrderModel extendKontrak(Long idOrder, String noPO);
 }

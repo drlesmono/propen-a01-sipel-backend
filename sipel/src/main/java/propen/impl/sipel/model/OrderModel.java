@@ -2,6 +2,7 @@ package propen.impl.sipel.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -19,6 +20,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "orders")
 //@Inheritance(strategy=InheritanceType.JOINED)
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class OrderModel implements Serializable{
 
     @Id
@@ -80,10 +82,12 @@ public class OrderModel implements Serializable{
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private ManagedServicesModel idOrderMs;
 
 //    @ManyToOne(fetch = FetchType.EAGER, optional = false)

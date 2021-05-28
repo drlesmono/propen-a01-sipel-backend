@@ -4,24 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.MaintenanceModel;
 import propen.impl.sipel.repository.MaintenanceDb;
-import propen.impl.sipel.repository.UserDb;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
 public class MaintenanceRestServiceImpl implements MaintenanceRestService{
 
     @Autowired
-    private MaintenanceDb maintenanceDb;
-
-    @Autowired
-    private UserDb userDb;
+    MaintenanceDb maintenanceDb;
 
     @Override
-    public MaintenanceModel updateStatus(Long idMaintenance, Boolean status) {
-        MaintenanceModel maintenanceTarget = maintenanceDb.findById(idMaintenance).get();
-        maintenanceTarget.setMaintained(status);
-        return maintenanceDb.save(maintenanceTarget);
+    public List<MaintenanceModel> retrieveListMaintenance() {
+        return maintenanceDb.findAll();
     }
 }

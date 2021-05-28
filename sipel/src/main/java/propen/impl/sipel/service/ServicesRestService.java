@@ -1,9 +1,12 @@
 package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.ServicesModel;
+import propen.impl.sipel.rest.ServicesDto;
 
 public interface ServicesRestService {
 
-    ServicesModel updateEngineer(Long idService, String idUser);
+    ServicesModel updateService(ServicesDto service);
+
+    ServicesModel createService(ServicesDto service, Long idOrderMs);
 
 }

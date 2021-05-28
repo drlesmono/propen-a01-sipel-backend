@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(allowGetters = true)
 public class ProjectInstallationDto {
 
-    @NotNull
     private Long idOrderPi;
 
     private String idUserEng;

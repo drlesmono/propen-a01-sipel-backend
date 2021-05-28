@@ -15,28 +15,49 @@ import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class ServicesRestController {
 
     @Autowired
     private ServicesRestService servicesRestService;
 
-    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateEngineer")
-    private BaseResponse<ServicesDto> updateEngineer(@Valid @RequestBody ServicesDto service,
+    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateService")
+    private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
-        BaseResponse<ServicesDto> response = new BaseResponse<>();
+        BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan
             response.setMessage("Engineer pada service gagal disimpan." );
             response.setStatus(405);
             return response;
         }
+        ServicesModel newService = servicesRestService.updateService(service);
+
         response.setStatus(200);
         response.setMessage("Success");
-        response.setResult(service);
-        servicesRestService.updateEngineer(service.getIdService(), service.getIdUser());
+        response.setResult(newService);
+
         return response;
     }
 
+    @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/createService")
+    private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
+                                                    @PathVariable("idOrderMs") Long idOrderMs,
+                                                     BindingResult bindingResult){
+        BaseResponse<ServicesModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Service gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        ServicesModel newService = servicesRestService.createService(service, idOrderMs);
+
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newService);
+
+        return response;
+    }
 }

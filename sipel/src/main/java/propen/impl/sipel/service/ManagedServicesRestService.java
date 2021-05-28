@@ -2,13 +2,16 @@ package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.ManagedServicesModel;
 
+import java.util.Date;
+import java.util.List;
+
 public interface ManagedServicesRestService{
+
+    List<ManagedServicesModel> retrieveListMs();
 
     ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic);
 
-    ManagedServicesModel updateStatus(Long idOrderMs, String status);
+    List<ManagedServicesModel> msOrderByActualEnd();
 
-    ManagedServicesModel getMsById(Long idOrderMs);
-
-
+    ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd);
 }

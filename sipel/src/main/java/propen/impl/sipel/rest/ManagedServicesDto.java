@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties(allowGetters = true)
 public class ManagedServicesDto {
 
-    @NotNull
     private Long idOrderMs;
 
     private String idUserPic;
@@ -21,7 +20,7 @@ public class ManagedServicesDto {
     @NotNull
     private Boolean isActivated;
 
-    private Long timeRemaining;
+//    private Long timeRemaining;
 
     private String dateClosedMS;
 
@@ -67,13 +66,13 @@ public class ManagedServicesDto {
         isActivated = activated;
     }
 
-    public Long getTimeRemaining() {
-        return timeRemaining;
-    }
-
-    public void setTimeRemaining(Long timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
+//    public Long getTimeRemaining() {
+//        return timeRemaining;
+//    }
+//
+//    public void setTimeRemaining(Long timeRemaining) {
+//        this.timeRemaining = timeRemaining;
+//    }
 
     public String getDateClosedMS() {
         return dateClosedMS;

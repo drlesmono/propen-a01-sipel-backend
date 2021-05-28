@@ -1,6 +1,7 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -16,13 +17,14 @@ import java.util.List;
 @Entity
 @Table(name = "projectInstallation")
 //@IdClass(OrderModel.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProjectInstallationModel implements Serializable{
 
 //    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private OrderModel idOrder;
 
     @Id
@@ -68,12 +70,12 @@ public class ProjectInstallationModel implements Serializable{
     @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private List<InstallationReportModel> idInstallationReport;
+    private List<InstallationReportModel> listInstallationReport;
 
     @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private List<BastModel> idBast;
+    private List<BastModel> listBast;
 
     public OrderModel getIdOrder() {
         return idOrder;
@@ -131,20 +133,20 @@ public class ProjectInstallationModel implements Serializable{
         this.listTask = listTask;
     }
 
-    public List<InstallationReportModel> getIdInstallationReport() {
-        return idInstallationReport;
+    public List<InstallationReportModel> getListInstallationReport() {
+        return listInstallationReport;
     }
 
-    public void setIdInstallationReport(List<InstallationReportModel> idInstallationReport) {
-        this.idInstallationReport = idInstallationReport;
+    public void setListInstallationReport(List<InstallationReportModel> listInstallationReport) {
+        this.listInstallationReport = listInstallationReport;
     }
 
     public List<BastModel> getIdBast() {
-        return idBast;
+        return listBast;
     }
 
     public void setIdBast(List<BastModel> idBast) {
-        this.idBast = idBast;
+        this.listBast = listBast;
     }
 
     public Date getStartPI() {

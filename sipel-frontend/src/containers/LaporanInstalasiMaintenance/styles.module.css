@@ -1,0 +1,142 @@
+.search{
+    width: 20%;
+}
+
+.button1{
+    background-color: #FD693E !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E !important;
+}
+
+.button1:hover{
+    background-color: #FD693E !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E!important;
+}
+
+.button1:focus{
+    box-shadow: none !important;
+}
+
+.button2{
+    background-color: #F2F2F2 !important;
+    outline-color:  #F2F2F2 !important;
+    border-color:  #F2F2F2 !important;
+    color: #2F3F58 !important;
+}
+
+.button2:hover{
+    background-color: #F2F2F2 !important;
+    outline-color:  #F2F2F2 !important;
+    border-color:  #F2F2F2!important;
+    color: #2F3F58 !important;
+}
+
+.button2:focus{
+    box-shadow: none !important;
+}
+
+.button3{
+    background-color: transparent !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E !important;
+    color: #FD693E !important;
+}
+
+.button3:hover{
+    background-color: transparent !important;
+    outline-color:  #FD693E !important;
+    border-color:  #FD693E !important;
+    color: #FD693E !important;
+}
+
+.button3:focus{
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+.button4{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F !important;
+}
+
+.button4:hover{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F!important;
+}
+
+.button4:focus{
+    box-shadow: none !important;
+}
+
+.button5{
+    background-color: #DA552F !important;
+    outline-color:  #DA552F !important;
+    border-color:  #DA552F !important;
+}
+
+.button5:hover{
+    background-color: #DA552F !important;
+    outline-color:  #DA552F!important;
+    border-color:  #DA552F!important;
+}
+
+.button5:focus{
+    box-shadow: none !important;
+}
+
+.buttonUpload{
+    width: 50% !important;
+}
+
+.containerButtonUpload{
+    width: 20% !important;
+}
+
+/* .file::after{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F !important;
+    position: relative;
+} */
+
+.card{
+    background-color: #F7873F !important;
+    outline-color:  #F7873F !important;
+    border-color:  #F7873F !important;
+    color: white;
+}
+
+.closeButton{
+    border: none !important;
+    background-color: none !important;
+    outline-color:  none !important;
+    border-color:  none !important;
+}
+
+.closeButton::after{
+    background-color: none !important;
+    border-color:  none !important;
+}
+
+.closeButton:focus{
+    border: none !important;
+    outline: none !important;
+}
+
+.closeButton:hover{
+    background-color: none !important;
+    outline-color:  none !important;
+    border-color:  none !important;
+}
+
+.container{
+    padding: 2%;
+    background-color: white;
+}
+
+.notes{
+    height: 200% !important;
+}
