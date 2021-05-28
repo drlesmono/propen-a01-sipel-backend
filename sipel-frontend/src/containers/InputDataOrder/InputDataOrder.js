@@ -1,16 +1,33 @@
 import React from "react";
 import APIConfig from "../../APIConfig";
-import CustomizedButtons from "../../components/Button";
 import CustomizedTables from "../../components/Table";
 import classes from "./styles.module.css";
 import { withRouter } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const initState = {
+    orderTarget: null,
+    file: null,
+}
 
 class InputDataOrder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             orders: [],
+            orderTarget: null,
+            isUnggah: false,
+            file: null,
+            isError: false,
+            isFinishedUpload: false,
+            noPO: "",
+            orderName: "",
+            clientName: "",
+            clientOrg: "",
+            projectInstallation: false,
+            managedService: false,
         };
         this.handleTambahOrder = this.handleTambahOrder.bind(this);
         this.handleLookUpDetail = this.handleLookUpDetail.bind(this);
@@ -26,6 +43,7 @@ class InputDataOrder extends React.Component {
             const listOrder  = await APIConfig.get("/orderList");
             this.setState({ orders: listOrder.data });
         } catch (error) {
+            this.setState({ isError: true });
             alert("Oops terjadi masalah pada server");
             console.log(error);
         }
@@ -61,8 +79,12 @@ class InputDataOrder extends React.Component {
         this.props.history.push(`/order/unggah/${order.idOrder}`);
     }
 
+    handleAfterError = () => {
+        this.setState({ isError: false });
+    }
+
     render() {
-        const { orders } = this.state;
+        const { orders, orderTarget, isError } = this.state;
 
         const tableHeaders = [
             'No', 
@@ -92,6 +114,21 @@ class InputDataOrder extends React.Component {
             <br></br>
             <br></br>
             <CustomizedTables headers={tableHeaders} rows={tableRows} />
+
+            <Modal show={isError} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                <Modal.Header>
+                    <div className="text-center">
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oops terjadi masalah pada server!
+                        <br></br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harap coba beberapa saat lagi</h4>
+                    </div>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="text-center">
+                        <Button className={classes.button2} onClick={() => this.handleAfterError()}>Kembali</Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
             </div>
             </div>
         );

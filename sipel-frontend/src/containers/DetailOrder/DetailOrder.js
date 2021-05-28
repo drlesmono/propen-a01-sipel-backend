@@ -168,7 +168,6 @@ class DetailOrder extends React.Component {
 
     handleLookDetail() {
         let order = this.state.orderTarget;
-        //console.log(this.state.orderTarget);
         this.setState({
             noPO: order.noPO,
             noSPH: order.noSPH,
@@ -189,7 +188,6 @@ class DetailOrder extends React.Component {
         let isMS = order.managedService;
         if (isPI === true) {
             const ordPI = this.getPIorder(order.idOrder);
-            //console.log(ordPI);
             this.setState({
                 idOrderPi: ordPI.idOrderPi,
                 startPI: ordPI.startPI,
@@ -200,7 +198,6 @@ class DetailOrder extends React.Component {
         }
         if (isMS === true) {
             const ordMS = this.getMSorder(order.idOrder);
-            //console.log(ordMS);
             this.setState({
                 idOrderMs: ordMS.idOrderMs,
                 actualStart: ordMS.actualStart,
@@ -215,7 +212,6 @@ class DetailOrder extends React.Component {
         try {
             const services = await APIConfig.get(`/order/MS/${this.state.idOrderMs}/listService`);
             this.setState({ listService: services.data });
-            //console.log(this.state.listService);
         } catch (error) {
             alert("Oops terjadi masalah pada server");
             console.log(error);
@@ -345,7 +341,6 @@ class DetailOrder extends React.Component {
                 const data = {
                     name: this.state.listServiceNew[i].name,
                 };
-                //console.log(this.state.listService[i].name);
                 await APIConfig.post(`/order/tambah/MS/${this.state.idOrderMs}/Service`, data);
                 this.loadData();
                 this.setState({ finishedSubmitAddService: true });
@@ -417,25 +412,16 @@ class DetailOrder extends React.Component {
                         <div className="card-body">
                             {this.state.projectInstallation && !this.state.managedService? 
                             <><div className="text-right">
-                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderPI()}>
-                                    Ubah Order
-                                </CustomizedButtons> */}
                                 <Button className={classes.button1} onClick={() => this.handleChangeOrderPI()}>&nbsp;Ubah Order&nbsp;</Button>
                             </div></>
                             : <></>}
                             {this.state.managedService && !this.state.projectInstallation ? 
                             <><div className="text-right">
-                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderMS()}>
-                                    Ubah Order
-                                </CustomizedButtons> */}
                                 <Button className={classes.button1} onClick={() => this.handleChangeOrderMS()}>&nbsp;Ubah Order&nbsp;</Button>
                             </div></>
                             : <></>}
                             {this.state.managedService && this.state.projectInstallation ? 
                             <><div className="text-right">
-                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleChangeOrderPIMS()}>
-                                    Ubah Order
-                                </CustomizedButtons> */}
                                 <Button className={classes.button1} onClick={() => this.handleChangeOrderPIMS()}>&nbsp;Ubah Order&nbsp;</Button>
                             </div></>
                             : <></>}
@@ -468,7 +454,6 @@ class DetailOrder extends React.Component {
                                 </div>
                             </div>
                             </div>
-                            {/* <h3 className={classes.subtitle}>Detail Data Project Installation</h3> */}
                             <ProjectInstallation 
                                 key={this.state.idOrderPi}
                                 idOrderPi={this.state.idOrderPi}
@@ -480,8 +465,6 @@ class DetailOrder extends React.Component {
                             : 
                                 <></>
                             }
-                        {/* </div>
-                        <div className="card-body"> */}
                             {this.state.managedService
                             ? 
                             <>
@@ -492,7 +475,6 @@ class DetailOrder extends React.Component {
                                 </div>
                             </div>
                             </div>
-                            {/* <h3 className={classes.subtitle}>Detail Data Managed Service</h3> */}
                             <ManagedService 
                                 key={this.state.idOrderMs}
                                 idOrderMs={this.state.idOrderMs}
@@ -508,9 +490,6 @@ class DetailOrder extends React.Component {
                             </div>
                             <div className="col-sm-6">
                             <div className="text-right">
-                                {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleTambahService}>
-                                    + Tambah Services
-                                </CustomizedButtons> */}
                                 <Button className={classes.button1} onClick={this.handleTambahService}>+ Tambah Services</Button>
                             </div>
                             </div>
@@ -521,9 +500,6 @@ class DetailOrder extends React.Component {
                             : <></> }
                         </div>
                         <div className="card-footer text-right">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleBack()} >
-                                Kembali
-                            </CustomizedButtons> */}
                             <Button className={classes.button1} onClick={() => this.handleBack()}>&nbsp;Kembali&nbsp;</Button>
                         </div>
                     </div>
@@ -555,13 +531,7 @@ class DetailOrder extends React.Component {
                                         </div>
                                     </div>
                                     <div className="card-footer text-center">
-                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitChangeService}>
-                                            Simpan
-                                        </CustomizedButtons> */}
                                         <Button className={classes.button1} onClick={this.handleSubmitChangeService}>Simpan</Button>
-                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancelSubmit}>
-                                            Batal
-                                        </CustomizedButtons> */}
                                         <span>&nbsp;&nbsp;</span>
                                         <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
@@ -577,9 +547,6 @@ class DetailOrder extends React.Component {
                             <h2>{`Service Berhasil Diubah`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
-                                Kembali
-                            </CustomizedButtons> */}
                             <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                         </div>
                     </div>
@@ -591,9 +558,6 @@ class DetailOrder extends React.Component {
                             <h2>{`Service Berhasil Dihapus`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterDelete()} >
-                                Kembali
-                            </CustomizedButtons> */}
                             <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
                         </div>
                     </div>
@@ -619,13 +583,7 @@ class DetailOrder extends React.Component {
                                         </table>
                                     </div>
                                     <div className="card-footer text-center">
-                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
-                                            Simpan
-                                        </CustomizedButtons> */}
                                         <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan</Button>
-                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleCancelSubmit}>
-                                            Batal
-                                        </CustomizedButtons> */}
                                         <span>&nbsp;&nbsp;</span>
                                         <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
@@ -641,9 +599,6 @@ class DetailOrder extends React.Component {
                             <h2>{`Service Berhasil Ditambahkan`}</h2>
                         </div>
                         <div className="card-footer text-center">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterAdd()} >
-                                Kembali
-                            </CustomizedButtons> */}
                             <Button className={classes.button1} onClick={() => this.handleAfterAdd()}>Kembali</Button>
                         </div>
                     </div>

@@ -35,6 +35,7 @@ import ChangeOrderMS from "./containers/ChangeOrderMS/ChangeOrderMS";
 import ChangeOrderPIMS from "./containers/ChangeOrderPIMS/ChangeOrderPIMS";
 import LaporanInstalasiMaintenance from "./containers/LaporanInstalasiMaintenance"
 import StatusPersetujuanLaporan from "./containers/StatusPersetujuanLaporan/StatusPersetujuanLaporan";
+import UnggahDokumenOrder from "./containers/UnggahDokumenOrder/UnggahDokumenOrder";
 
 const routes = {
   "/": () => 
@@ -57,7 +58,6 @@ const routes = {
   //"/produksi/maintenance": () => <PenjadwalanMaintenance />,
   //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
   "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />,
-  "/laporan/verifikasiLaporan" : () => <StatusPersetujuanLaporan />,
 };
 
 function App(){
@@ -130,6 +130,8 @@ function App(){
               <Route exact path="/orderPI/change/:id/:idPi" component={ChangeOrderPI} />
               <Route exact path="/orderMS/change/:id/:idMs" component={ChangeOrderMS} />
               <Route exact path="/orderPIMS/change/:id/:idPi/:idMs" component={ChangeOrderPIMS} />
+              <Route exact path="/laporan/verifikasiLaporan" component={StatusPersetujuanLaporan} />
+              <Route exact path="/order/unggah/:id" component={UnggahDokumenOrder} />
             </Switch>
           </Router>
           </Layout>
