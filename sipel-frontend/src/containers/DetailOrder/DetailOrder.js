@@ -7,10 +7,13 @@ import ProjectInstallation from "../../components/ProjectInstallation/piDetail";
 import ManagedService from "../../components/ManagedService/msDetail";
 import { withRouter } from "react-router-dom";
 import CustomizedTables from "../../components/Table";
-import Modal from "../../components/Modal";
+//import Modal from "../../components/Modal";
 import ServiceList from "../../components/Services/serviceList";
+import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
 import * as moment from "moment";
+import { store } from "react-notifications-component";
+import ReactNotification from "react-notifications-component";
 
 const initState = {
     name: "",
@@ -57,6 +60,13 @@ class DetailOrder extends React.Component {
             finishedDeleteService: false,
             finishedSubmitAddService: false,
             isAddService: false,
+            documents: [], //dok order
+            documentTarget: null,
+            isDelete: false,
+            isError: false,
+            isDeleteSuccess: false,
+            isDeleteService: false,
+            serviceTargetToDelete: null
         }
         this.handleLookDetail = this.handleLookDetail.bind(this);
         this.handleLookService = this.handleLookService.bind(this);
@@ -79,6 +89,10 @@ class DetailOrder extends React.Component {
         this.clickOnDelete = this.clickOnDelete.bind(this);
         this.handleSubmitTambahService = this.handleSubmitTambahService.bind(this);
         this.handleTambahService = this.handleTambahService.bind(this);
+        this.handleAfterError = this.handleAfterError.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
+        this.handleConfirmDeleteService = this.handleConfirmDeleteService.bind(this);
     }
 
     componentDidMount() {
@@ -90,12 +104,15 @@ class DetailOrder extends React.Component {
             const listOrderPI  = await APIConfig.get("/orderPI");
             const listOrderMS  = await APIConfig.get("/orderMS");
             const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
+            const docList = await APIConfig.get(`/order/${this.state.idOrder}/documents`); //doc order
             this.setState({ ordersPI: listOrderPI.data });
             this.setState({ ordersMS: listOrderMS.data });
             this.setState({ orderTarget: orderItem.data });
+            this.setState({ documents: docList.data }); //doc order
             this.handleLookDetail();
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
@@ -213,7 +230,8 @@ class DetailOrder extends React.Component {
             const services = await APIConfig.get(`/order/MS/${this.state.idOrderMs}/listService`);
             this.setState({ listService: services.data });
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
@@ -225,7 +243,8 @@ class DetailOrder extends React.Component {
             console.log(this.state.serviceTarget);
             this.handleToChangeService();
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
@@ -233,6 +252,23 @@ class DetailOrder extends React.Component {
     async handleSubmitChangeService(event) {
         event.preventDefault();
         try {
+            if (this.state.name === "" || this.state.name === null) {
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: "Anda wajib mengisi field Nama Service",
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 300
+                });
+                return false;
+            }
             const data = {
                 name: this.state.name,
             }
@@ -240,21 +276,24 @@ class DetailOrder extends React.Component {
             this.loadData();
             this.setState({ finishedSubmitService: true });
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
         this.handleCancel(event);
     }
-
+    
     async deleteService(idService) {
         try {
             await APIConfig.delete(`order/delete/service/${idService}`);
             this.loadData();
             this.setState({ finishedDeleteService: true });
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
+        this.setState({ isDeleteService: false });
     }
 
     handleToChangeService() {
@@ -286,12 +325,17 @@ class DetailOrder extends React.Component {
 
     handleAfterDelete = () => {
         this.props.history.push(`/order/detail/${this.state.idOrder}`);
-        this.setState({ finishedDeleteService: false });
+        this.setState({ finishedDeleteService: false, isDeleteSuccess: false });
     }
 
     handleAfterAdd = () => {
         this.props.history.push(`/order/detail/${this.state.idOrder}`);
         this.setState({ finishedSubmitAddService: false });
+    }
+
+    handleAfterError = () => {
+        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.setState({ isError: false });
     }
 
     handleCancelSubmit(event) {
@@ -301,7 +345,7 @@ class DetailOrder extends React.Component {
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({ isChangeService: false, isAddService: false, ...initState });
+        this.setState({ isChangeService: false, isAddService: false, isDelete: false, isDeleteService: false, ...initState });
     }
 
     handleChangeFieldService = (e) => {
@@ -338,6 +382,25 @@ class DetailOrder extends React.Component {
         event.preventDefault();
         try {
             for (let i=0; i<this.state.listServiceNew.length;i++) {
+                if (this.state.listServiceNew[i].name === "" || this.state.listServiceNew[i].name === null) {
+                    store.addNotification({
+                        title: "Peringatan!",
+                        message: "Anda wajib mengisi field Nama Service",
+                        type: "warning",
+                        container: "top-left",
+                        insert: "top",
+                        animationIn: ["animated", "fadeIn"],
+                        animationOut: ["animated", "fadeout"],
+                        dismiss: {
+                            duration: 7000,
+                            showIcon: true,
+                        },
+                        width: 300
+                    });
+                    return false;
+                }
+            }
+            for (let i=0; i<this.state.listServiceNew.length;i++) {
                 const data = {
                     name: this.state.listServiceNew[i].name,
                 };
@@ -346,58 +409,77 @@ class DetailOrder extends React.Component {
                 this.setState({ finishedSubmitAddService: true });
             }
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
         this.handleCancel(event);
     }
 
+    getUrl(document){
+        if(document.fileType === "application/pdf"){
+            return document.urlFile+"/preview";
+        }else{
+            return document.urlFile;
+        }
+    }
+
+    handleConfirmDelete(document){
+        this.setState({ documentTarget: document, isDelete: true });
+    }
+
+    handleConfirmDeleteService(service){
+        this.setState({ serviceTargetToDelete: service, isDeleteService: true });
+    }
+
+    async handleDelete(event){
+        event.preventDefault();
+        try{
+            await APIConfig.delete(`/order/document/${this.state.documentTarget.idDoc}/delete`);
+            this.loadData();
+        }catch (error){
+            this.setState({ isError: true });
+            console.log(error);
+        }
+        this.setState({isDeleteSuccess: true, isDelete: false});
+    }
+
     render() {
         const {
-            idOrder,
-            idOrderPi,
-            idOrderMs,
-            ordersPI,
-            ordersMS,
-            orderTarget ,
-            noPO,
-            noSPH,
-            orderName,
-            description,
-            projectInstallation ,
-            managedService ,
-            startPI,
-            deadline,
-            close,
-            percentage,
-            actualStart,
-            actualEnd,
-            activated,
-            clientName,
-            clientDiv,
-            clientPIC,
-            clientOrg,
-            clientPhone,
-            clientEmail,
-            dateOrder,
-            verified,
-            isPIchange,
-            finishedSubmit,
             name,
+            isDelete,
+            isError,
+            isDeleteSuccess,
+            isDeleteService,
         } = this.state;
 
         let { listService } = this.state;
 
         let { listServiceNew } = this.state;
 
+        let { documents } = this.state; //doc order
+
         const tableHeaders = [
-            'No', 'Nama Service', 'Ubah Service', 'Hapus Service'
+            'No', 'Nama Service', 'Aksi'
         ];
 
         const tableRows = listService.map((service) => [service.name,
-            <Button className={classes.button1} onClick={() => this.changeService(service.idService)}>&nbsp;Ubah&nbsp;</Button>, 
-            <Button className={classes.button2} onClick={() => this.deleteService(service.idService)}>Hapus</Button>
+            <div className="d-flex justify-content-center align-items-center">
+            <Button className={classes.button1} onClick={() => this.changeService(service.idService)}>&nbsp;Ubah&nbsp;</Button> 
+            <span>&nbsp;&nbsp;</span>
+            <Button className={classes.button2} onClick={() => this.handleConfirmDeleteService(service)}>Hapus</Button>
+            </div>
         ]);
+
+        const tableHeadersDoc = ['No', 'Nama Dokumen', 'Tanggal Upload', 'Aksi']; //doc order
+
+        const tableRowsDoc = documents.map((document) => [document.docName, this.getDate(document.uploadedDate),
+                            <div className="d-flex justify-content-center align-items-center">
+                            <Button className={classes.button1} href={this.getUrl(document)} target = "_blank">&nbsp;Preview&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={() => this.handleConfirmDelete(document)}>&nbsp;&nbsp;Hapus&nbsp;&nbsp;</Button>
+                            </div>
+                            ]); //doc order
 
         return (
             <div className={classes.container}>
@@ -498,6 +580,16 @@ class DetailOrder extends React.Component {
                             <CustomizedTables headers={tableHeaders} rows={tableRows} /><br></br>
                             </>
                             : <></> }
+                            {/* doc order */}
+                            <br></br>
+                            <div className="row">
+                            <div className="col-sm-6">
+                                <div className="form-group">
+                                    <h3 className={classes.subtitle}>Daftar Dokumen Order</h3>
+                                </div>
+                            </div>
+                            </div>
+                            <CustomizedTables headers={tableHeadersDoc} rows={tableRowsDoc} /><br></br>
                         </div>
                         <div className="card-footer text-right">
                             <Button className={classes.button1} onClick={() => this.handleBack()}>&nbsp;Kembali&nbsp;</Button>
@@ -506,8 +598,10 @@ class DetailOrder extends React.Component {
                 </div>
             </div>
 
-            <Modal show={this.state.isChangeService} >
-                <form onChange={this.handleChange} >
+                <Modal show={this.state.isChangeService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Body>
+                    <ReactNotification />
+                    <form onChange={this.handleChange} >
                     <div className="row" style={{ marginTop: 20 }}>
                         <div className="col-sm-1"></div>
                             <div className="col-sm-10">
@@ -529,6 +623,7 @@ class DetailOrder extends React.Component {
                                             </div>
                                             </div>
                                         </div>
+                                        <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                     </div>
                                     <div className="card-footer text-center">
                                         <Button className={classes.button1} onClick={this.handleSubmitChangeService}>Simpan</Button>
@@ -539,32 +634,54 @@ class DetailOrder extends React.Component {
                             </div>
                         </div>
                     </form>
+                    </Modal.Body>
                 </Modal>
 
-                <Modal show={this.state.finishedSubmitService}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Service Berhasil Diubah`}</h2>
+                <Modal show={this.state.finishedSubmitService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Diubah</h4>
                         </div>
-                        <div className="card-footer text-center">
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
                             <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                         </div>
-                    </div>
+                    </Modal.Body>
                 </Modal>
 
-                <Modal show={this.state.finishedDeleteService}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Service Berhasil Dihapus`}</h2>
+                <Modal show={isDeleteService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin menghapus service ?</h4>
                         </div>
-                        <div className="card-footer text-center">
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.deleteService(this.state.serviceTargetToDelete.idService)}>&nbsp;&nbsp;Hapus&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={this.handleCancel}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={this.state.finishedDeleteService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Dihapus</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
                             <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
                         </div>
-                    </div>
+                    </Modal.Body>
                 </Modal>
 
-                <Modal show={this.state.isAddService} >
-                <form onChange={this.handleChangeFieldService} >
+                <Modal show={this.state.isAddService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Body>
+                    <ReactNotification />
+                    <form onChange={this.handleChangeFieldService} >
                     <div className="row" style={{ marginTop: 20 }}>
                         <div className="col-sm-1"></div>
                             <div className="col-sm-10">
@@ -581,6 +698,7 @@ class DetailOrder extends React.Component {
                                             <ServiceList add={this.addNewRow} delete={this.clickOnDelete} listService={listServiceNew} />
                                         </tbody>
                                         </table>
+                                        <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                     </div>
                                     <div className="card-footer text-center">
                                         <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan</Button>
@@ -591,17 +709,65 @@ class DetailOrder extends React.Component {
                             </div>
                         </div>
                     </form>
+                    </Modal.Body>
                 </Modal>
 
-                <Modal show={this.state.finishedSubmitAddService}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Service Berhasil Ditambahkan`}</h2>
+                <Modal show={this.state.finishedSubmitAddService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Ditambahkan</h4>
                         </div>
-                        <div className="card-footer text-center">
-                            <Button className={classes.button1} onClick={() => this.handleAfterAdd()}>Kembali</Button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                        <Button className={classes.button1} onClick={() => this.handleAfterAdd()}>Kembali</Button>
                         </div>
-                    </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isDelete} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin menghapus dokumen ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={this.handleDelete}>&nbsp;&nbsp;Hapus&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={this.handleCancel}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isDeleteSuccess} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dokumen Order Berhasil Dihapus</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="card">
+                            <div className="card-footer text-center">
+                                <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isError} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oops terjadi masalah pada server!
+                            <br></br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harap coba beberapa saat lagi</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.handleAfterError()}>Kembali</Button>
+                        </div>
+                    </Modal.Body>
                 </Modal>
             </div>
             </div>

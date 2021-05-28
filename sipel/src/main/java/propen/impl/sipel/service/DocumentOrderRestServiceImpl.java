@@ -11,6 +11,7 @@ import propen.impl.sipel.rest.DocumentOrderDto;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,8 +25,20 @@ public class DocumentOrderRestServiceImpl implements DocumentOrderRestService{
     OrderDb orderDb;
 
     @Override
-    public List<DocumentOrderModel> retrieveListDocOrder() {
-        return documentOrderDb.findAllByOrderByUploadedDateDesc();
+    public List<DocumentOrderModel> retrieveListDocOrder(Long idOrder) {
+        List<DocumentOrderModel> listDocOrder = getListDocOrder();
+        List<DocumentOrderModel> newListDocOrder = new ArrayList<>();
+        for (DocumentOrderModel i : listDocOrder) {
+            if (i.getIdOrder().getIdOrder() == idOrder) {
+                newListDocOrder.add(i);
+            }
+        }
+        return newListDocOrder;
+    }
+
+    @Override
+    public List<DocumentOrderModel> getListDocOrder() {
+        return documentOrderDb.findAll();
     }
 
     @Override

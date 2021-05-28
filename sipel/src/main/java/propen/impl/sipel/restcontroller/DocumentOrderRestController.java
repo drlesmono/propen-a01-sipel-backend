@@ -46,10 +46,12 @@ public class DocumentOrderRestController {
 
     private static final Logger logger = Logger.getLogger(DocumentOrderRestController.class.getName());
 
-    @GetMapping(value = "/api/v1/order/documents")
-    private List<DocumentOrderModel> retrieveDocOrderList(){
-        List<DocumentOrderModel> listDoc = documentOrderRestService.retrieveListDocOrder();
-        return listDoc;
+    @GetMapping(value = "/api/v1/order/{idOrder}/documents")
+    private List<DocumentOrderModel> retrieveDocOrderList(
+            @Valid
+            @PathVariable (value = "idOrder") Long idOrder
+    ){
+        return documentOrderRestService.retrieveListDocOrder(idOrder);
     }
 
     @PostMapping(value="/api/v1/order/{idOrder}/document/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

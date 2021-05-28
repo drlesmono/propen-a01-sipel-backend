@@ -8,7 +8,9 @@ import propen.impl.sipel.rest.DocumentOrderDto;
 import java.util.List;
 
 public interface DocumentOrderRestService {
-    List<DocumentOrderModel> retrieveListDocOrder();
+    List<DocumentOrderModel> retrieveListDocOrder(Long idOrder);
+
+    List<DocumentOrderModel> getListDocOrder();
 
     DocumentOrderModel uploadDocument(DocumentOrderDto document, String urlFile);
 
