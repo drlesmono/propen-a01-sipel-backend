@@ -138,6 +138,24 @@ class CreateMaintenance extends React.Component {
                     });
                     return false;
                 }
+                if(new Date(this.state.listMaintenance[i].dateMn) === "" || new Date(this.state.listMaintenance[i].dateMn) === null) {
+                    let date = this.state.listMaintenance[i].dateMn;
+                    store.addNotification({
+                        title: "Peringatan!",
+                        message: `Anda wajib mengisi field Tanggal Maintenance`,
+                        type: "warning",
+                        container: "top-left",
+                        insert: "top",
+                        animationIn: ["animated", "fadeIn"],
+                        animationOut: ["animated", "fadeout"],
+                        dismiss: {
+                            duration: 7000,
+                            showIcon: true,
+                        },
+                        width: 600
+                    });
+                    return false;
+                }
             }
             for (let i=0; i<this.state.listMaintenance.length;i++) {
                 console.log(this.state.listMaintenance[i].dateMn);

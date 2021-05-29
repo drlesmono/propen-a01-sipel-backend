@@ -2,10 +2,13 @@ import React from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
-import Modal from "../../components/Modal";
+//import Modal from "../../components/Modal";
 import ServiceList from "../../components/Services/serviceList";
 import { withRouter } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { store } from "react-notifications-component";
+import ReactNotification from "react-notifications-component";
+import Modal from "react-bootstrap/Modal";
 
 const initState = {
     startPI: "",
@@ -48,6 +51,8 @@ class CreateOrder extends React.Component {
             orders: [],
             ordersMS: [],
             orderMSTarget: null,
+            isCancel: false,
+            isError: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmitTambahOrder = this.handleSubmitTambahOrder.bind(this);
@@ -61,6 +66,9 @@ class CreateOrder extends React.Component {
         this.handleSubmitTambahMS = this.handleSubmitTambahMS.bind(this);
         this.handleSubmitTambahService = this.handleSubmitTambahService.bind(this);
         this.handleSubmitTambahPIMS = this.handleSubmitTambahPIMS.bind(this);
+        this.handleConfirmCancel = this.handleConfirmCancel.bind(this);
+        this.handleBack = this.handleBack.bind(this);
+        this.handleAfterError = this.handleAfterError.bind(this);
     }
 
     componentDidMount() {
@@ -78,7 +86,8 @@ class CreateOrder extends React.Component {
             //console.log(this.state.orderTarget);
             //console.log(this.state.orderMSTarget);
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
@@ -113,7 +122,15 @@ class CreateOrder extends React.Component {
 
     handleCancel(event) {
         event.preventDefault();
-        this.setState({ isSubmitOrder: false, isSubmitOrderMS: false, ...initState });
+        this.setState({ isSubmitOrder: false, isSubmitOrderMS: false, isCancel: false, ...initState });
+    }
+
+    handleBack() {
+        this.setState({ isCancel: false });
+    }
+
+    handleConfirmCancel(){
+        this.setState({ isCancel: true });
     }
 
     handleCancelSubmit = () => {
@@ -127,6 +144,125 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahOrder(event) {
         event.preventDefault();
         try {
+            if (this.state.clientName === ""){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Nama Pelanggan`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.orderName === ""){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Nama Order`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.clientPIC === ""){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field PIC Pelanggan`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.description === ""){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Deskripsi Order`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.clientOrg === ""){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Perusahaan Pelanggan`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.clientEmail === ""){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Email Pelanggan`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.dateOrder.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Tanggal Order Masuk`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
             const data = {
                 noPO: this.state.noPO,
                 noSPH: this.state.noSPH,
@@ -147,7 +283,8 @@ class CreateOrder extends React.Component {
             this.loadData();
             this.setState( { isSubmitOrder: true });
         } catch (error) {
-            alert("Order Gagal Disimpan. Coba Kembali!");
+            this.setState({ isError: true });
+            //alert("Order Gagal Disimpan. Coba Kembali!");
             console.log(error);
         }
     }
@@ -155,6 +292,74 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahPI(event) {
         event.preventDefault();
         try {
+            if (new Date(this.state.startPI) > new Date (this.state.deadline)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Tanggal Selesai Project tidak boleh lebih awal dari Tanggal Mulai Project`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.startPI.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Tanggal Mulai Project`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (new Date(this.state.startPI) < new Date(this.state.dateOrder)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Tanggal Mulai Project tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.deadline.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Tanggal Selesai Project`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
             const data = {
                 startPI: this.state.startPI,
                 deadline: this.state.deadline,
@@ -164,16 +369,86 @@ class CreateOrder extends React.Component {
             await APIConfig.post(`/order/tambah/PI/${this.state.orderTarget.idOrder}`, data);
             this.loadData();
             this.setState({ finishSubmitOrder: true });
+            this.handleCancel(event);
         } catch (error) {
-            alert("Data Project Installation gagal disimpan! Masukkan kembali tanggal mulai dan selesai project!");
+            this.setState({ isError: true });
+            //alert("Data Project Installation gagal disimpan! Masukkan kembali tanggal mulai dan selesai project!");
             console.log(error);
         }
-        this.handleCancel(event);
+        //this.handleCancel(event);
     }
 
     async handleSubmitTambahMS(event) {
         event.preventDefault();
         try {
+            if (new Date(this.state.actualStart) > new Date (this.state.actualEnd)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Periode Selesai Managed tidak boleh lebih awal dari Periode Mulai Managed`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.actualStart.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Periode Mulai Managed`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (new Date(this.state.actualStart) < new Date(this.state.dateOrder)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Periode Mulai Managed tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.actualEnd.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Periode Selesai Managed`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
             const data = {
                 actualStart: this.state.actualStart,
                 actualEnd: this.state.actualEnd,
@@ -184,7 +459,8 @@ class CreateOrder extends React.Component {
             this.setState({ isSubmitOrderMS: true});
             this.setState({ isSubmitOrder: false });
         } catch (error) {
-            alert("Data Managed Service gagal disimpan! Masukkan kembali tanggal periode kontrak!");
+            this.setState({ isError: true });
+            //alert("Data Managed Service gagal disimpan! Masukkan kembali tanggal periode kontrak!");
             console.log(error);
         }
     }
@@ -192,6 +468,142 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahPIMS(event) {
         event.preventDefault();
         try {
+            if (new Date(this.state.startPI) > new Date (this.state.deadline)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Tanggal Selesai Project tidak boleh lebih awal dari Tanggal Mulai Project`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.startPI.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Tanggal Mulai Project`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (new Date(this.state.startPI) < new Date(this.state.dateOrder)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Tanggal Mulai Project tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.deadline.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Tanggal Selesai Project`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (new Date(this.state.actualStart) > new Date (this.state.actualEnd)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Periode Selesai Managed tidak boleh lebih awal dari Periode Mulai Managed`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.actualStart.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Periode Mulai Managed`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (new Date(this.state.actualStart) < new Date(this.state.dateOrder)){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Periode Mulai Managed tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
+            if (this.state.actualEnd.length === 0){
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib mengisi field Periode Selesai Managed`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 500
+                });
+                return false;
+            }
             const dataPI = {
                 startPI: this.state.startPI,
                 deadline: this.state.deadline,
@@ -209,7 +621,8 @@ class CreateOrder extends React.Component {
             this.setState({ isSubmitOrderMS: true});
             this.setState({ isSubmitOrder: false });
         } catch (error) {
-            alert("Data PI dan MS gagal disimpan! Masukkan kembali tanggal serta periode mulai dan selesai!");
+            this.setState({ isError: true });
+            //alert("Data PI dan MS gagal disimpan! Masukkan kembali tanggal serta periode mulai dan selesai!");
             console.log(error);
         }
     }
@@ -217,6 +630,25 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahService(event) {
         event.preventDefault();
         try {
+            for (let i=0; i<this.state.listService.length;i++) {
+                if (this.state.listService[i].name === "" || this.state.listService[i].name === null) {
+                    store.addNotification({
+                        title: "Peringatan!",
+                        message: "Anda wajib mengisi field Nama Service",
+                        type: "warning",
+                        container: "top-left",
+                        insert: "top",
+                        animationIn: ["animated", "fadeIn"],
+                        animationOut: ["animated", "fadeout"],
+                        dismiss: {
+                            duration: 7000,
+                            showIcon: true,
+                        },
+                        width: 400
+                    });
+                    return false;
+                }
+            }
             for (let i=0; i<this.state.listService.length;i++) {
                 const data = {
                     name: this.state.listService[i].name,
@@ -227,10 +659,15 @@ class CreateOrder extends React.Component {
                 this.setState({ finishSubmitOrder: true });
             }
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
         this.handleCancel(event);
+    }
+
+    handleAfterError = () => {
+        this.setState({ isError: false });
     }
 
     render() {
@@ -252,6 +689,8 @@ class CreateOrder extends React.Component {
             clientPhone,
             clientEmail,
             dateOrder,
+            isCancel,
+            isError
         } = this.state;
 
         let { listService } = this.state;
@@ -268,6 +707,7 @@ class CreateOrder extends React.Component {
                         <div className="col-sm-10">
                             <div className="card">
                                 <div className="card-body">
+                                <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
@@ -290,7 +730,7 @@ class CreateOrder extends React.Component {
                                                     name="clientName" 
                                                     id="clientName" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Nama" 
+                                                    placeholder="Masukkan Nama Pelanggan" 
                                                     value={clientName} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -305,7 +745,7 @@ class CreateOrder extends React.Component {
                                                     name="noSPH" 
                                                     id="noSPH" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan No.SPH" 
+                                                    placeholder="Masukkan Nomor SPH" 
                                                     value={noSPH} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -318,7 +758,7 @@ class CreateOrder extends React.Component {
                                                     name="clientDiv" 
                                                     id="clientDiv" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Divisi" 
+                                                    placeholder="Masukkan Divisi Pelanggan" 
                                                     value={clientDiv} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -346,7 +786,7 @@ class CreateOrder extends React.Component {
                                                     name="clientPIC" 
                                                     id="clientPIC" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan PIC" 
+                                                    placeholder="Masukkan PIC Pelanggan" 
                                                     value={clientPIC} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -361,7 +801,7 @@ class CreateOrder extends React.Component {
                                                     name="description" 
                                                     id="description" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Deskripsi" 
+                                                    placeholder="Masukkan Deskripsi Order" 
                                                     value={description} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -374,7 +814,7 @@ class CreateOrder extends React.Component {
                                                     name="clientOrg" 
                                                     id="clientOrg" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Perusahaan" 
+                                                    placeholder="Masukkan Perusahaan Pelanggan" 
                                                     value={clientOrg} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -418,7 +858,7 @@ class CreateOrder extends React.Component {
                                                     name="clientEmail" 
                                                     id="clientEmail" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Email" 
+                                                    placeholder="Masukkan Email Pelanggan" 
                                                     value={clientEmail} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -433,20 +873,20 @@ class CreateOrder extends React.Component {
                                                     name="dateOrder" 
                                                     id="dateOrder" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Tanggal Order" 
+                                                    placeholder="Masukkan Tanggal Masuk Order" 
                                                     value={dateOrder} 
                                                     onChange={this.handleChange} />
                                             </div>
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>No.Telp Pelanggan</label>
+                                                <label>Nomor Telepon Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientPhone" 
                                                     id="clientPhone" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan No.Telp" 
+                                                    placeholder="Masukkan Nomor Telepon Pelanggan" 
                                                     value={clientPhone} 
                                                     onChange={this.handleChange} />
                                             </div>
@@ -454,31 +894,26 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-right">
-                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahOrder}>
-                                        Simpan
-                                    </CustomizedButtons> */}
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahOrder}>Simpan</Button>
-                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
-                                        Batal
-                                    </CustomizedButtons> */}
                                     <span>&nbsp;&nbsp;</span>
-                                    <Button className={classes.button2} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                    <Button className={classes.button2} onClick={() => this.handleConfirmCancel()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                 </div> 
                             </div>
                         </div>
                     </div>
                 </form>
 
-                <Modal show={this.state.projectInstallation && !this.state.managedService && this.state.isSubmitOrder}>
+                <Modal show={this.state.projectInstallation && !this.state.managedService && this.state.isSubmitOrder} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <form onChange={this.handleChange} >
                         <div className="row" style={{ marginTop: 10 }}>
                         <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
+                        <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header text-center">
                                     Tambah Data PI
                                 </div>
                                 <div className="card-body">
+                                <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
@@ -509,27 +944,25 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPI} >
-                                        Simpan Data PI
-                                    </CustomizedButtons> */}
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahPI}>Simpan Data PI</Button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
+                    </form>
                 </Modal>
 
-                <Modal show={this.state.managedService && !this.state.projectInstallation && this.state.isSubmitOrder} >
+                <Modal show={this.state.managedService && !this.state.projectInstallation && this.state.isSubmitOrder} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <form onChange={this.handleChange} >
                         <div className="row" style={{ marginTop: 10 }}>
                         <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
+                        <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header text-center">
                                     Tambah Data MS
                                 </div>
                                 <div className="card-body">
+                                <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
@@ -560,9 +993,6 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahMS}>
-                                        Simpan Data MS
-                                    </CustomizedButtons> */}
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahMS}>Simpan Data MS</Button>
                                 </div>
                             </div>                                            
@@ -571,7 +1001,7 @@ class CreateOrder extends React.Component {
                     </form>
                 </Modal>
 
-                <Modal show={this.state.isSubmitOrderMS} >
+                <Modal show={this.state.isSubmitOrderMS} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                 <form onChange={this.handleChange} >
                     <div className="row" style={{ marginTop: 20 }}>
                         <div className="col-sm-1"></div>
@@ -579,6 +1009,7 @@ class CreateOrder extends React.Component {
                                 <div className="card">
                                     <div className="card-header text-center">Tambah Services</div>
                                     <div className="card-body">
+                                    <ReactNotification />
                                         <table className="table">
                                         <thead>
                                             <tr>
@@ -591,9 +1022,6 @@ class CreateOrder extends React.Component {
                                         </table>
                                     </div>
                                     <div className="card-footer text-center">
-                                        {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahService}>
-                                            Simpan Data Service
-                                        </CustomizedButtons> */}
                                         <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan Data Services</Button>
                                     </div>
                                 </div>
@@ -602,16 +1030,17 @@ class CreateOrder extends React.Component {
                     </form>
                 </Modal>
 
-                <Modal show={this.state.managedService && this.state.projectInstallation && this.state.isSubmitOrder} >
+                <Modal show={this.state.managedService && this.state.projectInstallation && this.state.isSubmitOrder} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <form onChange={this.handleChange} >
                         <div className="row" style={{ marginTop: 10 }}>
                         <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
+                        <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header text-center">
                                     Tambah Data PI-MS
                                 </div>
                                 <div className="card-body">
+                                <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
@@ -670,9 +1099,6 @@ class CreateOrder extends React.Component {
                                     </div>
                                 </div>
                                 <div className="card-footer text-center">
-                                    {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={this.handleSubmitTambahPIMS}>
-                                        Simpan Data PI-MS
-                                    </CustomizedButtons> */}
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahPIMS}>Simpan Data PI-MS</Button>
                                 </div>
                             </div>                                            
@@ -681,19 +1107,49 @@ class CreateOrder extends React.Component {
                     </form>
                 </Modal>
 
-                <Modal show={this.state.finishSubmitOrder}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Order Berhasil Ditambahkan`}</h2>
+                <Modal show={this.state.finishSubmitOrder} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Order Berhasil Ditambahkan</h4>
                         </div>
-                        <div className="card-footer text-center">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
-                                Kembali
-                            </CustomizedButtons> */}
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
                             <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                         </div>
-                    </div>
+                    </Modal.Body>
                 </Modal>
+
+                <Modal show={isCancel} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;Anda yakin membatalkan menyimpan order ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={() => this.handleBack()}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isError} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                <Modal.Header>
+                    <div className="text-center">
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oops terjadi masalah pada server!
+                        <br></br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harap coba beberapa saat lagi</h4>
+                    </div>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="text-center">
+                        <Button className={classes.button2} onClick={() => this.handleAfterError()}>Kembali</Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
             </div>
             </div>
         );

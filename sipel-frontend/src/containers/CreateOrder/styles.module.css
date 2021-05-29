@@ -63,3 +63,7 @@
     padding: 2%;
     background-color: white;
 }
+.modal-90w{
+    width: 90%;
+    max-width: none !important;
+}
