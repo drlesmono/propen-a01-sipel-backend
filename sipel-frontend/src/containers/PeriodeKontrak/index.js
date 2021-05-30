@@ -19,7 +19,7 @@ class PeriodeKontrak extends Component {
             isExtend: false,
             orderTarget: null,
             orderTargetUpdated: null,
-            users: [],
+            engineers: [],
             picEngineerMs: null,
             servicesEngineer: [],
             servicesEngineerName: [],
@@ -62,10 +62,10 @@ class PeriodeKontrak extends Component {
     async loadData() {
         try {
             const orders = await APIConfig.get("/ordersVerified/ms");
-            const users = await APIConfig.get("/users");
+            const engineers = await APIConfig.get("/engineers");
             const listPi = await APIConfig.get("/orders/pi");
             const listMs = await APIConfig.get("/orders/ms");
-            this.setState({ ordersVerified: orders.data, users: users.data, listPi: listPi.data, listMs: listMs.data});
+            this.setState({ ordersVerified: orders.data, engineers: engineers.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
             // alert("Oops terjadi masalah pada server");
             this.setState({ isError: true });
@@ -434,7 +434,7 @@ class PeriodeKontrak extends Component {
         // <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
         // value={this.state.servicesEngineer[initialTotal] === null ? "": this.state.servicesEngineer[initialTotal]}
         // onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-        // {this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+        // {this.state.engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
         // </Form.Control>]]});
         this.loadData();
     }
@@ -449,7 +449,7 @@ class PeriodeKontrak extends Component {
             <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
             value={this.state.servicesEngineer[index] === null ? "" : this.state.servicesEngineer[index]}
             onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-            {this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+            {this.state.engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
             </Form.Control>])});
     }
 
@@ -458,7 +458,7 @@ class PeriodeKontrak extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, users, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, messageError,
+        const { ordersVerified, isEdit, isExtend, orderTarget, engineers, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, messageError,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService, services } = this.state;
         const tableHeaders = ['No.', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         
@@ -486,7 +486,7 @@ class PeriodeKontrak extends Component {
                 //                     <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
                 //                     value={servicesEngineer[index] === null ? "" : servicesEngineer[index]}
                 //                     onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-                //                     {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                //                     {engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
                 //                 </Form.Control>]);
                 tableServiceRows = isExtend ?  
                                 services.map((service, index) => 
@@ -497,7 +497,7 @@ class PeriodeKontrak extends Component {
                                 <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
                                 value={this.state.servicesEngineer[index] === null ? "" : this.state.servicesEngineer[index]}
                                 onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-                                {this.state.users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                                {this.state.engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
                                 </Form.Control>])
                                 : services.map((service) =>[service.name, this.getPICService(service)]);
         }
@@ -570,7 +570,7 @@ class PeriodeKontrak extends Component {
                                             <><td><p className="d-flex">PIC Engineer<p style={{color: "red"}}>*</p></p></td>
                                             <td><Form.Control as="select" size="sm" name="picEngineerMs" value={picEngineerMs === null ? "" : picEngineerMs} onChange={this.handleChangeField}>
                                                     <option value="">Belum ditugaskan</option>
-                                                    {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                                                    {engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
                                                 </Form.Control></td></>
                                             : <><td>PIC Engineer</td>
                                             <td>: {this.getPICMS(orderTarget.idOrder) === null? "Belum ditugaskan" : this.getPICMS(orderTarget.idOrder).fullname}</td></>}
