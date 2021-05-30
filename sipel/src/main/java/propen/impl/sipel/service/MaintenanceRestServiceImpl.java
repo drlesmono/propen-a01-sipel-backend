@@ -15,6 +15,7 @@ public class MaintenanceRestServiceImpl implements MaintenanceRestService{
     @Autowired
     MaintenanceDb maintenanceDb;
 
+    // Mencari seluruh maintenance
     @Override
     public List<MaintenanceModel> retrieveListMaintenance() {
         return maintenanceDb.findAll();

@@ -22,11 +22,13 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     @Autowired
     private UserDb userDb;
 
+    // Mencari seluruh order yang memiliki jenis managed service
     @Override
     public List<ManagedServicesModel> retrieveListMs() {
         return managedServicesDb.findAll();
     }
 
+    // Mengubah data pic engineer
     @Override
     public ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic) {
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
@@ -34,11 +36,14 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         return managedServicesDb.save(msTarget);
     }
 
+    // Mencari seluruh order yang memiliki jenis managed service
+    // Order diurutkan berdasarkan periode berakhir atau actual end
     @Override
     public List<ManagedServicesModel> msOrderByActualEnd() {
         return managedServicesDb.findByOrderByActualEnd();
     }
 
+    // Mengubah data periode kontrak
     @Override
     public ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd) {
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();

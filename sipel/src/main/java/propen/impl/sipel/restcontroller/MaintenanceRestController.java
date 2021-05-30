@@ -18,6 +18,7 @@ public class MaintenanceRestController {
     @Autowired
     MaintenanceRestService maintenanceRestService;
 
+    // Mengembalikan list seluruh maintenance
     @GetMapping(value="/maintenances")
     private List<MaintenanceModel> retrieveListMaintenance(){
         return maintenanceRestService.retrieveListMaintenance();

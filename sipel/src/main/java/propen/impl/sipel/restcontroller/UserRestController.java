@@ -19,6 +19,7 @@ public class UserRestController {
     @Autowired
     private UserRestService userRestService;
 
+    // Mengembalikan list user yang memiliki role engineer
     @GetMapping(value="/engineers")
     private List<UserModel> retrieveListEngineer(){
         List<UserModel> listUser = userRestService.retrieveListUser();

@@ -20,11 +20,14 @@ public class ProjectInstallationRestController {
     @Autowired
     private ProjectInstallationRestService projectInstallationRestService;
 
+    // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
     private List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }
 
+    // Mengubah pic engineer dari suatu project installation
+    // Mengembalikan response dengan result project installation yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updatePIC")
     private BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
                                                              BindingResult bindingResult){
