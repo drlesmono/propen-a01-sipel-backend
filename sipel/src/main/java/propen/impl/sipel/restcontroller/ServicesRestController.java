@@ -22,13 +22,15 @@ public class ServicesRestController {
     @Autowired
     private ServicesRestService servicesRestService;
 
+    // Mengubah data dari service
+    // Mengembalikan response dengan result service yang berhasil diubah
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateService")
     private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan
-            response.setMessage("Engineer pada service gagal disimpan." );
+            response.setMessage("Service gagal disimpan." );
             response.setStatus(405);
             return response;
         }
@@ -41,6 +43,8 @@ public class ServicesRestController {
         return response;
     }
 
+    // Membuat service baru
+    // Mengembalikan response dengan result service yang berhasil dibuat
     @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/createService")
     private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,

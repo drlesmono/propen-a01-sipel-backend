@@ -19,9 +19,6 @@ public class OrderRestServiceImpl implements OrderRestService{
     private OrderDb orderDb;
 
     @Autowired
-    private ProjectInstallationDb projectInstallationDb;
-
-    @Autowired
     private ManagedServicesDb managedServicesDb;
 
     @Autowired
@@ -36,6 +33,7 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Autowired
     private MaintenanceDb maintenanceDb;
 
+    // Mencari seluruh order yang telah terverifikasi
     @Override
     public List<OrderModel> retrieveListOrderVerified() {
         List<OrderModel> listOrderVerified = new ArrayList<>();
@@ -49,12 +47,13 @@ public class OrderRestServiceImpl implements OrderRestService{
         return listOrderVerified;
     }
 
-
+    // Mencari order berdasarkan id order
     @Override
     public OrderModel findOrderById(Long idOrder) {
         return orderDb.findById(idOrder).get();
     }
 
+    // Mencari seluruh order dengan jenis managed service
     @Override
     public List<OrderModel> retrieveListOrderMs() {
         List<OrderModel> listOrderVerified = new ArrayList<>();
@@ -68,6 +67,8 @@ public class OrderRestServiceImpl implements OrderRestService{
         return listOrderVerified;
     }
 
+    // Membuat order baru dengan data order lama dan periode kontrak baru
+    // Penamaan order baru hasil perpanjangan menggunakan versi
     @Override
     public OrderModel extendKontrak(Long idOrder, String noPO) {
         OrderModel order = orderDb.findById(idOrder).get();
@@ -84,7 +85,6 @@ public class OrderRestServiceImpl implements OrderRestService{
         }
 
         if(orderName.contains("ver.")) {
-//            String orderNameTarget = order.getOrderName();
             int i = 3;
             orderName = orderNameSplit.get(0) + " ver." + i;
             while(listOrderSameName.contains(orderName)){

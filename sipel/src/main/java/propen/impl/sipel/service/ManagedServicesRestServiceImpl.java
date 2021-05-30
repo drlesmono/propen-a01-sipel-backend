@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.MaintenanceModel;
 import propen.impl.sipel.model.ManagedServicesModel;
-import propen.impl.sipel.model.ProjectInstallationModel;
-import propen.impl.sipel.model.UserModel;
 import propen.impl.sipel.repository.MaintenanceDb;
 import propen.impl.sipel.repository.ManagedServicesDb;
 import propen.impl.sipel.repository.UserDb;
@@ -29,11 +27,13 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     @Autowired
     private MaintenanceDb maintenanceDb;
 
+    // Mencari seluruh order yang memiliki jenis managed service
     @Override
     public List<ManagedServicesModel> retrieveListMs() {
         return managedServicesDb.findAll();
     }
 
+    // Mengubah data pic engineer
     @Override
     public ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic) {
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
@@ -41,11 +41,14 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         return managedServicesDb.save(msTarget);
     }
 
+    // Mencari seluruh order yang memiliki jenis managed service
+    // Order diurutkan berdasarkan periode berakhir atau actual end
     @Override
     public List<ManagedServicesModel> msOrderByActualEnd() {
         return managedServicesDb.findByOrderByActualEnd();
     }
 
+    // Mengubah data periode kontrak
     @Override
     public ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd) {
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();

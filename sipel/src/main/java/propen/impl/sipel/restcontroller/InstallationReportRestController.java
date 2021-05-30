@@ -24,9 +24,12 @@ public class InstallationReportRestController {
     @Autowired
     ReportRestService reportRestService;
 
+    // Mengembalikan list seluruh installation report
     @GetMapping(value="/reports/ir")
     private List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
 
+    // Membuat installation report setelah object report dibuat
+    // Mengembalikan response dengan result installation report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/installation/upload")
     private BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
                                                                             @PathVariable("idReport") Long idReport,

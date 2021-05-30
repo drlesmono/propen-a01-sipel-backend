@@ -15,6 +15,7 @@ public class UserRestServiceImpl implements UserRestService{
     @Autowired
     private UserDb userDb;
 
+    // Mencari seluruh user yang terdaftar pada sistem
     @Override
     public List<UserModel> retrieveListUser() {
         return userDb.findAll();

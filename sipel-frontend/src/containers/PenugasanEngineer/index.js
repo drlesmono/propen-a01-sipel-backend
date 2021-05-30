@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
-// import CustomizedButtons from "../../components/Button";
-// import Modal from "../../components/Modal";
 import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,7 +13,7 @@ class PenugasanEngineer extends Component {
             ordersVerified: [],
             isEdit: false,
             orderTarget: null,
-            users: [],
+            engineers: [],
             picEngineerPi: null,
             picEngineerMs: null,
             servicesEngineer: [],
@@ -43,58 +41,31 @@ class PenugasanEngineer extends Component {
         this.loadData();
     }
     
+    // Mengambil dan mengupdate data yang masuk
     async loadData() {
         try {
             const orders = await APIConfig.get("/ordersVerified");
-            const users = await APIConfig.get("/users");
+            const engineers = await APIConfig.get("/engineers");
             const listPi = await APIConfig.get("/orders/pi");
             const listMs = await APIConfig.get("/orders/ms");
-            console.log(orders.data);
-            console.log(users.data);
-            console.log(listPi.data);
-            console.log(listMs.data);
-            this.setState({ ordersVerified: orders.data, users: users.data, listPi: listPi.data, listMs: listMs.data});
+            this.setState({ ordersVerified: orders.data, engineers: engineers.data, listPi: listPi.data, listMs: listMs.data});
             
         } catch (error) {
-            // alert("Oops terjadi masalah pada server");
             this.setState({ isError: true });
             console.log(error);
         }
     }
 
+    // Mengirim data yang akan disimpan ke backend
     async handleSubmit(event) {
         event.preventDefault();
         let isPi = this.state.orderTarget.projectInstallation;
         let isMs = this.state.orderTarget.managedService;
-        // if(isPi === true && (this.state.picEngineerPi === null || this.state.picEngineerPi === "") && isMs === false){
-        //     return this.setState({isFailed: true, messageError: "PIC Engineer Project Installation wajib diisi"});
-        // }else if(isMs === true && isPi === false){
-        //     for(let i=0; i<this.state.servicesEngineer.length; i++){
-        //         if(this.state.servicesEngineer[i] === null || this.state.servicesEngineer[i] === ""){
-        //             return this.setState({isFailed: true, messageError: "Semua Engineer Service wajib diisi"});
-        //         }
-        //     }
-        //     if((this.state.picEngineerMs === null || this.state.picEngineerMs === "")){
-        //         return this.setState({isFailed: true, messageError: "PIC Engineer Managed Service wajib diisi"});
-        //     }
-        // }else if(isPi === true && (this.state.picEngineerPi === null || this.state.picEngineerPi === "")){
-        //     return this.setState({isFailed: true, messageError: "PIC Engineer Project Installation wajib diisi"});
-        // }
-
-        // for(let i=0; i<this.state.servicesEngineer.length; i++){
-        //     if(this.state.servicesEngineer[i] === null || this.state.servicesEngineer[i] === ""){
-        //         return this.setState({isFailed: true, messageError: "Semua Engineer Service wajib diisi"});
-        //         }
-        //     }
-        // if((this.state.picEngineerMs === null || this.state.picEngineerMs === "")){
-        //     return this.setState({isFailed: true, messageError: "PIC Engineer Managed Service wajib diisi"});
-        // }
 
             try {
+                // Apabila order memiliki jenis project installation
                 if(isPi === true){
-                    console.log(this.state.orderTarget);
                     const pi = this.getPi(this.state.orderTarget.idOrder);
-                    console.log(pi);
                     const dataPi = {
                         idOrderPi: pi.idOrderPi,
                         idUserEng: this.state.picEngineerPi,
@@ -103,9 +74,10 @@ class PenugasanEngineer extends Component {
                         deadline: pi.deadline,
                         dateClosedPI: pi.dateClosedPI
                     }
-                    console.log(dataPi);
                     await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi);
                 }
+
+                // Apabila order memiliki jenis managed service
                 if(isMs === true){
                     const ms = this.getMs(this.state.orderTarget.idOrder);
                     const dataMs = {
@@ -117,15 +89,12 @@ class PenugasanEngineer extends Component {
                         timeRemaining: ms.timeRemaining,
                         dateClosedMS: ms.dateClosedMS
                     }
-                    console.log(dataMs);
                     await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs);
                     let listService = this.getListService(this.state.orderTarget);
-                    console.log(listService);
-                    console.log(this.state.servicesEngineer);
+                    
+                    // Mengirim data service satu per satu
                     for(let i=0; i<this.state.servicesEngineer.length; i++){
-                        console.log(i);
                         let service = listService[i];
-                        console.log(service);
                         const dataService = {
                             idService: service.idService,
                             name: service.name,
@@ -134,20 +103,24 @@ class PenugasanEngineer extends Component {
                         await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service/${service.idService}/updateService`, dataService);
                     }
                 }
+
                 this.loadData();
             } catch (error) {
-                // alert("Penugasan Engineer gagal disimpan");
                 console.log(error);
                 return this.setState({isFailed: true, messageError: "Penugasan Engineer gagal disimpan"});
             }
-            // this.handleReport(event);
-            this.setState({isSuccess: true, isEdit: false});
+
+        this.setState({isSuccess: true, isEdit: false});
     }
 
+    // validasi form
+    // jika valid, maka memanggil handleSubmit
+    // jika tidak valid, maka memberikan notifikasi
     handleValidation(event){
         event.preventDefault();
         let isPi = this.state.orderTarget.projectInstallation;
         let isMs = this.state.orderTarget.managedService;
+
         if(isPi === true && isMs === false){
             if((this.state.picEngineerPi === null || this.state.picEngineerPi === "")){
                 return this.setState({isFailed: true, messageError: "PIC Engineer Project Installation wajib diisi"});
@@ -181,12 +154,13 @@ class PenugasanEngineer extends Component {
         this.handleSubmit(event);
     }
 
+    // Menampilkan report setelah berhasil menyimpan data
     handleReport(event){
         event.preventDefault();
         this.setState({isSuccess: false, isReport: true, isEdit:false});
-        // alert("Penugasan Engineer berhasil disimpan");
     }
 
+    // Mengecek tipe order berjenis project installation, managed service, atau keduanya
     checkTypeOrder(pi, ms){
         if(pi === true && ms === true){
             return "Project Installation, Managed Service";
@@ -197,11 +171,10 @@ class PenugasanEngineer extends Component {
         }
     }
 
+    // Mengambil order jenis project installation yang dipilih
     getPi(idOrder){
-        console.log(idOrder);
-        console.log(this.state.listPi);
         let pi = this.state.listPi.filter(pi => pi.idOrder.idOrder === idOrder );
-        console.log(pi.length);
+
         if (pi.length !== 0) {
             console.log(pi[0]);
             return pi[0];
@@ -209,8 +182,10 @@ class PenugasanEngineer extends Component {
         return null;
     }
 
+    // Mengambil order jenis managed services yang dipilih
     getMs(idOrder){
         let ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === idOrder);
+
         if (ms.length !== 0) {
             console.log(ms[0]);
             return ms[0];
@@ -218,23 +193,23 @@ class PenugasanEngineer extends Component {
         return null;
     }
 
+    // Mengambil pic engineer dari order jenis project installation yang dipilih
     getPICPI(idOrder){
-        let pi = this.getPi(idOrder);
-        console.log(pi);
-    
+        let pi = this.getPi(idOrder);  
+
         if(pi !== null){
             let user = pi.idUserEng;
             if(user !== null){
                 return user;
             }
         }
-
         return null
     }
 
+    // Mengambil pic engineer dari order jenis project installation yang dipilih
     getPICMS(idOrder){
         let ms = this.getMs(idOrder);
-        
+
         if(ms !== null){
             let user = ms.idUserPic;
             if(user !== null){
@@ -244,25 +219,28 @@ class PenugasanEngineer extends Component {
         return null;
     }
 
+    // Mengambil nama lengkap dari engineer pada service yang dipilih
     getPICService(service){
         if(service.idUser !== null){
-            console.log(service.idUser.fullname);
             return service.idUser.fullname;
         }
         return <p style={{color: "red"}}>Belum ditugaskan</p>;
     }
     
+    // Menargetkan order yang dipilih untuk diubah pic engineer nya
     handleEdit(order) {
         this.setState({
             isEdit: true,
             orderTarget: order
         });
+
         if(order.projectInstallation === true){
             const picPi = this.getPICPI(order.idOrder);
             if(picPi !== null){
                 this.setState({picEngineerPi: picPi.id});
             }
         }
+
         if(order.managedService === true){
             const picMs = this.getPICMS(order.idOrder);
             if(picMs !== null){
@@ -275,8 +253,10 @@ class PenugasanEngineer extends Component {
         }
     }
 
+    // Menutup semua modal
     handleCancel(event) {
         event.preventDefault();
+
         this.setState({
             isEdit: false, 
             isReport: false, 
@@ -288,11 +268,12 @@ class PenugasanEngineer extends Component {
         this.loadData();
     }
 
+    // Mengubah data yang ditargetkan sesuai dengan isi form
     handleChangeField(event) {
         event.preventDefault();
         const { name, value } = event.target;
-        console.log(name, value);
         const servicesEngineerNew = this.state.servicesEngineer;
+
         if( name.substring(0,16) === "servicesEngineer"){
             let index = Number(name.substring(16));
             servicesEngineerNew[index] = value;
@@ -302,6 +283,7 @@ class PenugasanEngineer extends Component {
         }
     }
 
+    // Mengambil list service dari order jenis managed service yang dipilih
     getListService(order){
         if(order.managedService === true){
             const ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === order.idOrder);
@@ -310,6 +292,7 @@ class PenugasanEngineer extends Component {
         return null;
     }
 
+    // Mengambil order yang dipilih
     getOrder(idOrder){
         const orders = this.state.ordersVerified;
         for(let i=0; i<=orders.length; i++){
@@ -319,6 +302,7 @@ class PenugasanEngineer extends Component {
         }
     }
 
+    // Menyaring list order sesuai dengan data yang dimasukkan pada form search
     handleFilter(event){
         let newOrderList = this.state.ordersVerified;
         const { value } = event.target;
@@ -334,17 +318,19 @@ class PenugasanEngineer extends Component {
         this.setState({ orderFiltered : newOrderList });
     }
 
+    // Menutup notifikasi gagal
     handleCloseNotif(){
         this.setState({ isFailed: false, messageError: null });
     }
 
     render() {
-        const { ordersVerified, isEdit, orderTarget, users, picEngineerPi, isFailed, messageError,
+        const { ordersVerified, isEdit, orderTarget, engineers, picEngineerPi, isFailed, messageError,
              picEngineerMs, servicesEngineer, isReport, isError, isSuccess, orderFiltered, isFiltered } = this.state;
-        console.log(orderTarget);
-        console.log(picEngineerPi);
-        console.log(servicesEngineer);
+        
+        // Judul untuk setiap kolom di tabel daftar order
         const tableHeaders = ['No.', 'Nomor PO', 'Nama Order', 'Tipe', 'PIC PI', 'PIC MS', 'Aksi'];                  
+        
+        // Isi tabel daftar order yang disesuaikan dengan yang dicari
         const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [ order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.checkTypeOrder(order.projectInstallation, order.managedService), 
@@ -358,22 +344,22 @@ class PenugasanEngineer extends Component {
                         this.getPICPI(order.idOrder) === null ? <p style={{color: "red", marginBottom: 0}}>Belum ditugaskan</p> : this.getPICPI(order.idOrder).fullname, 
                         this.getPICMS(order.idOrder) === null ? <p style={{color: "red", marginBottom: 0}}>Belum ditugaskan</p> : this.getPICMS(order.idOrder).fullname,
                         <div className="d-flex justify-content-center"><Button className={classes.button1}
-                        onClick={() => this.handleEdit(order)}>perbarui</Button></div>])
+                        onClick={() => this.handleEdit(order)}>perbarui</Button></div>]);
+        
+        // Judul untuk setiap kolom di tabel service
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
+        // Isi tabel service sesuai dengan order yang dipilih
         if(orderTarget !== null){
             let listServiceTarget = this.getListService(orderTarget);
-            console.log(listServiceTarget);
             if( listServiceTarget !== null){
-                tableServiceRows = listServiceTarget.map((service, index) =>
-                                        [service.name, isReport ? this.getPICService(service) :
-                                        <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
-                                        value={servicesEngineer[index] === null ? "" : servicesEngineer[index]}
-                                        onChange={this.handleChangeField}>
-                                            <option value="">Belum ditugaskan</option>
-                                            {users.map(user =><option value={user.id}>{user.fullname}</option>)}
-                                        </Form.Control>]);
+                tableServiceRows = listServiceTarget.map((service, index) =>[service.name, isReport ? this.getPICService(service) :
+                                    <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
+                                    value={servicesEngineer[index] === null ? "" : servicesEngineer[index]}
+                                    onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
+                                    {engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
+                                    </Form.Control>]);
             }
         }
 
@@ -381,9 +367,13 @@ class PenugasanEngineer extends Component {
 
         return (
             <div className={classes.container}>
+                
+                {/* Menampilkan daftar order */}
                 <div><h1 className="text-center">Daftar Order</h1></div>
                 <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
+                
+                {/* Menampilkan modal berisi form penugasan engineer */}
                 <Modal
                     show={isEdit || isReport}
                     dialogClassName="modal-90w"
@@ -407,10 +397,6 @@ class PenugasanEngineer extends Component {
                                 {orderTarget !== null ?
                                 <><Form>
                                     <Table borderless responsive="xl" size="sm">
-                                        {/* <tr>
-                                            <td>Id Order</td>
-                                            <td>: {orderTarget.idOrder}</td>
-                                        </tr> */}
                                         <tr>
                                             <td>Nomor PO</td>
                                             <td>: {orderTarget.noPO === null? "-" : orderTarget.noPO}</td>
@@ -432,14 +418,13 @@ class PenugasanEngineer extends Component {
                                                 <td style={{fontWeight: 'bold'}}>Project Installation</td>
                                             </tr>
                                             <tr>
-                                                {/* {console.log(picEngineerPi.id === null), console.log(users[0].id), console.log(picEngineerPi), console.log(users[0].id === picEngineerPi)} */}
                                                 {isReport ?
                                                 <><td>PIC Engineer</td>
                                                 <td>: {this.getPICPI(orderTarget.idOrder) === null? <p style={{color: "red"}}>Belum ditugaskan</p> : this.getPICPI(orderTarget.idOrder).fullname}</td></> :
                                                 <><td><p className="d-flex">PIC Engineer<p style={{color: "red"}}>*</p></p></td>
                                                 <td><Form.Control as="select" size="sm" name="picEngineerPi" value={picEngineerPi === null ? "": picEngineerPi} onChange={this.handleChangeField}>
                                                         <option value="">Belum ditugaskan</option>
-                                                        {users.map((user, index) => <option key={index} value={user.id}>{user.fullname}</option>)}
+                                                        {engineers.map((user, index) => <option key={index} value={user.id}>{user.fullname}</option>)}
                                                     </Form.Control></td></>}
                                             </tr></>
                                         : <></>}
@@ -461,9 +446,8 @@ class PenugasanEngineer extends Component {
                                             <td>: {this.getPICMS(orderTarget.idOrder) === null ? <p style={{color: "red"}}>Belum ditugaskan</p> : this.getPICMS(orderTarget.idOrder).fullname}</td></> :
                                             <><td><p className="d-flex">PIC Engineer<p style={{color: "red"}}>*</p></p></td>
                                             <td><Form.Control as="select" size="sm" name="picEngineerMs" value={picEngineerMs === null ? "" : picEngineerMs} onChange={this.handleChangeField}>
-                                                    {/* {listServiceEngineerNew.map(user =><option value={user[1]}>{user[2]}</option>)} */}
                                                     <option value="">Belum ditugaskan</option>
-                                                    {users.map(user =><option value={user.id}>{user.fullname}</option>)}
+                                                    {engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
                                                 </Form.Control></td></>}
                                         </tr></>
                                         : <></>}
@@ -482,6 +466,8 @@ class PenugasanEngineer extends Component {
                             </p>
                     </Modal.Body>
                 </Modal>
+
+                {/* Menampilkan modal berisi notifikasi ketika berhasil menyimpan data atau error */}
                 <Modal
                     show={isSuccess || isError}
                     dialogClassName="modal-90w"

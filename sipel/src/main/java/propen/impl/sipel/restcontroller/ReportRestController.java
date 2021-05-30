@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import propen.impl.sipel.filestorage.FileStorageService;
@@ -34,7 +32,6 @@ import java.util.logging.Logger;
 
 @RestController
 @CrossOrigin(origins = "*")
-//@RequestMapping("")
 public class ReportRestController {
 
     @Autowired
@@ -43,8 +40,7 @@ public class ReportRestController {
     @Autowired
     FileStorageService fileStorageService;
 
-    private static final Logger logger = Logger.getLogger(ReportRestController.class.getName());
-
+    // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
     private List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
@@ -60,6 +56,9 @@ public class ReportRestController {
         return listReport;
     }
 
+    // Menyimpan file yang diupload ke local server dan membuat report baru
+    // File yang memiliki nama yang sama akan dibuat nama dengan versi
+    // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
@@ -99,6 +98,7 @@ public class ReportRestController {
         return response;
     }
 
+    // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
                                                   HttpServletRequest request){
@@ -121,6 +121,7 @@ public class ReportRestController {
                 .body(resource);
     }
 
+    // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         Path filePath = fileStorageService.getFilePath(fileName);
@@ -137,6 +138,7 @@ public class ReportRestController {
                 .body(resource);
     }
 
+    // Menghapus file dari local server dan report dari database
     @DeleteMapping(value="/api/v1/report/{idReport}/delete")
     private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
