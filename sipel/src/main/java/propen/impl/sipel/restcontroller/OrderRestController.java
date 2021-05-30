@@ -2,6 +2,7 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.ManagedServicesModel;
@@ -9,6 +10,7 @@ import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.rest.OrderDto;
+import propen.impl.sipel.rest.ProgressOrderDto;
 import propen.impl.sipel.service.ManagedServicesRestService;
 import propen.impl.sipel.service.OrderRestService;
 
@@ -79,6 +81,12 @@ public class OrderRestController {
         response.setResult(newOrder);
 
         return response;
+    }
+
+    @GetMapping(value = "/order/progress")
+    public List<ProgressOrderDto> showAllProgress(Model model){
+        List<ProgressOrderDto> allProgress = orderRestService.getAllProgress();
+        return allProgress;
     }
 
 }

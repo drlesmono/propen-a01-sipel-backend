@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -79,5 +80,11 @@ public class ManagedServicesRestController {
         }
 
         return response;
+    }
+
+    @GetMapping(value="/orders/ms/perc")
+    private LinkedHashMap<String, String> retrieveTermMs(){
+
+        return managedServicesRestService.retrievePercentageMs();
     }
 }
