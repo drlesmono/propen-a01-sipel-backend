@@ -3,7 +3,7 @@ import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
 import classes from "./styles.module.css";
 import { withRouter } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -28,10 +28,13 @@ class InputDataOrder extends React.Component {
             clientOrg: "",
             projectInstallation: false,
             managedService: false,
+            isFiltered: false,
+            ordersFiltered: [],
         };
         this.handleTambahOrder = this.handleTambahOrder.bind(this);
         this.handleLookUpDetail = this.handleLookUpDetail.bind(this);
         this.handleClickUnggah = this.handleClickUnggah.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
     }
 
     componentDidMount() {
@@ -51,7 +54,7 @@ class InputDataOrder extends React.Component {
 
     checkTypeOrder(pi, ms) {
         if(pi === true && ms === true){
-            return "Project Installation, Managed Service";
+            return <div>Project Installation<br></br>Managed Service</div>;
         }else if(pi === true){
             return "Project Installation";
         }else if(ms === true){
@@ -65,6 +68,14 @@ class InputDataOrder extends React.Component {
         }else {
             return "Not Verified";
         }
+    }
+
+    getDate(date) {
+        let oldDate = new Date(date);
+        const month = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return oldDate.getDate() + " " + month[oldDate.getMonth()] + " " + oldDate.getFullYear();
+
     }
 
     handleTambahOrder = () => {
@@ -83,8 +94,27 @@ class InputDataOrder extends React.Component {
         this.setState({ isError: false });
     }
 
+    handleFilter(event){
+        let newOrders = this.state.orders;
+        const { value } = event.target;
+        if( value !== "" ){
+            newOrders = this.state.orders.filter(order => {
+                return (order.orderName.toLowerCase().includes(value.toLowerCase()) || 
+                order.noPO.toLowerCase().includes(value.toLowerCase()) ||
+                order.clientName.toLowerCase().includes(value.toLowerCase()) ||
+                order.clientOrg.toLowerCase().includes(value.toLowerCase()) ||
+                this.getDate(order.dateOrder).toLowerCase().includes(value.toLowerCase()) ||
+                this.checkStatusOrder(order.verified).toLowerCase().includes(value.toLowerCase()))
+            });
+            this.setState({ isFiltered : true });
+        }else{
+            this.setState({ isFiltered : false });
+        }
+        this.setState({ ordersFiltered : newOrders });
+    }
+
     render() {
-        const { orders, orderTarget, isError } = this.state;
+        const { orders, orderTarget, isError, isFiltered, ordersFiltered } = this.state;
 
         const tableHeaders = [
             'No', 
@@ -92,17 +122,28 @@ class InputDataOrder extends React.Component {
             'Nama Order', 
             'Nama Pelanggan', 
             'Perusahaan Pelanggan',
+            'Tanggal Masuk',
             'Jenis', 
             'Status', 
-            'Lihat Detail',
-            'Unggah Dokumen',
+            'Aksi',
         ];
 
-        const tableRows = orders.map((order) => [order.noPO, order.orderName, order.clientName, order.clientOrg,
-                        this.checkTypeOrder(order.projectInstallation, order.managedService), 
+        const tableRows = isFiltered ? ordersFiltered.map((order) => [order.noPO, order.orderName, order.clientName, order.clientOrg,
+                        this.getDate(order.dateOrder), this.checkTypeOrder(order.projectInstallation, order.managedService), 
                         this.checkStatusOrder(order.verified),
-                        <Button className={classes.button1} onClick={() => this.handleLookUpDetail(order)}>&nbsp;&nbsp;Lihat&nbsp;&nbsp;&nbsp;</Button>,
-                        <Button className={classes.button2} onClick={() => this.handleClickUnggah(order)}>Unggah</Button>]);
+                        <div className="d-flex justify-content-center align-items-center">
+                        <Button className={classes.button1} onClick={() => this.handleLookUpDetail(order)}>&nbsp;&nbsp;Lihat&nbsp;&nbsp;&nbsp;</Button>
+                        <span>&nbsp;&nbsp;</span>
+                        <Button className={classes.button2} onClick={() => this.handleClickUnggah(order)}>Unggah</Button>
+                        </div>])
+                        : orders.map((order) => [order.noPO, order.orderName, order.clientName, order.clientOrg,
+                        this.getDate(order.dateOrder), this.checkTypeOrder(order.projectInstallation, order.managedService), 
+                        this.checkStatusOrder(order.verified),
+                        <div className="d-flex justify-content-center align-items-center">
+                        <Button className={classes.button1} onClick={() => this.handleLookUpDetail(order)}>&nbsp;&nbsp;Lihat&nbsp;&nbsp;&nbsp;</Button>
+                        <span>&nbsp;&nbsp;</span>
+                        <Button className={classes.button2} onClick={() => this.handleClickUnggah(order)}>Unggah</Button>
+                        </div>]);
 
         return (
             <div className={classes.container}>
@@ -110,8 +151,10 @@ class InputDataOrder extends React.Component {
             <br></br>
             <h1 className={classes.title}>Daftar Order</h1>
             <br></br>
-            <Button className={classes.button2} onClick={() => this.handleTambahOrder()}>+ Tambah Order</Button>
-            <br></br>
+            <div className="d-flex justify-content-between" style={{padding: 5}}>
+                <Button className={classes.button2} onClick={() => this.handleTambahOrder()}>+ Tambah Order</Button>
+                <div className={classes.search}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter}/></div>
+            </div>
             <br></br>
             <CustomizedTables headers={tableHeaders} rows={tableRows} />
 

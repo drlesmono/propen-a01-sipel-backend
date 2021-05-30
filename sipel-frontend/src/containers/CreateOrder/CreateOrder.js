@@ -892,6 +892,7 @@ class CreateOrder extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                 </div>
                                 <div className="card-footer text-right">
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahOrder}>Simpan</Button>
@@ -942,6 +943,7 @@ class CreateOrder extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                 </div>
                                 <div className="card-footer text-center">
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahPI}>Simpan Data PI</Button>
@@ -991,6 +993,7 @@ class CreateOrder extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                 </div>
                                 <div className="card-footer text-center">
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahMS}>Simpan Data MS</Button>
@@ -1020,6 +1023,7 @@ class CreateOrder extends React.Component {
                                             <ServiceList add={this.addNewRow} delete={this.clickOnDelete} listService={listService} />
                                         </tbody>
                                         </table>
+                                        <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                     </div>
                                     <div className="card-footer text-center">
                                         <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan Data Services</Button>
@@ -1097,6 +1101,7 @@ class CreateOrder extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                 </div>
                                 <div className="card-footer text-center">
                                     <Button className={classes.button1} onClick={this.handleSubmitTambahPIMS}>Simpan Data PI-MS</Button>
@@ -1124,12 +1129,12 @@ class CreateOrder extends React.Component {
                 <Modal show={isCancel} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;&nbsp;Anda yakin membatalkan menyimpan order ?</h4>
+                            <h4>&nbsp;&nbsp;Anda yakin membatalkan menyimpan order ?</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="text-center">
-                            <Button className={classes.button1} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;</Button>
+                            <Button className={classes.button1} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
                             <span>&nbsp;&nbsp;</span>
                             <Button className={classes.button2} onClick={() => this.handleBack()}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
                         </div>
@@ -1149,7 +1154,7 @@ class CreateOrder extends React.Component {
                         <Button className={classes.button2} onClick={() => this.handleAfterError()}>Kembali</Button>
                     </div>
                 </Modal.Body>
-            </Modal>
+                </Modal>
             </div>
             </div>
         );

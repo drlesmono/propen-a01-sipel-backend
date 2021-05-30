@@ -66,7 +66,9 @@ class DetailOrder extends React.Component {
             isError: false,
             isDeleteSuccess: false,
             isDeleteService: false,
-            serviceTargetToDelete: null
+            serviceTargetToDelete: null,
+            isCancelChangeService: false,
+            isCancelToAddService: false,
         }
         this.handleLookDetail = this.handleLookDetail.bind(this);
         this.handleLookService = this.handleLookService.bind(this);
@@ -93,6 +95,10 @@ class DetailOrder extends React.Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handleConfirmDelete = this.handleConfirmDelete.bind(this);
         this.handleConfirmDeleteService = this.handleConfirmDeleteService.bind(this);
+        this.noCancelChange = this.noCancelChange.bind(this);
+        this.handleCancelSubmitService = this.handleCancelSubmitService.bind(this);
+        this.noCancelToAdd = this.noCancelToAdd.bind(this);
+        this.handleCancelSubmitAddService = this.handleCancelSubmitAddService.bind(this);
     }
 
     componentDidMount() {
@@ -340,7 +346,17 @@ class DetailOrder extends React.Component {
 
     handleCancelSubmit(event) {
         event.preventDefault();
-        this.setState({ isChangeService: false, isAddService: false });
+        this.setState({ isChangeService: false, isAddService: false, isCancelChangeService: false, isCancelToAddService: false });
+    }
+
+    handleCancelSubmitService(event) {
+        event.preventDefault();
+        this.setState({ isCancelChangeService: true });
+    }
+
+    handleCancelSubmitAddService(event) {
+        event.preventDefault();
+        this.setState({ isCancelToAddService: true });
     }
 
     handleCancel(event) {
@@ -371,6 +387,16 @@ class DetailOrder extends React.Component {
         this.setState({
             listServiceNew: this.state.listServiceNew.filter(r => r !== record)
         });
+    }
+
+    noCancelChange(event){
+        event.preventDefault()
+        this.setState({ isCancelChangeService: false });
+    }
+
+    noCancelToAdd(event){
+        event.preventDefault()
+        this.setState({ isCancelToAddService: false });
     }
 
     handleTambahService(event) {
@@ -451,6 +477,8 @@ class DetailOrder extends React.Component {
             isError,
             isDeleteSuccess,
             isDeleteService,
+            isCancelChangeService,
+            isCancelToAddService,
         } = this.state;
 
         let { listService } = this.state;
@@ -628,7 +656,7 @@ class DetailOrder extends React.Component {
                                     <div className="card-footer text-center">
                                         <Button className={classes.button1} onClick={this.handleSubmitChangeService}>Simpan</Button>
                                         <span>&nbsp;&nbsp;</span>
-                                        <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                        <Button className={classes.button2} onClick={this.handleCancelSubmitService}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
                                 </div>
                             </div>
@@ -640,7 +668,7 @@ class DetailOrder extends React.Component {
                 <Modal show={this.state.finishedSubmitService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Diubah</h4>
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Diubah</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>
@@ -653,7 +681,7 @@ class DetailOrder extends React.Component {
                 <Modal show={isDeleteService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin menghapus service ?</h4>
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin menghapus service ?</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>
@@ -665,10 +693,26 @@ class DetailOrder extends React.Component {
                     </Modal.Body>
                 </Modal>
 
+                {/* untuk batal mengubah */}
+                <Modal show={isCancelChangeService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal mengubah service ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={this.noCancelChange}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
                 <Modal show={this.state.finishedDeleteService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Dihapus</h4>
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Berhasil Dihapus</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>
@@ -703,7 +747,7 @@ class DetailOrder extends React.Component {
                                     <div className="card-footer text-center">
                                         <Button className={classes.button1} onClick={this.handleSubmitTambahService}>Simpan</Button>
                                         <span>&nbsp;&nbsp;</span>
-                                        <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                        <Button className={classes.button2} onClick={this.handleCancelSubmitAddService}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
                                 </div>
                             </div>
@@ -721,6 +765,21 @@ class DetailOrder extends React.Component {
                     <Modal.Body>
                         <div className="text-center">
                         <Button className={classes.button1} onClick={() => this.handleAfterAdd()}>Kembali</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isCancelToAddService} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;Anda yakin batal menambahkan service ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={this.noCancelToAdd}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
                         </div>
                     </Modal.Body>
                 </Modal>

@@ -25,6 +25,7 @@ class UnggahDokumenOrder extends React.Component {
             verified: false,
             isFinishedUpload: false,
             isError: false,
+            isCancel: false,
         };
         this.handleLookDetail = this.handleLookDetail.bind(this);
         this.checkTypeOrder = this.checkTypeOrder.bind(this);
@@ -33,6 +34,8 @@ class UnggahDokumenOrder extends React.Component {
         this.handleSubmitDocument = this.handleSubmitDocument.bind(this);
         this.handleCancelSubmit = this.handleCancelSubmit.bind(this);
         this.handleAfterUnggahDokumen = this.handleAfterUnggahDokumen.bind(this);
+        this.handleConfirmCancel = this.handleConfirmCancel.bind(this);
+        this.handleBack = this.handleBack.bind(this);
     }
 
     componentDidMount() {
@@ -126,6 +129,14 @@ class UnggahDokumenOrder extends React.Component {
         this.props.history.push(`/order/order`);
     }
 
+    handleConfirmCancel(){
+        this.setState({ isCancel: true });
+    }
+
+    handleBack() {
+        this.setState({ isCancel: false });
+    }
+
     handleAfterUnggahDokumen = () => {
         this.props.history.push(`/order/detail/${this.state.idOrder}`);
     }
@@ -137,7 +148,8 @@ class UnggahDokumenOrder extends React.Component {
     render() {
         const {
             isFinishedUpload,
-            isError
+            isError,
+            isCancel
         } = this.state;
         
         return(
@@ -178,7 +190,7 @@ class UnggahDokumenOrder extends React.Component {
                                     <td className="d-flex justify-content-center">
                                     <Button className={classes.button2} onClick={this.handleSubmitDocument}>Simpan</Button>
                                         <span>&nbsp;&nbsp;</span>
-                                    <Button className={classes.button3} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                    <Button className={classes.button3} onClick={() => this.handleConfirmCancel()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </td>
                                 </tr>
                             </Table>
@@ -191,7 +203,7 @@ class UnggahDokumenOrder extends React.Component {
             <Modal show={isFinishedUpload} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                 <Modal.Header>
                     <div className="text-center">
-                        <h3>&nbsp;&nbsp;&nbsp;Dokumen Order Berhasil Diunggah</h3>
+                        <h4>&nbsp;&nbsp;&nbsp;Dokumen Order Berhasil Diunggah</h4>
                     </div>
                 </Modal.Header>
                 <Modal.Body>
@@ -217,6 +229,21 @@ class UnggahDokumenOrder extends React.Component {
                     </div>
                 </Modal.Body>
             </Modal>
+
+            <Modal show={isCancel} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;Anda yakin membatalkan mengunggah dokumen ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button2} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button3} onClick={() => this.handleBack()}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
             </div>
             </div>
         );
