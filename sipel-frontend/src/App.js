@@ -3,6 +3,10 @@ import { useRoutes} from "hookrouter";
 // import routes from "./router";
 import './App.css';
 import Layout from "./components/Layout";
+import Progress from "./containers/Progress";
+import ReportAdmin from "./containers/ReportAdmin";
+import ReportFinance from "./containers/ReportFinance";
+import ReportHead from "./containers/ReportHead";
 import PenugasanEngineer from "./containers/PenugasanEngineer";
 import PeriodeKontrak from "./containers/PeriodeKontrak";
 import LaporanInstalasiMaintenance from "./containers/LaporanInstalasiMaintenance";
@@ -27,9 +31,13 @@ const routes = {
                 </table>
               </div>
             </div>,
+  "/order/progress": () => <Progress />,
   "/produksi/penugasan": () => <PenugasanEngineer />,
   "/produksi/periodeKontrak": () => <PeriodeKontrak />,
-  "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />
+  "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />,
+  "/laporan/finance" : () => < ReportFinance/>,
+  "/laporan/head" : () => < ReportHead/>,
+  "/laporan/admin" : () => < ReportAdmin/>,
 };
 
 function App(){
@@ -60,7 +68,7 @@ function App(){
                 <NavDropdown title="Produksi" id="collasible-nav-dropdown">
                   <div className="d-flex justify-content-between">
                     <Nav.Link href="/produksi/penugasan" style={{color: "black"}} className="pl-5 pr-5">Penugasan</Nav.Link>
-                    <Nav.Link href="#produksi/progress-delivery" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>
+                    <Nav.Link href="/order/progress" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>
                     <Nav.Link href="/produksi/periodeKontrak" style={{color: "black"}} className="pl-5 pr-5">Periode Kontrak</Nav.Link>
                     <Nav.Link href="#produksi/maintenance" style={{color: "black"}} className="pl-5 pr-5">Maintenance</Nav.Link>
                   </div>
@@ -71,6 +79,9 @@ function App(){
                 <NavDropdown title="Laporan"  id="collasible-nav-dropdown">
                   <div className="d-flex justify-content-between">
                     <Nav.Link href="/laporan/daftarLaporan" style={{color: "black"}} className="pl-5 pr-5">Daftar Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/admin" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/finance" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/head" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>
                     <Nav.Link href="#laporan/verifikasiLaporan" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Laporan</Nav.Link>
                   </div>
                   {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

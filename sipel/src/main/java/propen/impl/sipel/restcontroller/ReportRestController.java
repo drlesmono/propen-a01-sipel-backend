@@ -152,4 +152,25 @@ public class ReportRestController {
             );
         }
     }
+    @GetMapping(value="/api/v1/reports")
+    private List<ReportModel> retrieveListReport(){
+        List<ReportModel> listReport = reportRestService.retrieveListReport();
+        List<ReportModel> toBeSeenReport = new ArrayList<>();
+        for(ReportModel report : listReport){
+            if(report.getStatusApproval().toLowerCase().equals("approved")){
+                toBeSeenReport.add(report);
+            }
+
+        }
+
+        return toBeSeenReport;
+    }
+    @GetMapping(value="/api/v1/reports/all")
+    private List<ReportModel> retrieveListReportAll(){
+        List<ReportModel> listReport = reportRestService.retrieveListReport();
+
+        return listReport;
+    }
+
+
 }
