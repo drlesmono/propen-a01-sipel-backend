@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedTables from "../../components/Table";
-// import CustomizedButtons from "../../components/Button";
-// import CustomizedModal from "../../components/Modal";
 import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -59,6 +57,7 @@ class PeriodeKontrak extends Component {
         this.loadData();
     }
     
+    // Mengambil dan mengupdate data yang masuk
     async loadData() {
         try {
             const orders = await APIConfig.get("/ordersVerified/ms");
@@ -67,12 +66,12 @@ class PeriodeKontrak extends Component {
             const listMs = await APIConfig.get("/orders/ms");
             this.setState({ ordersVerified: orders.data, engineers: engineers.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
-            // alert("Oops terjadi masalah pada server");
             this.setState({ isError: true });
             console.log(error);
         }
     }
 
+    // Mengirim data yang akan disimpan ke backend
     async handleSubmit(event) {
         event.preventDefault();
         let response;
@@ -81,10 +80,13 @@ class PeriodeKontrak extends Component {
         let ms;
         let newOrder;
         let services;
+
         try {
             order = this.state.orderTarget;
             pi = order.projectInstallation === false ? null : this.getPi(order.idOrder).idOrderPi;
-            ms = this.getMs(order.idOrder);   
+            ms = this.getMs(order.idOrder);
+            
+            // Apabila ingin perpanjang kontrak, maka mengirim data order
             if(this.state.isExtend){
                 const dataOrder = {
                     idOrder: order.idOrder,
@@ -110,8 +112,6 @@ class PeriodeKontrak extends Component {
                 this.loadData();
             }
             
-            console.log(this.state.listMs);
-            console.log(newOrder);
             const dataMs = {
                 idOrderMs: this.state.isExtend ? null : ms.idOrderMs,
                 idUserPic: this.state.picEngineerMs,
@@ -123,6 +123,7 @@ class PeriodeKontrak extends Component {
             response = await APIConfig.put(`/order/${this.state.isExtend ? newOrder.idOrder : order.idOrder}/ms/updateKontrak`, dataMs);
             const newMsUpdated = response.data.result;
             
+            // Apabila ingin perpanjang kontrak, maka mengirim data service satu per satu
             if(this.state.isExtend){
                 let listServiceName = this.state.servicesEngineerName;
                 let listService = this.state.servicesEngineer;
@@ -151,8 +152,12 @@ class PeriodeKontrak extends Component {
         this.setState({isFailed: false, isValid: true, isSuccess: true, isExtend: false, isEdit: false, timeRemaining: this.getTimeRemaining(this.state.actualStart, this.state.actualEnd)});
     }
 
+    // validasi form
+    // jika valid, maka memanggil handleSubmit
+    // jika tidak valid, maka memberikan notifikasi
     handleValidation(event){
         event.preventDefault();
+
         if(this.state.isExtend){
             let listServiceName = this.state.servicesEngineerName;
             let listService = this.state.servicesEngineer;
@@ -182,8 +187,10 @@ class PeriodeKontrak extends Component {
         }
     }
 
+    // Menampilkan report setelah berhasil menyimpan data
     handleReport(event){
         event.preventDefault();
+
         if(this.state.isExtend){
             this.setState({isReportExtend: true, isAdded: false});
         }else{
@@ -193,6 +200,7 @@ class PeriodeKontrak extends Component {
         this.setState({isSuccess: false, isFailed: false, isValid: true});
     }
 
+    // Mengambil data dengan format "tanggal bulan(dalam huruf abjad) tahun"
     getDate(value){
         let date = new Date(value);
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -201,6 +209,7 @@ class PeriodeKontrak extends Component {
         return date.getDate()+" "+monthNames[date.getMonth()]+" "+date.getFullYear();
     }
 
+    // Kalkulasi waktu tersisa terhitung hari ini sampai periode berakhir
     getTimeRemaining(actualStart, actualEnd){
         const startDate = new Date(actualStart);
         const endDate = new Date(actualEnd);
@@ -220,7 +229,7 @@ class PeriodeKontrak extends Component {
         let endMonth = endDate.getMonth();
         let endDay = endDate.getDate();
         
-        // We calculate February based on end year as it might be a leep year which might influence the number of days.
+        // Jumlah tanggal februari berdasarkan tahun kabisat
         let february = (((endYear % 4 === 0) && (endYear % 100 !== 0)) || (endYear % 400 === 0)) ? 29 : 28;
         let daysOfMonth = [31, february, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
@@ -229,7 +238,7 @@ class PeriodeKontrak extends Component {
         
         let months = (12 + endMonth - startMonth - (endDay < startDay ? 1 : 0)) % 12;
         
-        // (12 + ...) % 12 makes sure index is always between 0 and 11
+        // (12 + ...) % 12 untuk memastikan index antara 0 sampai 11 sesuai dengan jumlah bulan
         let days = startDay <= endDay ? endDay - startDay : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
 
         let timeRemaining = "";
@@ -259,6 +268,7 @@ class PeriodeKontrak extends Component {
         return timeRemaining;
     }
 
+    // Mengubah data yang ditargetkan sesuai dengan isi form
     handleChangeField(event) {
         const { name, value } = event.target;
         const servicesEngineerNew = this.state.servicesEngineer;
@@ -274,17 +284,15 @@ class PeriodeKontrak extends Component {
             this.setState({ servicesEngineerName: servicesEngineerNameNew});
         }else{
             this.setState({ [name]: value });
-            console.log(name);
-            console.log(value);
         }
     }
 
+    // Menargetkan order yang dipilih untuk diubah periode kontrak nya atau diperpanjang
     handleEdit(order, typeEdit) {
         let ms = this.getMs(order.idOrder);
         let actualStart = moment(new Date(ms.actualStart)).format("YYYY-MM-DD");
         let actualEnd = moment(new Date(ms.actualEnd)).format("YYYY-MM-DD");
-        console.log(actualStart);
-        console.log(actualEnd);
+
         if(typeEdit === "perbarui"){
             this.setState({ isEdit: true , formValid: true});
         }else{
@@ -311,8 +319,10 @@ class PeriodeKontrak extends Component {
         }
     }
 
+    // Menutup semua modal
     handleCancel(event) {
         event.preventDefault();
+
         this.setState({
             isEdit: false, 
             isReport: false, 
@@ -338,20 +348,20 @@ class PeriodeKontrak extends Component {
         this.loadData();
     }
 
+    // Mengambil order jenis managed services yang dipilih
     getMs(idOrder){
         let ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === idOrder);
+
         if (ms.length !== 0) {
-            // console.log(ms[0]);
             return ms[0];
         }
         return null;
     }
 
+    // Mengambil order jenis project installation yang dipilih
     getPi(idOrder){
-        console.log(idOrder);
-        // console.log(this.state.listPi);
         let pi = this.state.listPi.filter(pi => pi.idOrder.idOrder === idOrder );
-        // console.log(pi.length);
+
         if (pi.length !== 0) {
             console.log(pi[0]);
             return pi[0];
@@ -359,6 +369,7 @@ class PeriodeKontrak extends Component {
         return null;
     }
 
+    // Mengambil pic engineer dari order jenis project installation yang dipilih
     getPICMS(idOrder){
         let ms = this.getMs(idOrder);
         
@@ -371,6 +382,7 @@ class PeriodeKontrak extends Component {
         return null;
     }
 
+    // Mengambil nama lengkap dari engineer pada service yang dipilih
     getPICService(service){
         if(service.idUser !== null){
             console.log(service.idUser.fullname);
@@ -379,12 +391,15 @@ class PeriodeKontrak extends Component {
         return <p style={{color: "red"}}>Belum ditugaskan</p>;
     }
 
+    // Mengubah tanggal sesuai format database
     convertDateToString(date){
         return date+"T17:00:00.000+00:00";
     }
 
+    // Mengambil jumlah hari tersisa dengan format "jumlah tahun jumlah bulan jumlah hari"
     getDaysMonthsYears(date){
         const dateSplit = date.split(" ");
+
         if(date.includes("tahun")){
             if(date.includes("bulan")){
                 if(date.includes("hari")) return [dateSplit[0], dateSplit[2], dateSplit[4]];
@@ -401,9 +416,11 @@ class PeriodeKontrak extends Component {
         }
     }
 
+    // Menyaring list order sesuai dengan data yang dimasukkan pada form search
     handleFilter(event){
         let newOrderList = this.state.ordersVerified;
         const { value } = event.target;
+
         if( value !== "" ){
             newOrderList = newOrderList.filter(order => {
                 return (order.orderName.toLowerCase().includes(value.toLowerCase()) ||
@@ -416,31 +433,28 @@ class PeriodeKontrak extends Component {
         this.setState({ orderFiltered : newOrderList });
     }
 
+    // Menambah slot untuk service baru
     handleAddServices(){
         this.setState({isAdded: true});
-        // let servicesEngineer = [...this.state.servicesEngineer];
         let initialTotal = this.state.listService.length;
         const totalServicesNew = initialTotal+1;
+
         this.setState({ totalServices: totalServicesNew });
+
         let servicesEngineer = this.state.servicesEngineer.concat(null);
         let servicesEngineerName = this.state.servicesEngineerName.concat(null);
+
         this.setState({serviceEngineer: servicesEngineer, servicesEngineerName: servicesEngineerName});
-        console.log(this.state.servicesEngineer);
         
         let services = [...this.state.services, null];
         this.setState({services: services});
-        // this.setState({listService: [...this.state.listService, [<Form.Control type="text" size="sm" name={"serviceName"+initialTotal} 
-        // placeholder="masukkan nama service" onChange={this.handleChangeField}/>, 
-        // <Form.Control as="select" size="sm" key={initialTotal} name={"servicesEngineer"+initialTotal} 
-        // value={this.state.servicesEngineer[initialTotal] === null ? "": this.state.servicesEngineer[initialTotal]}
-        // onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-        // {this.state.engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
-        // </Form.Control>]]});
         this.loadData();
     }
 
+    // Menambah row pada tabel service apabila ingin menambah service
     handleChangeListService(){
         this.handleAddServices();
+
         this.setState({listService: this.state.services.map((service, index) => 
             [<Form.Control type="text" size="sm" name={"serviceName"+index} 
             value={this.state.servicesEngineerName[index] === null ? service === null ? null : 
@@ -453,6 +467,7 @@ class PeriodeKontrak extends Component {
             </Form.Control>])});
     }
 
+    // Menutup notifikasi gagal
     handleCloseNotif(){
         this.setState({ isFailed: false, messageError: null});
     }
@@ -460,8 +475,11 @@ class PeriodeKontrak extends Component {
     render() {
         const { ordersVerified, isEdit, isExtend, orderTarget, engineers, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, messageError,
             servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService, services } = this.state;
+        
+        // Judul untuk setiap kolom di tabel daftar order
         const tableHeaders = ['No.', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  
         
+        // Isi tabel daftar order yang disesuaikan dengan yang dicari
         const tableRows = isFiltered ? orderFiltered.map((order) =>
                         [order.noPO === null ? "-" : order.noPO, order.orderName, 
                         this.getDate(this.getMs(order.idOrder).actualStart), this.getDate(this.getMs(order.idOrder).actualEnd),
@@ -474,32 +492,25 @@ class PeriodeKontrak extends Component {
                         this.getTimeRemaining(this.getMs(order.idOrder).actualStart, this.getMs(order.idOrder).actualEnd),
                         <div className="justify-content-between"><Button className={classes.button1} onClick={() => this.handleEdit(order, "perbarui")}>perbarui</Button>
                         <Button className={classes.button2} onClick={() => this.handleEdit(order, "perpanjang")}>perpanjang</Button></div>])
- 
+
+        // Judul untuk setiap kolom di tabel service
         const tableServiceHeaders = ['No.', 'Nama Service', 'Engineer'];
         let tableServiceRows;
 
+        // Isi tabel service sesuai dengan order yang dipilih
         if(orderTarget !== null){
-                // tableServiceRows = isAdded ? listService : services.map((service, index) =>
-                //                     [isExtend? <Form.Control type="text" size="sm" name={"serviceName"+index} value={servicesEngineerName[index] === null ? 
-                //                     service.name : servicesEngineerName[index]} onChange={this.handleChangeField} placeholder="masukkan service"/>
-                //                     : service.name, (isReport || isEdit || isReportExtend ) ? this.getPICService(service) :
-                //                     <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
-                //                     value={servicesEngineer[index] === null ? "" : servicesEngineer[index]}
-                //                     onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-                //                     {engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
-                //                 </Form.Control>]);
-                tableServiceRows = isExtend ?  
-                                services.map((service, index) => 
-                                [<Form.Control type="text" size="sm" name={"serviceName"+index} 
-                                value={this.state.servicesEngineerName[index] === null ? service === null ? null : 
-                                service.name : this.state.servicesEngineerName[index]} 
-                                onChange={this.handleChangeField} placeholder="masukkan service"/>,
-                                <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
-                                value={this.state.servicesEngineer[index] === null ? "" : this.state.servicesEngineer[index]}
-                                onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
-                                {this.state.engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
-                                </Form.Control>])
-                                : services.map((service) =>[service.name, this.getPICService(service)]);
+            tableServiceRows = isExtend ?  
+                            services.map((service, index) => 
+                            [<Form.Control type="text" size="sm" name={"serviceName"+index} 
+                            value={this.state.servicesEngineerName[index] === null ? service === null ? null : 
+                            service.name : this.state.servicesEngineerName[index]} 
+                            onChange={this.handleChangeField} placeholder="masukkan service"/>,
+                            <Form.Control as="select" size="sm" key={index} name={"servicesEngineer"+index} 
+                            value={this.state.servicesEngineer[index] === null ? "" : this.state.servicesEngineer[index]}
+                            onChange={this.handleChangeField}><option value="">Belum ditugaskan</option>
+                            {this.state.engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
+                            </Form.Control>])
+                            : services.map((service) =>[service.name, this.getPICService(service)]);
         }
 
         const titleExtend = isReportExtend? "Perpanjangan Periode Kontrak" : "Form Perpanjangan Periode Kontrak";
@@ -507,9 +518,13 @@ class PeriodeKontrak extends Component {
 
         return (
             <div className={classes.container}>
+                
+                {/* Menampilkan daftar order */}
                 <div><h1 className="text-center">Daftar Order</h1></div>
                 <div className="d-flex justify-content-end" style={{padding: 5}}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter} className={classes.search}/></div>
                 <div><CustomizedTables headers={tableHeaders} rows={tableRows}/></div>
+                
+                {/* Menampilkan modal berisi form mengubah periode kontrak atau perpanjang periode kontrak */}
                 <Modal
                     show={isEdit || isReport || isExtend || isReportExtend}
                     dialogClassName="modal-90w"
@@ -533,10 +548,6 @@ class PeriodeKontrak extends Component {
                                 { orderTarget !== null ?
                                 <Form>
                                     <Table borderless responsive="xl" size="sm">
-                                        {/* <tr>
-                                            <td>Id Order</td>
-                                            <td>: {orderTarget.idOrder}</td>
-                                        </tr> */}
                                         <tr>
                                             <td>Nomor PO</td>
                                             <td>: {orderTarget.noPO === null ? "-" : orderTarget.noPO}</td>
@@ -612,6 +623,8 @@ class PeriodeKontrak extends Component {
                             </p>
                     </Modal.Body>
                 </Modal>
+
+                {/* Menampilkan modal berisi notifikasi ketika berhasil menyimpan data atau error */}
                 <Modal
                     show={isSuccess || isError}
                     dialogClassName="modal-90w"
