@@ -340,7 +340,7 @@ class DetailOrder extends React.Component {
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/order`);
         this.setState({ isError: false });
     }
 

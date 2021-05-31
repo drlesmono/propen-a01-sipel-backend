@@ -143,6 +143,7 @@ class UnggahDokumenOrder extends React.Component {
 
     handleAfterError = () => {
         this.setState({ isError: false });
+        this.props.history.push(`/order/order`);
     }
 
     render() {

@@ -44,6 +44,7 @@ class StatusPersetujuanLaporan extends Component {
             isApprove: false,
             finishedSubmitChangeStatus: false,
             isError: false,
+            isCancelToVerif: false,
         };
         this.handleChangeField = this.handleChangeField.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
@@ -55,6 +56,8 @@ class StatusPersetujuanLaporan extends Component {
         this.onValueChangeReject = this.onValueChangeReject.bind(this);
         this.handleSubmitChangeStatusMR = this.handleSubmitChangeStatusMR.bind(this);
         this.handleAfterError = this.handleAfterError.bind(this);
+        this.cancelChange = this.cancelChange.bind(this);
+        this.handleConfirmToCancel = this.handleConfirmToCancel.bind(this);
     }
 
     componentDidMount() {
@@ -335,7 +338,7 @@ class StatusPersetujuanLaporan extends Component {
 
     handleCancelSubmit(event) {
         event.preventDefault();
-        this.setState({ isChangeStatus: false, ...initState });
+        this.setState({ isChangeStatus: false, isCancelToVerif: false, ...initState });
     }
 
     onValueChangeApprove(event) {
@@ -352,10 +355,20 @@ class StatusPersetujuanLaporan extends Component {
         });
     }
 
+    cancelChange(event) {
+        event.preventDefault();
+        this.setState({ isCancelToVerif: false });
+    }
+
+    handleConfirmToCancel(event) {
+        event.preventDefault()
+        this.setState({ isCancelToVerif: true });
+    }
+
     render() {
         const { reports, reportsFiltered, reportTarget, isFiltered, reportNum, statusApproval, 
             reportIRtarget, reportMRtarget, orderTarget, isChangeStatus, notes, isReject, isApprove,
-            finishedSubmitChangeStatus, isError } = this.state;
+            finishedSubmitChangeStatus, isError, isCancelToVerif } = this.state;
 
         const tableHeaders = ['No', 'Nomor Laporan', 'Nama Laporan', 'Nomor PO', 'Perusahaan Pelanggan', 'Status', 'Tanggal Dibuat', 'Catatan', 'Aksi'];
                   
@@ -461,7 +474,7 @@ class StatusPersetujuanLaporan extends Component {
                                         <div className="card-footer text-center">
                                             <Button className={classes.button2} onClick={this.handleSubmitChangeStatusIR}>Simpan</Button>
                                             <span>&nbsp;&nbsp;</span>
-                                            <Button className={classes.button3} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                            <Button className={classes.button3} onClick={this.handleConfirmToCancel}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                         </div>
                                         </form>
                                     </> : 
@@ -521,13 +534,28 @@ class StatusPersetujuanLaporan extends Component {
                                         <div className="card-footer text-center">
                                             <Button className={classes.button2} onClick={this.handleSubmitChangeStatusMR}>Simpan</Button>
                                             <span>&nbsp;&nbsp;</span>
-                                        <Button className={classes.button3} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                        <Button className={classes.button3} onClick={this.handleConfirmToCancel}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
                                         </form>
                                     </> : <></> }</>}
                                 </div>
                             </div>
                         </div>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isCancelToVerif} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal melakukan verifikasi laporan ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
+                                <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button3} onClick={this.cancelChange}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
                         </div>
                     </Modal.Body>
                 </Modal>

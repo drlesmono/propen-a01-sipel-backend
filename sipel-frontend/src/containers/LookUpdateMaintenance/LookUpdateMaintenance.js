@@ -255,8 +255,8 @@ class CreateMaintenance extends React.Component {
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/produksi/maintenance`);
         this.setState({ isError: false });
+        this.props.history.push(`/produksi/maintenance`);
     }
 
     render() {
