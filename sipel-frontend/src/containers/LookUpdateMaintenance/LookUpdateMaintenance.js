@@ -1,124 +1,14 @@
-/* import React from "react";
-import APIConfig from "../../APIConfig";
-import CustomizedButtons from "../../components/Button";
-import classes from "./styles.module.css";
-import TableMaintenanceDetail from "../../components/Maintenance/mnTableDetail";
-import { withRouter } from "react-router-dom";
-import CustomizedTables from "../../components/Table";
-
-class LookUpdateMaintenance extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            idOrder: this.props.match.params.id,
-            idMs: this.props.match.params.idMs,
-            orderTarget: null,
-            idOrderMs: "",
-            noPO: "",
-            clientName: "",
-            clientOrg: "",
-            fullname: "",
-            listMaintenanceTarget: [],
-            dateMn: "",
-        };
-        this.handleLookDetail = this.handleLookDetail.bind(this);
-    }
-
-    componentDidMount() {
-        this.loadData();
-    }
-
-    async loadData() {
-        try {
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
-            const listMaintenance = await APIConfig.get(`/produksi/maintenance/daftar/${this.state.idMs}`);
-            this.setState({ orderTarget: orderItem.data });
-            this.setState({ listMaintenanceTarget: listMaintenance.data });
-            this.handleLookDetail();
-            //console.log(this.state.orderTarget);
-            //console.log(this.state.listMaintenanceTarget);
-        } catch (error) {
-            alert("Oops terjadi masalah pada server");
-            console.log(error);
-        }
-    } 
-
-    handleLookDetail() {
-        let order = this.state.orderTarget;
-        this.setState({ 
-            idOrderMs: order.idOrderMs.idOrderMs,
-            noPO: order.noPO,
-            clientName: order.clientName,
-            clientOrg: order.clientOrg,
-            fullname: order.idOrderMs.idUserPic.fullname,
-        })
-    }
-
-    render() {
-        let{ listMaintenanceTarget } = this.state;
-
-        const tableHeaders = [
-            'No','Tanggal Maintenance','Aksi',
-        ];
-
-        const tableRows = listMaintenanceTarget.map((maintenance) => [maintenance.dateMn,
-                        <CustomizedButtons
-                            variant="contained"
-                            size="small"
-                            color="#FD693E"
-                            onClick={this.changeSchedule(maintenance)}>Ubah Jadwal</CustomizedButtons>]
-                        );
-
-        return (
-            <div className="content">
-            <br></br>
-            <h1 className={classes.title}>Lihat Penjadwalan Maintenance</h1>
-            <br></br>
-            <div className="row" style={{ marginTop: 10 }}>
-                <div className="col-sm-1"></div>
-                <div className="col-sm-10">
-                    <div className="card">
-                        <div className="card-body">
-                            <TableMaintenanceDetail 
-                                key={this.state.idOrder}
-                                idOrderMs={this.state.idOrderMs}
-                                noPO={this.state.noPO}
-                                clientName={this.state.clientName}
-                                clientOrg={this.state.clientOrg}
-                                fullname={this.state.fullname}
-                            />
-                            <br></br>
-                            <div className="col-sm-6">
-                            <h3 className={classes.subtitle}>Daftar Jadwal Maintenance</h3>
-                            <CustomizedTables headers={tableHeaders} rows={tableRows} />
-                            </div>
-                        </div>
-                        <div className="card-footer text-right">
-                            <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleBack}>
-                                Kembali
-                            </CustomizedButtons>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        );
-    }
-}
-
-export default withRouter(LookUpdateMaintenance); */
-
 import React from "react";
 import APIConfig from "../../APIConfig";
 import classes from "./styles.module.css";
 import TableMaintenanceDetail from "../../components/Maintenance/mnTableDetail";
-import Modal from "../../components/Modal";
 import { withRouter } from "react-router-dom";
 import ReactNotification from "react-notifications-component";
 import { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { Button } from "react-bootstrap";
 import CustomizedTables from "../../components/Table";
+import Modal from "react-bootstrap/Modal";
 
 const initState = {
     dateMn: "",
@@ -144,6 +34,10 @@ class CreateMaintenance extends React.Component {
             isChangeMaintenance: false,
             finishedSubmitSchedule: false,
             finishedDeleteMaintenance: false,
+            isCancelToChange: false,
+            scheduleToDelete: null,
+            isDeleteSchedule: false,
+            isError: false,
         };
         this.handleLookDetail = this.handleLookDetail.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -157,6 +51,11 @@ class CreateMaintenance extends React.Component {
         this.handleAfterSubmit = this.handleAfterSubmit.bind(this);
         this.deleteMaintenance = this.deleteMaintenance.bind(this);
         this.handleAfterDelete = this.handleAfterDelete.bind(this);
+        this.cancelChange = this.cancelChange.bind(this);
+        this.handleConfirmCancel = this.handleConfirmCancel.bind(this);
+        this.handleConfirmDeleteMaintenance = this.handleConfirmDeleteMaintenance.bind(this);
+        this.handleCancelToDelete = this.handleCancelToDelete.bind(this);
+        this.handleAfterError = this.handleAfterError.bind(this);
     }
 
     componentDidMount() {
@@ -169,7 +68,7 @@ class CreateMaintenance extends React.Component {
             this.setState({ orderMSTarget: orderMSItem.data });
             this.handleLookDetail();
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
             console.log(error);
         }
     } 
@@ -192,7 +91,7 @@ class CreateMaintenance extends React.Component {
             const maintenances = await APIConfig.get(`/produksi/maintenance/daftar/${this.state.orderMSTarget.idOrderMs}`);
             this.setState({ listMaintenance: maintenances.data });
         } catch(error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
             console.log(error);
         }
     }
@@ -215,7 +114,7 @@ class CreateMaintenance extends React.Component {
             this.setState({ maintenanceTarget: maintenanceItem.data });
             this.handleToChangeMaintenance();
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
             console.log(error);
         }
     }
@@ -235,7 +134,7 @@ class CreateMaintenance extends React.Component {
 
     handleCancelSubmit(event) {
         event.preventDefault();
-        this.setState({ isChangeMaintenance: false });
+        this.setState({ isChangeMaintenance: false, isCancelToChange: false, });
     }
 
     handleCancel(event) {
@@ -257,10 +156,10 @@ class CreateMaintenance extends React.Component {
         event.preventDefault();
         try {
             if(new Date(this.state.dateMn) < new Date(this.state.actualStart)) {
-                let date = this.state.dateMn;
+                let date = this.getDate(this.state.dateMn);
                 store.addNotification({
                     title: "Peringatan!",
-                    message: `Tanggal Maintenance  ${date} tidak boleh lebih awal dari periode mulai`,
+                    message: `Tanggal Maintenance  ${date} tidak boleh dilakukan sebelum periode mulai`,
                     type: "warning",
                     container: "top-left",
                     insert: "top",
@@ -270,12 +169,12 @@ class CreateMaintenance extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 600
+                    width: 370
                 });
                 return false;
             }
             if(new Date(this.state.dateMn) > new Date(this.state.actualEnd)) {
-                let date = this.state.dateMn;
+                let date = this.getDate(this.state.dateMn);
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Tanggal Maintenance  ${date} tidak boleh dilakukan setelah periode selesai`,
@@ -288,10 +187,27 @@ class CreateMaintenance extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 600
+                    width: 370
                 });
                 return false;
-            }
+            };
+            if(this.state.dateMn.length === 0) {
+                store.addNotification({
+                    title: "Peringatan!",
+                    message: `Anda wajib megisi field Tanggal Maintenance`,
+                    type: "warning",
+                    container: "top-left",
+                    insert: "top",
+                    animationIn: ["animated", "fadeIn"],
+                    animationOut: ["animated", "fadeout"],
+                    dismiss: {
+                        duration: 7000,
+                        showIcon: true,
+                    },
+                    width: 370
+                });
+            return false;
+            };
             const data = {
                 dateMn: this.state.dateMn,
             };
@@ -299,37 +215,70 @@ class CreateMaintenance extends React.Component {
             this.loadData();
             this.setState({ finishedSubmitSchedule: true });
         } catch(error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
         this.handleCancel(event);
     }
 
     async deleteMaintenance(idMaintenance) {
+        this.setState({ isDeleteSchedule: false });
         try {
             await APIConfig.delete(`/produksi/maintenance/delete/${idMaintenance}`);
             this.loadData();
             this.setState({ finishedDeleteMaintenance: true });
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
+    }
+
+    handleConfirmDeleteMaintenance(maintenance) {
+        this.setState({ scheduleToDelete: maintenance, isDeleteSchedule: true });
+    }
+
+    handleCancelToDelete(event) {
+        event.preventDefault();
+        this.setState({ isDeleteSchedule: false });
+    }
+
+    cancelChange(event) {
+        event.preventDefault();
+        this.setState({ isCancelToChange: false });
+    }
+
+    handleConfirmCancel(event) {
+        event.preventDefault();
+        this.setState({ isCancelToChange: true });
+    }
+
+    handleAfterError = () => {
+        this.props.history.push(`/produksi/maintenance`);
+        this.setState({ isError: false });
     }
 
     render() {
         const {
             dateMn,
+            isCancelToChange,
+            isDeleteSchedule,
+            isError
         } = this.state;
 
         let{ listMaintenance } = this.state;
 
         const tableHeaders = [
-            'No', 'Tanggal Maintenance', 'Ubah Jadwal', 'Hapus Jadwal'
+            'No', 'Tanggal Maintenance', 'Aksi'
         ];
 
         const tableRows = listMaintenance.map((maintenance) => [this.getDate(maintenance.dateMn),
-            <Button className={classes.button1} onClick={() => this.changeMaintenance(maintenance.idMaintenance)}>&nbsp;Ubah&nbsp;</Button>, 
-            <Button className={classes.button2} onClick={() => this.deleteMaintenance(maintenance.idMaintenance)}>Hapus</Button>
+            <div className="d-flex justify-content-center align-items-center">
+            <Button className={classes.button1} onClick={() => this.changeMaintenance(maintenance.idMaintenance)}>&nbsp;Ubah&nbsp;</Button>
+            <span>&nbsp;&nbsp;</span>
+            <Button className={classes.button2} onClick={() => this.handleConfirmDeleteMaintenance(maintenance)}>Hapus</Button>
+            </div>
         ]);
 
         return (
@@ -354,9 +303,15 @@ class CreateMaintenance extends React.Component {
                                 periodeMulai={this.getDate(this.state.actualStart)}
                                 periodeSelesai={this.getDate(this.state.actualEnd)}
                             />
-                            <br></br>
                         </div>
                         <div className="card-body">
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="form-group">
+                                    <h3 className={classes.subtitle}>Daftar Jadwal Maintenance</h3>
+                                </div>
+                            </div>
+                            </div>
                             <CustomizedTables headers={tableHeaders} rows={tableRows} /><br></br>
                         </div>
                         <div className="card-footer text-right">
@@ -366,7 +321,7 @@ class CreateMaintenance extends React.Component {
                 </div>
             </div>
 
-            <Modal show={this.state.isChangeMaintenance} >
+            <Modal show={this.state.isChangeMaintenance} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                 <form onChange={this.handleChange} >
                     <div className="row" style={{ marginTop: 20 }}>
                         <div className="col-sm-1"></div>
@@ -391,11 +346,12 @@ class CreateMaintenance extends React.Component {
                                             </div>
                                             </div>
                                         </div>
+                                        <div className={classes.requiredFill} style={{color: "red"}}>* Wajib diisi</div>
                                     </div>
                                     <div className="card-footer text-center">
                                         <Button className={classes.button1} onClick={this.handleSubmitChangeMaintenance}>Simpan</Button>
                                         <span>&nbsp;&nbsp;</span>
-                                        <Button className={classes.button2} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                                        <Button className={classes.button2} onClick={this.handleConfirmCancel}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                                     </div>
                                 </div>
                             </div>
@@ -403,27 +359,80 @@ class CreateMaintenance extends React.Component {
                 </form>
             </Modal>
 
-            <Modal show={this.state.finishedSubmitSchedule}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Jadwal Maintenance Berhasil Diubah`}</h2>
-                        </div>
-                        <div className="card-footer text-center">
-                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
-                        </div>
+            <Modal show={isCancelToChange} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                <Modal.Header>
+                    <div className="text-center">
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal mengubah jadwal ?</h4>
                     </div>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="text-center">
+                        <Button className={classes.button1} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                        <Button className={classes.button2} onClick={this.cancelChange}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
+                    </div>
+                </Modal.Body>
             </Modal>
 
-            <Modal show={this.state.finishedDeleteMaintenance}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Jadwal Maintenance Berhasil Dihapus`}</h2>
+            <Modal show={this.state.finishedSubmitSchedule} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jadwal Maintenance Berhasil Diubah</h4>
                         </div>
-                        <div className="card-footer text-center">
-                            <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="card">
+                            <div className="card-footer text-center">
+                                <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
+                            </div>
                         </div>
-                    </div>
-            </Modal>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isDeleteSchedule} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                    <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin akan menghapus jadwal ?</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.deleteMaintenance(this.state.scheduleToDelete.idMaintenance)}>&nbsp;&nbsp;Hapus&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                            <Button className={classes.button2} onClick={this.handleCancelToDelete}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={this.state.finishedDeleteMaintenance} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jadwal Maintenance Berhasil Dihapus</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="card">
+                            <div className="card-footer text-center">
+                                <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+                <Modal show={isError} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oops terjadi masalah pada server!
+                            <br></br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harap coba beberapa saat lagi</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.handleAfterError()}>Kembali</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
             
             </div>
             </div>

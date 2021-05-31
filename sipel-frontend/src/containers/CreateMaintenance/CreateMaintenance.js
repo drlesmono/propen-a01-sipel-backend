@@ -1,9 +1,7 @@
 import React from "react";
 import APIConfig from "../../APIConfig";
-import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
 import TableMaintenanceDetail from "../../components/Maintenance/mnTableDetail";
-import Modal from "../../components/Modal";
 import MaintenanceList from "../../components/Maintenance/maintenanceList";
 import { withRouter } from "react-router-dom";
 import * as moment from "moment";
@@ -11,6 +9,7 @@ import ReactNotification from "react-notifications-component";
 import { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 
 class CreateMaintenance extends React.Component {
     constructor(props) {
@@ -27,6 +26,8 @@ class CreateMaintenance extends React.Component {
             fullname: "",
             maintained: false,
             finishedSubmitSchedule: false,
+            isError: false,
+            isCancelToMake: false
         };
         this.handleLookDetail = this.handleLookDetail.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -36,6 +37,9 @@ class CreateMaintenance extends React.Component {
         this.handleSubmitCreateMaintenance = this.handleSubmitCreateMaintenance.bind(this);
         this.handleCancelSubmit = this.handleCancelSubmit.bind(this);
         this.handleAfterSubmit = this.handleAfterSubmit.bind(this);
+        this.handleAfterError = this.handleAfterError.bind(this);
+        this.handleConfirmCancel = this.handleConfirmCancel.bind(this);
+        this.cancelToMake = this.cancelToMake.bind(this);
     }
 
     componentDidMount() {
@@ -48,7 +52,8 @@ class CreateMaintenance extends React.Component {
             this.setState({ orderMSTarget: orderMSItem.data });
             this.handleLookDetail();
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     } 
@@ -103,10 +108,10 @@ class CreateMaintenance extends React.Component {
         try {
             for (let i=0; i<this.state.listMaintenance.length;i++) {
                 if(new Date(this.state.listMaintenance[i].dateMn) < new Date(this.state.actualStart)) {
-                    let date = this.state.listMaintenance[i].dateMn;
+                    let date = this.getDate(this.state.listMaintenance[i].dateMn);
                     store.addNotification({
                         title: "Peringatan!",
-                        message: `Tanggal Maintenance  ${date} tidak boleh lebih awal dari periode mulai`,
+                        message: `Tanggal Maintenance  ${date} tidak boleh dilakukan sebelum periode mulai`,
                         type: "warning",
                         container: "top-left",
                         insert: "top",
@@ -121,7 +126,7 @@ class CreateMaintenance extends React.Component {
                     return false;
                 }
                 if(new Date(this.state.listMaintenance[i].dateMn) > new Date(this.state.actualEnd)) {
-                    let date = this.state.listMaintenance[i].dateMn;
+                    let date = this.getDate(this.state.listMaintenance[i].dateMn);
                     store.addNotification({
                         title: "Peringatan!",
                         message: `Tanggal Maintenance  ${date} tidak boleh dilakukan setelah periode selesai`,
@@ -138,8 +143,7 @@ class CreateMaintenance extends React.Component {
                     });
                     return false;
                 }
-                if(new Date(this.state.listMaintenance[i].dateMn) === "" || new Date(this.state.listMaintenance[i].dateMn) === null) {
-                    let date = this.state.listMaintenance[i].dateMn;
+                if(this.state.listMaintenance[i].dateMn.length === 0) {
                     store.addNotification({
                         title: "Peringatan!",
                         message: `Anda wajib mengisi field Tanggal Maintenance`,
@@ -168,7 +172,8 @@ class CreateMaintenance extends React.Component {
                 this.setState({ finishedSubmitSchedule: true });
             }
         } catch (error) {
-            alert("Oops terjadi masalah pada server");
+            this.setState({ isError: true });
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
@@ -179,6 +184,21 @@ class CreateMaintenance extends React.Component {
 
     handleAfterSubmit = () => {
         this.props.history.push(`/produksi/maintenance`);
+    }
+
+    handleAfterError = () => {
+        this.props.history.push(`/produksi/maintenance`);
+        this.setState({ isError: false });
+    }
+
+    handleConfirmCancel(event) {
+        event.preventDefault();
+        this.setState({ isCancelToMake: true });
+    }
+
+    cancelToMake(event) {
+        event.preventDefault();
+        this.setState({ isCancelToMake: false });
     }
 
     render() {
@@ -224,34 +244,59 @@ class CreateMaintenance extends React.Component {
                             </div>
                         </div>
                         <div className="card-footer text-right">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#F86439" onClick={this.handleSubmitCreateMaintenance}>
-                                Simpan
-                            </CustomizedButtons> */}
                             <Button className={classes.button1} onClick={this.handleSubmitCreateMaintenance}>Simpan</Button>
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleCancelSubmit()}>
-                                Batal
-                            </CustomizedButtons> */}
                             <span>&nbsp;&nbsp;</span>
-                            <Button className={classes.button2} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
+                            <Button className={classes.button2} onClick={this.handleConfirmCancel}>&nbsp;&nbsp;Batal&nbsp;&nbsp;</Button>
                         </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <Modal show={this.state.finishedSubmitSchedule}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Jadwal Maintenance Berhasil Dibuat`}</h2>
-                        </div>
-                        <div className="card-footer text-center">
-                            {/* <CustomizedButtons variant="contained" size="medium" color="#FD693E" onClick={() => this.handleAfterSubmit()} >
-                                Kembali
-                            </CustomizedButtons> */}
-                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
-                        </div>
+            <Modal show={this.state.isCancelToMake} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                <Modal.Header>
+                    <div className="text-center">
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal membuat jadwal ?</h4>
                     </div>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="text-center">
+                        <Button className={classes.button1} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;</Button>
+                            <span>&nbsp;&nbsp;</span>
+                        <Button className={classes.button2} onClick={this.cancelToMake}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
+                    </div>
+                </Modal.Body>
             </Modal>
+
+            <Modal show={this.state.finishedSubmitSchedule} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jadwal Maintenance Berhasil Dibuat</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="card">
+                            <div className="card-footer text-center">
+                                <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
+            <Modal show={this.state.isError} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
+                     <Modal.Header>
+                        <div className="text-center">
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oops terjadi masalah pada server!
+                            <br></br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Harap coba beberapa saat lagi</h4>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.handleAfterError()}>Kembali</Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
             </div>
             </div>
         );
