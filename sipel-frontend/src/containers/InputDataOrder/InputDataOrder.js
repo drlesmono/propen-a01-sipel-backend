@@ -35,6 +35,7 @@ class InputDataOrder extends React.Component {
         this.handleLookUpDetail = this.handleLookUpDetail.bind(this);
         this.handleClickUnggah = this.handleClickUnggah.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
+        this.handleAfterError = this.handleAfterError.bind(this);
     }
 
     componentDidMount() {

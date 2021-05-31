@@ -667,6 +667,7 @@ class CreateOrder extends React.Component {
     }
 
     handleAfterError = () => {
+        this.props.history.push(`/order/order`);
         this.setState({ isError: false });
     }
 
