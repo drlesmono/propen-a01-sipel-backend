@@ -353,7 +353,7 @@ class ChangeStatusOrder extends Component {
                                         </tr>
                                     { this.state.isErrorPiClosed ?
                                         <><tr>
-                                        <td style={{fontWeight: 'bold', color: "#FD693E"}}>Progress order belum 100%</td>
+                                        <td style={{fontWeight: 'bold', color: "#fd693e"}}>Progress order belum 100%</td>
                                     </tr></> : <></>}
                                     </> : <></>}
                                 { orderTarget.managedService ?
