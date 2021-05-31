@@ -157,7 +157,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -174,7 +174,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -191,7 +191,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -208,7 +208,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -225,7 +225,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -242,7 +242,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -259,7 +259,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 500
                 });
                 return false;
             }
@@ -305,7 +305,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -322,7 +322,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -339,7 +339,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -356,7 +356,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -394,7 +394,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -411,7 +411,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -428,7 +428,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -445,7 +445,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -481,7 +481,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -498,7 +498,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -515,7 +515,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -532,7 +532,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -549,7 +549,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -566,7 +566,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -583,7 +583,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -600,7 +600,7 @@ class CreateOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 370
+                    width: 380
                 });
                 return false;
             }
@@ -644,7 +644,7 @@ class CreateOrder extends React.Component {
                             duration: 7000,
                             showIcon: true,
                         },
-                        width: 370
+                        width: 380
                     });
                     return false;
                 }
@@ -1130,7 +1130,7 @@ class CreateOrder extends React.Component {
                 <Modal show={isCancel} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;Anda yakin membatalkan menyimpan order ?</h4>
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal menyimpan order ?</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>

@@ -271,7 +271,7 @@ class DetailOrder extends React.Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 300
+                    width: 380
                 });
                 return false;
             }
@@ -421,7 +421,7 @@ class DetailOrder extends React.Component {
                             duration: 7000,
                             showIcon: true,
                         },
-                        width: 300
+                        width: 380
                     });
                     return false;
                 }
@@ -702,7 +702,7 @@ class DetailOrder extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="text-center">
-                            <Button className={classes.button1} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;</Button>
+                            <Button className={classes.button1} onClick={this.handleCancelSubmit}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
                             <span>&nbsp;&nbsp;</span>
                             <Button className={classes.button2} onClick={this.noCancelChange}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
                         </div>

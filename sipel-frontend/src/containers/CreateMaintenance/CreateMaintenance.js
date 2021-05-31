@@ -121,7 +121,7 @@ class CreateMaintenance extends React.Component {
                             duration: 7000,
                             showIcon: true,
                         },
-                        width: 600
+                        width: 500
                     });
                     return false;
                 }
@@ -139,7 +139,7 @@ class CreateMaintenance extends React.Component {
                             duration: 7000,
                             showIcon: true,
                         },
-                        width: 600
+                        width: 500
                     });
                     return false;
                 }
@@ -156,7 +156,7 @@ class CreateMaintenance extends React.Component {
                             duration: 7000,
                             showIcon: true,
                         },
-                        width: 600
+                        width: 500
                     });
                     return false;
                 }
@@ -256,12 +256,12 @@ class CreateMaintenance extends React.Component {
             <Modal show={this.state.isCancelToMake} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                 <Modal.Header>
                     <div className="text-center">
-                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal membuat jadwal ?</h4>
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal membuat jadwal ?</h4>
                     </div>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="text-center">
-                        <Button className={classes.button1} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;</Button>
+                        <Button className={classes.button1} onClick={() => this.handleCancelSubmit()}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ya&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Button>
                             <span>&nbsp;&nbsp;</span>
                         <Button className={classes.button2} onClick={this.cancelToMake}>&nbsp;&nbsp;Tidak&nbsp;&nbsp;</Button>
                     </div>

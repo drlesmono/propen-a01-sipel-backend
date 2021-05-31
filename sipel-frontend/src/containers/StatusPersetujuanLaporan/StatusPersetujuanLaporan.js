@@ -269,7 +269,7 @@ class StatusPersetujuanLaporan extends Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 300
+                    width: 380
                 });
                 return false;
             }
@@ -307,7 +307,7 @@ class StatusPersetujuanLaporan extends Component {
                         duration: 7000,
                         showIcon: true,
                     },
-                    width: 300
+                    width: 380
                 });
                 return false;
             }

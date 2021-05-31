@@ -746,7 +746,7 @@ class ChangeOrderPIMS extends React.Component {
                 <Modal show={isCancel} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;Anda yakin membatalkan menyimpan order ?</h4>
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal menyimpan order ?</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>

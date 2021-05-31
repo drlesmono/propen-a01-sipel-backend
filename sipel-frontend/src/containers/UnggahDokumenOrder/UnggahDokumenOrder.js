@@ -104,7 +104,7 @@ class UnggahDokumenOrder extends React.Component {
                     duration: 7000,
                     showIcon: true,
                 },
-                width: 300
+                width: 500
             });
             return false;
         }
@@ -204,7 +204,7 @@ class UnggahDokumenOrder extends React.Component {
             <Modal show={isFinishedUpload} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                 <Modal.Header>
                     <div className="text-center">
-                        <h4>&nbsp;&nbsp;&nbsp;Dokumen Order Berhasil Diunggah</h4>
+                        <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dokumen Order Berhasil Diunggah</h4>
                     </div>
                 </Modal.Header>
                 <Modal.Body>
@@ -234,7 +234,7 @@ class UnggahDokumenOrder extends React.Component {
             <Modal show={isCancel} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
                         <div className="text-center">
-                            <h4>&nbsp;&nbsp;Anda yakin membatalkan mengunggah dokumen ?</h4>
+                            <h4>&nbsp;&nbsp;&nbsp;&nbsp;Anda yakin batal mengunggah dokumen ?</h4>
                         </div>
                     </Modal.Header>
                     <Modal.Body>
