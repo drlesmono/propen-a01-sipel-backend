@@ -6,9 +6,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import propen.impl.sipel.filestorage.FileStorageProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({
-		FileStorageProperties.class
-})
+//@EnableConfigurationProperties({
+//		FileStorageProperties.class
+//})
 public class SipelApplication {
 
 	public static void main(String[] args) {
