@@ -45,3 +45,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### React ###
+/sipel-frontend/.eslintcache
