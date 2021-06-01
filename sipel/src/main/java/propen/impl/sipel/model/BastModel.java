@@ -42,27 +42,25 @@ public class BastModel implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = true)
-
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceModel idMaintenance;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = true)
-
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
-    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="startPeriod", nullable = false)
+    @Column(name="startPeriod", nullable = true)
     private Date startPeriod;
 
-    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="endPeriod", nullable = false)
+    @Column(name="endPeriod", nullable = true)
     private Date endPeriod;
+
+
 
 //    public void setIdReport(ReportModel idReport) {
 //        this.idReport = idReport;
@@ -92,6 +90,7 @@ public class BastModel implements Serializable{
         return idMaintenance;
     }
 
+    public String getBastNum () { return bastNum; }
     public void setBastNum(String bastNum) {
         this.bastNum = bastNum;
     }
