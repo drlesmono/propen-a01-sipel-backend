@@ -114,7 +114,9 @@ public class ReportRestController {
     @GetMapping("/report/{fileName:.+}")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
                                                   HttpServletRequest request){
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+//        Resource resource = fileStorageService.loadFileAsResource(fileName);
+        ReportModel report = reportRestService.findReportByReportName(fileName);
+        Resource resource = fileStorageService.loadFileAsResource(report.getUrlFile(), fileName);
         String fileType = null;
 
         try{
@@ -136,8 +138,10 @@ public class ReportRestController {
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
-        Path filePath = fileStorageService.getFilePath(fileName);
-        File file = new File(""+filePath+"");
+//        Path filePath = fileStorageService.getFilePath(fileName);
+        ReportModel report = reportRestService.findReportByReportName(fileName);
+//        File file = new File(""+filePath+"");
+        File file = new File(""+report.getUrlFile()+"");
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-disposition", "inline;filename=" +fileName);
 
