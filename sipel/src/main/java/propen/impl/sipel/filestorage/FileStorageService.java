@@ -48,7 +48,7 @@ public class FileStorageService {
 //            Path targetLocation = getFilePath(fileName);
 //           Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 //            Files.write(targetLocation, bytes);
-            File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + fileName);
+            File serverFile = new File(uploadRootDir.getAbsolutePath() + "/"+ fileName);
 
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
             stream.write(fileData.getBytes());
