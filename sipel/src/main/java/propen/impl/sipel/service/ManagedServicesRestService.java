@@ -3,6 +3,7 @@ package propen.impl.sipel.service;
 import propen.impl.sipel.model.ManagedServicesModel;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface ManagedServicesRestService{
@@ -14,4 +15,6 @@ public interface ManagedServicesRestService{
     List<ManagedServicesModel> msOrderByActualEnd();
 
     ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd);
+
+    LinkedHashMap<String, String> retrievePercentageMs();
 }

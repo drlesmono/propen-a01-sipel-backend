@@ -5,7 +5,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
-import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.service.ManagedServicesRestService;
@@ -14,9 +13,8 @@ import propen.impl.sipel.service.OrderRestService;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -30,11 +28,14 @@ public class ManagedServicesRestController {
     @Autowired
     private OrderRestService orderRestService;
 
+    // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
     private List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
 
+    // Mengubah pic engineer dari suatu managed services
+    // Mengembalikan response dengan result managed services yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updatePIC")
     private BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,
                                                          BindingResult bindingResult){
@@ -53,6 +54,8 @@ public class ManagedServicesRestController {
         return response;
     }
 
+    // Mengubah periode kontrak dari suatu managed services
+    // Mengembalikan response dengan result managed services yang berhasil menyimpan periode kontrak
     @PutMapping(value="/order/{idOrder}/ms/updateKontrak")
     private BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
                                                              @PathVariable("idOrder") Long idOrder,
@@ -60,7 +63,7 @@ public class ManagedServicesRestController {
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan
-            response.setMessage("PIC Engineer pada Managed Service gagal disimpan." );
+            response.setMessage("Periode kontrak pada Managed Service gagal disimpan." );
             response.setStatus(405);
             return response;
         }
@@ -79,5 +82,11 @@ public class ManagedServicesRestController {
         }
 
         return response;
+    }
+
+    @GetMapping(value="/orders/ms/perc")
+    private LinkedHashMap<String, String> retrieveTermMs(){
+
+        return managedServicesRestService.retrievePercentageMs();
     }
 }

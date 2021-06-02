@@ -31,11 +31,13 @@ public class InstallationReportRestServiceImpl implements InstallationReportRest
     @Autowired
     ProjectInstallationDb projectInstallationDb;
 
+    // Mencari seluruh installation report
     @Override
     public List<InstallationReportModel> retrieveListIr() {
         return installationReportDb.findAll();
     }
 
+    // Membuat nomor installation report
     @Override
     public String createIrNum(OrderModel order) {
 
@@ -53,6 +55,7 @@ public class InstallationReportRestServiceImpl implements InstallationReportRest
         return nomorIr;
     }
 
+    // Membuat installation report baru
     @Override
     public InstallationReportModel uploadIr(ReportModel report, InstallationReportDto ir) {
         InstallationReportModel newIr = new InstallationReportModel();

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import propen.impl.sipel.model.UserModel;
 import propen.impl.sipel.service.UserRestService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,8 +19,18 @@ public class UserRestController {
     @Autowired
     private UserRestService userRestService;
 
-    @GetMapping(value="/users")
-    private List<UserModel> retrieveListUser(){
-        return userRestService.retrieveListUser();
+    // Mengembalikan list user yang memiliki role engineer
+    @GetMapping(value="/engineers")
+    private List<UserModel> retrieveListEngineer(){
+        List<UserModel> listUser = userRestService.retrieveListUser();
+        List<UserModel> listEngineer = new ArrayList<>();
+
+        for(UserModel user : listUser){
+            if(user.getRole().getRole().equals("engineer")){
+                listEngineer.add(user);
+            }
+        }
+
+        return listEngineer;
     }
 }

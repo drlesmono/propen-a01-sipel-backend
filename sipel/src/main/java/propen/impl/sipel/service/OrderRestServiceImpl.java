@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.*;
 import propen.impl.sipel.repository.*;
+import propen.impl.sipel.rest.ProgressOrderDto;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -18,9 +19,6 @@ public class OrderRestServiceImpl implements OrderRestService{
     private OrderDb orderDb;
 
     @Autowired
-    private ProjectInstallationDb projectInstallationDb;
-
-    @Autowired
     private ManagedServicesDb managedServicesDb;
 
     @Autowired
@@ -32,6 +30,10 @@ public class OrderRestServiceImpl implements OrderRestService{
     @Autowired
     private ReportDb reportDb;
 
+    @Autowired
+    private MaintenanceDb maintenanceDb;
+
+    // Mencari seluruh order yang telah terverifikasi
     @Override
     public List<OrderModel> retrieveListOrderVerified() {
         List<OrderModel> listOrderVerified = new ArrayList<>();
@@ -45,12 +47,13 @@ public class OrderRestServiceImpl implements OrderRestService{
         return listOrderVerified;
     }
 
-
+    // Mencari order berdasarkan id order
     @Override
     public OrderModel findOrderById(Long idOrder) {
         return orderDb.findById(idOrder).get();
     }
 
+    // Mencari seluruh order dengan jenis managed service
     @Override
     public List<OrderModel> retrieveListOrderMs() {
         List<OrderModel> listOrderVerified = new ArrayList<>();
@@ -64,6 +67,8 @@ public class OrderRestServiceImpl implements OrderRestService{
         return listOrderVerified;
     }
 
+    // Membuat order baru dengan data order lama dan periode kontrak baru
+    // Penamaan order baru hasil perpanjangan menggunakan versi
     @Override
     public OrderModel extendKontrak(Long idOrder, String noPO) {
         OrderModel order = orderDb.findById(idOrder).get();
@@ -80,7 +85,6 @@ public class OrderRestServiceImpl implements OrderRestService{
         }
 
         if(orderName.contains("ver.")) {
-//            String orderNameTarget = order.getOrderName();
             int i = 3;
             orderName = orderNameSplit.get(0) + " ver." + i;
             while(listOrderSameName.contains(orderName)){
@@ -151,5 +155,157 @@ public class OrderRestServiceImpl implements OrderRestService{
         }
 
         return newOrder;
+    }
+
+    @Override
+    public ProgressOrderDto getProgress(OrderModel order, String tipe) {
+        ProgressOrderDto selectedOrderDto = new ProgressOrderDto();
+        selectedOrderDto.setOrderName(order.getOrderName());
+        if(tipe == "pi"){
+            selectedOrderDto.setTipeOrder("Proyek Instalasi");
+            selectedOrderDto.setCompletionPercentage(getProgressPI(order));
+            selectedOrderDto.setStatusOrder(getStatusPI(order));
+        }
+        if(tipe == "ms"){
+            selectedOrderDto.setTipeOrder("Managed Service");
+            selectedOrderDto.setCompletionPercentage(getProgressMS(order));
+            selectedOrderDto.setStatusOrder(getStatusMS(order));
+        }
+
+        return selectedOrderDto;
+    }
+
+    @Override
+    public List<ProgressOrderDto> getAllProgress() {
+        List<ProgressOrderDto> allProgress = new ArrayList<>();
+        List<OrderModel> allOrder = orderDb.findAll();
+
+        for(OrderModel order: allOrder){
+            if(order.getVerified() == true){
+                ProjectInstallationModel isPi = order.getIdOrderPi();
+                ManagedServicesModel isMs = order.getIdOrderMs();
+                Date today = new Date();
+                if(isPi == null && isMs != null){
+                    Date closedMs = isMs.getDateClosedMS();
+                    if (closedMs == null){
+                        ProgressOrderDto progressOrder = getProgress(order, "ms");
+                        allProgress.add(progressOrder);
+                    }
+                    else{
+                        if(closedMs.compareTo(today) > 0){
+                            ProgressOrderDto progressOrder = getProgress(order, "ms");
+                            allProgress.add(progressOrder);
+                        }
+                    }
+
+                }
+                if(isPi != null && isMs == null){
+                    if(isPi.getClose() == false){
+                        ProgressOrderDto progressOrder = getProgress(order, "pi");
+                        allProgress.add(progressOrder);
+                    }
+                }
+                if(isPi != null && isMs != null){
+                    if(isPi.getClose() == false){
+                        ProgressOrderDto progressOrder = getProgress(order, "pi");
+                        allProgress.add(progressOrder);
+                    }
+
+                    Date closedMs = isMs.getDateClosedMS();
+                    if (closedMs == null){
+                        ProgressOrderDto progressOrder2 = getProgress(order, "ms");
+                        allProgress.add(progressOrder2);
+                    }
+                    else{
+                        if(closedMs.compareTo(today) > 0){
+                            ProgressOrderDto progressOrder2 = getProgress(order, "ms");
+                            allProgress.add(progressOrder2);
+                        }
+                    }
+
+                }
+            }
+        }
+        return allProgress;
+    }
+
+    @Override
+    public Float getProgressPI(OrderModel order) {
+        ProjectInstallationModel pi = order.getIdOrderPi();
+        Float percentage = pi.getPercentage();
+        return percentage;
+    }
+
+    @Override
+    public Float getProgressMS(OrderModel order) {
+        ManagedServicesModel ms = order.getIdOrderMs();
+        List<MaintenanceModel> maintenanceList = new ArrayList<>();
+        List<MaintenanceModel> allMaintenance = maintenanceDb.findAll();
+        for(MaintenanceModel mn: allMaintenance){
+            Long idMS1 = mn.getIdOrderMS().getIdOrderMs();
+            Long idMS2 = ms.getIdOrderMs();
+            if(idMS1.equals(idMS2)){
+                maintenanceList.add(mn);
+            }
+        }
+        Float progress = Float.valueOf(0);
+        Float size = Float.valueOf(maintenanceList.size());
+        if(size == 0){
+            return progress;
+        }else{
+            for(MaintenanceModel main: maintenanceList){
+                boolean stat = main.getMaintained();
+                if (stat == true){
+                    progress++;
+                }
+            }
+            return (progress/size*100);
+        }
+    }
+
+    @Override
+    public String getStatusPI(OrderModel order) {
+        ProjectInstallationModel pi = order.getIdOrderPi();
+        Float percentage = pi.getPercentage();
+        String defaultStatus = "In Progress";
+        Boolean close = pi.getClose();
+        Date deadline = pi.getDeadline();
+        Date closed = pi.getDateClosedPI();
+        UserModel eng = pi.getIdUserEng();
+        Date now = new Date();
+        Boolean isDue = now.after(deadline);
+        if(close == true){
+            defaultStatus = "Closed";
+        }
+        if(close == false){
+            if(percentage == Float.valueOf(100)){
+                defaultStatus = "Finished";
+            }
+            else{
+                if(percentage == Float.valueOf(0) && eng==null){
+                    defaultStatus = "On Hold";
+                }
+                else{
+                    defaultStatus = "In Progress";
+                }
+            }
+        }
+
+        return defaultStatus;
+    }
+
+    @Override
+    public String getStatusMS(OrderModel order) {
+        ManagedServicesModel ms = order.getIdOrderMs();
+        UserModel assigned = ms.getIdUserPic();
+        Float percentage = getProgressMS(order);
+
+        String defaultStatus = "Inactivate";
+        Boolean activated = ms.getActivated();
+        if (activated==true && assigned != null){
+            defaultStatus = "Active";
+        }
+
+        return defaultStatus;
     }
 }
