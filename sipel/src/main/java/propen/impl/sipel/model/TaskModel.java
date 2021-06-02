@@ -1,15 +1,12 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "task")
@@ -29,15 +26,8 @@ public class TaskModel implements Serializable{
     @Column(name="taskName", nullable = false)
     private String taskName;
 
-    @NotNull
-    @Column(name="percentage", nullable = false)
+    @Column(name="percentage", nullable = true)
     private Float percentage;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private UserModel idUserPic;
 
     public Long getIdTask() {
         return idTask;
@@ -71,11 +61,4 @@ public class TaskModel implements Serializable{
         this.percentage = percentage;
     }
 
-    public UserModel getIdUserPic() {
-        return idUserPic;
-    }
-
-    public void setIdUserPic(UserModel idUserPic) {
-        this.idUserPic = idUserPic;
-    }
 }
