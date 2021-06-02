@@ -313,16 +313,17 @@ class LaporanInstalasiMaintenance extends Component {
         //const FILE_API_BASE_URL = "http://localhost:2020/report";
         //const url = report.urlFile;
         //const suffix = "/preview";
+        //const nama = report.fileName
         if(report.fileType === "application/pdf"){
             return report.urlFile+"/preview";
-            //this.props.history.push(`/report/${report.urlFile}/preview`, { headers: authHeader() } );
+            //this.props.history.push(`/report/${report.reportName}/preview`, { headers: authHeader() } );
             //return axios.post(http://localhost:2020/report/ + report.urlFile + /preview);
-            //return axios.get(FILE_API_BASE_URL + report.urlFile + suffix, { headers: authHeader() });
+            //return axios.get(FILE_API_BASE_URL + report.reportName + suffix, { headers: authHeader() });
 
         }else{
             return report.urlFile;
-            //this.props.history.push(`/report/${report.urlFile}`, { headers: authHeader() } );
-            //return axios.get(FILE_API_BASE_URL + "/" + report.urlFile, { headers: authHeader() });
+            //this.props.history.push(`/report/${report.reportName}`, { headers: authHeader() } );
+            //return axios.get(FILE_API_BASE_URL + "/" + report.reportName, { headers: authHeader() });
         
         }
 

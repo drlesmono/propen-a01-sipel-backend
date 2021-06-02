@@ -117,7 +117,8 @@ class App extends Component {
       showPeriodeKontrak: false,
       showPenugasanEngineer: false,
       showMengelolaLaporan: false,
-	  showBoardAdmin: false,
+	    showBoardAdmin: false,
+      showHalamanAdmin: false,
       currentUser: undefined,
     };
   }
@@ -132,6 +133,7 @@ class App extends Component {
         showPenugasanEngineer: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
         showMengelolaLaporan: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_ENGINEER"),
 		    showBoardAdmin: user.roles.includes("ROLE_ADMIN"),
+        showHalamanAdmin: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
       });
     }
   }
@@ -140,7 +142,7 @@ class App extends Component {
     AuthService.logout();
   }
   render() {
-    const { currentUser, showPeriodeKontrak, showPenugasanEngineer, showBoardAdmin, showMengelolaLaporan } = this.state;
+    const { currentUser, showPeriodeKontrak, showPenugasanEngineer, showMengelolaLaporan, showBoardAdmin, showHalamanAdmin } = this.state;
 
     return (
       <div>

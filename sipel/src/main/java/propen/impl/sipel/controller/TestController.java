@@ -20,12 +20,12 @@ public class TestController {
 	private OrderRestService orderRestService;
 
 	@GetMapping("/all")
-	public String allAccess() {
-		return "Public Content.";
+	public List<OrderModel> allAccess() {
+		return orderRestService.retrieveListOrderVerified();
 	}
 	
 	@GetMapping("/admin")
-	@PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
 	public List<OrderModel> adminAccess() {
 		return orderRestService.retrieveListOrderVerified();
 	}
