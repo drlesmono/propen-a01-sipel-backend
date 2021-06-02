@@ -60,13 +60,24 @@ public class ReportRestController {
     // File yang memiliki nama yang sama akan dibuat nama dengan versi
     // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report) throws Exception{
+    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
+                                                   HttpServletRequest request) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
         if(report.getReportType() == null && report.getFile() == null){
             // Respon Gagal Simpan
             response.setMessage("Laporan gagal disimpan." );
             response.setStatus(405);
             return response;
+        }
+
+        // Root Directory
+        String uploadRootPath = request.getServletContext().getRealPath("upload");
+//        System.out.println("uploadRootPath=" + uploadRootPath);
+
+        File uploadRootDir = new File(uploadRootPath);
+        // Create directory if it not exists.
+        if (!uploadRootDir.exists()) {
+            uploadRootDir.mkdirs();
         }
 
         String fileNameOriginal = StringUtils.cleanPath(report.getFile().getOriginalFilename());
@@ -82,7 +93,8 @@ public class ReportRestController {
                 fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
             }
         }
-        String fileName = fileStorageService.storeFile(report.getFile(), fileNameOriginal);
+//        String fileName = fileStorageService.storeFile(report.getFile(), fileNameOriginal);
+        String fileName = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
         String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/report/")
                 .path(fileName)

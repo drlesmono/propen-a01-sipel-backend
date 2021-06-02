@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -35,15 +38,21 @@ public class FileStorageService {
 //    }
 
     //  Menyimpan file ke local server
-    public String storeFile(MultipartFile file, String fileNameTarget){
+    public String storeFile(File uploadRootDir, String fileNameTarget, MultipartFile fileData){
         String fileName = fileNameTarget;
+
         try{
 //           Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            byte[] bytes = file.getBytes();
+//            byte[] bytes = file.getBytes();
 //            Path targetLocation = Paths.get(UPLOADED_FOLDER + fileName);
-            Path targetLocation = getFilePath(fileName);
+//            Path targetLocation = getFilePath(fileName);
 //           Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            Files.write(targetLocation, bytes);
+//            Files.write(targetLocation, bytes);
+            File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + fileName);
+
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+            stream.write(fileData.getBytes());
+            stream.close();
            return fileName;
         }catch (IOException e){
             throw new FileStorageException("File "+fileName+" gagal disimpan, silahkan coba lagi!", e);
