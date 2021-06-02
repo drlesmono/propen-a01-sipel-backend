@@ -1,6 +1,7 @@
 package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.OrderModel;
@@ -13,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class ProjectInstallationRestController {
 
@@ -21,12 +22,14 @@ public class ProjectInstallationRestController {
     private ProjectInstallationRestService projectInstallationRestService;
 
     @GetMapping(value="/orders/pi")
-    private List<ProjectInstallationModel> retrieveListPi(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }
 
     @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updatePIC")
-    private BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
                                                              BindingResult bindingResult){
         BaseResponse<ProjectInstallationModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){

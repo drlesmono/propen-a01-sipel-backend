@@ -10,10 +10,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 public class UserModel implements Serializable {
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -21,6 +27,7 @@ public class UserModel implements Serializable {
     private String id;
 
     @NotNull
+    @Size(max = 20)
     @Column(name="username", nullable = false)
     private String username;
 
@@ -38,7 +45,6 @@ public class UserModel implements Serializable {
     private String fullname;
 
     @NotNull
-    @Size(max = 50)
     @Column(name="surname", nullable = false)
     private String surname;
 
@@ -46,11 +52,44 @@ public class UserModel implements Serializable {
     @Column(name="email", nullable = false)
     private String email;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_role", referencedColumnName = "id", nullable = false)
+    /**@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private RoleModel role;
+    private RoleModel role;*/
+
+    @Column(name="role_name", nullable = true)
+    private String role_name;
+
+    public String getRole_name() {
+        return role_name;
+    }
+
+    public void setRole_name(String role_name) {
+        this.role_name = role_name;
+    }
+
+    //kamila nambahin
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(	name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleModel> roles = new HashSet<>();
+
+    public UserModel() {
+    }
+
+    public UserModel(String fullname, String surname, String email, String nip, String username, String role_name, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role_name = role_name;
+        this.nip = nip;
+        this.fullname = fullname;
+        this.surname = surname;
+    }
+
+    //sampai sini
 
 //    @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY)
 //    @OnDelete(action = OnDeleteAction.CASCADE)
@@ -71,12 +110,6 @@ public class UserModel implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<ServicesModel> listService;
-
-    @OneToMany(mappedBy = "idUserPic", fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private List<TaskModel> listTask;
-
 
     public void setId(String id){
         this.id = id;
@@ -134,12 +167,20 @@ public class UserModel implements Serializable {
         return surname;
     }
 
-    public void setRole(RoleModel role) {
+    /**public void setRole(RoleModel role) {
         this.role = role;
     }
 
     public RoleModel getRole() {
         return role;
+    }*/
+
+    public Set<RoleModel> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleModel> roles) {
+        this.roles = roles;
     }
 
     public void setListService(List<ServicesModel> listService) {
@@ -148,14 +189,6 @@ public class UserModel implements Serializable {
 
     public List<ServicesModel> getListService() {
         return listService;
-    }
-
-    public void setListTask(List<TaskModel> listTask) {
-        this.listTask = listTask;
-    }
-
-    public List<TaskModel> getListTask() {
-        return listTask;
     }
 
 //    public void setListOrder(List<OrderModel> listOrder) {

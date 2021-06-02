@@ -28,7 +28,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     }
 
     @Override
-    public ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic) {
+    public ManagedServicesModel updatePIC(Long idOrderMs, String idUserPic) { 
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
         msTarget.setIdUserPic(userDb.findById(idUserPic).get());
         return managedServicesDb.save(msTarget);

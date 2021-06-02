@@ -5,6 +5,9 @@ import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
+import authHeader from '../../services/auth-header';
+import UserService from "../../services/user.service";
+import axios from 'axios';
 
 class LaporanInstalasiMaintenance extends Component {
     constructor(props) {
@@ -52,16 +55,17 @@ class LaporanInstalasiMaintenance extends Component {
 
     componentDidMount() {
         this.loadData();
+        
     }
 
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerifiedReport");
-            const reports = await APIConfig.get("/reportsIrMr");
-            const listIr = await APIConfig.get("/reports/ir");
-            const listMr = await APIConfig.get("/reports/mr");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerifiedReport", { headers: authHeader() });
+            const reports = await APIConfig.get("/reportsIrMr", { headers: authHeader() });
+            const listIr = await APIConfig.get("/reports/ir", { headers: authHeader() });
+            const listMr = await APIConfig.get("/reports/mr", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
             this.setState({ ordersVerified: orders.data, reports: reports.data, listIr: listIr.data, 
                             listMr: listMr.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
@@ -83,7 +87,7 @@ class LaporanInstalasiMaintenance extends Component {
             dataReport.append("reportType", this.state.isInstallationReport ? "installation" : "maintenance");
             dataReport.append("file", this.state.file);
             console.log(dataReport);
-            response = await APIConfig.post(`/report/upload`, dataReport);
+            response = await APIConfig.post(`/report/upload`, dataReport, { headers: authHeader() });
             newReport = response.data.result;
 
             if(this.state.isInstallationReport){
@@ -93,7 +97,7 @@ class LaporanInstalasiMaintenance extends Component {
                     notes: this.state.notes,
                     idOrderPi: this.getPi(parseInt(this.state.orderByPO, 10)).idOrderPi
                 }
-                await APIConfig.post(`/report/${newReport.idReport}/installation/upload`, dataInstallationReport);
+                await APIConfig.post(`/report/${newReport.idReport}/installation/upload`, dataInstallationReport, { headers: authHeader() });
             }else{
                 const dataMaintenanceReport = {
                     idMaintenanceReport: null,
@@ -102,7 +106,7 @@ class LaporanInstalasiMaintenance extends Component {
                     idMaintenance: parseInt(this.state.maintenanceTarget, 10)
                 }
                 console.log(dataMaintenanceReport);
-                await APIConfig.post(`/report/${newReport.idReport}/maintenance/upload`, dataMaintenanceReport);
+                await APIConfig.post(`/report/${newReport.idReport}/maintenance/upload`, dataMaintenanceReport, { headers: authHeader() });
             }
             
             this.setState({reportTarget: newReport});
@@ -143,7 +147,7 @@ class LaporanInstalasiMaintenance extends Component {
     async handleDelete(event){
         event.preventDefault();
         try{
-            await APIConfig.delete(`/report/${this.state.reportTarget.idReport}/delete`);
+            await APIConfig.delete(`/report/${this.state.reportTarget.idReport}/delete`, { headers: authHeader() });
         }catch (error){
             console.log(error);
             return this.setState({isFailed: true, messageError: "Laporan gagal dihapus"});
@@ -306,11 +310,22 @@ class LaporanInstalasiMaintenance extends Component {
     }
 
     getUrl(report){
+        //const FILE_API_BASE_URL = "http://localhost:2020/report";
+        //const url = report.urlFile;
+        //const suffix = "/preview";
         if(report.fileType === "application/pdf"){
             return report.urlFile+"/preview";
+            //this.props.history.push(`/report/${report.urlFile}/preview`, { headers: authHeader() } );
+            //return axios.post(http://localhost:2020/report/ + report.urlFile + /preview);
+            //return axios.get(FILE_API_BASE_URL + report.urlFile + suffix, { headers: authHeader() });
+
         }else{
             return report.urlFile;
+            //this.props.history.push(`/report/${report.urlFile}`, { headers: authHeader() } );
+            //return axios.get(FILE_API_BASE_URL + "/" + report.urlFile, { headers: authHeader() });
+        
         }
+
     }
 
     getNotes(report){
@@ -361,13 +376,13 @@ class LaporanInstalasiMaintenance extends Component {
                         this.getDate(report.uploadedDate), this.getNotes(report), 
                         <div className="d-flex justify-content-center"><Button className={classes.button2}
                         onClick={() => this.handleConfirmDelete(report)}>hapus</Button>
-                        <Button className={classes.button4} href={this.getUrl(report)} target = "_blank">lihat</Button></div>])
+                        <Button className={classes.button4} /**onClick = { () => this.getUrl(report) }*/ href={this.getUrl(report)} target = "_blank">lihat</Button></div>])
                         : reports.map((report) =>
                         [ this.getReportNum(report), report.reportName, this.getOrder(report).noPO, this.getOrder(report).clientOrg, 
                         this.getDate(report.uploadedDate), this.getNotes(report), 
                         <div className="d-flex justify-content-center"><Button className={classes.button2}
                         onClick={() => this.handleConfirmDelete(report)}>hapus</Button>
-                        <Button className={classes.button4} href={this.getUrl(report)} target = "_blank">lihat</Button></div>]);
+                        <Button className={classes.button4} /**onClick = { () => this.getUrl(report) }*/ href={this.getUrl(report)} target = "_blank">lihat</Button></div>]);
         }
 
         return (
@@ -521,7 +536,7 @@ class LaporanInstalasiMaintenance extends Component {
                                 </Button></div></>  
                                 :<><div className="d-flex justify-content-center">Laporan {reportTarget.reportType === "installation" ? "Instalasi" : "Maintenace"} {reportTarget.reportName} pada order {this.getOrder(reportTarget) === null ? "" : this.getOrder(reportTarget).noPO} berhasil disimpan.</div><br></br>
                                 <div className="d-flex justify-content-center">
-                                <Button variant="primary" className={classes.button1} href={this.getUrl(reportTarget)} target="_blank">
+                                <Button variant="primary" className={classes.button1} href={this.getUrl(reportTarget)} /**onClick = { () => this.getUrl(reportTarget) }*/ target="_blank">
                                     lihat
                                 </Button></div></>
                             }

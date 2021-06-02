@@ -7,6 +7,7 @@ import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
+import authHeader from '../../services/auth-header';
 
 class PenugasanEngineer extends Component {
     constructor(props) {
@@ -41,14 +42,15 @@ class PenugasanEngineer extends Component {
     
     componentDidMount() {
         this.loadData();
+        
     }
     
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerified");
-            const users = await APIConfig.get("/users");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerified", { headers: authHeader() });
+            const users = await APIConfig.get("/users", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
             console.log(orders.data);
             console.log(users.data);
             console.log(listPi.data);
@@ -104,7 +106,7 @@ class PenugasanEngineer extends Component {
                         dateClosedPI: pi.dateClosedPI
                     }
                     console.log(dataPi);
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi, { headers: authHeader() });
                 }
                 if(isMs === true){
                     const ms = this.getMs(this.state.orderTarget.idOrder);
@@ -118,7 +120,7 @@ class PenugasanEngineer extends Component {
                         dateClosedMS: ms.dateClosedMS
                     }
                     console.log(dataMs);
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs, { headers: authHeader() });
                     let listService = this.getListService(this.state.orderTarget);
                     console.log(listService);
                     console.log(this.state.servicesEngineer);
@@ -131,7 +133,7 @@ class PenugasanEngineer extends Component {
                             name: service.name,
                             idUser: this.state.servicesEngineer[i]
                         }
-                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service/${service.idService}/updateService`, dataService);
+                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service/${service.idService}/updateService`, dataService, { headers: authHeader() });
                     }
                 }
                 this.loadData();

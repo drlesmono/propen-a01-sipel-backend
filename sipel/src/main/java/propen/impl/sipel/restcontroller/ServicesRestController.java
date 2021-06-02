@@ -2,6 +2,7 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,7 +16,7 @@ import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class ServicesRestController {
 
@@ -23,7 +24,8 @@ public class ServicesRestController {
     private ServicesRestService servicesRestService;
 
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateService")
-    private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -42,7 +44,8 @@ public class ServicesRestController {
     }
 
     @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/createService")
-    private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();

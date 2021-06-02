@@ -1,6 +1,7 @@
 package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class OrderRestController {
 
@@ -29,13 +30,15 @@ public class OrderRestController {
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
 
-    @GetMapping(value="/ordersVerified")
-    private List<OrderModel> retrieveListOrderVerified(){
+    @GetMapping("/ordersVerified")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderVerified(){
         return orderRestService.retrieveListOrderVerified();
     }
 
     @GetMapping(value="/ordersVerified/ms")
-    private List<OrderModel> retrieveListOrderMS() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderMS() {
         List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByActualEnd();
 
         List<OrderModel> listOrder = new ArrayList<>();
@@ -49,7 +52,8 @@ public class OrderRestController {
     }
 
     @GetMapping(value="/ordersVerifiedReport")
-    private List<OrderModel> retrieveListOrderVerifiedReport(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderVerifiedReport(){
         List<OrderModel> listOrder = orderRestService.retrieveListOrderVerified();
 
         List<OrderModel> listOrderFiltered = new ArrayList<>();
@@ -63,7 +67,8 @@ public class OrderRestController {
     }
 
     @PutMapping(value="/order/{idOrder}/perpanjangKontrak")
-    private BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
                                                  BindingResult bindingResult){
         BaseResponse<OrderModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){

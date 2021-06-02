@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 //@RequestMapping("")
 public class ReportRestController {
 
@@ -46,7 +47,8 @@ public class ReportRestController {
     private static final Logger logger = Logger.getLogger(ReportRestController.class.getName());
 
     @GetMapping(value="/api/v1/reportsIrMr")
-    private List<ReportModel> retrieveListReportIrMr(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
         List<ReportModel> listReportFiltered = new ArrayList<>();
@@ -61,7 +63,8 @@ public class ReportRestController {
     }
 
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report) throws Exception{
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
         if(report.getReportType() == null && report.getFile() == null){
             // Respon Gagal Simpan
@@ -100,6 +103,7 @@ public class ReportRestController {
     }
 
     @GetMapping("/report/{fileName:.+}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
                                                   HttpServletRequest request){
         Resource resource = fileStorageService.loadFileAsResource(fileName);
@@ -122,6 +126,7 @@ public class ReportRestController {
     }
 
     @GetMapping("/report/{fileName:.+}/preview")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         Path filePath = fileStorageService.getFilePath(fileName);
         File file = new File(""+filePath+"");
@@ -129,7 +134,6 @@ public class ReportRestController {
         headers.add("content-disposition", "inline;filename=" +fileName);
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentLength(file.length())
@@ -138,7 +142,8 @@ public class ReportRestController {
     }
 
     @DeleteMapping(value="/api/v1/report/{idReport}/delete")
-    private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
             String fileName = report.getReportName();

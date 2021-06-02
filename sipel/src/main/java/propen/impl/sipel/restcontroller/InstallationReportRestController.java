@@ -1,6 +1,7 @@
 package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.InstallationReportModel;
@@ -14,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class InstallationReportRestController {
 
@@ -25,10 +26,12 @@ public class InstallationReportRestController {
     ReportRestService reportRestService;
 
     @GetMapping(value="/reports/ir")
-    private List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
 
     @PostMapping(value="/report/{idReport}/installation/upload")
-    private BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
                                                                             @PathVariable("idReport") Long idReport,
                                                                             BindingResult bindingResult){
         BaseResponse<InstallationReportModel> response = new BaseResponse<>();

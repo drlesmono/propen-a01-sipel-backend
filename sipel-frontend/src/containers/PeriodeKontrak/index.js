@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
 import moment from "moment";
+import authHeader from '../../services/auth-header';
 
 class PeriodeKontrak extends Component {
     constructor(props) {
@@ -61,10 +62,10 @@ class PeriodeKontrak extends Component {
     
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerified/ms");
-            const users = await APIConfig.get("/users");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerified/ms", { headers: authHeader() });
+            const users = await APIConfig.get("/users", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
             this.setState({ ordersVerified: orders.data, users: users.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
             // alert("Oops terjadi masalah pada server");
@@ -105,7 +106,7 @@ class PeriodeKontrak extends Component {
                     idOrderPi: pi,
                     idOrderMs: ms.idOrderMs
                 }
-                response = await APIConfig.put(`/order/${order.idOrder}/perpanjangKontrak`, dataOrder);
+                response = await APIConfig.put(`/order/${order.idOrder}/perpanjangKontrak`, dataOrder, { headers: authHeader() });
                 newOrder = response.data.result;
                 this.loadData();
             }
@@ -120,7 +121,7 @@ class PeriodeKontrak extends Component {
                 activated: ms.activated,
                 dateClosedMS: null
             }
-            response = await APIConfig.put(`/order/${this.state.isExtend ? newOrder.idOrder : order.idOrder}/ms/updateKontrak`, dataMs);
+            response = await APIConfig.put(`/order/${this.state.isExtend ? newOrder.idOrder : order.idOrder}/ms/updateKontrak`, dataMs, { headers: authHeader() });
             const newMsUpdated = response.data.result;
             
             if(this.state.isExtend){
@@ -132,7 +133,7 @@ class PeriodeKontrak extends Component {
                     name: listServiceName[i],
                     idUser: listService[i]
                     }
-                    response = await APIConfig.post(`/order/${newOrder.idOrder}/ms/${newMsUpdated.idOrderMs}/createService`, dataService);
+                    response = await APIConfig.post(`/order/${newOrder.idOrder}/ms/${newMsUpdated.idOrderMs}/createService`, dataService, { headers: authHeader() });
                     const service = response.data.result;
                     services[i] = service;
                     this.loadData();
