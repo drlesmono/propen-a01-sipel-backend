@@ -12,10 +12,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.net.URI;
 
 @Service
 public class FileStorageService {
@@ -67,17 +69,18 @@ public class FileStorageService {
     }
 
     // Mengakses file dari local server
-    public Resource loadFileAsResource(String fileName){
+    public Resource loadFileAsResource(String filePath, String fileName){
         try{
-            Path filePath = getFilePath(fileName);
+//            Path filePath = getFilePath(fileName);
 //            Path filePath = Paths.get(UPLOADED_FOLDER + fileName);
-            Resource resource = new UrlResource(filePath.toUri());
+//            Resource resource = new UrlResource(filePath.toUri());
+            Resource resource = new UrlResource(new URI(filePath));
             if(resource.exists()){
                 return resource;
             }else{
                 throw new MyFileNotFoundException("File "+fileName+" tidak ditemukan");
             }
-        }catch (MalformedURLException e){
+        }catch (MalformedURLException | URISyntaxException e){
             throw new MyFileNotFoundException("File "+fileName+" tidak ditemukan");
         }
     }
