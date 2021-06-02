@@ -1,5 +1,6 @@
 package propen.impl.sipel.restcontroller;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -113,7 +114,7 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
-    public ResponseEntity<FileOutputStream> downloadReport(@PathVariable String fileName) throws IOException {
+    public ResponseEntity downloadReport(@PathVariable String fileName) throws IOException {
 //        Resource resource = fileStorageService.loadFileAsResource(fileName);
 //        ReportModel report = reportRestService.findReportByReportName(fileName);
 //        Resource resource = fileStorageService.loadFileAsResource(report.getUrlFile(), fileName);
@@ -130,16 +131,22 @@ public class ReportRestController {
 //        }
 
         ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
-        URL url = new URL(reportTarget.getUrlFile());
-        try (InputStream in = url.openStream();
-             BufferedInputStream bis = new BufferedInputStream(in);
-             FileOutputStream fos = new FileOutputStream(fileName)) {
+        BufferedInputStream in = null;
+        FileOutputStream fout = null;
+        try {
+            in = new BufferedInputStream(new URL(reportTarget.getUrlFile()).openStream());
+            fout = new FileOutputStream(fileName);
 
-            byte[] data = new byte[1024];
+            byte data[] = new byte[1024];
             int count;
-            while ((count = bis.read(data, 0, 1024)) != -1) {
-                fos.write(data, 0, count);
+            while ((count = in.read(data, 0, 1024)) != -1) {
+                fout.write(data, 0, count);
             }
+        } finally {
+            if (in != null)
+                in.close();
+            if (fout != null)
+                fout.close();
         }
 
         return ResponseEntity.ok()
