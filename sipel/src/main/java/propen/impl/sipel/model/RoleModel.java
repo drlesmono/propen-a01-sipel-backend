@@ -19,37 +19,58 @@ public class RoleModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Size(max = 50)
-    @Column(name="role", nullable = false,unique = true)
-    private String role;
-
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    /**@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private List<UserModel> userRole;
+    private List<UserModel> userRole;*/
+
+    //kamila nambahin
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
+
+    public RoleModel() {
+
+    }
+
+    public RoleModel(ERole name) {
+        this.name = name;
+    }
+
+    public ERole getName() {
+        return name;
+    }
+
+    public void setName(ERole name) {
+        this.name = name;
+    }
+
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    //kamila nambahin sampai sini
+
     public Long getId() {
         return id;
     }
 
-    public void setRole(String role) {
+    /**public void setRole(String role) {
         this.role = role;
     }
 
     public String getRole() {
         return role;
-    }
+    }*/
 
-    public void setUserRole(List<UserModel> userRole) {
+    /**public void setUserRole(List<UserModel> userRole) {
         this.userRole = userRole;
     }
 
     public List<UserModel> getUserRole() {
         return userRole;
-    }
+    }*/
 }
+
+

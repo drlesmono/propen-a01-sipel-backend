@@ -2,6 +2,7 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,7 +27,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class ManagedServicesRestController {
 
@@ -95,14 +96,16 @@ public class ManagedServicesRestController {
 
     // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
-    private List<ManagedServicesModel> retrieveListMs(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
 
     // Mengubah pic engineer dari suatu managed services
     // Mengembalikan response dengan result managed services yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updatePIC")
-    private BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,
                                                          BindingResult bindingResult){
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -122,7 +125,8 @@ public class ManagedServicesRestController {
     // Mengubah periode kontrak dari suatu managed services
     // Mengembalikan response dengan result managed services yang berhasil menyimpan periode kontrak
     @PutMapping(value="/order/{idOrder}/ms/updateKontrak")
-    private BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
                                                              @PathVariable("idOrder") Long idOrder,
                                                              BindingResult bindingResult){
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();

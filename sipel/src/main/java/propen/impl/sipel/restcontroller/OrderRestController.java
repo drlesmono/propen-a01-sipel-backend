@@ -2,6 +2,8 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,8 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1")
 public class  OrderRestController {
     @Autowired
@@ -111,14 +113,16 @@ public class  OrderRestController {
     }
 
     // Mengembalikan list seluruh order yang telah terverifikasi
-    @GetMapping(value="/ordersVerified")
-    private List<OrderModel> retrieveListOrderVerified(){
+    @GetMapping("/ordersVerified")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderVerified(){
         return orderRestService.retrieveListOrderVerified();
     }
 
     // Mengembalikan list seluruh order jenis managed services yang telah terverifikasi
     @GetMapping(value="/ordersVerified/ms")
-    private List<OrderModel> retrieveListOrderMS() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderMS() {
         List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByActualEnd();
 
         List<OrderModel> listOrder = new ArrayList<>();
@@ -132,7 +136,8 @@ public class  OrderRestController {
 
     // Mengembalikan list order yang telah terverifikasi dan sudah memiliki nomor PO
     @GetMapping(value="/ordersVerifiedReport")
-    private List<OrderModel> retrieveListOrderVerifiedReport(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderVerifiedReport(){
         List<OrderModel> listOrder = orderRestService.retrieveListOrderVerified();
 
         List<OrderModel> listOrderFiltered = new ArrayList<>();
@@ -148,7 +153,8 @@ public class  OrderRestController {
     // Membuat order baru dengan data yang sama dengan order lama dan periode kontrak baru
     // Mengembalikan response dengan result order baru yang berhasil dibuat
     @PutMapping(value="/order/{idOrder}/perpanjangKontrak")
-    private BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
                                                  BindingResult bindingResult){
         BaseResponse<OrderModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){

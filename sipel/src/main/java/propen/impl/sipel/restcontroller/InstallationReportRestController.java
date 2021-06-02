@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.InstallationReportModel;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class InstallationReportRestController {
 
@@ -31,12 +32,14 @@ public class InstallationReportRestController {
 
     // Mengembalikan list seluruh installation report
     @GetMapping(value="/reports/ir")
-    private List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
 
     // Membuat installation report setelah object report dibuat
     // Mengembalikan response dengan result installation report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/installation/upload")
-    private BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
                                                                             @PathVariable("idReport") Long idReport,
                                                                             BindingResult bindingResult){
         BaseResponse<InstallationReportModel> response = new BaseResponse<>();

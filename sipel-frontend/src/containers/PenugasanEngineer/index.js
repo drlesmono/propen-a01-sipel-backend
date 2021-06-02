@@ -5,6 +5,7 @@ import { Form, Button, Card, Table } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
+import authHeader from '../../services/auth-header';
 
 class PenugasanEngineer extends Component {
     constructor(props) {
@@ -39,16 +40,21 @@ class PenugasanEngineer extends Component {
     
     componentDidMount() {
         this.loadData();
+        
     }
     
     // Mengambil dan mengupdate data yang masuk
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerified");
-            const engineers = await APIConfig.get("/engineers");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
-            this.setState({ ordersVerified: orders.data, engineers: engineers.data, listPi: listPi.data, listMs: listMs.data});
+            const orders = await APIConfig.get("/ordersVerified", { headers: authHeader() });
+            const users = await APIConfig.get("/users", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
+            console.log(orders.data);
+            console.log(users.data);
+            console.log(listPi.data);
+            console.log(listMs.data);
+            this.setState({ ordersVerified: orders.data, users: users.data, listPi: listPi.data, listMs: listMs.data});
             
         } catch (error) {
             this.setState({ isError: true });
@@ -74,7 +80,8 @@ class PenugasanEngineer extends Component {
                         deadline: pi.deadline,
                         dateClosedPI: pi.dateClosedPI
                     }
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi);
+                    console.log(dataPi);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi, { headers: authHeader() });
                 }
 
                 // Apabila order memiliki jenis managed service
@@ -89,7 +96,8 @@ class PenugasanEngineer extends Component {
                         timeRemaining: ms.timeRemaining,
                         dateClosedMS: ms.dateClosedMS
                     }
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs);
+                    console.log(dataMs);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs, { headers: authHeader() });
                     let listService = this.getListService(this.state.orderTarget);
                     
                     // Mengirim data service satu per satu
@@ -100,7 +108,7 @@ class PenugasanEngineer extends Component {
                             name: service.name,
                             idUser: this.state.servicesEngineer[i]
                         }
-                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service/${service.idService}/updateService`, dataService);
+                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/service/${service.idService}/updateService`, dataService, { headers: authHeader() });
                     }
                 }
 

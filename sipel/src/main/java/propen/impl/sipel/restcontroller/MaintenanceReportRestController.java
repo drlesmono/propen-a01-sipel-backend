@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.MaintenanceReportModel;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class MaintenanceReportRestController {
 
@@ -31,12 +32,14 @@ public class MaintenanceReportRestController {
 
     // Mengembalikan list seluruh maintenance report
     @GetMapping(value="/reports/mr")
-    private List<MaintenanceReportModel> retrieveListMr(){ return maintenanceReportRestService.retrieveListMr(); }
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public List<MaintenanceReportModel> retrieveListMr(){ return maintenanceReportRestService.retrieveListMr(); }
 
     // Membuat maintenance report setelah object report dibuat
     // Mengembalikan response dengan result maintenance report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/maintenance/upload")
-    private BaseResponse<MaintenanceReportModel> uploadMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
+    public BaseResponse<MaintenanceReportModel> uploadMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
                                                                          @PathVariable("idReport") Long idReport,
                                                                           BindingResult bindingResult){
         BaseResponse<MaintenanceReportModel> response = new BaseResponse<>();
