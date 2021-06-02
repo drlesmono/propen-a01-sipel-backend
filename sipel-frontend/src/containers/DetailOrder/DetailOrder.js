@@ -511,7 +511,6 @@ class DetailOrder extends React.Component {
 
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Detail Order</h1>
             <br></br>
@@ -560,7 +559,7 @@ class DetailOrder extends React.Component {
                             <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <h3 className={classes.subtitle}>Detail Data Project Installation</h3>
+                                    <h3 className={classes.subtitle} style={{color: "black"}}>Detail Data Project Installation</h3>
                                 </div>
                             </div>
                             </div>
@@ -581,7 +580,7 @@ class DetailOrder extends React.Component {
                             <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <h3 className={classes.subtitle}>Detail Data Managed Service</h3>
+                                    <h3 className={classes.subtitle} style={{color: "black"}}>Detail Data Managed Service</h3>
                                 </div>
                             </div>
                             </div>
@@ -595,7 +594,7 @@ class DetailOrder extends React.Component {
                             <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <h3 className={classes.subtitle}>Daftar Services</h3>
+                                    <h3 className={classes.subtitle} style={{color: "black"}}>Daftar Services</h3>
                                 </div>
                             </div>
                             <div className="col-sm-6">
@@ -613,7 +612,7 @@ class DetailOrder extends React.Component {
                             <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <h3 className={classes.subtitle}>Daftar Dokumen Order</h3>
+                                    <h3 className={classes.subtitle} style={{color: "black"}}>Daftar Dokumen Order</h3>
                                 </div>
                             </div>
                             </div>
@@ -634,12 +633,12 @@ class DetailOrder extends React.Component {
                         <div className="col-sm-1"></div>
                             <div className="col-sm-10">
                                 <div className="card">
-                                    <div className="card-header text-center">Ubah Service</div>
+                                    <div className="card-header text-center"><h5 style={{color: "black"}}>Ubah Service</h5></div>
                                     <div className="card-body">
                                         <div className="row">
                                             <div className="col-sm-10">
                                             <div className="form-group">
-                                                <label className="required">Nama Service</label>
+                                                <label className="required" style={{color: "black"}}>Nama Service</label>
                                                 <input 
                                                     type="text" 
                                                     name="name" 
@@ -730,12 +729,12 @@ class DetailOrder extends React.Component {
                         <div className="col-sm-1"></div>
                             <div className="col-sm-10">
                                 <div className="card">
-                                    <div className="card-header text-center">Tambah Services</div>
+                                    <div className="card-header text-center"><h5 style={{color: "black"}}>Tambah Services</h5></div>
                                     <div className="card-body">
                                         <table className="table">
                                         <thead>
                                             <tr>
-                                                <th className="required">Nama Services</th>
+                                                <th className="required" style={{color: "black"}}>Nama Services</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -828,7 +827,6 @@ class DetailOrder extends React.Component {
                         </div>
                     </Modal.Body>
                 </Modal>
-            </div>
             </div>
         );
     }

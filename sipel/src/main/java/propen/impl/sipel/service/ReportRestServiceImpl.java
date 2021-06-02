@@ -7,6 +7,7 @@ import propen.impl.sipel.model.InstallationReportModel;
 import propen.impl.sipel.model.MaintenanceReportModel;
 import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.repository.InstallationReportDb;
+import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.repository.ReportDb;
 import propen.impl.sipel.rest.ReportDto;
 
@@ -23,11 +24,13 @@ public class ReportRestServiceImpl implements ReportRestService{
     @Autowired
     ReportDb reportDb;
 
+    // Mencari seluruh report
     @Override
     public List<ReportModel> retrieveListReport() {
         return reportDb.findAllByOrderByUploadedDateDesc();
     }
 
+    // Membuat report baru
     @Override
     public ReportModel uploadReport(ReportDto report, String urlFile) {
         ReportModel newReport = new ReportModel();
@@ -57,16 +60,20 @@ public class ReportRestServiceImpl implements ReportRestService{
         return reportDb.save(newReport);
     }
 
+
+    // Menghapus report
     @Override
     public void deleteReport(Long idReport) {
         reportDb.deleteById(idReport);
     }
 
+    // Mencari report berdasarkan id report
     @Override
     public ReportModel findReportById(Long idReport) {
         return reportDb.findById(idReport).get();
     }
 
+    // Mencari report berdasarkan nama report
     @Override
     public ReportModel findReportByReportName(String reportName) {
         return reportDb.findByReportName(reportName);

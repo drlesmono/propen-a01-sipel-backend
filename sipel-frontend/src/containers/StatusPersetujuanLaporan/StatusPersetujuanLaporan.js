@@ -434,7 +434,7 @@ class StatusPersetujuanLaporan extends Component {
                                         <div className="d-flex justify-content-center">
                                         <div className="form-check"> 
                                             <div className="radio">
-                                            <label className="form-check-label">
+                                            <label className="form-check-label" style={{color: "black"}}>
                                             <input 
                                                 type="radio"
                                                 value="Setujui"
@@ -446,7 +446,7 @@ class StatusPersetujuanLaporan extends Component {
                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                         <div className="form-check"> 
                                             <div className="radio">
-                                            <label className="form-check-label">
+                                            <label className="form-check-label" style={{color: "black"}}>
                                             <input 
                                                 type="radio"
                                                 value="Tolak"
@@ -459,7 +459,7 @@ class StatusPersetujuanLaporan extends Component {
                                         {this.state.isReject ? 
                                         <>
                                         <div className="form-group">
-                                            <label className="required">Catatan</label>
+                                            <label className="required" style={{color: "black"}}>Catatan</label>
                                                 <input 
                                                     type="text" 
                                                     name="notes" 
@@ -494,7 +494,7 @@ class StatusPersetujuanLaporan extends Component {
                                         <div className="d-flex justify-content-center">
                                         <div className="form-check"> 
                                             <div className="radio">
-                                            <label className="form-check-label">
+                                            <label className="form-check-label" style={{color: "black"}}>
                                             <input 
                                                 type="radio"
                                                 value="Setujui"
@@ -506,7 +506,7 @@ class StatusPersetujuanLaporan extends Component {
                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                         <div className="form-check"> 
                                             <div className="radio">
-                                            <label className="form-check-label">
+                                            <label className="form-check-label" style={{color: "black"}}>
                                             <input 
                                                 type="radio"
                                                 value="Tolak"
@@ -519,7 +519,7 @@ class StatusPersetujuanLaporan extends Component {
                                         {this.state.isReject ? 
                                         <>
                                         <div className="form-group">
-                                            <label className="required">Catatan</label>
+                                            <label className="required" style={{color: "black"}}>Catatan</label>
                                                 <input 
                                                     type="text" 
                                                     name="notes" 
@@ -567,11 +567,9 @@ class StatusPersetujuanLaporan extends Component {
                         </div>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="card">
-                            <div className="card-footer text-center">
+                            <div className="text-center">
                                 <Button className={classes.button2} onClick={() => this.handleAfterChangeStatus()}>Kembali</Button>
                             </div>
-                        </div>
                     </Modal.Body>
                 </Modal>
 

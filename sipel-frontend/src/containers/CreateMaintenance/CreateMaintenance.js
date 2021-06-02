@@ -206,7 +206,6 @@ class CreateMaintenance extends React.Component {
 
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Buat Penjadwalan Maintenance</h1>
             <br></br>
@@ -234,7 +233,7 @@ class CreateMaintenance extends React.Component {
                             <table className="table">
                             <thead>
                                 <tr>
-                                    <th className="required">Tanggal Maintenance</th>
+                                    <th className="required" style={{color: "black"}}>Tanggal Maintenance</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -275,11 +274,9 @@ class CreateMaintenance extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="card">
-                            <div className="card-footer text-center">
+                            <div className="text-center">
                                 <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                             </div>
-                        </div>
                     </Modal.Body>
                 </Modal>
 
@@ -297,7 +294,6 @@ class CreateMaintenance extends React.Component {
                         </div>
                     </Modal.Body>
                 </Modal>
-            </div>
             </div>
         );
     }

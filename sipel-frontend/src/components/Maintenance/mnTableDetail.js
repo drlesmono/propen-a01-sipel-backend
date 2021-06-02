@@ -16,50 +16,50 @@ const TableMaintenanceDetail = (props) => {
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`ID Managed Service: ${idOrderMs}`}</p>
+                        <p style={{color: "black"}}>{`ID Managed Service: ${idOrderMs}`}</p>
                     </div>
                 </div>
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Perusahaan Pelanggan: ${clientOrg}`}</p>
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-sm-6">
-                    <div className="form-group">
-                        <p>{`Nomor PO: ${noPO}`}</p>
-                    </div>
-                </div>
-                <div className="col-sm-6">
-                    <div className="form-group">
-                        <p>{`Jenis Order: Managed Service`}</p>
+                        <p style={{color: "black"}}>{`Perusahaan Pelanggan: ${clientOrg}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Nama Pelanggan: ${clientName}`}</p>
+                        <p style={{color: "black"}}>{`Nomor PO: ${noPO}`}</p>
                     </div>
                 </div>
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`PIC Engineer: ${fullname}`}</p>
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-sm-6">
-                    <div className="form-group">
-                        <p>{`Periode Mulai Managed: ${periodeMulai}`}</p>
+                        <p style={{color: "black"}}>{`Jenis Order: Managed Service`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Periode Selesai Managed: ${periodeSelesai}`}</p>
+                        <p style={{color: "black"}}>{`Nama Pelanggan: ${clientName}`}</p>
+                    </div>
+                </div>
+                <div className="col-sm-6">
+                    <div className="form-group">
+                        <p style={{color: "black"}}>{`PIC Engineer: ${fullname}`}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="form-group">
+                        <p style={{color: "black"}}>{`Periode Mulai Managed: ${periodeMulai}`}</p>
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="form-group">
+                        <p style={{color: "black"}}>{`Periode Selesai Managed: ${periodeSelesai}`}</p>
                     </div>
                 </div>
             </div>

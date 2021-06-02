@@ -45,6 +45,7 @@ public class ReportRestController {
 
     private static final Logger logger = Logger.getLogger(ReportRestController.class.getName());
 
+    // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
     private List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
@@ -60,6 +61,9 @@ public class ReportRestController {
         return listReport;
     }
 
+    // Menyimpan file yang diupload ke local server dan membuat report baru
+    // File yang memiliki nama yang sama akan dibuat nama dengan versi
+    // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
@@ -99,9 +103,10 @@ public class ReportRestController {
         return response;
     }
 
+    // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
-                                                   HttpServletRequest request){
+                                                  HttpServletRequest request){
         Resource resource = fileStorageService.loadFileAsResource(fileName);
         String fileType = null;
 
@@ -121,6 +126,7 @@ public class ReportRestController {
                 .body(resource);
     }
 
+    // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         Path filePath = fileStorageService.getFilePath(fileName);
@@ -137,6 +143,7 @@ public class ReportRestController {
                 .body(resource);
     }
 
+    // Menghapus file dari local server dan report dari database
     @DeleteMapping(value="/api/v1/report/{idReport}/delete")
     private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
@@ -167,4 +174,25 @@ public class ReportRestController {
             );
         }
     }
+    @GetMapping(value="/api/v1/reports")
+    private List<ReportModel> retrieveListReport(){
+        List<ReportModel> listReport = reportRestService.retrieveListReport();
+        List<ReportModel> toBeSeenReport = new ArrayList<>();
+        for(ReportModel report : listReport){
+            if(report.getStatusApproval().toLowerCase().equals("approved")){
+                toBeSeenReport.add(report);
+            }
+
+        }
+
+        return toBeSeenReport;
+    }
+    @GetMapping(value="/api/v1/reports/all")
+    private List<ReportModel> retrieveListReportAll(){
+        List<ReportModel> listReport = reportRestService.retrieveListReport();
+
+        return listReport;
+    }
+
+
 }

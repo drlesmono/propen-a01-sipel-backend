@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.InstallationReportModel;
 import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.rest.BaseResponse;
@@ -27,13 +29,16 @@ public class InstallationReportRestController {
     @Autowired
     ReportRestService reportRestService;
 
+    // Mengembalikan list seluruh installation report
     @GetMapping(value="/reports/ir")
     private List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
 
+    // Membuat installation report setelah object report dibuat
+    // Mengembalikan response dengan result installation report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/installation/upload")
     private BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
-                                                                           @PathVariable("idReport") Long idReport,
-                                                                           BindingResult bindingResult){
+                                                                            @PathVariable("idReport") Long idReport,
+                                                                            BindingResult bindingResult){
         BaseResponse<InstallationReportModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan

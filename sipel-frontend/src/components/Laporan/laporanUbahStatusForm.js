@@ -12,12 +12,12 @@ const Laporan = (props) => {
          } = props;
     return (
         <div>
-            <p>{`Nomor Laporan: ${reportNum}`}</p>
-            <p>{`Nama Laporan: ${reportName}`}</p>
-            <p>{`Nomor PO: ${noPO}`}</p>
-            <p>{`Perusahaan Pelanggan: ${clientOrg}`}</p>
-            <p>{`Status: ${statusApproval}`}</p>
-            <p>{`Tanggal Dibuat: ${uploadedDate}`}</p>
+            <p style={{color: "black"}}>{`Nomor Laporan: ${reportNum}`}</p>
+            <p style={{color: "black"}}>{`Nama Laporan: ${reportName}`}</p>
+            <p style={{color: "black"}}>{`Nomor PO: ${noPO}`}</p>
+            <p style={{color: "black"}}>{`Perusahaan Pelanggan: ${clientOrg}`}</p>
+            <p style={{color: "black"}}>{`Status: ${statusApproval}`}</p>
+            <p style={{color: "black"}}>{`Tanggal Dibuat: ${uploadedDate}`}</p>
         </div>
     );
 };

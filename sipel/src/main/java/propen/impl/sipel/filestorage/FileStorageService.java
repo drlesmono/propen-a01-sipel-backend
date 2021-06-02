@@ -19,6 +19,8 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
+    // constructor
+    // pembuatan directory untuk menyimpan file di local server
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties) {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath();
@@ -30,28 +32,26 @@ public class FileStorageService {
         }
     }
 
-    //  Fungsi untuk menyimpan file
+    //  Menyimpan file ke local server
     public String storeFile(MultipartFile file, String fileNameTarget){
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         String fileName = fileNameTarget;
         try{
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return fileName;
+           Path targetLocation = this.fileStorageLocation.resolve(fileName);
+           Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+           return fileName;
         }catch (IOException e){
             throw new FileStorageException("File "+fileName+" gagal disimpan, silahkan coba lagi!", e);
         }
     }
 
-    // Fungsi untuk get file path
+    // Mengambil file path
     public Path getFilePath(String fileName){
         return this.fileStorageLocation.resolve(fileName).normalize();
     }
 
-    // Fungsi untuk load file
+    // Mengakses file dari local server
     public Resource loadFileAsResource(String fileName){
         try{
-//            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Path filePath = getFilePath(fileName);
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()){

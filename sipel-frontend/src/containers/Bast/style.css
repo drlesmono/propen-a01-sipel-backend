@@ -1,0 +1,50 @@
+#buttonoption{
+    align-self: center;
+    alignment: center;
+    margin: 5%;
+}
+#option{
+    width: 40%;
+    align-self: center;
+    alignment: center;
+    margin: 25px;
+}
+#option2{
+    width: 40%;
+    align-self: center;
+    alignment: center;
+    margin: 25px;
+}
+#card-table{
+    width: 80%;
+    margin-left: 5%;
+    margin-right: 5%;
+    color: midnightblue;
+}
+#card-table2{
+    width: 80%;
+    margin-left: 5%;
+    margin-right: 5%;
+    color: midnightblue;
+}
+#title{
+    color: black;
+    font-weight: bolder;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+#titleGenerate{
+    alignment: center;
+    align-self: center;
+    color: black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    align-content: center;
+}
+#desc{
+    alignment: left;
+}
+#mandat{
+    color: crimson;
+    font-size: 3px;
+}

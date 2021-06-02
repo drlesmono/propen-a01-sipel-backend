@@ -54,6 +54,7 @@ class LaporanInstalasiMaintenance extends Component {
         this.loadData();
     }
 
+    // Mengambil dan mengupdate data yang masuk
     async loadData() {
         try {
             const orders = await APIConfig.get("/ordersVerifiedReport");
@@ -65,14 +66,15 @@ class LaporanInstalasiMaintenance extends Component {
             this.setState({ ordersVerified: orders.data, reports: reports.data, listIr: listIr.data, 
                             listMr: listMr.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
-            // alert("Oops terjadi masalah pada server");
             this.setState({ isError: true, messageError: "Oops terjadi masalah pada server" });
             console.log(error);
         }
     }
 
+    // Mengirim data yang akan disimpan ke backend
     async handleSubmit(event) {
         event.preventDefault();
+
         try {   
             let response;
             let newReport;
@@ -86,6 +88,8 @@ class LaporanInstalasiMaintenance extends Component {
             response = await APIConfig.post(`/report/upload`, dataReport);
             newReport = response.data.result;
 
+            // Apabila report berjenis installation, maka masuk ke if
+            // Apabila report berjenis maintenance, maka masuk ke else
             if(this.state.isInstallationReport){
                 const dataInstallationReport = {
                     idInstallationReport: null,
@@ -115,8 +119,13 @@ class LaporanInstalasiMaintenance extends Component {
         this.loadData();
     }
 
+    // validasi form upload report
+    // jika valid dan report berjenis installation, maka memanggil handleSubmit
+    // jika valida dan report berjenis maintenance, maka memanggil handleMrUpload
+    // jika tidak valid, maka memberikan notifikasi
     handleValidation(event){
         event.preventDefault();
+
         if(this.state.orderByPO === null || this.state.orderByPO === ""){
             return this.setState({isFailed: true, messageError: "Nomor PO wajib diisi"});
         }
@@ -132,14 +141,18 @@ class LaporanInstalasiMaintenance extends Component {
         this.handleSubmit(event);
     }
 
+    // validasi form pemilihan maintenance
+    // jika tidak valid, maka memberikan notifikasi
     handleValidationMrUpload(event){
         event.preventDefault();
+
         if(this.state.maintenanceTarget === null || this.state.maintenanceTarget === ""){
             return this.setState({isFailed: true, messageError: "Tanggal maintenance wajib diisi"});
         }
         this.handleSubmit(event);
     }
 
+    // mengirim id report yang ingin dihapus
     async handleDelete(event){
         event.preventDefault();
         try{
@@ -152,17 +165,20 @@ class LaporanInstalasiMaintenance extends Component {
         return this.setState({isDeleteSuccess: true, isDelete: false});
     }
 
+    // Mengubah data yang ditargetkan sesuai dengan isi form
     handleChangeField(event) {
         event.preventDefault();
         const { name, value } = event.target;
         this.setState({ [name]: value });
     }
 
+    // Mengubah file yang ditargetkan sesuai dengan isi form
     handleChangeFile(event){
         event.preventDefault();
         this.setState({[event.target.name]: event.target.files[0]});
     }
 
+    // Mengambil order yang dipilih
     getOrder(report){
         if(report.reportType === "installation"){
             const ir = this.getIr(report.idReport);
@@ -186,10 +202,10 @@ class LaporanInstalasiMaintenance extends Component {
                 }
             }
         }
-
         return null;
     }
 
+    // Menyaring order sesuai dengan jenisnya
     getListOrderFilter(){
         if(this.state.isInstallationReport){
             return this.state.ordersVerified.filter(order => order.projectInstallation === true);
@@ -198,17 +214,20 @@ class LaporanInstalasiMaintenance extends Component {
         }
     }
 
+    // Mengambil order jenis project installation yang dipilih
     getPi(idOrder){
         let pi = this.state.listPi.filter(pi => pi.idOrder.idOrder === idOrder );
+
         if (pi.length !== 0) {
             return pi[0];
         }
         return null;
     }
 
+    // Mengambil order jenis managed services yang dipilih
     getMs(idOrder){
         let ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === idOrder);
-        console.log(ms);
+
         if (ms.length !== 0) {
             console.log(ms[0]);
             return ms[0];
@@ -216,22 +235,27 @@ class LaporanInstalasiMaintenance extends Component {
         return null;
     }
 
+    // Mengambil report jenis installation yang dipilih
     getIr(idReport){
         let ir = this.state.listIr.filter(ir => ir.idReport.idReport === idReport);
+
         if (ir.length !== 0) {
             return ir[0];
         }
         return null;
     }
 
+    // Mengambil report jenis maintenance yang dipilih
     getMr(idReport){
         let mr = this.state.listMr.filter(mr => mr.idReport.idReport === idReport);
+
         if (mr.length !== 0) {
             return mr[0];
         }
         return null;
     }
 
+    // Mengambil nomor report
     getReportNum(report){
         if(report.reportType === "installation"){
             if(this.getIr(report.idReport) !== null){
@@ -245,6 +269,7 @@ class LaporanInstalasiMaintenance extends Component {
         return null;
     }
 
+    // Menampilkan form untuk upload
     handleUpload(type){
         if(type === "instalasi"){
             this.setState({isInstallationReport: true});
@@ -252,20 +277,25 @@ class LaporanInstalasiMaintenance extends Component {
         this.setState({isUpload: true});
     }
 
+    // Menampilkan form untuk pemilihan maintenance
     handleMrUpload(event){
         event.preventDefault();
         const ms = this.getMs(parseInt(this.state.orderByPO, 10));
+
         this.setState({listMaintenance: ms.listMaintenance, isUpload: false, isInstallationReport: false, isMrUploaded: true});
     }
 
+    // Mengambil data dengan format "tanggal bulan(dalam huruf abjad) tahun"
     getDate(value){
         let date = new Date(value);
+
         const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
                             "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
         return date.getDate()+" "+monthNames[date.getMonth()]+" "+date.getFullYear();
     }
 
+    // Menutup semua modal
     handleCancel(event) {
         event.preventDefault();
         this.setState({
@@ -292,19 +322,26 @@ class LaporanInstalasiMaintenance extends Component {
         this.loadData();
     }
 
+    // Menutup notifikasi gagal
     handleCloseNotif(){
         this.setState({ isFailed: false });
     }
 
+    // Menargetkan report yang akan dihapus
+    // Menampilkan pertanyaan konfirmasi untuk menghapus report
     handleConfirmDelete(report){
         const reportNum = this.getReportNum(report);
         this.setState({reportNum: reportNum, reportTarget: report, isDelete: true, orderTarget: this.getOrder(report)});
     }
 
+    // Menutup modal yang berisi form untuk pemilihan maintenance
     handleCancelMrUpload(){
         this.setState({isMrUploaded: false, isUpload: true});
     }
 
+    // Mendapatkan url sesuai dengan jenis file
+    // Apabila jenis file adalah pdf, maka url preview yang digunakan
+    // Apabila jenis file selain pdf, maka url download yang digunakan
     getUrl(report){
         if(report.fileType === "application/pdf"){
             return report.urlFile+"/preview";
@@ -313,6 +350,7 @@ class LaporanInstalasiMaintenance extends Component {
         }
     }
 
+    // Mengambil catatan untuk report
     getNotes(report){
         if(report.reportType === "installation"){
             const ir = this.getIr(report.idReport);
@@ -333,9 +371,11 @@ class LaporanInstalasiMaintenance extends Component {
         return "-";
     }
 
+    // Menyaring list report sesuai dengan data yang dimasukkan pada form search
     handleFilter(event){
         let newReportList = this.state.reports;
         const { value } = event.target;
+
         if( value !== "" ){
             newReportList = this.state.reports.filter(report => {
                 return (report.reportName.toLowerCase().includes(value.toLowerCase()) || 
@@ -352,9 +392,12 @@ class LaporanInstalasiMaintenance extends Component {
     render() {
         const { reports, reportsFiltered, isMrUploaded, isInstallationReport, isUpload, isSuccess, isDelete, isDeleteSuccess, isFailed, isError,
                 listMaintenance, reportTarget, messageError, isFiltered, reportNum } = this.state;
+        
+        // Judul untuk setiap kolom di tabel daftar laporan
         const tableHeaders = ['No.', 'Nomor Laporan', 'Nama Laporan', 'Nomor PO', 'Perusahaan', 'Tanggal dibuat', 'Catatan', 'Aksi'];                  
         let tableRows = [];
-
+        
+        // Isi tabel daftar laporan yang disesuaikan dengan yang dicari
         if(reports.length !== 0){
             tableRows = isFiltered ? reportsFiltered.map((report) =>
                         [ this.getReportNum(report), report.reportName, this.getOrder(report).noPO, this.getOrder(report).clientOrg, 
@@ -372,6 +415,8 @@ class LaporanInstalasiMaintenance extends Component {
 
         return (
             <div className={classes.container}>
+
+                {/* Menampilkan daftar laporan */}
                 <div><h1 className="text-center">Daftar Laporan</h1></div>
                 <div className="d-flex justify-content-between" style={{padding: 5}}>
                     <div className={classes.containerButtonUpload}>
@@ -381,6 +426,8 @@ class LaporanInstalasiMaintenance extends Component {
                     <div className={classes.search}><Form.Control type="text" size="sm" placeholder="Cari..." onChange={this.handleFilter}/></div>
                 </div>
                 <div>{ reports.length !== 0 ? <CustomizedTables headers={tableHeaders} rows={tableRows}/> : <p className="text-center" style={{color: "red"}}>Belum terdapat laporan </p>}</div>
+                
+                 {/* Menampilkan modal berisi form upload laporan */}
                 <Modal
                     show={isUpload}
                     dialogClassName="modal-90w"
@@ -433,6 +480,8 @@ class LaporanInstalasiMaintenance extends Component {
                             </p>
                     </Modal.Body>
                 </Modal>
+
+                 {/* Menampilkan modal berisi form pemilihan maintenance */}
                 <Modal
                     show={isMrUploaded}
                     dialogClassName="modal-90w"
@@ -473,6 +522,8 @@ class LaporanInstalasiMaintenance extends Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
+
+                 {/* Menampilkan modal berisi konfirmasi hapus laporan */}
                 <Modal
                     show={isDelete}
                     dialogClassName="modal-90w"
@@ -500,6 +551,8 @@ class LaporanInstalasiMaintenance extends Component {
                         </div>
                     </Modal.Body>
                 </Modal>
+
+                {/* Menampilkan modal berisi notifikasi ketika berhasil menyimpan data atau berhasil hapus, atau error */}
                 <Modal
                     show={isSuccess || isDeleteSuccess || isError}
                     dialogClassName="modal-90w"

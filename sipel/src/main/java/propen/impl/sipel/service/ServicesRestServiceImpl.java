@@ -14,10 +14,23 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.ServicesModel;
+import propen.impl.sipel.repository.ManagedServicesDb;
+import propen.impl.sipel.repository.ServicesDb;
+import propen.impl.sipel.repository.UserDb;
+import propen.impl.sipel.rest.ServicesDto;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service
 @Transactional
-public class ServicesRestServiceImpl implements ServicesRestService {
-    private final WebClient webClient;
+public class ServicesRestServiceImpl implements ServicesRestService{
+    private UserDb userDb;
+
+    @Autowired
+    private ManagedServicesDb managedServicesDb;
 
     @Autowired
     private ServicesDb servicesDb;
@@ -72,7 +85,22 @@ public class ServicesRestServiceImpl implements ServicesRestService {
         servicesDb.delete(service);
     }
 
-    public ServicesRestServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(Setting.serviceURl).build();
+    // Mengubah data service
+    @Override
+    public ServicesModel updateService(ServicesDto service) {
+        ServicesModel serviceTarget = servicesDb.findById(service.getIdService()).get();
+        serviceTarget.setName(service.getName());
+        serviceTarget.setIdUser(userDb.findById(service.getIdUser()).get());
+        return servicesDb.save(serviceTarget);
+    }
+
+    @Override
+    public ServicesModel createService(ServicesDto service, Long idOrderMs) {
+        ServicesModel newService = new ServicesModel();
+        ManagedServicesModel ms = managedServicesDb.findById(idOrderMs).get();
+        newService.setName(service.getName());
+        newService.setIdUser(userDb.findById(service.getIdUser()).get());
+        newService.setIdOrderMS(ms);
+        return servicesDb.save(newService);
     }
 }

@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.MaintenanceReportModel;
 import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.rest.BaseResponse;
@@ -27,13 +29,16 @@ public class MaintenanceReportRestController {
     @Autowired
     ReportRestService reportRestService;
 
+    // Mengembalikan list seluruh maintenance report
     @GetMapping(value="/reports/mr")
     private List<MaintenanceReportModel> retrieveListMr(){ return maintenanceReportRestService.retrieveListMr(); }
 
+    // Membuat maintenance report setelah object report dibuat
+    // Mengembalikan response dengan result maintenance report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/maintenance/upload")
     private BaseResponse<MaintenanceReportModel> uploadMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
                                                                          @PathVariable("idReport") Long idReport,
-                                                                         BindingResult bindingResult){
+                                                                          BindingResult bindingResult){
         BaseResponse<MaintenanceReportModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
             // Respon Gagal Simpan

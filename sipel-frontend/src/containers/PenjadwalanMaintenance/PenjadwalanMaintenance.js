@@ -125,7 +125,6 @@ class PenjadwalanMaintenance extends React.Component {
 
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Daftar Order</h1>
             <div className="d-flex justify-content-end" style={{padding: 5}}>
@@ -144,11 +143,10 @@ class PenjadwalanMaintenance extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         <div className="text-center">
-                            <Button className={classes.button1} onClick={() => this.handleAfterError()}>Kembali</Button>
+                            <Button className={classes.button2} onClick={() => this.handleAfterError()}>Kembali</Button>
                         </div>
                     </Modal.Body>
                 </Modal>
-            </div>
             </div>
         );
     }

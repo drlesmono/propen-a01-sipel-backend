@@ -15,4 +15,6 @@ public interface ProjectInstallationRestService {
     List<ProjectInstallationModel> retrievePI();
 
     List<ProjectInstallationModel> retrieveListPi();
+
+    ProjectInstallationModel updatePIC(Long idOrderPi, String idUserEng);
 }

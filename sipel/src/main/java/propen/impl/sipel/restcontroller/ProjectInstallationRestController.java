@@ -17,6 +17,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import propen.impl.sipel.rest.BaseResponse;
+import propen.impl.sipel.rest.ProjectInstallationDto;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1")
@@ -79,8 +82,30 @@ public class ProjectInstallationRestController {
         return projectInstallationRestService.retrievePI();
     }
 
+
+    // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
     private List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
+    }
+
+    // Mengubah pic engineer dari suatu project installation
+    // Mengembalikan response dengan result project installation yang berhasil menyimpan pic engineer
+    @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updatePIC")
+    private BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
+                                                             BindingResult bindingResult){
+        BaseResponse<ProjectInstallationModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("PIC Engineer pada Project Installation gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        ProjectInstallationModel newPi = projectInstallationRestService.updatePIC(pi.getIdOrderPi(), pi.getIdUserEng());
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newPi);
+
+        return response;
     }
 }

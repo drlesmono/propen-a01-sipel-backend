@@ -155,7 +155,6 @@ class UnggahDokumenOrder extends React.Component {
         
         return(
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Unggah Dokumen Order</h1>
             <br></br>
@@ -177,7 +176,7 @@ class UnggahDokumenOrder extends React.Component {
                             <Table borderless responsive="xl" size="md">
                                 <ReactNotification />
                                 <tr>
-                                    <td><h5 className="d-flex justify-content-center">Dokumen Order <p style={{color: "red"}}>&nbsp;&nbsp;*</p></h5></td>
+                                    <td><h5 className="d-flex justify-content-center" style={{color: "black"}}>Dokumen Order <p style={{color: "red"}}>&nbsp;&nbsp;*</p></h5></td>
                                 </tr>
                                 <tr>
                                     <td className="d-flex justify-content-center">
@@ -245,7 +244,6 @@ class UnggahDokumenOrder extends React.Component {
                         </div>
                     </Modal.Body>
                 </Modal>
-            </div>
             </div>
         );
     }

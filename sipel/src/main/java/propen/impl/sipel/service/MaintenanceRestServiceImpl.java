@@ -65,4 +65,10 @@ public class MaintenanceRestServiceImpl implements MaintenanceRestService {
         MaintenanceModel maintenance = getMaintenanceById(idMaintenance);
         maintenanceDb.delete(maintenance);
     }
+
+    // Mencari seluruh maintenance
+    @Override
+    public List<MaintenanceModel> retrieveListMaintenance() {
+        return maintenanceDb.findAll();
+    }
 }

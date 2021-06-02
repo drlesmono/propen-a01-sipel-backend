@@ -13,36 +13,36 @@ const OrderDetailForUnggah = (props) => {
         <div className="row">
             <div className="col-sm-6">
                 <div className="form-group">
-                    <h5>{`Nomor PO: ${noPO}`}</h5>
+                    <h5 style={{color: "black"}}>{`Nomor PO: ${noPO}`}</h5>
                 </div>
             </div>
             <div className="col-sm-6">
                 <div className="form-group">
-                    <h5>{`Nama Pelanggan: ${clientName}`}</h5>
-                </div>
-            </div>
-        </div>
-        <div className="row">
-            <div className="col-sm-6">
-                <div className="form-group">
-                    <h5>{`Nama Order: ${orderName}`}</h5>
-                </div>
-            </div>
-            <div className="col-sm-6">
-                <div className="form-group">
-                    <h5>{`Perusahaan Pelanggan: ${clientOrg}`}</h5>
+                    <h5 style={{color: "black"}}>{`Nama Pelanggan: ${clientName}`}</h5>
                 </div>
             </div>
         </div>
         <div className="row">
             <div className="col-sm-6">
                 <div className="form-group">
-                    <h5>{`Jenis: ${jenis}`}</h5>
+                    <h5 style={{color: "black"}}>{`Nama Order: ${orderName}`}</h5>
                 </div>
             </div>
             <div className="col-sm-6">
                 <div className="form-group">
-                    <h5>{`Status: ${status}`}</h5>
+                    <h5 style={{color: "black"}}>{`Perusahaan Pelanggan: ${clientOrg}`}</h5>
+                </div>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-sm-6">
+                <div className="form-group">
+                    <h5 style={{color: "black"}}>{`Jenis: ${jenis}`}</h5>
+                </div>
+            </div>
+            <div className="col-sm-6">
+                <div className="form-group">
+                    <h5 style={{color: "black"}}>{`Status: ${status}`}</h5>
                 </div>
             </div>
         </div>

@@ -13,13 +13,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import propen.impl.sipel.repository.UserDb;
+
+
 @Service
 @Transactional
-public class ProjectInstallationRestServiceImpl implements ProjectInstallationRestService {
-    private final WebClient webClient;
+public class ProjectInstallationRestServiceImpl implements ProjectInstallationRestService{
 
     @Autowired
     private ProjectInstallationDb projectInstallationDb;
+
+    @Autowired
+    private UserDb userDb;
 
     @Override
     public ProjectInstallationModel createOrderPI(ProjectInstallationModel projectInstallation) {
@@ -69,12 +74,17 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         return projectInstallationDb.findAll();
     }
 
+    // Mencari seluruh order yang memilikimn jenis project installation
     @Override
     public List<ProjectInstallationModel> retrieveListPi() {
         return projectInstallationDb.findAll();
     }
 
-    public ProjectInstallationRestServiceImpl(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(Setting.orderPIURl).build();
+    // Mengubah data pic engineer
+    @Override
+    public ProjectInstallationModel updatePIC(Long idOrderPi, String idUserEng) {
+        ProjectInstallationModel piTarget = projectInstallationDb.findById(idOrderPi).get();
+        piTarget.setIdUserEng(userDb.findById(idUserEng).get());
+        return projectInstallationDb.save(piTarget);
     }
 }

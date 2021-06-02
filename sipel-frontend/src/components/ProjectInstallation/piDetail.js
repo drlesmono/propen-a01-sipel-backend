@@ -14,35 +14,35 @@ const ProjectInstallation = (props) => {
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`ID Project Installation: ${idOrderPi}`}</p>
+                        <p style={{color: "black"}}>{`ID Project Installation: ${idOrderPi}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Tanggal Mulai Proyek: ${startPI}`}</p>
+                        <p style={{color: "black"}}>{`Tanggal Mulai Proyek: ${startPI}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Tanggal Selesai Proyek: ${deadline}`}</p>
+                        <p style={{color: "black"}}>{`Tanggal Selesai Proyek: ${deadline}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Progres Pengerjaan: ${percentage} %`}</p>
+                        <p style={{color: "black"}}>{`Progres Pengerjaan: ${percentage} %`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Status: ${close}`}</p>
+                        <p style={{color: "black"}}>{`Status: ${close}`}</p>
                     </div>
                 </div>
             </div>

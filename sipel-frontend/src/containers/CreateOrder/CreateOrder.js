@@ -9,6 +9,7 @@ import { Button } from "react-bootstrap";
 import { store } from "react-notifications-component";
 import ReactNotification from "react-notifications-component";
 import Modal from "react-bootstrap/Modal";
+import moment from "moment";
 
 const initState = {
     startPI: "",
@@ -246,7 +247,7 @@ class CreateOrder extends React.Component {
                 });
                 return false;
             }
-            if (this.state.dateOrder.length === 0){
+            /* if (this.state.dateOrder.length === 0){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Anda wajib mengisi field Tanggal Order Masuk`,
@@ -262,7 +263,7 @@ class CreateOrder extends React.Component {
                     width: 500
                 });
                 return false;
-            }
+            } */
             const data = {
                 noPO: this.state.noPO,
                 noSPH: this.state.noSPH,
@@ -276,7 +277,7 @@ class CreateOrder extends React.Component {
                 clientOrg: this.state.clientOrg,
                 clientPhone: this.state.clientPhone,
                 clientEmail: this.state.clientEmail,
-                dateOrder: this.state.dateOrder,
+                dateOrder: new Date(),
                 verified: this.state.verified
             }
             await APIConfig.post("/order/tambah", data);
@@ -292,7 +293,11 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahPI(event) {
         event.preventDefault();
         try {
-            if (new Date(this.state.startPI) > new Date (this.state.deadline)){
+            //let dateOrd = moment(new Date(this.state.dateOrder)).format("YYYY-MM-DD");
+            let dateOrd = moment(new Date()).format("YYYY-MM-DD");
+            let start = moment(new Date(this.state.startPI)).format("YYYY-MM-DD");
+            let end = moment(new Date(this.state.deadline)).format("YYYY-MM-DD");
+            if (start > end){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Tanggal Selesai Project tidak boleh lebih awal dari Tanggal Mulai Project`,
@@ -326,10 +331,10 @@ class CreateOrder extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.startPI) < new Date(this.state.dateOrder)){
+            if (start < dateOrd){
                 store.addNotification({
                     title: "Peringatan!",
-                    message: `Tanggal Mulai Project tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    message: `Tanggal Mulai Project tidak boleh lebih awal dari tanggal hari ini`,
                     type: "warning",
                     container: "top-left",
                     insert: "top",
@@ -381,7 +386,11 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahMS(event) {
         event.preventDefault();
         try {
-            if (new Date(this.state.actualStart) > new Date (this.state.actualEnd)){
+            //let dateOrd = moment(new Date(this.state.dateOrder)).format("YYYY-MM-DD");
+            let dateOrd = moment(new Date()).format("YYYY-MM-DD");
+            let startDate = moment(new Date(this.state.actualStart)).format("YYYY-MM-DD");
+            let endDate = moment(new Date(this.state.actualEnd)).format("YYYY-MM-DD");
+            if (startDate > endDate){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Periode Selesai Managed tidak boleh lebih awal dari Periode Mulai Managed`,
@@ -415,10 +424,10 @@ class CreateOrder extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.actualStart) < new Date(this.state.dateOrder)){
+            if (startDate < dateOrd){
                 store.addNotification({
                     title: "Peringatan!",
-                    message: `Periode Mulai Managed tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    message: `Periode Mulai Managed tidak boleh lebih awal dari tanggal hari ini`,
                     type: "warning",
                     container: "top-left",
                     insert: "top",
@@ -468,7 +477,13 @@ class CreateOrder extends React.Component {
     async handleSubmitTambahPIMS(event) {
         event.preventDefault();
         try {
-            if (new Date(this.state.startPI) > new Date (this.state.deadline)){
+            //let dateOrd = moment(new Date(this.state.dateOrder)).format("YYYY-MM-DD");
+            let dateOrd = moment(new Date()).format("YYYY-MM-DD");
+            let start = moment(new Date(this.state.startPI)).format("YYYY-MM-DD");
+            let end = moment(new Date(this.state.deadline)).format("YYYY-MM-DD");
+            let startDate = moment(new Date(this.state.actualStart)).format("YYYY-MM-DD");
+            let endDate = moment(new Date(this.state.actualEnd)).format("YYYY-MM-DD");
+            if (start > end){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Tanggal Selesai Project tidak boleh lebih awal dari Tanggal Mulai Project`,
@@ -502,10 +517,10 @@ class CreateOrder extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.startPI) < new Date(this.state.dateOrder)){
+            if (start < dateOrd){
                 store.addNotification({
                     title: "Peringatan!",
-                    message: `Tanggal Mulai Project tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    message: `Tanggal Mulai Project tidak boleh lebih awal dari tanggal hari ini`,
                     type: "warning",
                     container: "top-left",
                     insert: "top",
@@ -536,7 +551,7 @@ class CreateOrder extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.actualStart) > new Date (this.state.actualEnd)){
+            if (startDate > endDate){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Periode Selesai Managed tidak boleh lebih awal dari Periode Mulai Managed`,
@@ -570,10 +585,10 @@ class CreateOrder extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.actualStart) < new Date(this.state.dateOrder)){
+            if (startDate < dateOrd){
                 store.addNotification({
                     title: "Peringatan!",
-                    message: `Periode Mulai Managed tidak boleh lebih awal dari Tanggal Order Masuk`,
+                    message: `Periode Mulai Managed tidak boleh lebih awal dari tanggal hari ini`,
                     type: "warning",
                     container: "top-left",
                     insert: "top",
@@ -696,9 +711,12 @@ class CreateOrder extends React.Component {
 
         let { listService } = this.state;
 
+        /* let todayDate = new Date();
+        todayDate.setDate(todayDate.getDate() + 3);
+        let dateToday = todayDate.toISOString().substr(0, 10); */
+
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Tambah Order</h1>
             <br></br>
@@ -712,7 +730,7 @@ class CreateOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Nomor PO</label>
+                                                <label style={{color: "black"}}>Nomor PO</label>
                                                 <input 
                                                     type="text" 
                                                     name="noPO" 
@@ -725,7 +743,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Nama Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>Nama Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientName" 
@@ -740,7 +758,7 @@ class CreateOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Nomor SPH</label>
+                                                <label style={{color: "black"}}>Nomor SPH</label>
                                                 <input 
                                                     type="text"  
                                                     name="noSPH" 
@@ -753,7 +771,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Divisi Pelanggan</label>
+                                                <label style={{color: "black"}}>Divisi Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientDiv" 
@@ -768,7 +786,7 @@ class CreateOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Nama Order</label>
+                                                <label className="required" style={{color: "black"}}>Nama Order</label>
                                                 <input 
                                                     type="text"  
                                                     name="orderName" 
@@ -781,7 +799,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">PIC Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>PIC Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientPIC" 
@@ -796,7 +814,7 @@ class CreateOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Deskripsi Order</label>
+                                                <label className="required" style={{color: "black"}}>Deskripsi Order</label>
                                                 <input 
                                                     type="text"  
                                                     name="description" 
@@ -809,7 +827,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Perusahaan Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>Perusahaan Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientOrg" 
@@ -823,7 +841,7 @@ class CreateOrder extends React.Component {
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6">
-                                            <label className="required">Jenis Order</label>
+                                            <label className="required" style={{color: "black"}}>Jenis Order</label>
                                             <div className="form-check"> 
                                                 <input
                                                     type="checkbox" 
@@ -835,7 +853,7 @@ class CreateOrder extends React.Component {
                                                     onChange={(e) => this.setState(prevState => ({
                                                         projectInstallation: !prevState.projectInstallation
                                                     }))} /> 
-                                                <label className="form-check-label">Project Installation</label>
+                                                <label className="form-check-label" style={{color: "black"}}>Project Installation</label>
                                             </div>
                                             <div className="form-check">
                                                 <input 
@@ -848,12 +866,12 @@ class CreateOrder extends React.Component {
                                                     onChange={(e) => this.setState(prev => ({
                                                         managedService: !prev.managedService
                                                     }))} />
-                                                <label className="form-check-label">Managed Services</label>
+                                                <label className="form-check-label" style={{color: "black"}}>Managed Services</label>
                                             </div>
                                         </div> 
                                         <div className="col-sm-6">
                                             <div className="form-group ">
-                                                <label className="required">Email Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>Email Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientEmail" 
@@ -868,19 +886,20 @@ class CreateOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Masuk Order</label>
+                                                {/* <label className="required" style={{color: "black"}}>Tanggal Masuk Order</label>
                                                 <input 
                                                     type="date" 
                                                     name="dateOrder" 
                                                     id="dateOrder" 
                                                     className="form-control" 
-                                                    placeholder="Masukkan Tanggal Masuk Order" 
+                                                    placeholder="Masukkan Tanggal Masuk Order"
+                                                    defaultValue={dateToday} 
                                                     value={dateOrder} 
-                                                    onChange={this.handleChange} />
+                                                    onChange={this.handleChange} /> */}
                                             </div>
                                         </div>
                                         <div className="col-sm-6">
-                                            <div className="form-group">
+                                            <div className="form-group" style={{color: "black"}}>
                                                 <label>Nomor Telepon Pelanggan</label>
                                                 <input 
                                                     type="text" 
@@ -911,15 +930,15 @@ class CreateOrder extends React.Component {
                         <div className="col-sm-1"></div>
                         <div className="col-sm-12">
                             <div className="card">
-                                <div className="card-header text-center">
-                                    Tambah Data PI
+                                <div className="card-header text-center" style={{color: "black"}}>
+                                    <h5 style={{color: "black"}} >Tambah Data PI</h5>
                                 </div>
                                 <div className="card-body">
                                 <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Mulai Project</label>
+                                                <label className="required" style={{color: "black"}}>Tanggal Mulai Project</label>
                                                 <input 
                                                     type="date" 
                                                     name="startPI" 
@@ -932,7 +951,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Selesai Project</label>
+                                                <label className="required" style={{color: "black"}}>Tanggal Selesai Project</label>
                                                 <input 
                                                     type="date" 
                                                     name="deadline" 
@@ -962,14 +981,14 @@ class CreateOrder extends React.Component {
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header text-center">
-                                    Tambah Data MS
+                                    <h5 style={{color: "black"}}>Tambah Data MS</h5>
                                 </div>
                                 <div className="card-body">
                                 <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Periode Mulai Managed</label>
+                                                <label className="required" style={{color: "black"}}>Periode Mulai Managed</label>
                                                 <input 
                                                     type="date" 
                                                     name="actualStart" 
@@ -982,7 +1001,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Periode Selesai Managed</label>
+                                                <label className="required" style={{color: "black"}}>Periode Selesai Managed</label>
                                                 <input 
                                                     type="date" 
                                                     name="actualEnd" 
@@ -1011,13 +1030,13 @@ class CreateOrder extends React.Component {
                         <div className="col-sm-1"></div>
                             <div className="col-sm-10">
                                 <div className="card">
-                                    <div className="card-header text-center">Tambah Services</div>
+                                    <div className="card-header text-center"><h5 style={{color: "black"}}>Tambah Services</h5></div>
                                     <div className="card-body">
                                     <ReactNotification />
                                         <table className="table">
                                         <thead>
                                             <tr>
-                                                <th className="required">Nama Services</th>
+                                                <th className="required" style={{color: "black"}}>Nama Services</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1042,14 +1061,14 @@ class CreateOrder extends React.Component {
                         <div className="col-sm-12">
                             <div className="card">
                                 <div className="card-header text-center">
-                                    Tambah Data PI-MS
+                                    <h5 style={{color: "black"}}>Tambah Data PI-MS</h5>
                                 </div>
                                 <div className="card-body">
                                 <ReactNotification />
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Mulai Project</label>
+                                                <label className="required" style={{color: "black"}}>Tanggal Mulai Project</label>
                                                 <input 
                                                     type="date" 
                                                     name="startPI" 
@@ -1062,7 +1081,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Periode Mulai Managed</label>
+                                                <label className="required" style={{color: "black"}}>Periode Mulai Managed</label>
                                                 <input 
                                                     type="date" 
                                                     name="actualStart" 
@@ -1077,7 +1096,7 @@ class CreateOrder extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Selesai Project</label>
+                                                <label className="required" style={{color: "black"}}>Tanggal Selesai Project</label>
                                                 <input 
                                                     type="date" 
                                                     name="deadline" 
@@ -1090,7 +1109,7 @@ class CreateOrder extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Periode Selesai Managed</label>
+                                                <label className="required" style={{color: "black"}}>Periode Selesai Managed</label>
                                                 <input 
                                                     type="date" 
                                                     name="actualEnd" 
@@ -1152,11 +1171,10 @@ class CreateOrder extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="text-center">
-                        <Button className={classes.button2} onClick={() => this.handleAfterError()}>Kembali</Button>
+                        <Button className={classes.button1} onClick={() => this.handleAfterError()}>Kembali</Button>
                     </div>
                 </Modal.Body>
                 </Modal>
-            </div>
             </div>
         );
     }

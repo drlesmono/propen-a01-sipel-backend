@@ -9,6 +9,7 @@ import "react-notifications-component/dist/theme.css";
 import { Button } from "react-bootstrap";
 import CustomizedTables from "../../components/Table";
 import Modal from "react-bootstrap/Modal";
+import moment from "moment";
 
 const initState = {
     dateMn: "",
@@ -123,7 +124,7 @@ class CreateMaintenance extends React.Component {
         let mn = this.state.maintenanceTarget;
         this.setState({
             idMaintenance: mn.idMaintenance,
-            dateMn: mn.dateMn,
+            dateMn: moment(new Date(mn.dateMn)).format("YYYY-MM-DD"),
             isChangeMaintenance: true,
         })
     }
@@ -283,7 +284,6 @@ class CreateMaintenance extends React.Component {
 
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Lihat Penjadwalan Maintenance</h1>
             <br></br>
@@ -308,7 +308,7 @@ class CreateMaintenance extends React.Component {
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="form-group">
-                                    <h3 className={classes.subtitle}>Daftar Jadwal Maintenance</h3>
+                                    <h3 className={classes.subtitle} style={{color: "black"}}>Daftar Jadwal Maintenance</h3>
                                 </div>
                             </div>
                             </div>
@@ -327,14 +327,14 @@ class CreateMaintenance extends React.Component {
                         <div className="col-sm-1"></div>
                             <div className="col-sm-10">
                                 <div className="card">
-                                    <div className="card-header text-center">Ubah Maintenance</div>
+                                    <div className="card-header text-center"><h5 style={{color: "black"}}>Ubah Maintenance</h5></div>
                                     <ReactNotification />
                                     <div className="card-body">
                                         {/* <ReactNotification /> */}
                                         <div className="row">
                                             <div className="col-sm-10">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Maintenance</label>
+                                                <label className="required" style={{color: "black"}}>Tanggal Maintenance</label>
                                                 <input 
                                                     type="date" 
                                                     name="dateMn" 
@@ -381,11 +381,9 @@ class CreateMaintenance extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="card">
-                            <div className="card-footer text-center">
+                            <div className="text-center">
                                 <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
                             </div>
-                        </div>
                     </Modal.Body>
                 </Modal>
 
@@ -411,11 +409,9 @@ class CreateMaintenance extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="card">
-                            <div className="card-footer text-center">
+                            <div className="text-center">
                                 <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
                             </div>
-                        </div>
                     </Modal.Body>
                 </Modal>
 
@@ -433,8 +429,6 @@ class CreateMaintenance extends React.Component {
                         </div>
                     </Modal.Body>
                 </Modal>
-            
-            </div>
             </div>
         );
     }

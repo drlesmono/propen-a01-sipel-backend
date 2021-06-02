@@ -65,17 +65,17 @@ public class ReportModel implements Serializable{
 //    @JsonIgnore
 //    private BastModel Bast;
 
-    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private InstallationReportModel idInstallationReport;
 
-    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private MaintenanceReportModel idMaintenanceReport;
 
-    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idReport", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private BastModel idBast;

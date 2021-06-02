@@ -2,6 +2,8 @@ package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.ServicesModel;
+import propen.impl.sipel.rest.ServicesDto;
+
 
 import java.util.List;
 
@@ -17,4 +19,9 @@ public interface ServicesRestService {
     List<ServicesModel> retrieveServices();
 
     void deleteService(Long idService);
+
+    ServicesModel updateService(ServicesDto service);
+
+    ServicesModel createService(ServicesDto service, Long idOrderMs);
+
 }

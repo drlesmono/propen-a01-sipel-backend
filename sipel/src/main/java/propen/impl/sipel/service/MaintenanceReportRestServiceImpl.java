@@ -28,11 +28,13 @@ public class MaintenanceReportRestServiceImpl implements MaintenanceReportRestSe
     @Autowired
     MaintenanceDb maintenanceDb;
 
+    // Mencari seluruh maintenance report
     @Override
     public List<MaintenanceReportModel> retrieveListMr() {
         return maintenanceReportDb.findAll();
     }
 
+    // Membuat nomor maintenance report
     @Override
     public String createMrNum(OrderModel order) {
 
@@ -50,6 +52,7 @@ public class MaintenanceReportRestServiceImpl implements MaintenanceReportRestSe
         return nomorMr;
     }
 
+    // Membuat maintenance report baru
     @Override
     public MaintenanceReportModel uploadMr(ReportModel report, MaintenanceReportDto mr) {
         MaintenanceReportModel newMr = new MaintenanceReportModel();

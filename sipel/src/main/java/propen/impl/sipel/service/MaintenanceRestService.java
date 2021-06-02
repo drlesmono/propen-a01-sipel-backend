@@ -17,4 +17,7 @@ public interface MaintenanceRestService {
     MaintenanceModel changeMaintenance(Long idMaintenance, MaintenanceModel maintenance);
 
     void deleteMaintenance(Long idMaintenance);
+
+    List<MaintenanceModel> retrieveListMaintenance();
+
 }

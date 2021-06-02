@@ -18,3 +18,7 @@ code {
   content: ' *';
   display:inline;
 }
+
+html, body, #root {
+  height: 100% !important;
+}

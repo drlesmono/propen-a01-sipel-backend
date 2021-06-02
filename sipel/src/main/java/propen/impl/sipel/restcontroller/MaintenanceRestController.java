@@ -15,6 +15,15 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import propen.impl.sipel.model.MaintenanceModel;
+import propen.impl.sipel.service.MaintenanceRestService;
+
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1")
@@ -104,5 +113,11 @@ public class MaintenanceRestController {
                     HttpStatus.BAD_REQUEST, "Maintenance telah selesai dan tidak dapat dihapus!"
             );
         }
+    }
+
+    // Mengembalikan list seluruh maintenance
+    @GetMapping(value="/maintenances")
+    private List<MaintenanceModel> retrieveListMaintenance(){
+        return maintenanceRestService.retrieveListMaintenance();
     }
 }

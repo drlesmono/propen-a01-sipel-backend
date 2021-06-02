@@ -48,7 +48,7 @@ class InputDataOrder extends React.Component {
             this.setState({ orders: listOrder.data });
         } catch (error) {
             this.setState({ isError: true });
-            alert("Oops terjadi masalah pada server");
+            //alert("Oops terjadi masalah pada server");
             console.log(error);
         }
     }
@@ -148,7 +148,6 @@ class InputDataOrder extends React.Component {
 
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Daftar Order</h1>
             <br></br>
@@ -173,7 +172,6 @@ class InputDataOrder extends React.Component {
                     </div>
                 </Modal.Body>
             </Modal>
-            </div>
             </div>
         );
     }

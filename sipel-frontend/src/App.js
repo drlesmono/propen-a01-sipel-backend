@@ -1,22 +1,4 @@
-/* import React, { Component } from "react";
-import Layout from "./components/Layout";
-import InputDataOrder from "./containers/InputDataOrder/InputDataOrder";
-
-class App extends Component {
-  render() {
-    return (
-      <Layout>
-        <InputDataOrder/>
-      </Layout>
-    );
-  }
-}
-
-export default App; */
-
-// import logo from './logo.svg';
 import { useRoutes, A } from "hookrouter";
-// import routes from "./router";
 import './App.css';
 import React, { Component } from "react";
 import Layout from "./components/Layout";
@@ -36,6 +18,12 @@ import ChangeOrderPIMS from "./containers/ChangeOrderPIMS/ChangeOrderPIMS";
 import LaporanInstalasiMaintenance from "./containers/LaporanInstalasiMaintenance"
 import StatusPersetujuanLaporan from "./containers/StatusPersetujuanLaporan/StatusPersetujuanLaporan";
 import UnggahDokumenOrder from "./containers/UnggahDokumenOrder/UnggahDokumenOrder";
+import Progress from "./containers/Progress";
+import ReportAdmin from "./containers/ReportAdmin";
+import ReportFinance from "./containers/ReportFinance";
+import ReportHead from "./containers/ReportHead";
+import PenugasanEngineer from "./containers/PenugasanEngineer";
+import PeriodeKontrak from "./containers/PeriodeKontrak";
 
 const routes = {
   "/": () => 
@@ -54,10 +42,13 @@ const routes = {
                 </table>
               </div>
             </div>,
-  //"/order/order": () => <InputDataOrder/>,
-  //"/produksi/maintenance": () => <PenjadwalanMaintenance />,
-  //"/produksi/maintenance/tambah/:id" : () => <CreateMaintenance />,
+  "/order/progress": () => <Progress />,
+  "/produksi/penugasan": () => <PenugasanEngineer />,
+  "/produksi/periodeKontrak": () => <PeriodeKontrak />,
   "/laporan/daftarLaporan" : () => <LaporanInstalasiMaintenance />,
+  "/laporan/finance" : () => < ReportFinance/>,
+  "/laporan/head" : () => < ReportHead/>,
+  "/laporan/admin" : () => < ReportAdmin/>,
 };
 
 function App(){
@@ -65,8 +56,8 @@ function App(){
   const routeResult = useRoutes(routes);
 
     return (
-        <Layout>
-          <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" id="navbar">
+        <>
+          <Navbar collapseOnSelect expand="lg" id="navbar" variant="dark" style={{ backgroundColor: '#2F3F58' }}>
             <Navbar.Brand href="/" style={{ textDecoration: 'none', color: '#F7873F' }}>SIPEL</Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
@@ -79,27 +70,24 @@ function App(){
                     <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something</Nav.Link>
                     <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something 2</Nav.Link>
                   </div>
-                  {/* <NavDropdown.Item href="/order/order">Order</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item> */}
                 </NavDropdown>
                 <NavDropdown title="Produksi" id="collasible-nav-dropdown">
                   <div className="d-flex justify-content-between">
-                    <Nav.Link href="#produksi/penugasan" style={{color: "black"}} className="pl-5 pr-5">Penugasan</Nav.Link>
-                    <Nav.Link href="#produksi/progress-delivery" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>
-                    <Nav.Link href="#produksi/periodeKontrak" style={{color: "black"}} className="pl-5 pr-5">Periode Kontrak</Nav.Link>
+                    <Nav.Link href="/produksi/penugasan" style={{color: "black"}} className="pl-5 pr-5">Penugasan</Nav.Link>
+                    <Nav.Link href="/order/progress" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>
+                    <Nav.Link href="/produksi/periodeKontrak" style={{color: "black"}} className="pl-5 pr-5">Periode Kontrak</Nav.Link>
                     <Nav.Link href="/produksi/maintenance" style={{color: "black"}} className="pl-5 pr-5">Maintenance</Nav.Link>
                   </div>
-                  {/* <NavDropdown.Item href="#action/3.1">Penugasan</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.1">Progress Delivery</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.1">Periode Kontrak</NavDropdown.Item>
-                  <NavDropdown.Item href="produksi/maintenance">Maintenance</NavDropdown.Item> */}
+                  {/* <NavDropdown.Item href="#produksi/progress-delivery">Progress Delivery</NavDropdown.Item>
+                  <NavDropdown.Item href="/produksi/periodeKontrak">Periode Kontrak</NavDropdown.Item>
+                  <NavDropdown.Item href="#produksi/maintenance">Maintenance</NavDropdown.Item> */}
                 </NavDropdown>
-                <NavDropdown title="Laporan" id="collasible-nav-dropdown">
+                <NavDropdown title="Laporan"  id="collasible-nav-dropdown">
                   <div className="d-flex justify-content-between">
                     <Nav.Link href="/laporan/daftarLaporan" style={{color: "black"}} className="pl-5 pr-5">Daftar Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/admin" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/finance" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>
+                    <Nav.Link href="/laporan/head" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>
                     <Nav.Link href="/laporan/verifikasiLaporan" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Laporan</Nav.Link>
                   </div>
                   {/* <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -118,7 +106,7 @@ function App(){
               </Nav>
             </Navbar.Collapse>
           </Navbar>
-            { routeResult }
+          <Layout>
           <Router>
             <Switch>
               <Route exact path="/order/order" component={InputDataOrder} />
@@ -134,7 +122,9 @@ function App(){
               <Route exact path="/order/unggah/:id" component={UnggahDokumenOrder} />
             </Switch>
           </Router>
+          { routeResult }
           </Layout>
+        </>
     );
 }
 

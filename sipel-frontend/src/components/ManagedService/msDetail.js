@@ -15,28 +15,28 @@ const ManagedService = (props) => {
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`ID Managed Service: ${idOrderMs}`}</p>
+                        <p style={{color: "black"}}>{`ID Managed Service: ${idOrderMs}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Periode Mulai: ${actualStart}`}</p>
+                        <p style={{color: "black"}}>{`Periode Mulai: ${actualStart}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Periode Selesai: ${actualEnd}`}</p>
+                        <p style={{color: "black"}}>{`Periode Selesai: ${actualEnd}`}</p>
                     </div>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-6">
                     <div className="form-group">
-                        <p>{`Status: ${activated}`}</p>
+                        <p style={{color: "black"}}>{`Status: ${activated}`}</p>
                     </div>
                 </div>
             </div>

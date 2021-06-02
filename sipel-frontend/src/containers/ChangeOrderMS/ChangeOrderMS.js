@@ -8,6 +8,7 @@ import { Button } from "react-bootstrap";
 import { store } from "react-notifications-component";
 import ReactNotification from "react-notifications-component";
 import Modal from "react-bootstrap/Modal";
+import moment from "moment";
 
 class ChangeOrderMS extends React.Component {
     constructor(props) {
@@ -83,9 +84,9 @@ class ChangeOrderMS extends React.Component {
             clientOrg: ord.clientOrg,
             clientPhone: ord.clientPhone,
             clientEmail: ord.clientEmail,
-            dateOrder: ord.dateOrder,
-            actualStart: ordMS.actualStart,
-            actualEnd: ordMS.actualEnd,
+            dateOrder: moment(new Date(ord.dateOrder)).format("YYYY-MM-DD"),
+            actualStart: moment(new Date(ordMS.actualStart)).format("YYYY-MM-DD"),
+            actualEnd: moment(new Date(ordMS.actualEnd)).format("YYYY-MM-DD"),
             activated: ordMS.activated,
         })
     }
@@ -118,6 +119,9 @@ class ChangeOrderMS extends React.Component {
     async handleSubmitChangeOrderMS(event) {
         event.preventDefault();
         try {
+            let dateOrd = moment(new Date(this.state.dateOrder)).format("YYYY-MM-DD");
+            let startDate = moment(new Date(this.state.actualStart)).format("YYYY-MM-DD");
+            let endDate = moment(new Date(this.state.actualEnd)).format("YYYY-MM-DD");
             if (this.state.clientName === ""){
                 store.addNotification({
                     title: "Peringatan!",
@@ -237,7 +241,7 @@ class ChangeOrderMS extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.actualStart) > new Date (this.state.actualEnd)){
+            if (startDate > endDate){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Periode Selesai Managed tidak boleh lebih awal dari Periode Mulai Managed`,
@@ -271,7 +275,7 @@ class ChangeOrderMS extends React.Component {
                 });
                 return false;
             }
-            if (new Date(this.state.actualStart) < new Date(this.state.dateOrder)){
+            if (startDate < dateOrd){
                 store.addNotification({
                     title: "Peringatan!",
                     message: `Periode Mulai Managed tidak boleh lebih awal dari Tanggal Order Masuk`,
@@ -360,7 +364,6 @@ class ChangeOrderMS extends React.Component {
 
         return (
             <div className={classes.container}>
-            <div className="content">
             <br></br>
             <h1 className={classes.title}>Ubah Order</h1>
             <br></br>
@@ -374,7 +377,7 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Nomor PO</label>
+                                                <label style={{color: "black"}}>Nomor PO</label>
                                                 <input 
                                                     type="text" 
                                                     name="noPO" 
@@ -387,7 +390,7 @@ class ChangeOrderMS extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Nama Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>Nama Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientName" 
@@ -402,7 +405,7 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Nomor SPH</label>
+                                                <label style={{color: "black"}}>Nomor SPH</label>
                                                 <input 
                                                     type="text"  
                                                     name="noSPH" 
@@ -415,7 +418,7 @@ class ChangeOrderMS extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Divisi Pelanggan</label>
+                                                <label style={{color: "black"}}>Divisi Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientDiv" 
@@ -430,7 +433,7 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Nama Order</label>
+                                                <label className="required" style={{color: "black"}}>Nama Order</label>
                                                 <input 
                                                     type="text"  
                                                     name="orderName" 
@@ -443,7 +446,7 @@ class ChangeOrderMS extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">PIC Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>PIC Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientPIC" 
@@ -458,7 +461,7 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Deskripsi Order</label>
+                                                <label className="required" style={{color: "black"}}>Deskripsi Order</label>
                                                 <input 
                                                     type="text"  
                                                     name="description" 
@@ -471,7 +474,7 @@ class ChangeOrderMS extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Perusahaan Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>Perusahaan Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientOrg" 
@@ -485,7 +488,7 @@ class ChangeOrderMS extends React.Component {
                                     </div>
                                     <div className="row">
                                         <div className="col-sm-6">
-                                            <label className="required">Jenis Order</label>
+                                            <label className="required" style={{color: "black"}}>Jenis Order</label>
                                             <div className="form-check"> 
                                                 <input disabled
                                                     type="checkbox" 
@@ -497,7 +500,7 @@ class ChangeOrderMS extends React.Component {
                                                     onChange={(e) => this.setState(prevState => ({
                                                         projectInstallation: !prevState.projectInstallation
                                                     }))} /> 
-                                                <label className="form-check-label">Project Installation</label>
+                                                <label className="form-check-label" style={{color: "black"}}>Project Installation</label>
                                             </div>
                                             <div className="form-check">
                                                 <input disabled
@@ -510,12 +513,12 @@ class ChangeOrderMS extends React.Component {
                                                     onChange={(e) => this.setState(prev => ({
                                                         managedService: !prev.managedService
                                                     }))} />
-                                                <label className="form-check-label">Managed Services</label>
+                                                <label className="form-check-label" style={{color: "black"}}>Managed Services</label>
                                             </div>
                                         </div> 
                                         <div className="col-sm-6">
                                             <div className="form-group ">
-                                                <label className="required">Email Pelanggan</label>
+                                                <label className="required" style={{color: "black"}}>Email Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientEmail" 
@@ -530,8 +533,8 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Tanggal Masuk Order</label>
-                                                <input 
+                                                <label className="required" style={{color: "black"}}>Tanggal Masuk Order</label>
+                                                <input disabled
                                                     type="date" 
                                                     name="dateOrder" 
                                                     id="dateOrder" 
@@ -543,7 +546,7 @@ class ChangeOrderMS extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label>Nomor Telepon Pelanggan</label>
+                                                <label style={{color: "black"}}>Nomor Telepon Pelanggan</label>
                                                 <input 
                                                     type="text" 
                                                     name="clientPhone" 
@@ -558,7 +561,7 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Periode Mulai Managed</label>
+                                                <label className="required" style={{color: "black"}}>Periode Mulai Managed</label>
                                                 <input 
                                                     type="date" 
                                                     name="actualStart" 
@@ -573,7 +576,7 @@ class ChangeOrderMS extends React.Component {
                                     <div className="row">
                                         <div className="col-sm-6">
                                             <div className="form-group">
-                                                <label className="required">Periode Selesai Managed</label>
+                                                <label className="required" style={{color: "black"}}>Periode Selesai Managed</label>
                                                 <input 
                                                     type="date" 
                                                     name="actualEnd" 
@@ -596,17 +599,6 @@ class ChangeOrderMS extends React.Component {
                         </div>
                     </div>
                 </form>
-
-                {/* <Modal show={this.state.finishSubmitOrder}>
-                    <div className="card">
-                        <div className="card-body text-center">
-                            <h2>{`Order Berhasil Diubah`}</h2>
-                        </div>
-                        <div className="card-footer text-center">
-                            <Button className={classes.button1} onClick={() => this.handleAfterSubmit()}>Kembali</Button>
-                        </div>
-                    </div>
-                </Modal> */}
 
                 <Modal show={this.state.finishSubmitOrder} dialogClassName="modal-90w" aria-labelledby="contained-modal-title-vcenter">
                     <Modal.Header>
@@ -651,7 +643,6 @@ class ChangeOrderMS extends React.Component {
                     </div>
                 </Modal.Body>
                 </Modal>
-            </div>
             </div>
         );
     }
