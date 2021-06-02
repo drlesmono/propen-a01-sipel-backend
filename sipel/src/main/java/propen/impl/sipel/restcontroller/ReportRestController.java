@@ -19,10 +19,11 @@ import propen.impl.sipel.service.ReportRestService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -112,27 +113,40 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
-    public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
-                                                  HttpServletRequest request){
+    public ResponseEntity<FileOutputStream> downloadReport(@PathVariable String fileName) throws IOException {
 //        Resource resource = fileStorageService.loadFileAsResource(fileName);
-        ReportModel report = reportRestService.findReportByReportName(fileName);
-        Resource resource = fileStorageService.loadFileAsResource(report.getUrlFile(), fileName);
-        String fileType = null;
+//        ReportModel report = reportRestService.findReportByReportName(fileName);
+//        Resource resource = fileStorageService.loadFileAsResource(report.getUrlFile(), fileName);
+//        String fileType = null;
+//
+//        try{
+//            fileType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+//        }catch (IOException e){
+//            System.out.println("Tidak dapat menentukan tipe file");
+//        }
+//
+//        if(fileType==null){
+//            fileType = "application/octet-stream";
+//        }
 
-        try{
-            fileType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        }catch (IOException e){
-            System.out.println("Tidak dapat menentukan tipe file");
-        }
+        ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
+        URL url = new URL(reportTarget.getUrlFile());
+        try (InputStream in = url.openStream();
+             BufferedInputStream bis = new BufferedInputStream(in);
+             FileOutputStream fos = new FileOutputStream(fileName)) {
 
-        if(fileType==null){
-            fileType = "application/octet-stream";
+            byte[] data = new byte[1024];
+            int count;
+            while ((count = bis.read(data, 0, 1024)) != -1) {
+                fos.write(data, 0, count);
+            }
         }
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(fileType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+//                .contentType(MediaType.parseMediaType(fileType))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+//                .body(resource);
     }
 
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
