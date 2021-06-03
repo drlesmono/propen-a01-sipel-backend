@@ -131,26 +131,38 @@ public class ReportRestController {
 //        }
 
         ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
-        BufferedInputStream in = null;
-        FileOutputStream fout = null;
-        try {
-            in = new BufferedInputStream(new URL(reportTarget.getUrlFile()).openStream());
-            fout = new FileOutputStream(fileName);
+//        BufferedInputStream in = null;
+//        FileOutputStream fout = null;
+//        try {
+//            in = new BufferedInputStream(new URL(reportTarget.getUrlFile()).openStream());
+//            fout = new FileOutputStream(fileName);
+//
+//            byte data[] = new byte[1024];
+//            int count;
+//            while ((count = in.read(data, 0, 1024)) != -1) {
+//                fout.write(data, 0, count);
+//            }
+//        } finally {
+//            if (in != null)
+//                in.close();
+//            if (fout != null)
+//                fout.close();
+//        }
 
-            byte data[] = new byte[1024];
-            int count;
-            while ((count = in.read(data, 0, 1024)) != -1) {
-                fout.write(data, 0, count);
-            }
-        } finally {
-            if (in != null)
-                in.close();
-            if (fout != null)
-                fout.close();
-        }
+        File file = new File(reportTarget.getUrlFile());
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
 //                .contentType(MediaType.parseMediaType(fileType))
 //                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 //                .body(resource);
