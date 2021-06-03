@@ -26,13 +26,8 @@ public class MaintenanceRestServiceImpl implements MaintenanceRestService {
     }
 
     @Override
-    public List<MaintenanceModel> retrieveMaintenance() {
-        return maintenanceDb.findAll();
-    }
-
-    @Override
     public List<MaintenanceModel> retrieveMaintenanceMS(Long idOrderMs) {
-        List<MaintenanceModel> mnList = retrieveMaintenance();
+        List<MaintenanceModel> mnList = retrieveListMaintenance();
         List<MaintenanceModel> mnListMS = new ArrayList<MaintenanceModel>();
         for (MaintenanceModel i : mnList) {
             if (i.getIdOrderMS().getIdOrderMs() == idOrderMs) {

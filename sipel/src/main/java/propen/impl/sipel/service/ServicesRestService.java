@@ -8,9 +8,9 @@ import propen.impl.sipel.rest.ServicesDto;
 import java.util.List;
 
 public interface ServicesRestService {
-    ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices);
+//    ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices);
 
-    ServicesModel changeServices(Long idService, ServicesModel service);
+//    ServicesModel changeServices(Long idService, ServicesModel service);
 
     ServicesModel getServiceById(Long idServices);
 

@@ -53,16 +53,11 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/daftar/{idOrderMS}")
-    private List<MaintenanceModel> retrieveListMaintenance(
+    private List<MaintenanceModel> retrieveListMaintenanceByIdOrderMs(
             @Valid
             @PathVariable ("idOrderMS") Long idOrderMS
     ) {
         return maintenanceRestService.retrieveMaintenanceMS(idOrderMS);
-    }
-
-    @GetMapping(value = "/maintenance/list")
-    private List<MaintenanceModel> listMn() {
-        return maintenanceRestService.retrieveMaintenance();
     }
 
     @PutMapping(value = "/produksi/maintenance/ubah/{idMaintenance}")

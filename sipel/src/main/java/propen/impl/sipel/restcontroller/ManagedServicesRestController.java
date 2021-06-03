@@ -7,12 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
-import propen.impl.sipel.model.ProjectInstallationModel;
-import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.service.ManagedServicesRestService;
 import propen.impl.sipel.service.OrderRestService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -81,11 +78,6 @@ public class ManagedServicesRestController {
                     HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idOrderMs) + " not found!"
             );
         }
-    }
-
-    @GetMapping(value = "/orderMS")
-    public List<ManagedServicesModel> retrieveMS() {
-        return managedServicesRestService.retrieveMS();
     }
 
     @GetMapping(value = "/orderMSassigned")

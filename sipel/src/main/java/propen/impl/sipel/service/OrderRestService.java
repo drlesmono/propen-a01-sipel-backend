@@ -14,8 +14,6 @@ public interface OrderRestService {
 
     OrderModel changeOrder(Long idOrder, OrderModel orderUpdate);
 
-    List<OrderModel> retrieveOrderIsMS();
-
     OrderModel getLatestOrder();
 
     List<OrderModel> retrieveListOrderVerified();

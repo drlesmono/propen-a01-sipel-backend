@@ -8,8 +8,6 @@ import java.util.List;
 public interface MaintenanceRestService {
     MaintenanceModel createMaintenance (MaintenanceModel maintenance, ManagedServicesModel ms);
 
-    List<MaintenanceModel> retrieveMaintenance();
-
     List<MaintenanceModel> retrieveMaintenanceMS(Long idOrderMs);
 
     MaintenanceModel getMaintenanceById(Long idMaintenance);

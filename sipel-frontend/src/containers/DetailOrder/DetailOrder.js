@@ -107,8 +107,8 @@ class DetailOrder extends React.Component {
 
     async loadData() {
         try {
-            const listOrderPI  = await APIConfig.get("/orderPI");
-            const listOrderMS  = await APIConfig.get("/orderMS");
+            const listOrderPI  = await APIConfig.get("/orders/pi");
+            const listOrderMS  = await APIConfig.get("/orders/ms");
             const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
             const docList = await APIConfig.get(`/order/${this.state.idOrder}/documents`); //doc order
             this.setState({ ordersPI: listOrderPI.data });
@@ -278,7 +278,8 @@ class DetailOrder extends React.Component {
             const data = {
                 name: this.state.name,
             }
-            await APIConfig.put(`/order/ubah/service/${this.state.idService}`, data);
+            // await APIConfig.put(`/order/ubah/service/${this.state.idService}`, data);
+            await APIConfig.put(`/order/${this.state.orderTarget.idOrder.idOrder}/service/${this.state.idService}/updateService`, data);
             this.loadData();
             this.setState({ finishedSubmitService: true });
         } catch (error) {

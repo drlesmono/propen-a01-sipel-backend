@@ -52,18 +52,6 @@ public class OrderRestServiceImpl implements OrderRestService {
     }
 
     @Override
-    public List<OrderModel> retrieveOrderIsMS() {
-        List<OrderModel> ordList = retrieveOrder();
-        List<OrderModel> ordMSList = new ArrayList<OrderModel>();
-        for (OrderModel i : ordList) {
-            if (i.getManagedService() && i.getIdOrderMs().getIdUserPic() != null) {
-                ordMSList.add(i);
-            }
-        }
-        return ordMSList;
-    }
-
-    @Override
     public OrderModel getLatestOrder() {
         List<OrderModel> orders = retrieveOrder();
         OrderModel order = orders.get(orders.size() - 1);

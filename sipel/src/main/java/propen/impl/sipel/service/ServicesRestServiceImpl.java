@@ -39,18 +39,18 @@ public class ServicesRestServiceImpl implements ServicesRestService{
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
 
-    @Override
-    public ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices) {
-        services.setIdOrderMS(managedServices);
-        return servicesDb.save(services);
-    }
+//    @Override
+//    public ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices) {
+//        services.setIdOrderMS(managedServices);
+//        return servicesDb.save(services);
+//    }
 
-    @Override
-    public ServicesModel changeServices(Long idService, ServicesModel service) {
-        ServicesModel srvc = getServiceById(idService);
-        srvc.setName(service.getName());
-        return servicesDb.save(srvc);
-    }
+//    @Override
+//    public ServicesModel changeServices(Long idService, ServicesModel service) {
+//        ServicesModel srvc = getServiceById(idService);
+//        srvc.setName(service.getName());
+//        return servicesDb.save(srvc);
+//    }
 
     @Override
     public ServicesModel getServiceById(Long idServices) {

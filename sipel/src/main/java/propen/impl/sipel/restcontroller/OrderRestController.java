@@ -7,27 +7,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
-import propen.impl.sipel.model.ProjectInstallationModel;
-import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.repository.OrderDb;
 import propen.impl.sipel.service.ManagedServicesRestService;
 import propen.impl.sipel.service.OrderRestService;
 import propen.impl.sipel.service.ProjectInstallationRestService;
 import propen.impl.sipel.service.ServicesRestService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.rest.BaseResponse;
-import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.rest.OrderDto;
 import propen.impl.sipel.rest.ProgressOrderDto;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,11 +91,6 @@ public class  OrderRestController {
     @GetMapping(value = "/orderList")
     private List<OrderModel> retrieveListOrder() {
         return orderRestService.retrieveOrder();
-    }
-
-    @GetMapping(value = "/orderListIsMS")
-    private List<OrderModel> retrieveOrdListMS() {
-        return orderRestService.retrieveOrderIsMS();
     }
 
     @GetMapping(value = "/order/target")

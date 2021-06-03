@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import propen.impl.sipel.filestorage.FileStorageService;
@@ -175,7 +173,7 @@ public class ReportRestController {
         }
     }
     @GetMapping(value="/api/v1/reports")
-    private List<ReportModel> retrieveListReport(){
+    private List<ReportModel> retrieveListReportApproved(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
         List<ReportModel> toBeSeenReport = new ArrayList<>();
         for(ReportModel report : listReport){

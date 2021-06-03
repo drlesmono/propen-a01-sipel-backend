@@ -5,14 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import propen.impl.sipel.model.ManagedServicesModel;
-import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
-import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.service.OrderRestService;
 import propen.impl.sipel.service.ProjectInstallationRestService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -76,12 +72,6 @@ public class ProjectInstallationRestController {
             );
         }
     }
-
-    @GetMapping(value = "/orderPI")
-    private List<ProjectInstallationModel> retrievePI() {
-        return projectInstallationRestService.retrievePI();
-    }
-
 
     // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
