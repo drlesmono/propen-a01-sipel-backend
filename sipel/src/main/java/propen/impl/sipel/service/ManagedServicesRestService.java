@@ -17,4 +17,6 @@ public interface ManagedServicesRestService{
     ManagedServicesModel updateKontrak(Long idOrderMs, String idUserPic, Date actualStart, Date actualEnd);
 
     LinkedHashMap<String, String> retrievePercentageMs();
+
+//    List<Integer> getMsMasukDanSelesai(Date startDate, Date endDate);
 }

@@ -68,7 +68,7 @@ public class ProjectInstallationModel implements Serializable{
     @JsonIgnore
     private List<InstallationReportModel> listInstallationReport;
 
-    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<BastModel> listBast;

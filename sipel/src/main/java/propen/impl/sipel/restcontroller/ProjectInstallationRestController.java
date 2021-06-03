@@ -10,6 +10,11 @@ import propen.impl.sipel.rest.ProjectInstallationDto;
 import propen.impl.sipel.service.ProjectInstallationRestService;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -45,4 +50,71 @@ public class ProjectInstallationRestController {
 
         return response;
     }
+
+    @GetMapping(value="/orders/pi/namaBulan/{startDateString}/{endDateString}")
+    private List<String> retrieveListNamaBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        return projectInstallationRestService.getListBulan(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/pi/masuk/{startDateString}/{endDateString}")
+    private List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        return projectInstallationRestService.getPiMasuk(startDate, endDate);
+    }
+
+    @GetMapping(value="/order/pi/selesai/{startDateString}/{endDateString}")
+    private List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        return projectInstallationRestService.getPiMasuk(startDate, endDate);
+    }
+
 }
