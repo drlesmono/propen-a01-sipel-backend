@@ -79,7 +79,7 @@ class CreateOrder extends React.Component {
     async loadData() {
         try {
             const listOrder  = await APIConfig.get("/orderList");
-            const listOrderMS  = await APIConfig.get("/orderMS");
+            const listOrderMS  = await APIConfig.get("/orders/ms");
             this.setState({ orders: listOrder.data });
             this.setState({ orderTarget: this.state.orders[this.state.orders.length - 1] });
             this.setState({ ordersMS: listOrderMS.data });

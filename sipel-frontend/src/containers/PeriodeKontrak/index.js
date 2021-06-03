@@ -307,11 +307,11 @@ class PeriodeKontrak extends Component {
             timeRemaining: this.getTimeRemaining(ms.actualStart, ms.actualEnd)  
         });
         
-        if(ms.idUserPic !== null){
-            let servicesEngineer = ms.listService.map(service => service.idUser.id);
+        if(ms.listService !== null){
+            let servicesEngineer = ms.listService.map(service => service.idUser === null ? null : service.idUser.id);
             let servicesEngineerName = ms.listService.map(service => service.name);
             this.setState({
-                picEngineerMs: ms.idUserPic.id, 
+                picEngineerMs: ms.idUserPic === null ? null : ms.idUserPic.id, 
                 servicesEngineer: servicesEngineer,
                 servicesEngineerName: servicesEngineerName,
                 services: ms.listService
@@ -570,8 +570,9 @@ class PeriodeKontrak extends Component {
                                             {isExtend ? 
                                             <td><p className="d-flex">Services<p style={{color: "red"}}>*</p></p></td> 
                                             : <td>Services</td>}
-                                            <td>
-                                                <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>
+                                            <td className="d-flex">
+                                                : {services.length === 0 ? <p style={{color: "red"}}>Belum terdapat service</p> :
+                                                <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>}
                                             </td>
                                         </tr>
                                         <tr>
@@ -582,7 +583,7 @@ class PeriodeKontrak extends Component {
                                                     {engineers.map(user =><option value={user.id}>{user.fullname}</option>)}
                                                 </Form.Control></td></>
                                             : <><td>PIC Engineer</td>
-                                            <td>: {this.getPICMS(orderTarget.idOrder) === null? "Belum ditugaskan" : this.getPICMS(orderTarget.idOrder).fullname}</td></>}
+                                            <td className="d-flex">: {this.getPICMS(orderTarget.idOrder) === null? <p style={{color: "red"}}>Belum ditugaskan</p> : this.getPICMS(orderTarget.idOrder).fullname}</td></>}
                                         </tr>
                                         <tr>
                                             { isExtend ? <>

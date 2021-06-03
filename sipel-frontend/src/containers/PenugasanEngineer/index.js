@@ -240,8 +240,8 @@ class PenugasanEngineer extends Component {
         }
 
         if(order.managedService === true){
-            const picMs = this.getPICMS(order.idOrder);
-            if(picMs !== null){
+            if(this.getMs(order.idOrderMs).listService !== null){
+                const picMs = this.getPICMS(order.idOrder);
                 const servicesEngineer = this.getListService(order).map(service => service.idUser.id);
                 this.setState({
                     picEngineerMs: picMs.id, 
@@ -434,8 +434,9 @@ class PenugasanEngineer extends Component {
                                             {isReport ? 
                                             <td>Services</td> :
                                             <td><p className="d-flex">Services<p style={{color: "red"}}>*</p></p></td> }
-                                            <td>
-                                                <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>
+                                            <td className="d-flex">
+                                                : {this.getMs(orderTarget.idOrder).listService === null ? <p style={{color: "red"}}>Belum terdapat service</p> :
+                                                <><CustomizedTables headers={tableServiceHeaders} rows={tableServiceRows}></CustomizedTables></>}
                                             </td>
                                         </tr>
                                         <tr>
