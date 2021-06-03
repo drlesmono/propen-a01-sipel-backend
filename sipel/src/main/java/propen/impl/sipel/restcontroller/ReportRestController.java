@@ -131,7 +131,7 @@ public class ReportRestController {
     @GetMapping("/report/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         ReportModel report = reportRestService.findReportByReportName(fileName);
-        File file = new File(""+report.getUrlFile()+"");
+        File file = new File(report.getUrlFile());
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-disposition", "inline;filename=" +fileName);
 
@@ -150,11 +150,17 @@ public class ReportRestController {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
             String fileName = report.getReportName();
-            Path filePath = fileStorageService.getFilePath(fileName);
-            reportRestService.deleteReport(idReport);
-            Files.delete(filePath);
-            return ResponseEntity.ok("Report dengan ID "+String.valueOf(idReport)+" berhasil dihapus!");
-        }catch (NoSuchElementException | IOException e){
+//            Path filePath = fileStorageService.getFilePath(fileName);
+            File file = new File(report.getUrlFile());
+            if(file.delete()){
+                reportRestService.deleteReport(idReport);
+                return ResponseEntity.ok("Report dengan ID "+String.valueOf(idReport)+" berhasil dihapus!");
+            }else{
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Report dengan ID "+String.valueOf(idReport)+" tidak ditemukan!"
+                );
+            }
+        }catch (NoSuchElementException e){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Report dengan ID "+String.valueOf(idReport)+" tidak ditemukan!"
             );
