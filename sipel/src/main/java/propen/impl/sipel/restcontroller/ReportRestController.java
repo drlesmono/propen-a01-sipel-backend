@@ -21,10 +21,6 @@ import propen.impl.sipel.service.ReportRestService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -74,7 +70,6 @@ public class ReportRestController {
 
         // Root Directory
         String uploadRootPath = request.getServletContext().getRealPath("upload");
-//        System.out.println("uploadRootPath=" + uploadRootPath);
 
         File uploadRootDir = new File(uploadRootPath);
         // Create directory if it not exists.
@@ -95,7 +90,6 @@ public class ReportRestController {
                 fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
             }
         }
-//        String fileName = fileStorageService.storeFile(report.getFile(), fileNameOriginal);
         String fileName = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
         String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/report/")
@@ -115,39 +109,8 @@ public class ReportRestController {
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName) throws IOException {
-//        Resource resource = fileStorageService.loadFileAsResource(fileName);
-//        ReportModel report = reportRestService.findReportByReportName(fileName);
-//        Resource resource = fileStorageService.loadFileAsResource(report.getUrlFile(), fileName);
-//        String fileType = null;
-//
-//        try{
-//            fileType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-//        }catch (IOException e){
-//            System.out.println("Tidak dapat menentukan tipe file");
-//        }
-//
-//        if(fileType==null){
-//            fileType = "application/octet-stream";
-//        }
 
         ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
-//        BufferedInputStream in = null;
-//        FileOutputStream fout = null;
-//        try {
-//            in = new BufferedInputStream(new URL(reportTarget.getUrlFile()).openStream());
-//            fout = new FileOutputStream(fileName);
-//
-//            byte data[] = new byte[1024];
-//            int count;
-//            while ((count = in.read(data, 0, 1024)) != -1) {
-//                fout.write(data, 0, count);
-//            }
-//        } finally {
-//            if (in != null)
-//                in.close();
-//            if (fout != null)
-//                fout.close();
-//        }
 
         File file = new File(reportTarget.getUrlFile());
 
@@ -162,19 +125,13 @@ public class ReportRestController {
                 .contentLength(file.length())
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
-//                .contentType(MediaType.parseMediaType(fileType))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-//                .body(resource);
     }
 
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
-//        Path filePath = fileStorageService.getFilePath(fileName);
         ReportModel report = reportRestService.findReportByReportName(fileName);
-//        File file = new File(""+filePath+"");
-        File file = new File(""+report.getUrlFile()+"");
+        File file = new File(report.getUrlFile());
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-disposition", "inline;filename=" +fileName);
 
@@ -193,11 +150,17 @@ public class ReportRestController {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
             String fileName = report.getReportName();
-            Path filePath = fileStorageService.getFilePath(fileName);
-            reportRestService.deleteReport(idReport);
-            Files.delete(filePath);
-            return ResponseEntity.ok("Report dengan ID "+String.valueOf(idReport)+" berhasil dihapus!");
-        }catch (NoSuchElementException | IOException e){
+//            Path filePath = fileStorageService.getFilePath(fileName);
+            File file = new File(report.getUrlFile());
+            if(file.delete()){
+                reportRestService.deleteReport(idReport);
+                return ResponseEntity.ok("Report dengan ID "+String.valueOf(idReport)+" berhasil dihapus!");
+            }else{
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Report dengan ID "+String.valueOf(idReport)+" tidak ditemukan!"
+                );
+            }
+        }catch (NoSuchElementException e){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Report dengan ID "+String.valueOf(idReport)+" tidak ditemukan!"
             );
