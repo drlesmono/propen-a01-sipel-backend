@@ -383,7 +383,7 @@ class Bast extends Component {
                     <div id="preview">
                         <Modal show={isPopup} handleCloseModal={this.handleCancel}>
                             <h2 style={{ marginTop: 0, marginBottom: 0}}><b>Preview BAST untuk order telah berhasil dibuat.</b></h2>
-                            <a onClick={(event)=>this.handleClose(event)} href={"/laporan/list"}><h6 id="highlighted3"> &#8810; Kembali ke Daftar Laporan</h6></a>
+                            <a onClick={(event)=>this.handleClose(event)} href={"/laporan/admin"}><h6 id="highlighted3"> &#8810; Kembali ke Daftar Laporan</h6></a>
                         </Modal>
                     </div>
                     :

@@ -207,10 +207,8 @@ class UnggahDokumenOrder extends React.Component {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="card">
-                        <div className="card-footer text-center">
-                            <Button className={classes.button2} onClick={() => this.handleAfterUnggahDokumen()}>Kembali</Button>
-                        </div>
+                    <div className="text-center">
+                        <Button className={classes.button2} onClick={() => this.handleAfterUnggahDokumen()}>Kembali</Button>
                     </div>
                 </Modal.Body>
             </Modal>

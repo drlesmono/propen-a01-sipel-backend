@@ -51,19 +51,19 @@ public class ManagedServicesModel implements Serializable{
     @Column(name = "isActivated", nullable = false)
     private Boolean isActivated;
 
-    //@NotNull
+//    @NotNull
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name="timeRemaining", nullable = true)
-    private Long timeRemaining;
+//    @Column(name="timeRemaining", nullable = true)
+//    private Long timeRemaining;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private List<ServicesModel> listService = new ArrayList<>();
+//    @JsonIgnore
+    private List<ServicesModel> listService;
 
     @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private List<MaintenanceModel> listMaintenance;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -118,13 +118,13 @@ public class ManagedServicesModel implements Serializable{
         isActivated = activated;
     }
 
-    public Long getTimeRemaining() {
-        return timeRemaining;
-    }
+//    public Long getTimeRemaining() {
+//        return timeRemaining;
+//    }
 
-    public void setTimeRemaining(Long timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
+//    public void setTimeRemaining(Long timeRemaining) {
+//        this.timeRemaining = timeRemaining;
+//    }
 
     public List<ServicesModel> getListService() {
         return listService;
@@ -148,9 +148,5 @@ public class ManagedServicesModel implements Serializable{
 
     public void setDateClosedMS(Date dateClosedMS) {
         this.dateClosedMS = dateClosedMS;
-    }
-
-    public void addService(String name) {
-        this.listService.add(new ServicesModel(name, this));
     }
 }

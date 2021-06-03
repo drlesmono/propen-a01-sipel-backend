@@ -805,10 +805,8 @@ class DetailOrder extends React.Component {
                         </div>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="card">
-                            <div className="card-footer text-center">
-                                <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
-                            </div>
+                        <div className="text-center">
+                            <Button className={classes.button1} onClick={() => this.handleAfterDelete()}>Kembali</Button>
                         </div>
                     </Modal.Body>
                 </Modal>

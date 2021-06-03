@@ -32,7 +32,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     public ManagedServicesModel createOrderMS(ManagedServicesModel managedServices) {
         managedServices.setActivated(false);
         managedServices.setDateClosedMS(null);
-        managedServices.setTimeRemaining(setRem(managedServices));
+        //managedServices.setTimeRemaining(setRem(managedServices));
         return managedServicesDb.save(managedServices);
     }
 
@@ -41,7 +41,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         ManagedServicesModel orderMS = getMSOrderById(idOrderMS);
         orderMS.setActivated(orderMSUpdate.getActivated());
         orderMS.setDateClosedMS(null);
-        orderMS.setTimeRemaining(setRem(orderMSUpdate));
+        //orderMS.setTimeRemaining(setRem(orderMSUpdate));
         orderMS.setActualStart(orderMSUpdate.getActualStart());
         orderMS.setActualEnd(orderMSUpdate.getActualEnd());
         return managedServicesDb.save(orderMS);
@@ -78,10 +78,11 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
 
     @Override
     public List<ManagedServicesModel> retrieveMSassigned() {
+        Date today = new Date();
         List<ManagedServicesModel> msList = retrieveMS();
         List<ManagedServicesModel> msListAssigned = new ArrayList<ManagedServicesModel>();
         for (ManagedServicesModel i : msList) {
-            if (i.getIdUserPic() != null && i.getTimeRemaining() != 0 && i.getTimeRemaining() != null) {
+            if (i.getIdUserPic() != null && i.getDateClosedMS() == null && today.compareTo(i.getActualEnd()) < 0) {
                 msListAssigned.add(i);
             }
         }
