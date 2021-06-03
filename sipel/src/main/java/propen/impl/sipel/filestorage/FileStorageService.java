@@ -23,19 +23,18 @@ import java.net.URI;
 public class FileStorageService {
 
     //  Menyimpan file ke local server
-    public String storeFile(File uploadRootDir, String fileNameTarget, MultipartFile fileData){
-        String fileName = fileNameTarget;
+    public File storeFile(File uploadRootDir, String fileNameTarget, MultipartFile fileData){
 
         try{
-            File serverFile = new File(uploadRootDir.getAbsolutePath() + "/"+ fileName);
+            File serverFile = new File(uploadRootDir.getAbsolutePath() + "/"+ fileNameTarget);
             System.out.println(serverFile.getAbsoluteFile());
 
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
             stream.write(fileData.getBytes());
             stream.close();
-           return fileName;
+            return serverFile;
         }catch (IOException e){
-            throw new FileStorageException("File "+fileName+" gagal disimpan, silahkan coba lagi!", e);
+            throw new FileStorageException("File "+fileNameTarget+" gagal disimpan, silahkan coba lagi!", e);
         }
     }
 
