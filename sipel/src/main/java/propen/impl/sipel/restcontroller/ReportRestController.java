@@ -90,12 +90,9 @@ public class ReportRestController {
                 fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
             }
         }
-        String fileName = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
-        String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/report/")
-                .path(fileName)
-                .toUriString();
-        report.setReportName(fileName);
+        File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
+        String urlFile = file.getAbsolutePath();
+        report.setReportName(fileNameOriginal);
         report.setFileType(report.getFile().getContentType());
         report.setSize(report.getFile().getSize());
         ReportModel newReport = reportRestService.uploadReport(report, urlFile);
