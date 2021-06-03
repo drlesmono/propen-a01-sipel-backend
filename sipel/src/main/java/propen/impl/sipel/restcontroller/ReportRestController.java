@@ -70,6 +70,7 @@ public class ReportRestController {
 
         // Root Directory
         String uploadRootPath = request.getServletContext().getRealPath("upload");
+//        System.out.println("uploadRootPath=" + uploadRootPath);
 
         File uploadRootDir = new File(uploadRootPath);
         // Create directory if it not exists.
@@ -90,12 +91,16 @@ public class ReportRestController {
                 fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
             }
         }
-        String fileName = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
-        String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/report/")
-                .path(fileName)
-                .toUriString();
-        report.setReportName(fileName);
+//        String fileName = fileStorageService.storeFile(report.getFile(), fileNameOriginal);
+//        String fileName= fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
+        File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
+        String urlFile = file.getAbsolutePath();
+//        String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/report/")
+//                .path(fileName)
+//                .toUriString();
+//        report.setReportName(fileNameOri);
+        report.setReportName(fileNameOriginal);
         report.setFileType(report.getFile().getContentType());
         report.setSize(report.getFile().getSize());
         ReportModel newReport = reportRestService.uploadReport(report, urlFile);
