@@ -51,7 +51,7 @@ public class ReportRestController {
             }
         }
 
-        return listReport;
+        return listReportFiltered;
     }
 
     // Menyimpan file yang diupload ke local server dan membuat report baru
