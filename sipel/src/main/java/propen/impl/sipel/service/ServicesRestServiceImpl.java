@@ -27,6 +27,7 @@ import java.util.List;
 @Service
 @Transactional
 public class ServicesRestServiceImpl implements ServicesRestService{
+    @Autowired
     private UserDb userDb;
 
     @Autowired

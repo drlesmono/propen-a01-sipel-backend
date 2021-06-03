@@ -43,7 +43,7 @@ public class MaintenanceModel implements Serializable{
     @JsonIgnore
     private List<MaintenanceReportModel> listMaintenanceReport;
 
-    @OneToMany(mappedBy = "idBast", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idBast", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<BastModel> listBast;

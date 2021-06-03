@@ -24,7 +24,7 @@ public class DocumentOrderModel implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private OrderModel idOrder;
 
     @NotNull
@@ -36,17 +36,17 @@ public class DocumentOrderModel implements Serializable{
     @Column(name="uploadedDate", nullable = false)
     private Date uploadedDate;
 
-    /*@NotNull
-    @Column(name="docType", nullable = false)
-    private String docType;*/
-
     @NotNull
-    @Column(name="size", nullable = false)
-    private Long size;
+    @Column(name="docType", nullable = false)
+    private String docType;
 
     @NotNull
     @Column(name = "urlFile", nullable = false)
     private String urlFile;
+
+    @NotNull
+    @Column(name = "size", nullable = false)
+    private Long size;
 
     @NotNull
     @Column(name = "fileType", nullable = false)
@@ -68,9 +68,9 @@ public class DocumentOrderModel implements Serializable{
         this.uploadedDate = uploadedDate;
     }
 
-    /*public void setDocType(String docType) {
+    public void setDocType(String docType) {
         this.docType = docType;
-    }*/
+    }
 
     public Long getIdDoc() {
         return idDoc;
@@ -88,16 +88,8 @@ public class DocumentOrderModel implements Serializable{
         return uploadedDate;
     }
 
-    /*public String getDocType() {
+    public String getDocType() {
         return docType;
-    }*/
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
     }
 
     public String getUrlFile() {
@@ -106,6 +98,14 @@ public class DocumentOrderModel implements Serializable{
 
     public void setUrlFile(String urlFile) {
         this.urlFile = urlFile;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
     }
 
     public String getFileType() {

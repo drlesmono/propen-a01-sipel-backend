@@ -62,13 +62,4 @@ public class ServicesModel implements Serializable{
     public void setIdUser(UserModel idUser) {
         this.idUser = idUser;
     }
-
-    public ServicesModel() {
-
-    }
-
-    public ServicesModel(String name, ManagedServicesModel idOrderMS) {
-        this.name = name;
-        this.idOrderMS = idOrderMS;
-    }
 }

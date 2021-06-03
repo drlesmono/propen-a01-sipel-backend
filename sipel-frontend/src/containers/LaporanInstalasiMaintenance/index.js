@@ -84,7 +84,6 @@ class LaporanInstalasiMaintenance extends Component {
             dataReport.append("signed", false)
             dataReport.append("reportType", this.state.isInstallationReport ? "installation" : "maintenance");
             dataReport.append("file", this.state.file);
-            console.log(dataReport);
             response = await APIConfig.post(`/report/upload`, dataReport);
             newReport = response.data.result;
 
@@ -105,7 +104,6 @@ class LaporanInstalasiMaintenance extends Component {
                     notes: this.state.notes,
                     idMaintenance: parseInt(this.state.maintenanceTarget, 10)
                 }
-                console.log(dataMaintenanceReport);
                 await APIConfig.post(`/report/${newReport.idReport}/maintenance/upload`, dataMaintenanceReport);
             }
             
@@ -229,7 +227,6 @@ class LaporanInstalasiMaintenance extends Component {
         let ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === idOrder);
 
         if (ms.length !== 0) {
-            console.log(ms[0]);
             return ms[0];
         }
         return null;

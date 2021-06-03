@@ -363,7 +363,6 @@ class PeriodeKontrak extends Component {
         let pi = this.state.listPi.filter(pi => pi.idOrder.idOrder === idOrder );
 
         if (pi.length !== 0) {
-            console.log(pi[0]);
             return pi[0];
         }
         return null;
@@ -385,7 +384,6 @@ class PeriodeKontrak extends Component {
     // Mengambil nama lengkap dari engineer pada service yang dipilih
     getPICService(service){
         if(service.idUser !== null){
-            console.log(service.idUser.fullname);
             return service.idUser.fullname;
         }
         return <p style={{color: "red"}}>Belum ditugaskan</p>;

@@ -74,7 +74,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         return projectInstallationDb.findAll();
     }
 
-    // Mencari seluruh order yang memilikimn jenis project installation
+    // Mencari seluruh order yang memiliki jenis project installation
     @Override
     public List<ProjectInstallationModel> retrieveListPi() {
         return projectInstallationDb.findAll();

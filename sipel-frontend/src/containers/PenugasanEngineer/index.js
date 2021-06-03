@@ -176,7 +176,6 @@ class PenugasanEngineer extends Component {
         let pi = this.state.listPi.filter(pi => pi.idOrder.idOrder === idOrder );
 
         if (pi.length !== 0) {
-            console.log(pi[0]);
             return pi[0];
         }
         return null;
@@ -187,7 +186,6 @@ class PenugasanEngineer extends Component {
         let ms = this.state.listMs.filter(ms => ms.idOrder.idOrder === idOrder);
 
         if (ms.length !== 0) {
-            console.log(ms[0]);
             return ms[0];
         }
         return null;

@@ -15,13 +15,13 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "project_Installation")
+@Table(name = "projectInstallation")
 //@IdClass(OrderModel.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProjectInstallationModel implements Serializable{
 
-//    @Id
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //    @Id
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
@@ -68,7 +68,7 @@ public class ProjectInstallationModel implements Serializable{
     @JsonIgnore
     private List<InstallationReportModel> listInstallationReport;
 
-    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<BastModel> listBast;
@@ -141,7 +141,7 @@ public class ProjectInstallationModel implements Serializable{
         return listBast;
     }
 
-    public void setIdBast(List<BastModel> listBast) {
+    public void setIdBast(List<BastModel> idBast) {
         this.listBast = listBast;
     }
 

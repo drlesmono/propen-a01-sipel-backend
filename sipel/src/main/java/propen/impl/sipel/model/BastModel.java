@@ -19,7 +19,7 @@ import java.util.List;
 //@IdClass(ReportModel.class)
 public class BastModel implements Serializable{
 
-//    @Id
+    //    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

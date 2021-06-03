@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +20,8 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ManagedServicesModel implements Serializable{
 
-//    @Id
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //    @Id
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
@@ -121,7 +120,7 @@ public class ManagedServicesModel implements Serializable{
 //    public Long getTimeRemaining() {
 //        return timeRemaining;
 //    }
-
+//
 //    public void setTimeRemaining(Long timeRemaining) {
 //        this.timeRemaining = timeRemaining;
 //    }
