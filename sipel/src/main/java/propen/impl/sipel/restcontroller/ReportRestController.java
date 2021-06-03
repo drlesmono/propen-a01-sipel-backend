@@ -114,7 +114,7 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
-    public ResponseEntity downloadReport(@PathVariable String fileName) throws IOException {
+    public ResponseEntity<Resource> downloadReport(@PathVariable String fileName) throws IOException {
 //        Resource resource = fileStorageService.loadFileAsResource(fileName);
 //        ReportModel report = reportRestService.findReportByReportName(fileName);
 //        Resource resource = fileStorageService.loadFileAsResource(report.getUrlFile(), fileName);
