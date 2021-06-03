@@ -444,10 +444,11 @@ class DetailOrder extends React.Component {
     }
 
     getUrl(document){
+        const BASE_URL = "https://propen-a01-sipel.herokuapp.com/order/document/";
         if(document.fileType === "application/pdf"){
-            return document.urlFile+"/preview";
+            return BASE_URL+document.docName+"/preview";
         }else{
-            return document.urlFile;
+            return BASE_URL+document.docName;
         }
     }
 

@@ -63,13 +63,23 @@ public class ReportRestController {
     // File yang memiliki nama yang sama akan dibuat nama dengan versi
     // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report) throws Exception{
+    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
+                                                   HttpServletRequest request) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
         if(report.getReportType() == null && report.getFile() == null){
             // Respon Gagal Simpan
             response.setMessage("Laporan gagal disimpan." );
             response.setStatus(405);
             return response;
+        }
+
+        // Root Directory
+        String uploadRootPath = request.getServletContext().getRealPath("upload");
+
+        File uploadRootDir = new File(uploadRootPath);
+        // Create directory if it not exists.
+        if (!uploadRootDir.exists()) {
+            uploadRootDir.mkdirs();
         }
 
         String fileNameOriginal = StringUtils.cleanPath(report.getFile().getOriginalFilename());
@@ -85,12 +95,9 @@ public class ReportRestController {
                 fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
             }
         }
-        String fileName = fileStorageService.storeFile(report.getFile(), fileNameOriginal);
-        String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/report/")
-                .path(fileName)
-                .toUriString();
-        report.setReportName(fileName);
+        File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
+        String urlFile = file.getAbsolutePath();
+        report.setReportName(fileNameOriginal);
         report.setFileType(report.getFile().getContentType());
         report.setSize(report.getFile().getSize());
         ReportModel newReport = reportRestService.uploadReport(report, urlFile);
@@ -103,32 +110,30 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
-    public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
-                                                  HttpServletRequest request){
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
-        String fileType = null;
+    public ResponseEntity<Resource> downloadReport(@PathVariable String fileName) throws IOException {
 
-        try{
-            fileType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        }catch (IOException e){
-            System.out.println("Tidak dapat menentukan tipe file");
-        }
+        ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
 
-        if(fileType==null){
-            fileType = "application/octet-stream";
-        }
+        File file = new File(reportTarget.getUrlFile());
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(fileType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }
 
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
-        Path filePath = fileStorageService.getFilePath(fileName);
-        File file = new File(""+filePath+"");
+        ReportModel report = reportRestService.findReportByReportName(fileName);
+        File file = new File(report.getUrlFile());
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-disposition", "inline;filename=" +fileName);
 
@@ -146,12 +151,16 @@ public class ReportRestController {
     private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
-            String fileName = report.getReportName();
-            Path filePath = fileStorageService.getFilePath(fileName);
-            reportRestService.deleteReport(idReport);
-            Files.delete(filePath);
-            return ResponseEntity.ok("Report dengan ID "+String.valueOf(idReport)+" berhasil dihapus!");
-        }catch (NoSuchElementException | IOException e){
+            File file = new File(report.getUrlFile());
+            if(file.delete()){
+                reportRestService.deleteReport(idReport);
+                return ResponseEntity.ok("Report dengan ID "+String.valueOf(idReport)+" berhasil dihapus!");
+            }else{
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Report dengan ID "+String.valueOf(idReport)+" tidak ditemukan!"
+                );
+            }
+        }catch (NoSuchElementException e){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Report dengan ID "+String.valueOf(idReport)+" tidak ditemukan!"
             );

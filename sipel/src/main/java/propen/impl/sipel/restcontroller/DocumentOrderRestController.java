@@ -58,7 +58,8 @@ public class DocumentOrderRestController {
     private BaseResponse<DocumentOrderModel> uploadDocumentOrder(
             @Valid
             @ModelAttribute DocumentOrderDto docOrder,
-            @PathVariable(value = "idOrder") Long idOrder
+            @PathVariable(value = "idOrder") Long idOrder,
+            HttpServletRequest request
     ) throws Exception{
         BaseResponse<DocumentOrderModel> response = new BaseResponse<>();
         if(docOrder.getFile() == null){
@@ -66,6 +67,15 @@ public class DocumentOrderRestController {
             response.setMessage("Dokumen Order gagal disimpan." );
             response.setStatus(405);
             return response;
+        }
+
+        // Root Directory
+        String uploadRootPath = request.getServletContext().getRealPath("upload");
+
+        File uploadRootDir = new File(uploadRootPath);
+        // Create directory if it not exists.
+        if (!uploadRootDir.exists()) {
+            uploadRootDir.mkdirs();
         }
 
         String fileNameOriginal = StringUtils.cleanPath(docOrder.getFile().getOriginalFilename());
@@ -81,12 +91,9 @@ public class DocumentOrderRestController {
                 fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
             }
         }
-        String fileName = fileStorageService.storeFile(docOrder.getFile(), fileNameOriginal);
-        String urlFile = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/report/")
-                .path(fileName)
-                .toUriString();
-        docOrder.setDocName(fileName);
+        File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, docOrder.getFile());
+        String urlFile = file.getAbsolutePath();
+        docOrder.setDocName(fileNameOriginal);
         docOrder.setIdOrder(idOrder);
         docOrder.setFileType(docOrder.getFile().getContentType());
         docOrder.setSize(docOrder.getFile().getSize());
@@ -98,10 +105,30 @@ public class DocumentOrderRestController {
         return response;
     }
 
+    @GetMapping("/order/document/{fileName:.+}")
+    public ResponseEntity<Resource> downloadDocumentOrder(@PathVariable String fileName) throws IOException {
+
+        DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
+
+        File file = new File(document.getUrlFile());
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
     @GetMapping("/order/document/{fileName:.+}/preview")
     public ResponseEntity<InputStreamResource> previewDocumentOrder(@PathVariable String fileName) throws FileNotFoundException {
-        Path filePath = fileStorageService.getFilePath(fileName);
-        File file = new File(""+filePath+"");
+        DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
+        File file = new File(document.getUrlFile());
         HttpHeaders headers = new HttpHeaders();
         headers.add("content-disposition", "inline;filename=" +fileName);
 
@@ -118,12 +145,16 @@ public class DocumentOrderRestController {
     private ResponseEntity<String> deleteDocumentOrder(@PathVariable("idDoc") Long idDoc) {
         try{
             DocumentOrderModel document = documentOrderRestService.findDocumentById(idDoc);
-            String fileName = document.getDocName();
-            Path filePath = fileStorageService.getFilePath(fileName);
-            documentOrderRestService.deleteDocument(idDoc);
-            Files.delete(filePath);
-            return ResponseEntity.ok("Dokumen Order dengan ID "+String.valueOf(idDoc)+" berhasil dihapus!");
-        }catch (NoSuchElementException | IOException e){
+            File file = new File(document.getUrlFile());
+            if(file.delete()){
+                documentOrderRestService.deleteDocument(idDoc);
+                return ResponseEntity.ok("Dokumen dengan ID "+String.valueOf(idDoc)+" berhasil dihapus!");
+            }else{
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Dokumen dengan ID "+String.valueOf(idDoc)+" tidak ditemukan!"
+                );
+            }
+        }catch (NoSuchElementException e){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Dokumen Order dengan ID "+String.valueOf(idDoc)+" tidak ditemukan!"
             );
