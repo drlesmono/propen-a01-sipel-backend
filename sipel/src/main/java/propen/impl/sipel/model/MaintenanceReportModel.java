@@ -38,7 +38,7 @@ public class MaintenanceReportModel implements Serializable{
     @Column(name = "notes", nullable = true)
     private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
