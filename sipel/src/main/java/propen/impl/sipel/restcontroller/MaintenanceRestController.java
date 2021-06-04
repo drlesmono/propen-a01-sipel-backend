@@ -10,6 +10,8 @@ import propen.impl.sipel.model.MaintenanceModel;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.service.MaintenanceRestService;
 import propen.impl.sipel.service.ManagedServicesRestService;
+import propen.impl.sipel.rest.BaseResponse;
+import propen.impl.sipel.rest.MaintenanceDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -116,5 +118,22 @@ public class MaintenanceRestController {
     @GetMapping(value="/maintenances")
     public List<MaintenanceModel> retrieveListMaintenance(){
         return maintenanceRestService.retrieveListMaintenance();
+    }
+
+    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/maintenance/{idMaintenance}/updateStatus")
+    private BaseResponse<MaintenanceDto> updateStatus(@Valid @RequestBody MaintenanceDto maintenance,
+                                                      BindingResult bindingResult){
+        BaseResponse<MaintenanceDto> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Perubahan status maintenance gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(maintenance);
+        maintenanceRestService.updateStatus(maintenance.getIdMaintenance(), maintenance.getMaintained());
+        return response;
     }
 }

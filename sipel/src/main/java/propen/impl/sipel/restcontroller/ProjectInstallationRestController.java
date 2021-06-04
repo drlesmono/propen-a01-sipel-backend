@@ -13,6 +13,11 @@ import propen.impl.sipel.service.OrderRestService;
 import propen.impl.sipel.service.ProjectInstallationRestService;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -125,5 +130,124 @@ public class ProjectInstallationRestController {
     @PreAuthorize("hasRole('ENGINEER')")
     public List<TaskModel> getListTaskByIdPi(@PathVariable Long idOrderPi, Model model){
         return projectInstallationRestService.getProjectInstallationByIdOrderPi(idOrderPi).getListTask();
+    }
+
+    @GetMapping(value="/orders/pi/namaBulan/{startDateString}/{endDateString}")
+    private List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller pi bulan");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getListBulanPi(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/pi/masuk/{startDateString}/{endDateString}")
+    private List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller pi masuk");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getPiMasuk(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/pi/selesai/{startDateString}/{endDateString}")
+    private List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller pi selesai");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getPiSelesai(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/pi/tepatWaktuTelat/{startDateString}/{endDateString}")
+    private List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller pi selesai");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getPiTepatWaktuTelat(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/pi/belumSelesai")
+    private Integer retrieveListJumlahPiTepatWaktuTelat(){
+        System.out.println("masuk ke controller pi selesai");
+        return projectInstallationRestService.getPiBelumSelesai();
+    }
+
+    @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updateStatus")
+    private BaseResponse<ProjectInstallationDto> updateStatus(@Valid @RequestBody ProjectInstallationDto pi,
+                                                              BindingResult bindingResult){
+        BaseResponse<ProjectInstallationDto> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Status pada Project Installation gagal diubah." );
+            response.setStatus(405);
+            return response;
+        }
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(pi);
+        projectInstallationRestService.updateStatus(pi.getIdOrderPi(), pi.getStatus());
+        return response;
     }
 }
