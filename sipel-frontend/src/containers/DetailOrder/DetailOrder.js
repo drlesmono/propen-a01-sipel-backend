@@ -432,7 +432,7 @@ class DetailOrder extends React.Component {
                 const data = {
                     name: this.state.listServiceNew[i].name,
                 };
-                await APIConfig.post(`/ms/${this.state.orderMSTarget.idOrderMs}/createService`, data);
+                await APIConfig.post(`/ms/${this.state.idOrderMs}/createService`, data);
                 this.loadData();
                 this.setState({ finishedSubmitAddService: true });
             }
