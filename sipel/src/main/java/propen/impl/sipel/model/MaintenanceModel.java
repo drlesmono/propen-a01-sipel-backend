@@ -43,10 +43,11 @@ public class MaintenanceModel implements Serializable{
     @JsonIgnore
     private List<MaintenanceReportModel> listMaintenanceReport;
 
-    @OneToMany(mappedBy = "idBast", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idBast", referencedColumnName = "idBast", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private List<BastModel> listBast;
+    private BastModel bast;
 
     public Long getIdMaintenance() {
         return idMaintenance;
@@ -88,11 +89,11 @@ public class MaintenanceModel implements Serializable{
         this.listMaintenanceReport = listMaintenanceReport;
     }
 
-    public List<BastModel> getListBast() {
-        return listBast;
+    public BastModel bast() {
+        return bast;
     }
 
-    public void setListBast(List<BastModel> listBast) {
-        this.listBast = listBast;
+    public void setListBast(BastModel bast) {
+        this.bast = bast;
     }
 }
