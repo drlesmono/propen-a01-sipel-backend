@@ -48,7 +48,7 @@ class CreateMaintenance extends React.Component {
 
     async loadData() {
         try {
-            const orderMSItem = await APIConfig.get(`/order/detail/MS/${this.state.idOrderMs}`);
+            const orderMSItem = await APIConfig.get(`/order/detail/MS/${this.state.idOrderMs}`, { headers: authHeader() });
             this.setState({ orderMSTarget: orderMSItem.data });
             this.handleLookDetail();
         } catch (error) {
@@ -167,7 +167,7 @@ class CreateMaintenance extends React.Component {
                     dateMn: this.state.listMaintenance[i].dateMn,
                     maintained: this.state.maintained,
                 };
-                await APIConfig.post(`/produksi/maintenance/tambah/${this.state.orderMSTarget.idOrderMs}`, data);
+                await APIConfig.post(`/produksi/maintenance/tambah/${this.state.orderMSTarget.idOrderMs}`, data, { headers: authHeader() });
                 this.loadData();
                 this.setState({ finishedSubmitSchedule: true });
             }

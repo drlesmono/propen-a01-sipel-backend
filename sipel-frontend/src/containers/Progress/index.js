@@ -32,7 +32,7 @@ class Progress extends Component {
 
     async loadData() {
         try {
-            const progressList = await APIConfig.get("/order/progress");
+            const progressList = await APIConfig.get("/order/progress", { headers: authHeader() });
             this.setState({ progress: progressList.data,
                 }
                 );
@@ -77,7 +77,6 @@ class Progress extends Component {
         });
 
         this.setState({ filteredProgress : progressList });
-        //console.log(this.state.filteredProgress);
 
     }
 

@@ -65,7 +65,7 @@ class CreateMaintenance extends React.Component {
 
     async loadData() {
         try {
-            const orderMSItem = await APIConfig.get(`/order/detail/MS/${this.state.idOrderMs}`);
+            const orderMSItem = await APIConfig.get(`/order/detail/MS/${this.state.idOrderMs}`, { headers: authHeader() });
             this.setState({ orderMSTarget: orderMSItem.data });
             this.handleLookDetail();
         } catch (error) {
@@ -89,7 +89,7 @@ class CreateMaintenance extends React.Component {
 
     async handleLookMaintenance() {
         try {
-            const maintenances = await APIConfig.get(`/produksi/maintenance/daftar/${this.state.orderMSTarget.idOrderMs}`);
+            const maintenances = await APIConfig.get(`/produksi/maintenance/daftar/${this.state.orderMSTarget.idOrderMs}`, { headers: authHeader() });
             this.setState({ listMaintenance: maintenances.data });
         } catch(error) {
             this.setState({ isError: true });
@@ -111,7 +111,7 @@ class CreateMaintenance extends React.Component {
 
     async changeMaintenance(idMaintenance) {
         try {
-            const maintenanceItem = await APIConfig.get(`/produksi/maintenance/detail/${idMaintenance}`);
+            const maintenanceItem = await APIConfig.get(`/produksi/maintenance/detail/${idMaintenance}`, { headers: authHeader() });
             this.setState({ maintenanceTarget: maintenanceItem.data });
             this.handleToChangeMaintenance();
         } catch (error) {
@@ -144,12 +144,12 @@ class CreateMaintenance extends React.Component {
     }
 
     handleAfterSubmit = () => {
-        this.props.history.push(`/produksi/maintenance/look-update/${this.state.idOrderMs}`);
+        this.props.history.push(`/produksi/maintenance/look-update/${this.state.idOrderMs}`, { headers: authHeader() });
         this.setState({ finishedSubmitSchedule: false });
     }
 
     handleAfterDelete = () => {
-        this.props.history.push(`/produksi/maintenance/look-update/${this.state.idOrderMs}`);
+        this.props.history.push(`/produksi/maintenance/look-update/${this.state.idOrderMs}`, { headers: authHeader() });
         this.setState({ finishedDeleteMaintenance: false });
     }
 
@@ -212,7 +212,7 @@ class CreateMaintenance extends React.Component {
             const data = {
                 dateMn: this.state.dateMn,
             };
-            await APIConfig.put(`/produksi/maintenance/ubah/${this.state.idMaintenance}`, data);
+            await APIConfig.put(`/produksi/maintenance/ubah/${this.state.idMaintenance}`, data, { headers: authHeader() });
             this.loadData();
             this.setState({ finishedSubmitSchedule: true });
         } catch(error) {
@@ -226,7 +226,7 @@ class CreateMaintenance extends React.Component {
     async deleteMaintenance(idMaintenance) {
         this.setState({ isDeleteSchedule: false });
         try {
-            await APIConfig.delete(`/produksi/maintenance/delete/${idMaintenance}`);
+            await APIConfig.delete(`/produksi/maintenance/delete/${idMaintenance}`, { headers: authHeader() });
             this.loadData();
             this.setState({ finishedDeleteMaintenance: true });
         } catch (error) {

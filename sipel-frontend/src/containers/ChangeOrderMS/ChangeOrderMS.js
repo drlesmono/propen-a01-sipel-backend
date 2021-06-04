@@ -54,12 +54,10 @@ class ChangeOrderMS extends React.Component {
 
     async loadData() {
         try {
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
-            const orderMSitem = await APIConfig.get(`/order/detail/MS/${this.state.idMs}`);
+            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
+            const orderMSitem = await APIConfig.get(`/order/detail/MS/${this.state.idMs}`, { headers: authHeader() });
             this.setState({ orderTarget: orderItem.data });
             this.setState({ orderMSTarget: orderMSitem.data });
-            console.log(this.state.orderTarget);
-            console.log(this.state.orderMSTarget);
             this.handleChangeOrder();
         } catch (error) {
             this.setState({ isError: true });
@@ -100,7 +98,7 @@ class ChangeOrderMS extends React.Component {
     }
 
     handleCancelSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleBack() {
@@ -108,11 +106,11 @@ class ChangeOrderMS extends React.Component {
     }
 
     handleAfterSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/order`, { headers: authHeader() });
         this.setState({ isError: false });
     }
 
@@ -330,13 +328,12 @@ class ChangeOrderMS extends React.Component {
                 actualEnd: this.state.actualEnd,
                 activated: this.state.activated,
             }
-            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data);
-            await APIConfig.put(`/order/ubah/MS/${this.state.idMs}`, dataMS);
+            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data, { headers: authHeader() });
+            await APIConfig.put(`/order/ubah/MS/${this.state.idMs}`, dataMS, { headers: authHeader() });
             this.loadData();
             this.setState({ finishSubmitOrder: true });
         } catch (error) {
             this.setState({ isError: true });
-            //alert("Order Gagal Disimpan. Coba Kembali!");
             console.log(error);
         }
     }

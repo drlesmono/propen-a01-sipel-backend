@@ -44,7 +44,7 @@ class UnggahDokumenOrder extends React.Component {
 
     async loadData() {
         try {
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
+            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
             this.setState({ orderTarget: orderItem.data });
             this.handleLookDetail();
         } catch (error) {
@@ -115,7 +115,7 @@ class UnggahDokumenOrder extends React.Component {
             const dataDocument = new FormData();
             dataDocument.append("file", this.state.file);
             console.log(dataDocument);
-            response = await APIConfig.post(`/order/${this.state.orderTarget.idOrder}/document/upload`, dataDocument);
+            response = await APIConfig.post(`/order/${this.state.orderTarget.idOrder}/document/upload`, dataDocument, { headers: authHeader() });
             newDocument = response.data.result;
             this.loadData();
             this.setState({ isFinishedUpload: true });
@@ -138,12 +138,12 @@ class UnggahDokumenOrder extends React.Component {
     }
 
     handleAfterUnggahDokumen = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleAfterError = () => {
         this.setState({ isError: false });
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/order`, { headers: authHeader() });
     }
 
     render() {

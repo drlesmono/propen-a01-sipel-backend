@@ -2,7 +2,6 @@ import React from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
-//import Modal from "../../components/Modal";
 import { withRouter } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { store } from "react-notifications-component";
@@ -55,12 +54,10 @@ class ChangeOrderPI extends React.Component {
 
     async loadData() {
         try {
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
-            const orderPIitem = await APIConfig.get(`/order/detail/PI/${this.state.idPi}`);
+            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
+            const orderPIitem = await APIConfig.get(`/order/detail/PI/${this.state.idPi}`, { headers: authHeader() });
             this.setState({ orderTarget: orderItem.data });
             this.setState({ orderPITarget: orderPIitem.data });
-            console.log(this.state.orderTarget);
-            console.log(this.state.orderPITarget);
             this.handleChangeOrder();
         } catch (error) {
             this.setState({ isError: true });
@@ -102,7 +99,7 @@ class ChangeOrderPI extends React.Component {
     }
 
     handleCancelSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleBack() {
@@ -110,11 +107,11 @@ class ChangeOrderPI extends React.Component {
     }
 
     handleAfterSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/order`, { headers: authHeader() });
         this.setState({ isError: false });
     }
 
@@ -333,8 +330,8 @@ class ChangeOrderPI extends React.Component {
                 percentage: this.state.percentage,
                 close: this.state.close,
             }
-            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data);
-            await APIConfig.put(`/order/ubah/PI/${this.state.idPi}`, dataPI);
+            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data, { headers: authHeader() });
+            await APIConfig.put(`/order/ubah/PI/${this.state.idPi}`, dataPI, { headers: authHeader() });
             this.loadData();
             this.setState({ finishSubmitOrder: true });
         } catch (error) {

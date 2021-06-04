@@ -60,10 +60,10 @@ class PeriodeKontrak extends Component {
     // Mengambil dan mengupdate data yang masuk
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerified/ms");
-            const engineers = await APIConfig.get("/engineers");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerified/ms", { headers: authHeader() });
+            const engineers = await APIConfig.get("/engineers", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
             this.setState({ ordersVerified: orders.data, engineers: engineers.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {
             this.setState({ isError: true });
@@ -107,7 +107,7 @@ class PeriodeKontrak extends Component {
                     idOrderPi: pi,
                     idOrderMs: ms.idOrderMs
                 }
-                response = await APIConfig.put(`/order/${order.idOrder}/perpanjangKontrak`, dataOrder);
+                response = await APIConfig.put(`/order/${order.idOrder}/perpanjangKontrak`, dataOrder, { headers: authHeader() });
                 newOrder = response.data.result;
                 this.loadData();
             }
@@ -120,7 +120,7 @@ class PeriodeKontrak extends Component {
                 activated: ms.activated,
                 dateClosedMS: null
             }
-            response = await APIConfig.put(`/order/${this.state.isExtend ? newOrder.idOrder : order.idOrder}/ms/updateKontrak`, dataMs);
+            response = await APIConfig.put(`/order/${this.state.isExtend ? newOrder.idOrder : order.idOrder}/ms/updateKontrak`, dataMs, { headers: authHeader() });
             const newMsUpdated = response.data.result;
             
             // Apabila ingin perpanjang kontrak, maka mengirim data service satu per satu
@@ -133,7 +133,7 @@ class PeriodeKontrak extends Component {
                     name: listServiceName[i],
                     idUser: listService[i]
                     }
-                    response = await APIConfig.post(`/ms/${newMsUpdated.idOrderMs}/createService`, dataService);
+                    response = await APIConfig.post(`/ms/${newMsUpdated.idOrderMs}/createService`, dataService, { headers: authHeader() });
                     const service = response.data.result;
                     services[i] = service;
                     this.loadData();
@@ -471,8 +471,8 @@ class PeriodeKontrak extends Component {
     }
 
     render() {
-        const { ordersVerified, isEdit, isExtend, orderTarget, engineers, actualStart, actualEnd, picEngineerMs, isAdded, timeRemaining, isSuccess, isFailed, isError, messageError,
-            servicesEngineer, servicesEngineerName, isReport, isReportExtend, orderFiltered, isFiltered, listService, services } = this.state;
+        const { ordersVerified, isEdit, isExtend, orderTarget, engineers, actualStart, actualEnd, picEngineerMs, timeRemaining, isSuccess, isFailed, isError, messageError,
+                isReport, isReportExtend, orderFiltered, isFiltered, services } = this.state;
         
         // Judul untuk setiap kolom di tabel daftar order
         const tableHeaders = ['No.', 'Nomor PO', 'Nama Order', 'Periode Mulai', 'Periode Berakhir', 'Waktu Tersisa', 'Aksi'];                  

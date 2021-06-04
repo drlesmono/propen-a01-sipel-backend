@@ -66,12 +66,12 @@ class StatusPersetujuanLaporan extends Component {
 
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerifiedReport");
-            const reports = await APIConfig.get("/reportsIrMr");
-            const listIr = await APIConfig.get("/reports/ir");
-            const listMr = await APIConfig.get("/reports/mr");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerifiedReport", { headers: authHeader() });
+            const reports = await APIConfig.get("/reportsIrMr", { headers: authHeader() });
+            const listIr = await APIConfig.get("/reports/ir", { headers: authHeader() });
+            const listMr = await APIConfig.get("/reports/mr", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
             this.setState({ ordersVerified: orders.data, reports: reports.data, listIr: listIr.data, 
                             listMr: listMr.data, listPi: listPi.data, listMs: listMs.data});
         } catch (error) {

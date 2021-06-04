@@ -44,10 +44,10 @@ class PenugasanEngineer extends Component {
     // Mengambil dan mengupdate data yang masuk
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerified");
-            const engineers = await APIConfig.get("/engineers");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
+            const orders = await APIConfig.get("/ordersVerified", { headers: authHeader() });
+            const engineers = await APIConfig.get("/engineers", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
             this.setState({ ordersVerified: orders.data, engineers: engineers.data, listPi: listPi.data, listMs: listMs.data});
             
         } catch (error) {
@@ -74,7 +74,7 @@ class PenugasanEngineer extends Component {
                         deadline: pi.deadline,
                         dateClosedPI: pi.dateClosedPI
                     }
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/pi/${pi.idOrderPi}/updatePIC`, dataPi, { headers: authHeader() });
                 }
 
                 // Apabila order memiliki jenis managed service
@@ -89,7 +89,7 @@ class PenugasanEngineer extends Component {
                         timeRemaining: ms.timeRemaining,
                         dateClosedMS: ms.dateClosedMS
                     }
-                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs);
+                    await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/ms/${ms.idOrderMs}/updatePIC`, dataMs, { headers: authHeader() });
                     let listService = this.getListService(this.state.orderTarget);
                     
                     // Mengirim data service satu per satu
@@ -100,7 +100,7 @@ class PenugasanEngineer extends Component {
                             name: service.name,
                             idUser: this.state.servicesEngineer[i]
                         }
-                        await APIConfig.put(`/service/${service.idService}/updateService`, dataService);
+                        await APIConfig.put(`/service/${service.idService}/updateService`, dataService, { headers: authHeader() });
                     }
                 }
 

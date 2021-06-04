@@ -44,7 +44,7 @@ class InputDataOrder extends React.Component {
 
     async loadData() {
         try {
-            const listOrder  = await APIConfig.get("/orderList");
+            const listOrder  = await APIConfig.get("/orderList", { headers: authHeader() });
             this.setState({ orders: listOrder.data });
         } catch (error) {
             this.setState({ isError: true });
@@ -84,11 +84,11 @@ class InputDataOrder extends React.Component {
     }
 
     handleLookUpDetail = (order) => {
-        this.props.history.push(`/order/detail/${order.idOrder}`);
+        this.props.history.push(`/order/detail/${order.idOrder}`, { headers: authHeader() });
     }
 
     handleClickUnggah = (order) => {
-        this.props.history.push(`/order/unggah/${order.idOrder}`);
+        this.props.history.push(`/order/unggah/${order.idOrder}`, { headers: authHeader() });
     }
 
     handleAfterError = () => {

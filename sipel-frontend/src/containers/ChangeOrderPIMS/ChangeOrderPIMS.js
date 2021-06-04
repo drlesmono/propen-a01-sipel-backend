@@ -2,7 +2,6 @@ import React from "react";
 import APIConfig from "../../APIConfig";
 import CustomizedButtons from "../../components/Button";
 import classes from "./styles.module.css";
-//import Modal from "../../components/Modal";
 import { withRouter } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { store } from "react-notifications-component";
@@ -60,9 +59,9 @@ class ChangeOrderPIMS extends React.Component {
 
     async loadData() {
         try {
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
-            const orderPIitem = await APIConfig.get(`/order/detail/PI/${this.state.idPi}`);
-            const orderMSitem = await APIConfig.get(`/order/detail/MS/${this.state.idMs}`);
+            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
+            const orderPIitem = await APIConfig.get(`/order/detail/PI/${this.state.idPi}`, { headers: authHeader() });
+            const orderMSitem = await APIConfig.get(`/order/detail/MS/${this.state.idMs}`, { headers: authHeader() });
             this.setState({ orderTarget: orderItem.data });
             this.setState({ orderPITarget: orderPIitem.data });
             this.setState({ orderMSTarget: orderMSitem.data });
@@ -114,7 +113,7 @@ class ChangeOrderPIMS extends React.Component {
     }
 
     handleCancelSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleBack() {
@@ -122,11 +121,11 @@ class ChangeOrderPIMS extends React.Component {
     }
 
     handleAfterSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/order`, { headers: authHeader() });
         this.setState({ isError: false });
     }
 
@@ -420,9 +419,9 @@ class ChangeOrderPIMS extends React.Component {
                 actualEnd: this.state.actualEnd,
                 activated: this.state.activated,
             }
-            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data);
-            await APIConfig.put(`/order/ubah/PI/${this.state.idPi}`, dataPI);
-            await APIConfig.put(`/order/ubah/MS/${this.state.idMs}`, dataMS);
+            await APIConfig.put(`/order/ubah/${this.state.idOrder}`, data, { headers: authHeader() });
+            await APIConfig.put(`/order/ubah/PI/${this.state.idPi}`, dataPI, { headers: authHeader() });
+            await APIConfig.put(`/order/ubah/MS/${this.state.idMs}`, dataMS, { headers: authHeader() });
             this.loadData();
             this.setState({ finishSubmitOrder: true });
         } catch (error) {

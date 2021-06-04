@@ -53,11 +53,11 @@ class Bast extends Component {
 
     async loadData() {
         try {
-            const laporan = await APIConfig.get("/laporan");
-            const order = await APIConfig.get("/laporan/order");
-            const bast = await APIConfig.get("/laporan/bast");
-            const pi = await APIConfig.get("/laporan/pi");
-            const mn = await APIConfig.get("/laporan/mn");
+            const laporan = await APIConfig.get("/laporan", { headers: authHeader() });
+            const order = await APIConfig.get("/laporan/order", { headers: authHeader() });
+            const bast = await APIConfig.get("/laporan/bast", { headers: authHeader() });
+            const pi = await APIConfig.get("/laporan/pi", { headers: authHeader() });
+            const mn = await APIConfig.get("/laporan/mn", { headers: authHeader() });
             this.setState({ laporanList: laporan.data,
                 orderList: order.data,
                 bastList: bast.data,
@@ -72,8 +72,8 @@ class Bast extends Component {
 
     async handleCreatePi(){
         try {
-            const Pi = (await APIConfig.get("/laporan/bast/create/pi")).data;
-            const list = APIConfig.get("/laporan/pi").data;
+            const Pi = (await APIConfig.get("/laporan/bast/create/pi", { headers: authHeader() })).data;
+            const list = APIConfig.get("/laporan/pi", { headers: authHeader() }).data;
             this.loadData()
             //console.log(Pi);
             this.setState({
@@ -92,7 +92,7 @@ class Bast extends Component {
 
     async handleCreateMn(){
         try {
-            const Mn = (await APIConfig.get("/laporan/bast/create/mn")).data;
+            const Mn = (await APIConfig.get("/laporan/bast/create/mn", { headers: authHeader() })).data;
             this.loadData();
             //console.log(Mn.maintenanceList);
             this.setState({
@@ -113,7 +113,6 @@ class Bast extends Component {
         this.setState({
             isEdit: true,
             laporanTarget:laporan});
-        //alert(this.state.laporanTarget.report)
     }
 
     handleCancel(event){
@@ -158,7 +157,6 @@ class Bast extends Component {
 
         if(this.state.mn !== null){
             var score = this.state.dateHandover === null || this.state.startPeriod === null ||this.state.endPeriod===null
-            //console.log(score)
             if(score === false){this.setState({isError:false})}
         } else{
             {this.setState({isError:false})}
@@ -168,7 +166,6 @@ class Bast extends Component {
     }
 
     handleSubmit(event){
-        //event.preventDefault();
         let test = this.state.endPeriod;
         if(test === null){
             try{
@@ -184,16 +181,13 @@ class Bast extends Component {
                 };
                 this.setState({isPopup: true,
                     isToCreate: false,
-                    //bast: res
                 })
                 if(this.state.isError === true){
                     alert(this.state.errorMsg);
                     this.setState({isOption:true, isToCreate:false, isPopup: false
-                        //isOption : true, isToCreate: false
                     })
-                    //this.handleCreatePi();
                 } if(this.state.isError === false){
-                    let res = APIConfig.post(`/laporan/create-bast/pi`, bastPi)
+                    let res = APIConfig.post(`/laporan/create-bast/pi`, bastPi, { headers: authHeader() })
                     this.setState({isPopup: true,
                     })
                     this.loadData();
@@ -216,17 +210,13 @@ class Bast extends Component {
                     startPeriod: this.state.startPeriod,
                     endPeriod: this.state.endPeriod,
                 };
-                //console.log(dataMn)
                 if(this.state.isError === true){
                     alert(this.state.errorMsg);
-                    //isToCreate === true && isOption === false && isMaintenance === false && isPopup === false?// pi
-                    //isToCreate === true && isOption === false && isMaintenance === true// main
                     this.setState({isOption:true, isToCreate:false, isPopup: false
                     })
-                    //this.handleCreateMn();
                 }
                 if(this.state.isError === false){
-                    let res = APIConfig.post(`/laporan/create-bast/mn`, dataMn);
+                    let res = APIConfig.post(`/laporan/create-bast/mn`, dataMn, { headers: authHeader() });
                     this.setState({isPopup: true,
                     })
                     this.loadData();
@@ -242,30 +232,13 @@ class Bast extends Component {
     }
 
     render() {
-        let {bast, report, isMn, listPi, listMn, isOption, isToCreate, isLoading,
-            isEdit, isMaintenance, idPi, idMn, dateHandover, endPeriod, startPeriod,
-        isPopup, errorMsg, isError} = this.state;
-
-        let nomor, tipe, status, order, id, ms, bastNum, picName, namaOrder, deskripsi;
-        let namaKedua, divisiKedua, organisasiKedua, picKedua, po, sph, selectedOrder;
+        let {isOption, isToCreate, isMaintenance, isPopup} = this.state;
 
         let piList = this.state.piList;
         let mnList = this.state.mnList;
-        let laporanList = this.state.laporanList
-        let orderList = this.state.orderList;
-        let bastList = this.state.bastList;
 
         const pi = this.state.pi;
         const mn = this.state.mn;
-        //const isPopup = this.state.isPopup
-
-        if(pi === null){
-            let pop_pi = false
-        }
-        if(mn=== null){
-            let pop_mn=false
-        }
-
 
         return(
             <div>

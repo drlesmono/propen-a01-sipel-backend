@@ -31,7 +31,7 @@ class PenjadwalanMaintenance extends React.Component {
 
     async loadData() {
         try {
-            const listOrderTerassigned = await APIConfig.get("/orderMSassigned");
+            const listOrderTerassigned = await APIConfig.get("/orderMSassigned", { headers: authHeader() });
             this.setState({ ordersTerassign: listOrderTerassigned.data });
         } catch (error) {
             this.setState({ isError: true });
@@ -91,7 +91,6 @@ class PenjadwalanMaintenance extends React.Component {
 
     render() {
         const {
-            ordMSTerassignFromOrdersList,
             ordersTerassign,
             isFiltered,
             ordersTerassignFiltered,

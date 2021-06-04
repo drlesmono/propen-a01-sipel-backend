@@ -668,9 +668,7 @@ class CreateOrder extends React.Component {
                 const data = {
                     name: this.state.listService[i].name,
                 };
-                //console.log(this.state.listService[i].name);
-                // await APIConfig.post(`/order/tambah/MS/${this.state.orderMSTarget.idOrderMs}/Service`, data);
-                await APIConfig.post(`/ms/${this.state.orderMSTarget.idOrderMs}/createService`, data);
+                await APIConfig.post(`/ms/${this.state.orderMSTarget.idOrderMs}/createService`, data, { headers: authHeader() });
                 this.loadData();
                 this.setState({ finishSubmitOrder: true });
             }
@@ -683,7 +681,7 @@ class CreateOrder extends React.Component {
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/order`, { headers: authHeader() });
         this.setState({ isError: false });
     }
 
@@ -705,16 +703,11 @@ class CreateOrder extends React.Component {
             clientOrg,
             clientPhone,
             clientEmail,
-            dateOrder,
             isCancel,
             isError
         } = this.state;
 
         let { listService } = this.state;
-
-        /* let todayDate = new Date();
-        todayDate.setDate(todayDate.getDate() + 3);
-        let dateToday = todayDate.toISOString().substr(0, 10); */
 
         return (
             <div className={classes.container}>

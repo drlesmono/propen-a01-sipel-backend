@@ -50,15 +50,15 @@ class ReportHead extends Component {
 
     async loadData() {
         try {
-            const orders = await APIConfig.get("/ordersVerifiedReport");
-            const order = await APIConfig.get("/laporan/order");
-            const reports = await APIConfig.get("/reports/all");
-            const listIr = await APIConfig.get("/reports/ir");
-            const listMr = await APIConfig.get("/reports/mr");
-            const listPi = await APIConfig.get("/orders/pi");
-            const listMs = await APIConfig.get("/orders/ms");
-            const listTerm = await APIConfig.get("/orders/ms/perc");
-            const bast = await APIConfig.get("/laporan/bast");
+            const orders = await APIConfig.get("/ordersVerifiedReport", { headers: authHeader() });
+            const order = await APIConfig.get("/laporan/order", { headers: authHeader() });
+            const reports = await APIConfig.get("/reports/all", { headers: authHeader() });
+            const listIr = await APIConfig.get("/reports/ir", { headers: authHeader() });
+            const listMr = await APIConfig.get("/reports/mr", { headers: authHeader() });
+            const listPi = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listMs = await APIConfig.get("/orders/ms", { headers: authHeader() });
+            const listTerm = await APIConfig.get("/orders/ms/perc", { headers: authHeader() });
+            const bast = await APIConfig.get("/laporan/bast", { headers: authHeader() });
             this.setState({ ordersVerified: orders.data, reports: reports.data, listIr: listIr.data,
                 listMr: listMr.data, listPi: listPi.data, listMs: listMs.data, bastList: bast.data, orderList: order.data,
                 termList: listTerm.data});
@@ -402,7 +402,6 @@ class ReportHead extends Component {
         }
     }
     async handleDownload(laporan){
-        const report = laporan;
         const bastList = this.state.bastList;
         var tipe;
         const id = laporan.idReport;
@@ -415,7 +414,6 @@ class ReportHead extends Component {
         let bastNum = bast.bastNum;
         let dateHandover = bast.dateHandover.substr(0, 10);
         let picName = bast.picName;
-        let endP = bast.endPeriod;
         let dateHO = new Date(bast.dateHandover);
         dateHO = dateHO.getDay();
 
@@ -428,7 +426,6 @@ class ReportHead extends Component {
         console.log(term);
 
         const orderList = this.state.orderList;
-        const mnList = this.state.mnList;
         var selectedOrder;
         for(let x=0; x<orderList.length;x++){
             let order = orderList[x];
@@ -469,13 +466,11 @@ class ReportHead extends Component {
         }
 
         let namaOrder = selectedOrder.orderName;
-        let deskripsi = selectedOrder.description;
         let namaKedua = selectedOrder.clientName;
         let divisiKedua = selectedOrder.clientDiv;
         let organisasiKedua = selectedOrder.clientOrg;
         let picKedua = selectedOrder.clientPIC
         let po = selectedOrder.noPO;
-        let sph = selectedOrder.noSPH
 
         var doc = new jsPDF('p', 'pt', 'a4',);
         doc.setFontSize(10);
@@ -488,8 +483,6 @@ class ReportHead extends Component {
         let startY = 10;
         let startX = 15;
         var footerY = doc.internal.pageSize.height-10;
-        let adderX = 0;
-        let adderY = 0;
 
         let listBulan = ["", "Januari", "Februari", "Maret",  "April",
             "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]

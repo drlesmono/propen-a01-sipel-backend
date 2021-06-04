@@ -107,10 +107,10 @@ class DetailOrder extends React.Component {
 
     async loadData() {
         try {
-            const listOrderPI  = await APIConfig.get("/orders/pi");
-            const listOrderMS  = await APIConfig.get("/orders/ms");
-            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`);
-            const docList = await APIConfig.get(`/order/${this.state.idOrder}/documents`); //doc order
+            const listOrderPI  = await APIConfig.get("/orders/pi", { headers: authHeader() });
+            const listOrderMS  = await APIConfig.get("/orders/ms", { headers: authHeader() });
+            const orderItem  = await APIConfig.get(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
+            const docList = await APIConfig.get(`/order/${this.state.idOrder}/documents`, { headers: authHeader() }); //doc order
             this.setState({ ordersPI: listOrderPI.data });
             this.setState({ ordersMS: listOrderMS.data });
             this.setState({ orderTarget: orderItem.data });
@@ -233,7 +233,7 @@ class DetailOrder extends React.Component {
 
     async handleLookService() {
         try {
-            const services = await APIConfig.get(`/order/MS/${this.state.idOrderMs}/listService`);
+            const services = await APIConfig.get(`/order/MS/${this.state.idOrderMs}/listService`, { headers: authHeader() });
             this.setState({ listService: services.data });
         } catch (error) {
             this.setState({ isError: true });
@@ -244,7 +244,7 @@ class DetailOrder extends React.Component {
 
     async changeService(idService) {
         try {
-            const serviceItem = await APIConfig.get(`/order/detail/Service/${idService}`);
+            const serviceItem = await APIConfig.get(`/order/detail/Service/${idService}`, { headers: authHeader() });
             this.setState({ serviceTarget: serviceItem.data });
             console.log(this.state.serviceTarget);
             this.handleToChangeService();
@@ -279,8 +279,7 @@ class DetailOrder extends React.Component {
                 idService: this.state.idService,
                 name: this.state.name,
             }
-            // await APIConfig.put(`/order/ubah/service/${this.state.idService}`, data);
-            await APIConfig.put(`/service/${this.state.idService}/updateService`, data);
+            await APIConfig.put(`/service/${this.state.idService}/updateService`, data, { headers: authHeader() });
             this.loadData();
             this.setState({ finishedSubmitService: true });
         } catch (error) {
@@ -293,7 +292,7 @@ class DetailOrder extends React.Component {
     
     async deleteService(idService) {
         try {
-            await APIConfig.delete(`order/delete/service/${idService}`);
+            await APIConfig.delete(`order/delete/service/${idService}`, { headers: authHeader() });
             this.loadData();
             this.setState({ finishedDeleteService: true });
         } catch (error) {
@@ -314,35 +313,35 @@ class DetailOrder extends React.Component {
     }
 
     handleChangeOrderPI = () => {
-        this.props.history.push(`/orderPI/change/${this.state.idOrder}/${this.state.idOrderPi}`);
+        this.props.history.push(`/orderPI/change/${this.state.idOrder}/${this.state.idOrderPi}`, { headers: authHeader() });
     }
 
     handleChangeOrderMS = () => {
-        this.props.history.push(`/orderMS/change/${this.state.idOrder}/${this.state.idOrderMs}`);
+        this.props.history.push(`/orderMS/change/${this.state.idOrder}/${this.state.idOrderMs}`, { headers: authHeader() });
     }
     
     handleChangeOrderPIMS = () => {
-        this.props.history.push(`/orderPIMS/change/${this.state.idOrder}/${this.state.idOrderPi}/${this.state.idOrderMs}`);
+        this.props.history.push(`/orderPIMS/change/${this.state.idOrder}/${this.state.idOrderPi}/${this.state.idOrderMs}`, { headers: authHeader() });
     }
 
 
     handleAfterSubmit = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
         this.setState({ finishedSubmitService: false });
     }
 
     handleAfterDelete = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
         this.setState({ finishedDeleteService: false, isDeleteSuccess: false });
     }
 
     handleAfterAdd = () => {
-        this.props.history.push(`/order/detail/${this.state.idOrder}`);
+        this.props.history.push(`/order/detail/${this.state.idOrder}`, { headers: authHeader() });
         this.setState({ finishedSubmitAddService: false });
     }
 
     handleAfterError = () => {
-        this.props.history.push(`/order/order`);
+        this.props.history.push(`/order/order`, { headers: authHeader() });
         this.setState({ isError: false });
     }
 
