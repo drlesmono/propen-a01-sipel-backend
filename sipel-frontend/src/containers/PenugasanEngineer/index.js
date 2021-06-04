@@ -240,11 +240,12 @@ class PenugasanEngineer extends Component {
         }
 
         if(order.managedService === true){
-            if(this.getMs(order.idOrderMs).listService !== null){
+            console.log(this.getMs(order.idOrder));
+            if(this.getMs(order.idOrder).listService !== null){
                 const picMs = this.getPICMS(order.idOrder);
-                const servicesEngineer = this.getListService(order).map(service => service.idUser.id);
+                const servicesEngineer = this.getListService(order).map(service => service.idUser === null ? null : service.idUser.id);
                 this.setState({
-                    picEngineerMs: picMs.id, 
+                    picEngineerMs: picMs === null ? null : picMs.id, 
                     servicesEngineer: servicesEngineer
                 });
             }
