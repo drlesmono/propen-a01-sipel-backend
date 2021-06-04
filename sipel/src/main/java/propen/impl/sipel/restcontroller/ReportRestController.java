@@ -1,5 +1,6 @@
 package propen.impl.sipel.restcontroller;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -19,10 +20,7 @@ import propen.impl.sipel.service.ReportRestService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -153,6 +151,8 @@ public class ReportRestController {
     private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
+            String fileName = report.getReportName();
+//            Path filePath = fileStorageService.getFilePath(fileName);
             File file = new File(report.getUrlFile());
             if(file.delete()){
                 reportRestService.deleteReport(idReport);

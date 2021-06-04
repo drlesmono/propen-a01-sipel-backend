@@ -2,9 +2,7 @@ package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -33,6 +31,7 @@ public class ManagedServicesModel implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = true)
+    @NotFound(action = NotFoundAction.IGNORE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserModel idUserPic;
 
@@ -68,6 +67,9 @@ public class ManagedServicesModel implements Serializable{
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="dateClosedMS", nullable = true)
     private Date dateClosedMS;
+
+    @Column(name="status", nullable = false)
+    private String status;
 
     public OrderModel getIdOrder() {
         return idOrder;
@@ -147,5 +149,13 @@ public class ManagedServicesModel implements Serializable{
 
     public void setDateClosedMS(Date dateClosedMS) {
         this.dateClosedMS = dateClosedMS;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

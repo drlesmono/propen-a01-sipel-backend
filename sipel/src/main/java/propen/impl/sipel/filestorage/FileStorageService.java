@@ -12,12 +12,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.net.URI;
 
 @Service
 public class FileStorageService {
@@ -35,10 +37,14 @@ public class FileStorageService {
             stream.close();
             return serverFile;
         }catch (IOException e){
-            throw new FileStorageException("File "+fileNameTarget+" gagal disimpan, silahkan coba lagi!", e);
+            throw new FileStorageException("File "+fileName+" gagal disimpan, silahkan coba lagi!", e);
         }
     }
 
+    // Mengambil file path
+    public Path getFilePath(String fileName){
+        return this.fileStorageLocation.resolve(fileName).normalize();
+    }
 
     // Mengakses file dari local server
     public Resource loadFileAsResource(String filePath, String fileName){
