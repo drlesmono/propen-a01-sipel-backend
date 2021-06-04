@@ -52,7 +52,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/namaBulan/{startDateString}/{endDateString}")
-    private List<String> retrieveListNamaBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    private List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -69,8 +69,10 @@ public class ProjectInstallationRestController {
         Date endDate = java.util.Date.from(
                 LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
-
-        return projectInstallationRestService.getListBulan(startDate, endDate);
+        System.out.println("masuk ke controller pi bulan");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getListBulanPi(startDate, endDate);
     }
 
     @GetMapping(value="/orders/pi/masuk/{startDateString}/{endDateString}")
@@ -91,11 +93,13 @@ public class ProjectInstallationRestController {
         Date endDate = java.util.Date.from(
                 LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
-
+        System.out.println("masuk ke controller pi masuk");
+        System.out.println(startDate);
+        System.out.println(endDate);
         return projectInstallationRestService.getPiMasuk(startDate, endDate);
     }
 
-    @GetMapping(value="/order/pi/selesai/{startDateString}/{endDateString}")
+    @GetMapping(value="/orders/pi/selesai/{startDateString}/{endDateString}")
     private List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -113,8 +117,10 @@ public class ProjectInstallationRestController {
         Date endDate = java.util.Date.from(
                 LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
-
-        return projectInstallationRestService.getPiMasuk(startDate, endDate);
+        System.out.println("masuk ke controller pi selesai");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getPiSelesai(startDate, endDate);
     }
 
 }

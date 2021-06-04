@@ -38,35 +38,46 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
 
     // Membuat list nama-nama bulan dalam suatu timeframe tertentu (max 1 tahun)
     @Override
-    public List<String> getListBulan(Date startDate, Date endDate){
+    public List<String> getListBulanPi(Date startDate, Date endDate){
         List<String> listNamaBulan = new ArrayList<>();
         List<ProjectInstallationModel> listPi = retrieveListPi();
         List<ProjectInstallationModel> listPiMasukDateFiltered = new ArrayList<>();
+        List<ProjectInstallationModel> listPiSelesaiDateFiltered = new ArrayList<>();
         for(int i = 0; i < listPi.size(); i++){
             if (listPi.get(i).getIdOrder().getDateOrder().after(startDate) && listPi.get(i).getIdOrder().getDateOrder().before(endDate)){
                 listPiMasukDateFiltered.add(listPi.get(i));
             }
         }
-        listPiMasukDateFiltered.sort((o1, o2) -> o1.getIdOrder().getDateOrder().compareTo(o2.getIdOrder().getDateOrder()));
-        for(int i = 0; i < listPiMasukDateFiltered.size(); i++){
-            if (i == 0){
-                Integer month = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1;
-                Integer year = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1900;
-                String monthInString = month.toString();
-                String yearInString = year.toString();
-                listNamaBulan.add(monthInString + "." + yearInString);
-            } else {
-                Integer month = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1;
-                Integer year = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1900;
-                String monthInString = month.toString();
-                String yearInString = year.toString();
-                String monthLabel = monthInString + "." + yearInString;
-                if (!listNamaBulan.contains(monthLabel)){
-                    listNamaBulan.add(monthLabel);
-                }
+        for(int i = 0; i < listPi.size(); i++){
+            if (listPi.get(i).getDateClosedPI().after(startDate) && listPi.get(i).getDateClosedPI().before(endDate)){
+                listPiSelesaiDateFiltered.add(listPi.get(i));
             }
         }
+        listPiMasukDateFiltered.sort((o1, o2) -> o1.getIdOrder().getDateOrder().compareTo(o2.getIdOrder().getDateOrder()));
+        listPiSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedPI().compareTo(o2.getDateClosedPI()));
+        for(int i = 0; i < listPiMasukDateFiltered.size(); i++){
+            Integer month = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1;
+            Integer year = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getYear() + 1900;
+            String monthInString = month.toString();
+            String yearInString = year.toString();
+            String monthLabel = monthInString + "." + yearInString;
+            if (!listNamaBulan.contains(monthLabel)){
+                listNamaBulan.add(monthLabel);
+            }
+        }
+        for(int i = 0; i < listPiSelesaiDateFiltered.size(); i++){
+            Integer month = listPiSelesaiDateFiltered.get(i).getDateClosedPI().getMonth() + 1;
+            Integer year = listPiSelesaiDateFiltered.get(i).getDateClosedPI().getYear() + 1900;
+            String monthInString = month.toString();
+            String yearInString = year.toString();
+            String monthLabel = monthInString + "." + yearInString;
+            if (!listNamaBulan.contains(monthLabel)){
+                listNamaBulan.add(monthLabel);
+            }
+        }
+        System.out.println("ini list bulan " + listNamaBulan);
         return listNamaBulan;
+
     }
 
     // Mencari jumlah PI yang masuk dalam suatu timeframe tertentu (max 1 tahun)
@@ -75,18 +86,21 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         List<Integer> jumlahPiMasukPerBulan = new ArrayList<>();
         List<ProjectInstallationModel> listPi = retrieveListPi();
         List<ProjectInstallationModel> listPiMasukDateFiltered = new ArrayList<>();
+
         for(int i = 0; i < listPi.size(); i++){
             if (listPi.get(i).getIdOrder().getDateOrder().after(startDate) && listPi.get(i).getIdOrder().getDateOrder().before(endDate)){
                 listPiMasukDateFiltered.add(listPi.get(i));
             }
         }
+
+
         listPiMasukDateFiltered.sort((o1, o2) -> o1.getIdOrder().getDateOrder().compareTo(o2.getIdOrder().getDateOrder()));
-        List<String> listNamaBulan = getListBulan(startDate,endDate);
+        List<String> listNamaBulan = getListBulanPi(startDate,endDate);
         for(int i = 0; i < listNamaBulan.size(); i++){
             int counter = 0;
             for (int j = 0; j < listPiMasukDateFiltered.size(); j++){
-                Integer month = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1;
-                Integer year = listPiMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1900;
+                Integer month = listPiMasukDateFiltered.get(j).getIdOrder().getDateOrder().getMonth() + 1;
+                Integer year = listPiMasukDateFiltered.get(j).getIdOrder().getDateOrder().getYear() + 1900;
                 String monthInString = month.toString();
                 String yearInString = year.toString();
                 String monthLabel = monthInString + "." + yearInString;
@@ -96,7 +110,9 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
             }
             jumlahPiMasukPerBulan.add(counter);
         }
+        System.out.println("ini jumlah pi masuk " + jumlahPiMasukPerBulan);
         return jumlahPiMasukPerBulan;
+
 
     }
 
@@ -112,12 +128,12 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
             }
         }
         listPiSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedPI().compareTo(o2.getDateClosedPI()));
-        List<String> listNamaBulan = getListBulan(startDate,endDate);
+        List<String> listNamaBulan = getListBulanPi(startDate,endDate);
         for(int i = 0; i < listNamaBulan.size(); i++){
             int counter = 0;
             for (int j = 0; j < listPiSelesaiDateFiltered.size(); j++){
-                Integer month = listPiSelesaiDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1;
-                Integer year = listPiSelesaiDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1900;
+                Integer month = listPiSelesaiDateFiltered.get(j).getDateClosedPI().getMonth() + 1;
+                Integer year = listPiSelesaiDateFiltered.get(j).getDateClosedPI().getYear() + 1900;
                 String monthInString = month.toString();
                 String yearInString = year.toString();
                 String monthLabel = monthInString + "." + yearInString;
@@ -127,7 +143,9 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
             }
             jumlahPiSelesaiPerBulan.add(counter);
         }
+        System.out.println("ini jumlah Pi selesai " + jumlahPiSelesaiPerBulan);
         return jumlahPiSelesaiPerBulan;
+
 
 
 

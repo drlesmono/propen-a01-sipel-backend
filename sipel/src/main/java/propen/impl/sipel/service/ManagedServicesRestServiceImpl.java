@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.MaintenanceModel;
 import propen.impl.sipel.model.ManagedServicesModel;
+import propen.impl.sipel.model.ProjectInstallationModel;
 import propen.impl.sipel.repository.MaintenanceDb;
 import propen.impl.sipel.repository.ManagedServicesDb;
 import propen.impl.sipel.repository.UserDb;
@@ -101,5 +102,120 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         }
 
         return mapTermMn;
+    }
+
+    // Membuat list nama-nama bulan dalam suatu timeframe tertentu (max 1 tahun)
+    @Override
+    public List<String> getListBulanMs(Date startDate, Date endDate){
+        List<String> listNamaBulan = new ArrayList<>();
+        List<ManagedServicesModel> listMs = retrieveListMs();
+        List<ManagedServicesModel> listMsMasukDateFiltered = new ArrayList<>();
+        List<ManagedServicesModel> listMsSelesaiDateFiltered = new ArrayList<>();
+        for(int i = 0; i < listMs.size(); i++){
+            if (listMs.get(i).getIdOrder().getDateOrder().after(startDate) && listMs.get(i).getIdOrder().getDateOrder().before(endDate)){
+                listMsMasukDateFiltered.add(listMs.get(i));
+            }
+        }
+        for(int i = 0; i < listMs.size(); i++){
+            if (listMs.get(i).getDateClosedMS().after(startDate) && listMs.get(i).getDateClosedMS().before(endDate)){
+                listMsSelesaiDateFiltered.add(listMs.get(i));
+            }
+        }
+        listMsMasukDateFiltered.sort((o1, o2) -> o1.getIdOrder().getDateOrder().compareTo(o2.getIdOrder().getDateOrder()));
+        listMsSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedMS().compareTo(o2.getDateClosedMS()));
+        for(int i = 0; i < listMsMasukDateFiltered.size(); i++){
+            Integer month = listMsMasukDateFiltered.get(i).getIdOrder().getDateOrder().getMonth() + 1;
+            Integer year = listMsMasukDateFiltered.get(i).getIdOrder().getDateOrder().getYear() + 1900;
+            String monthInString = month.toString();
+            String yearInString = year.toString();
+            String monthLabel = monthInString + "." + yearInString;
+            if (!listNamaBulan.contains(monthLabel)){
+                listNamaBulan.add(monthLabel);
+            }
+        }
+        for(int i = 0; i < listMsSelesaiDateFiltered.size(); i++){
+            Integer month = listMsSelesaiDateFiltered.get(i).getDateClosedMS().getMonth() + 1;
+            Integer year = listMsSelesaiDateFiltered.get(i).getDateClosedMS().getYear() + 1900;
+            String monthInString = month.toString();
+            String yearInString = year.toString();
+            String monthLabel = monthInString + "." + yearInString;
+            if (!listNamaBulan.contains(monthLabel)){
+                listNamaBulan.add(monthLabel);
+            }
+        }
+        System.out.println("ini list bulan " + listNamaBulan);
+        return listNamaBulan;
+
+    }
+
+    // Mencari jumlah PI yang masuk dalam suatu timeframe tertentu (max 1 tahun)
+    @Override
+    public List<Integer> getMsMasuk(Date startDate, Date endDate){
+        List<Integer> jumlahMsMasukPerBulan = new ArrayList<>();
+        List<ManagedServicesModel> listMs = retrieveListMs();
+        List<ManagedServicesModel> listMsMasukDateFiltered = new ArrayList<>();
+
+        for(int i = 0; i < listMs.size(); i++){
+            if (listMs.get(i).getIdOrder().getDateOrder().after(startDate) && listMs.get(i).getIdOrder().getDateOrder().before(endDate)){
+                listMsMasukDateFiltered.add(listMs.get(i));
+            }
+        }
+
+
+        listMsMasukDateFiltered.sort((o1, o2) -> o1.getIdOrder().getDateOrder().compareTo(o2.getIdOrder().getDateOrder()));
+        List<String> listNamaBulan = getListBulanMs(startDate,endDate);
+        for(int i = 0; i < listNamaBulan.size(); i++){
+            int counter = 0;
+            for (int j = 0; j < listMsMasukDateFiltered.size(); j++){
+                Integer month = listMsMasukDateFiltered.get(j).getIdOrder().getDateOrder().getMonth() + 1;
+                Integer year = listMsMasukDateFiltered.get(j).getIdOrder().getDateOrder().getYear() + 1900;
+                String monthInString = month.toString();
+                String yearInString = year.toString();
+                String monthLabel = monthInString + "." + yearInString;
+                if (monthLabel.equals(listNamaBulan.get(i))){
+                    counter++;
+                }
+            }
+            jumlahMsMasukPerBulan.add(counter);
+        }
+        System.out.println("ini jumlah pi masuk " + jumlahMsMasukPerBulan);
+        return jumlahMsMasukPerBulan;
+
+
+    }
+
+    // Mencari jumlah PI yang selesai dalam suatu timeframe tertentu (max 1 tahun)
+    @Override
+    public List<Integer> getMsSelesai(Date startDate, Date endDate){
+        List<Integer> jumlahMsSelesaiPerBulan = new ArrayList<>();
+        List<ManagedServicesModel> listMs = retrieveListMs();
+        List<ManagedServicesModel> listMsSelesaiDateFiltered = new ArrayList<>();
+        for(int i = 0; i < listMs.size(); i++){
+            if (listMs.get(i).getDateClosedMS().after(startDate) && listMs.get(i).getDateClosedMS().before(endDate)){
+                listMsSelesaiDateFiltered.add(listMs.get(i));
+            }
+        }
+        listMsSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedMS().compareTo(o2.getDateClosedMS()));
+        List<String> listNamaBulan = getListBulanMs(startDate,endDate);
+        for(int i = 0; i < listNamaBulan.size(); i++){
+            int counter = 0;
+            for (int j = 0; j < listMsSelesaiDateFiltered.size(); j++){
+                Integer month = listMsSelesaiDateFiltered.get(j).getDateClosedMS().getMonth() + 1;
+                Integer year = listMsSelesaiDateFiltered.get(j).getDateClosedMS().getYear() + 1900;
+                String monthInString = month.toString();
+                String yearInString = year.toString();
+                String monthLabel = monthInString + "." + yearInString;
+                if (monthLabel.equals(listNamaBulan.get(i))){
+                    counter++;
+                }
+            }
+            jumlahMsSelesaiPerBulan.add(counter);
+        }
+        System.out.println("ini jumlah Pi selesai " + jumlahMsSelesaiPerBulan);
+        return jumlahMsSelesaiPerBulan;
+
+
+
+
     }
 }

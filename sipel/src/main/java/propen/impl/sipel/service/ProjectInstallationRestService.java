@@ -12,7 +12,7 @@ public interface ProjectInstallationRestService {
 
     ProjectInstallationModel updatePIC(Long idOrderPi, String idUserEng);
 
-    List<String> getListBulan(Date startDate, Date endDate);
+    List<String> getListBulanPi(Date startDate, Date endDate);
 
     List<Integer> getPiMasuk(Date startDate, Date endDate);
 

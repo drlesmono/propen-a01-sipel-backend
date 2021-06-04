@@ -18,5 +18,9 @@ public interface ManagedServicesRestService{
 
     LinkedHashMap<String, String> retrievePercentageMs();
 
-//    List<Integer> getMsMasukDanSelesai(Date startDate, Date endDate);
+    List<String> getListBulanMs(Date startDate, Date endDate);
+
+    List<Integer> getMsMasuk(Date startDate, Date endDate);
+
+    List<Integer> getMsSelesai(Date startDate, Date endDate);
 }
