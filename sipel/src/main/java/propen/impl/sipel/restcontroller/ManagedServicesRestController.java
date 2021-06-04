@@ -154,6 +154,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/perc")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LinkedHashMap<String, String> retrieveTermMs(){
 
         return managedServicesRestService.retrievePercentageMs();
