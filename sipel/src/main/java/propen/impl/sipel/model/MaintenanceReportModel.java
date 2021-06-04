@@ -20,7 +20,7 @@ import java.util.List;
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MaintenanceReportModel implements Serializable{
 
-//    @Id
+    //    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -31,7 +31,7 @@ public class MaintenanceReportModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMaintenanceReport;
 
-//    @NotNull
+    //    @NotNull
     @Column(name="mrNum", nullable = true)
     private String mrNum;
 

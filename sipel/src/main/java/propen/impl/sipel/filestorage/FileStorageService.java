@@ -12,17 +12,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.net.URI;
 
 @Service
 public class FileStorageService {
 
-    //  Menyimpan file ke local server
+    // constructor
+    // pembuatan directory untuk menyimpan file di local server
     public File storeFile(File uploadRootDir, String fileNameTarget, MultipartFile fileData){
 
         try{

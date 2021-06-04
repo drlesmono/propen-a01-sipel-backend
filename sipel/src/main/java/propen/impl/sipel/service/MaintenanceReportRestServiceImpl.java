@@ -64,4 +64,11 @@ public class MaintenanceReportRestServiceImpl implements MaintenanceReportRestSe
         newMr.setIdMaintenance(maintenance);
         return maintenanceReportDb.save(newMr);
     }
+
+    @Override
+    public MaintenanceReportModel updateNotes(Long idMaintenanceReport, MaintenanceReportModel maintenanceReport) {
+        MaintenanceReportModel mrModel = maintenanceReportDb.findById(idMaintenanceReport).get();
+        mrModel.setNotes(maintenanceReport.getNotes());
+        return maintenanceReportDb.save(mrModel);
+    }
 }

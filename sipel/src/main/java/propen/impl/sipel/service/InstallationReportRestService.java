@@ -15,4 +15,6 @@ public interface InstallationReportRestService {
 
     InstallationReportModel uploadIr(ReportModel report, InstallationReportDto ir);
 
+    InstallationReportModel updateNotes(Long idInstallationReport, InstallationReportModel installationReport);
+
 }

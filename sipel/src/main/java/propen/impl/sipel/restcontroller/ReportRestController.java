@@ -1,6 +1,5 @@
 package propen.impl.sipel.restcontroller;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -20,7 +19,10 @@ import propen.impl.sipel.service.ReportRestService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -28,8 +30,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "*")
+//@RequestMapping("")
 public class ReportRestController {
 
     @Autowired
@@ -38,9 +43,12 @@ public class ReportRestController {
     @Autowired
     FileStorageService fileStorageService;
 
+    private static final Logger logger = Logger.getLogger(ReportRestController.class.getName());
+
     // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
-    private List<ReportModel> retrieveListReportIrMr(){
+    @PreAuthorize("hasRole('ENGINEER')")
+    public List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
         List<ReportModel> listReportFiltered = new ArrayList<>();
@@ -58,7 +66,8 @@ public class ReportRestController {
     // File yang memiliki nama yang sama akan dibuat nama dengan versi
     // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
+    @PreAuthorize("hasRole('ENGINEER')")
+    public BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
                                                    HttpServletRequest request) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
         if(report.getReportType() == null && report.getFile() == null){
@@ -143,11 +152,10 @@ public class ReportRestController {
 
     // Menghapus file dari local server dan report dari database
     @DeleteMapping(value="/api/v1/report/{idReport}/delete")
-    private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
+    @PreAuthorize("hasRole('ENGINEER')")
+    public ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
-            String fileName = report.getReportName();
-//            Path filePath = fileStorageService.getFilePath(fileName);
             File file = new File(report.getUrlFile());
             if(file.delete()){
                 reportRestService.deleteReport(idReport);
@@ -163,8 +171,26 @@ public class ReportRestController {
             );
         }
     }
+
+    @PutMapping(value = "/api/v1/report/update/{idReport}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ReportModel updateStatusReport(
+            @PathVariable (value = "idReport") Long idReport,
+            @RequestBody ReportModel report
+    ) {
+        try {
+            return reportRestService.updateStatus(idReport, report);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Report with ID " + String.valueOf(idReport) + " not found!"
+            );
+        }
+    }
+
     @GetMapping(value="/api/v1/reports")
-    private List<ReportModel> retrieveListReport(){
+    @PreAuthorize("hasRole('FINANCE')")
+    public List<ReportModel> retrieveListReportApproved(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
         List<ReportModel> toBeSeenReport = new ArrayList<>();
         for(ReportModel report : listReport){
@@ -176,8 +202,10 @@ public class ReportRestController {
 
         return toBeSeenReport;
     }
+
     @GetMapping(value="/api/v1/reports/all")
-    private List<ReportModel> retrieveListReportAll(){
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
         return listReport;

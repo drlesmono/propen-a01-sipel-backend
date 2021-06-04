@@ -2,20 +2,24 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.ServicesModel;
 import propen.impl.sipel.rest.BaseResponse;
-import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.rest.ServicesDto;
 import propen.impl.sipel.service.ServicesRestService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class ServicesRestController {
 
@@ -24,8 +28,9 @@ public class ServicesRestController {
 
     // Mengubah data dari service
     // Mengembalikan response dengan result service yang berhasil diubah
-    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/service/{idService}/updateService")
-    private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
+    @PutMapping(value="/service/{idService}/updateService")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -45,8 +50,9 @@ public class ServicesRestController {
 
     // Membuat service baru
     // Mengembalikan response dengan result service yang berhasil dibuat
-    @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/createService")
-    private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
+    @PostMapping(value="/ms/{idOrderMs}/createService")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
@@ -63,5 +69,51 @@ public class ServicesRestController {
         response.setResult(newService);
 
         return response;
+    }
+
+    @GetMapping(value = "/order/MS/{idOrderMS}/listService")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ServicesModel> retrieveListService(
+            @Valid
+            @PathVariable (value = "idOrderMS") Long idOrderMS
+    ) {
+        return servicesRestService.getListService(idOrderMS);
+    }
+
+    @DeleteMapping(value = "order/delete/service/{idService}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteService(
+            @Valid
+            @PathVariable(value = "idService") Long idService
+    ) {
+        try {
+            servicesRestService.deleteService(idService);
+            return ResponseEntity.ok("Service dengan ID " + String.valueOf(idService) + " berhasil dihapus!");
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Service dengan ID " + String.valueOf(idService) + " tidak ditemukan!"
+            );
+        }
+        catch (UnsupportedOperationException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Service masih terassign engineer, tolong hapus engineer terlebih dahulu"
+            );
+        }
+    }
+
+    @GetMapping(value = "/order/detail/Service/{idService}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ServicesModel retrieveService(
+            @PathVariable(value = "idService") Long idService
+    ) {
+        try {
+            return servicesRestService.getServiceById(idService);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order with ID " + String.valueOf(idService) + " not found!"
+            );
+        }
     }
 }

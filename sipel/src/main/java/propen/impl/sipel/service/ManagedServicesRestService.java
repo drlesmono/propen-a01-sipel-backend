@@ -6,7 +6,18 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public interface ManagedServicesRestService{
+public interface ManagedServicesRestService {
+    ManagedServicesModel createOrderMS(ManagedServicesModel managedServices);
+
+    ManagedServicesModel changeOrderMS(Long idOrderMS, ManagedServicesModel orderMSUpdate);
+
+    ManagedServicesModel getMSOrderById(Long idOrderMS);
+
+    Long setRem(ManagedServicesModel managedServices);
+
+    List<ManagedServicesModel> retrieveMS();
+
+    List<ManagedServicesModel> retrieveMSassigned();
 
     List<ManagedServicesModel> retrieveListMs();
 

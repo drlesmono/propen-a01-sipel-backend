@@ -165,67 +165,55 @@ public class BastServiceImpl implements BastService {
     @Override
     public List<MaintenanceModel> getMaintenanceList(String keyword) {
         List<MaintenanceModel> maintenanceModels = maintenanceDb.findAll();
-        List<MaintenanceModel> idToRetrieveBast = new ArrayList<>();
+        List<MaintenanceModel> idToRetrieveBast = maintenanceModels;
         List<BastModel> BastList = bastDb.findAll();
-        /*
-        if(keyword.toLowerCase() == "create") {
-            for (int i = 0; i < maintenanceModels.size(); i++) {
-                    MaintenanceModel main = maintenanceModels.get(i);
-                    System.out.println(main.getIdMaintenance() + "id M");
-                    System.out.println("tahap 1");
-                    boolean statusMaintenance = main.getMaintained();
-                    if (statusMaintenance == true) {
-                        BastModel bastMain = new BastModel();
-                        Boolean status = bastMain == null;
-                        System.out.println(bastMain);
-                        System.out.println("tahap 2");
-                        //System.out.println(status);
-                        if (status == true){
-                            idToRetrieveBast.add(main);
-                            System.out.println("no bast");
-                        }
-                        else{
-                            System.out.println("ada bast");
-                            String checker = "ap";
-                            String stat = bastMain.getIdReport().getStatusApproval().toLowerCase().substring(0,2);
-                            Boolean isApproved = status.equals(checker);
-                            System.out.println(isApproved);
-                            if(isApproved == true){
-                                System.out.println("tahap 3");
-                                idToRetrieveBast.add(main);
-                                if (idToRetrieveBast.contains(main)){
-                                    idToRetrieveBast.remove(main);
-                                }                            }
-                        }
+        //maintenanceDb.findById(Long.valueOf("2"));
+        if(keyword.toLowerCase() == "create"){
+            for(int x=0; x<BastList.size(); x++){
+                BastModel bast = BastList.get(x);
+                MaintenanceModel mns = bast.getIdMaintenance();
+                Boolean isNull = mns == null;
+                if(!isNull){
+                    if(this.getReportByBast(bast).getStatusApproval().toLowerCase() == "approved"){
+                        idToRetrieveBast.remove(mns);
                     }
-                    else {
+                }
 
-                    }
             }
         }
-        else{
-            idToRetrieveBast = maintenanceModels;
-        }
-        for(int i =0; i<idToRetrieveBast.size(); i++){
-            System.out.println(idToRetrieveBast.get(i).getIdMaintenance());
-        }
-
-
-         */
-        return maintenanceModels;
+        return idToRetrieveBast;
     }
 
     @Override
     public List<ProjectInstallationModel> getPiList(String keyword) {
         List<ProjectInstallationModel> projectInstallationModels = projectInstallationDb.findAll();
-        List<ProjectInstallationModel> idToRetrieveBast = new ArrayList<>();
+        List<ProjectInstallationModel> idToRetrieveBast = projectInstallationModels;
         List<BastModel> BastList = bastDb.findAll();
         if(keyword.toLowerCase() == "create"){
+            for(int x=0; x<BastList.size(); x++){
+                BastModel bast = BastList.get(x);
+                ProjectInstallationModel pi = bast.getIdOrderPi();
+                Boolean isNull = pi == null;
+                if(!isNull){
+                    ReportModel report = this.getReportByBast(bast);
+                    String stat = report.getStatusApproval().toLowerCase();
+                    Boolean isRemove = stat.equals("approved");
+                    if(isRemove){
+                        System.out.println("appapa");
+                        idToRetrieveBast.remove(pi);
+                    }
+
+                }
+            }
+            /*
             for(int i = 0; i<projectInstallationModels.size(); i++){
                 ProjectInstallationModel pi = projectInstallationModels.get(i);
                 List<BastModel> bast_pi = pi.getIdBast();
                 if(bast_pi.size() == 0){
-                    idToRetrieveBast.add(pi);
+                    if (pi.getClose() == true){
+                    }else{
+                        idToRetrieveBast.add(pi);
+                    }
                 }
                 else{
                     Boolean anyApprove = false;
@@ -248,12 +236,10 @@ public class BastServiceImpl implements BastService {
 
                 }
             }
+            */
         }
         else{
             idToRetrieveBast = projectInstallationModels;
-        }
-        for(int i =0; i<idToRetrieveBast.size(); i++){
-            System.out.println(idToRetrieveBast.get(i).getIdOrderPi());
         }
         return idToRetrieveBast;
     }

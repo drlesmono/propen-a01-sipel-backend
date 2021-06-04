@@ -51,6 +51,16 @@ public class OrderDto {
 
     private Long idOrderMs;
 
+    private String nama_verifikasi;
+
+    public String getNama_verifikasi() {
+        return nama_verifikasi;
+    }
+
+    public void setNama_verifikasi(String nama_verifikasi) {
+        this.nama_verifikasi = nama_verifikasi;
+    }
+
     public Long getIdOrder() {
         return idOrder;
     }
