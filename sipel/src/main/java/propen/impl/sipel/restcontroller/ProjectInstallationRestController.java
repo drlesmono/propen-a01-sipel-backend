@@ -87,14 +87,14 @@ public class ProjectInstallationRestController {
 
     // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
-    private List<ProjectInstallationModel> retrieveListPi(){
+    public List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }
 
     // Mengubah pic engineer dari suatu project installation
     // Mengembalikan response dengan result project installation yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updatePIC")
-    private BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
+    public BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
                                                              BindingResult bindingResult){
         BaseResponse<ProjectInstallationModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -135,7 +135,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/namaBulan/{startDateString}/{endDateString}")
-    private List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -159,7 +159,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/masuk/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -183,7 +183,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/selesai/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -207,7 +207,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/tepatWaktuTelat/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -231,7 +231,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/belumSelesai")
-    private Integer retrieveListJumlahPiTepatWaktuTelat(){
+    public Integer retrieveListJumlahPiTepatWaktuTelat(){
         System.out.println("masuk ke controller pi selesai");
         return projectInstallationRestService.getPiBelumSelesai();
     }

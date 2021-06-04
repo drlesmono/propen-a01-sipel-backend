@@ -39,6 +39,9 @@ import UpdateTaskProgressComponent from './components/ListTask/UpdateTaskProgres
 import ListNotVerifiedOrder from './components/OrderVerification/ListNotVerifiedOrder';
 import OrderDetails from './components/OrderVerification/OrderDetails';
 import OrderVerificationComponent from './components/OrderVerification/OrderVerificationComponent';
+import Dashboard from "./containers/Dashboard";
+import ChangeStatusOrder from "./containers/ChangeStatusOrder";
+import FinalisasiLaporan from "./containers/FinalisasiLaporan";
 
 class App extends Component {
   constructor(props) {
@@ -69,7 +72,7 @@ class App extends Component {
         showPeriodeKontrak: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
         showPenugasanEngineer: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
         showMengelolaLaporan: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_ENGINEER"),
-		    showBoardAdmin: user.roles.includes("ROLE_ADMIN"),
+          showBoardAdmin: user.roles.includes("ROLE_ADMIN"),
         showHalamanAdmin: user.roles.includes("ROLE_ADMIN"),
         showDeliveryProgress: user.roles.includes("ROLE_ENGINEER"),
         showOrderVerification: user.roles.includes("ROLE_ADMIN"),
@@ -95,13 +98,13 @@ class App extends Component {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="mr-auto">
-              <Nav.Link href="#dashboard">Dashboard</Nav.Link>
+              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
               <NavDropdown title="Order" id="collasible-nav-dropdown">
                 <div className="d-flex justify-content-between">
                   <Nav.Link href="#action/3.1" style={{color: "black"}} className="pl-5 pr-5">Action</Nav.Link>
                   {showOrderVerification && (<Nav.Link href="/order-verification" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Order</Nav.Link>)}
-                  <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something</Nav.Link>
-                  <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something 2</Nav.Link>
+                  <Nav.Link href="/order/finalisasi" style={{color: "black"}} className="pl-5 pr-5">Finalisasi Laporan</Nav.Link>
+                  <Nav.Link href="/order/changeStatus" style={{color: "black"}} className="pl-5 pr-5">Ubah Status</Nav.Link>
                   </div>
               </NavDropdown>
               <NavDropdown title="Produksi" id="collasible-nav-dropdown">
@@ -191,6 +194,9 @@ class App extends Component {
             <Route exact path="/orderPIMS/change/:id/:idPi/:idMs" component={ChangeOrderPIMS} />
             <Route exact path="/laporan/verifikasiLaporan" component={StatusPersetujuanLaporan} />
             <Route exact path="/order/unggah/:id" component={UnggahDokumenOrder} />
+            <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path="/order/finalisasi" component={FinalisasiLaporan} />
+            <Route exact path="/order/changeStatus" component={ChangeStatusOrder} />
             <Route component={PageNotFound}/>
           </Switch>
         </div>

@@ -155,7 +155,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/namaBulan/{startDateString}/{endDateString}")
-    private List<String> retrieveListNamaBulanMs(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<String> retrieveListNamaBulanMs(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -179,7 +179,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/masuk/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahMsMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<Integer> retrieveListJumlahMsMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -203,7 +203,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/selesai/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    public List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -227,7 +227,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/belumSelesai")
-    private Integer retrieveListJumlahMsTepatWaktuTelat(){
+    public Integer retrieveListJumlahMsTepatWaktuTelat(){
         System.out.println("masuk ke controller pi selesai");
         return managedServicesRestService.getMsBelumSelesai();
     }
