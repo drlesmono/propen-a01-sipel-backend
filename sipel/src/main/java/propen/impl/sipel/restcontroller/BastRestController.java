@@ -37,6 +37,7 @@ public class BastRestController {
 
     // used to retrieve all report from backend
     @GetMapping(value = "/laporan")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('FINANCE')")
     public List<ReportDto> showAllLaporan(Model model){
         List<ReportModel> reportList = bastService.getAllReport();
         List<ReportDto> dtoList = new ArrayList<>();
@@ -57,6 +58,7 @@ public class BastRestController {
 
     // used to retrieve all order from backend
     @GetMapping(value = "/laporan/order")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<OrderDto> showAllOrder(Model model){
         List<OrderModel> orderList = bastService.getOrderList();
         List<OrderDto> dtoList = new ArrayList<>();
@@ -110,6 +112,7 @@ public class BastRestController {
 
     // used to retrieve all bast from backend
     @GetMapping(value = "/laporan/bast")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('FINANCE')")
     public List<BastDto> showAllBast(Model model){
         List<BastModel> bastList = bastService.getBastList();
         List<BastDto> dtoList = new ArrayList<>();
@@ -149,6 +152,7 @@ public class BastRestController {
     // used to retrieve all installation project from backend
     // used
     @GetMapping(value = "/laporan/pi")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<ProjectInstallationModel> showAllPi(Model model){
         List<ProjectInstallationModel> piList = bastService.getPiList("create");
         return piList;
@@ -157,12 +161,14 @@ public class BastRestController {
     // used to retrieve all maintenance from backend
     // used
     @GetMapping(value = "/laporan/mn")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<MaintenanceModel> showAllMn(Model model){
         List<MaintenanceModel> mnList = bastService.getMaintenanceList("create");
         return mnList;
     }
 
     @GetMapping(value = "/laporan/mn/all")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public List<MaintenanceModel> showAllMns(Model model){
         List<MaintenanceModel> mnList = bastService.getMaintenanceList("all");
         return mnList;
@@ -170,12 +176,14 @@ public class BastRestController {
 
     // used as a page of option
     @GetMapping(value = "/laporan/bast/create")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public String showBastOption(){
         return "bast-option";
     }
 
     // Halaman form add bast pi
     @GetMapping(value = "/laporan/bast/create/pi")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LinkedHashMap<String, Object> addBastPiFormPage(Model model){
         List<ProjectInstallationModel> projectInstallationList = bastService.getPiList("create");
         ReportModel report = new ReportModel();
@@ -191,6 +199,7 @@ public class BastRestController {
 
     // Halaman form add bast pi
     @GetMapping(value = "/laporan/bast/create/mn")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public LinkedHashMap<String, Object> addBastMnFormPage(Model model){
         List<MaintenanceModel> maintenanceList = bastService.getMaintenanceList("create");
         ReportModel report = new ReportModel();
@@ -206,6 +215,7 @@ public class BastRestController {
 
 
     @PostMapping(value = "/laporan/create-bast/pi")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public BaseResponse<BastDto> addBastPiSubmit(@Valid @RequestBody BastDto bastDto,
                                                  BindingResult bindingResult) throws ParseException {
         BaseResponse<BastDto> response = new BaseResponse<>();
@@ -242,6 +252,7 @@ public class BastRestController {
     }
 
     @PostMapping(value = "/laporan/create-bast/mn")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     public BaseResponse<BastDto> addBastMnSubmit(@Valid @RequestBody BastDto bastDto,
                                                  BindingResult bindingResult) throws ParseException {
         BaseResponse<BastDto> response = new BaseResponse<>();
@@ -284,7 +295,8 @@ public class BastRestController {
     }
 
     @GetMapping(value = "/laporan/bast/{idBast}")
-    private LinkedHashMap<String, Object> findBastByNum(@PathVariable(value = "idBast") Long idBast){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('FINANCE')")
+    public LinkedHashMap<String, Object> findBastByNum(@PathVariable(value = "idBast") Long idBast){
         try{
             BastModel currentBast = bastService.getBastById(idBast);
             OrderModel order = bastService.getOrderFromBast(currentBast);
@@ -314,7 +326,8 @@ public class BastRestController {
     }
 
     @PutMapping({"/laporan/accept/{idReport}"})
-    private BaseResponse<ReportDto> acceptBast(@Valid @RequestBody ReportDto report,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ReportDto> acceptBast(@Valid @RequestBody ReportDto report,
                                                BindingResult bindingResult){
         BaseResponse<ReportDto> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -331,7 +344,8 @@ public class BastRestController {
     }
 
     @PutMapping({"/laporan/reject/{idReport}"})
-    private BaseResponse<ReportDto> rejectBast(@Valid @RequestBody ReportDto report,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ReportDto> rejectBast(@Valid @RequestBody ReportDto report,
                                                BindingResult bindingResult){
         BaseResponse<ReportDto> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){

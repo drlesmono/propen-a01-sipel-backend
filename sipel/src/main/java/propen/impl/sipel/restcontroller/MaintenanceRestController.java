@@ -37,7 +37,7 @@ public class MaintenanceRestController {
     private ManagedServicesRestService managedServicesRestService;
 
     @PostMapping(value = "/produksi/maintenance/tambah/{idOrderMS}")
-    private MaintenanceModel createMaintenanceSchedule(
+    public MaintenanceModel createMaintenanceSchedule(
             @Valid
             @RequestBody MaintenanceModel maintenance,
             @PathVariable ("idOrderMS") Long idOrderMS,
@@ -55,7 +55,7 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/daftar/{idOrderMS}")
-    private List<MaintenanceModel> retrieveListMaintenanceByIdOrderMs(
+    public List<MaintenanceModel> retrieveListMaintenanceByIdOrderMs(
             @Valid
             @PathVariable ("idOrderMS") Long idOrderMS
     ) {
@@ -63,7 +63,7 @@ public class MaintenanceRestController {
     }
 
     @PutMapping(value = "/produksi/maintenance/ubah/{idMaintenance}")
-    private MaintenanceModel changeMaintenance(
+    public MaintenanceModel changeMaintenance(
             @PathVariable(value = "idMaintenance") Long idMaintenance,
             @RequestBody MaintenanceModel maintenance
     ) {
@@ -78,7 +78,7 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/detail/{idMaintenance}")
-    private MaintenanceModel detailMaintenance(
+    public MaintenanceModel detailMaintenance(
             @PathVariable(value = "idMaintenance") Long idMaintenance
     ) {
         try {
@@ -92,7 +92,7 @@ public class MaintenanceRestController {
     }
 
     @DeleteMapping(value = "/produksi/maintenance/delete/{idMaintenance}")
-    private ResponseEntity<String> deleteMaintenance(
+    public ResponseEntity<String> deleteMaintenance(
             @Valid
             @PathVariable(value = "idMaintenance") Long idMaintenance
     ) {
@@ -114,7 +114,7 @@ public class MaintenanceRestController {
 
     // Mengembalikan list seluruh maintenance
     @GetMapping(value="/maintenances")
-    private List<MaintenanceModel> retrieveListMaintenance(){
+    public List<MaintenanceModel> retrieveListMaintenance(){
         return maintenanceRestService.retrieveListMaintenance();
     }
 }

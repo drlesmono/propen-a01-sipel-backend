@@ -48,7 +48,8 @@ public class DocumentOrderRestController {
     private static final Logger logger = Logger.getLogger(DocumentOrderRestController.class.getName());
 
     @GetMapping(value = "/api/v1/order/{idOrder}/documents")
-    private List<DocumentOrderModel> retrieveDocOrderList(
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA ENTRY')")
+    public List<DocumentOrderModel> retrieveDocOrderList(
             @Valid
             @PathVariable (value = "idOrder") Long idOrder
     ){
@@ -56,7 +57,8 @@ public class DocumentOrderRestController {
     }
 
     @PostMapping(value="/api/v1/order/{idOrder}/document/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    private BaseResponse<DocumentOrderModel> uploadDocumentOrder(
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA ENTRY')")
+    public BaseResponse<DocumentOrderModel> uploadDocumentOrder(
             @Valid
             @ModelAttribute DocumentOrderDto docOrder,
             @PathVariable(value = "idOrder") Long idOrder,
@@ -107,6 +109,7 @@ public class DocumentOrderRestController {
     }
 
     @GetMapping("/order/document/{fileName:.+}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA ENTRY')")
     public ResponseEntity<Resource> downloadDocumentOrder(@PathVariable String fileName) throws IOException {
 
         DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
@@ -127,6 +130,7 @@ public class DocumentOrderRestController {
     }
 
     @GetMapping("/order/document/{fileName:.+}/preview")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA ENTRY')")
     public ResponseEntity<InputStreamResource> previewDocumentOrder(@PathVariable String fileName) throws FileNotFoundException {
         DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
         File file = new File(document.getUrlFile());
@@ -143,7 +147,8 @@ public class DocumentOrderRestController {
     }
 
     @DeleteMapping(value="/api/v1/order/document/{idDoc}/delete")
-    private ResponseEntity<String> deleteDocumentOrder(@PathVariable("idDoc") Long idDoc) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA ENTRY')")
+    public ResponseEntity<String> deleteDocumentOrder(@PathVariable("idDoc") Long idDoc) {
         try{
             DocumentOrderModel document = documentOrderRestService.findDocumentById(idDoc);
             File file = new File(document.getUrlFile());

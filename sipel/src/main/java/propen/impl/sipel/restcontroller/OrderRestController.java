@@ -45,7 +45,7 @@ public class  OrderRestController {
     private OrderDb orderDb;
 
     @PostMapping(value = "/order/tambah")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public OrderModel createOrder(
             @Valid
             @RequestBody OrderModel order,
@@ -62,14 +62,14 @@ public class  OrderRestController {
     }
 
     @GetMapping(value="/order-details/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public OrderModel getOrderByIdOrder(@PathVariable Long idOrder, Model model){
         OrderModel order = orderDb.findByIdOrder(idOrder);
         return order;
     }
 
     @PutMapping("/verification/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public OrderModel updateStatusVerifikasi(@PathVariable Long idOrder, @RequestBody OrderModel order){
 
         OrderModel targetedOrder = orderDb.findByIdOrder(idOrder);
@@ -79,7 +79,7 @@ public class  OrderRestController {
     }
 
     @PutMapping(value="/order/verification")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public BaseResponse<OrderModel> updateOrder(@Valid @RequestBody OrderDto order,
                                               BindingResult bindingResult){
         BaseResponse<OrderModel> response = new BaseResponse<>();
@@ -105,7 +105,7 @@ public class  OrderRestController {
     }
 
     @GetMapping(value="/order-verification")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public List<OrderModel> getAllNotVerifiedOrders(){
         //List<OrderModel> listNotVerifiedOrder =
 
@@ -113,8 +113,8 @@ public class  OrderRestController {
     }
 
     @GetMapping(value = "/order/detail/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
-    private OrderModel retrieveOrder(
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    public OrderModel retrieveOrder(
             @PathVariable(value = "idOrder") Long idOrder
     ) {
         try {
@@ -128,8 +128,8 @@ public class  OrderRestController {
     }
 
     @PutMapping(value = "/order/ubah/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
-    private OrderModel updateOrder(
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    public OrderModel updateOrder(
             @PathVariable(value = "idOrder") Long idOrder,
             @RequestBody OrderModel order
     ) {
@@ -144,28 +144,28 @@ public class  OrderRestController {
     }
 
     @GetMapping(value = "/orderList")
-    @PreAuthorize("hasRole('ADMIN')")
-    private List<OrderModel> retrieveListOrder() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    public List<OrderModel> retrieveListOrder() {
         return orderRestService.retrieveOrder();
     }
 
     @GetMapping(value = "/order/target")
-    @PreAuthorize("hasRole('ADMIN')")
-    private OrderModel retrieveOrderTarget() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    public OrderModel retrieveOrderTarget() {
         return orderRestService.getLatestOrder();
     }
 
     // Mengembalikan list seluruh order yang telah terverifikasi
     @GetMapping(value="/ordersVerified")
-    @PreAuthorize("hasRole('ADMIN')")
-    private List<OrderModel> retrieveListOrderVerified(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<OrderModel> retrieveListOrderVerified(){
         return orderRestService.retrieveListOrderVerified();
     }
 
     // Mengembalikan list seluruh order jenis managed services yang telah terverifikasi
     @GetMapping(value="/ordersVerified/ms")
-    @PreAuthorize("hasRole('ADMIN')")
-    private List<OrderModel> retrieveListOrderMS() {
+    @PreAuthorize("hasRole('ADMIN')  or hasRole('ENGINEER')")
+    public List<OrderModel> retrieveListOrderMS() {
         List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByActualEnd();
 
         List<OrderModel> listOrder = new ArrayList<>();
@@ -179,7 +179,8 @@ public class  OrderRestController {
 
     // Mengembalikan list order yang telah terverifikasi dan sudah memiliki nomor PO
     @GetMapping(value="/ordersVerifiedReport")
-    private List<OrderModel> retrieveListOrderVerifiedReport(){
+    @PreAuthorize("hasRole('ENGINEER')")
+    public List<OrderModel> retrieveListOrderVerifiedReport(){
         List<OrderModel> listOrder = orderRestService.retrieveListOrderVerified();
 
         List<OrderModel> listOrderFiltered = new ArrayList<>();
@@ -196,7 +197,7 @@ public class  OrderRestController {
     // Mengembalikan response dengan result order baru yang berhasil dibuat
     @PutMapping(value="/order/{idOrder}/perpanjangKontrak")
     @PreAuthorize("hasRole('ADMIN')")
-    private BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
+    public BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
                                                  BindingResult bindingResult){
         BaseResponse<OrderModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -215,6 +216,7 @@ public class  OrderRestController {
     }
 
     @GetMapping(value = "/order/progress")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ENGINEER')")
     public List<ProgressOrderDto> showAllProgress(Model model){
         List<ProgressOrderDto> allProgress = orderRestService.getAllProgress();
         return allProgress;

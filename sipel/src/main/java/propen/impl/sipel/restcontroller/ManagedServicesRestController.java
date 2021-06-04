@@ -36,7 +36,8 @@ public class ManagedServicesRestController {
     private OrderRestService orderRestService;
 
     @PostMapping(value = "/order/tambah/MS/{idOrder}")
-    private ManagedServicesModel createOrderMS(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ManagedServicesModel createOrderMS(
             @Valid
             @RequestBody ManagedServicesModel managedServices,
             @PathVariable ("idOrder") Long idOrder,
@@ -54,7 +55,8 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value = "/order/detail/MS/{idOrderMs}")
-    private ManagedServicesModel retrieveOrderMS(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ManagedServicesModel retrieveOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs
     ) {
         try {
@@ -68,7 +70,8 @@ public class ManagedServicesRestController {
     }
 
     @PutMapping(value = "/order/ubah/MS/{idOrderMs}")
-    private ManagedServicesModel updateOrderMS(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ManagedServicesModel updateOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs,
             @RequestBody ManagedServicesModel managedServices
     ) {
@@ -83,14 +86,15 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value = "/orderMSassigned")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ManagedServicesModel> retrieveMSTerassigned() {
         return managedServicesRestService.retrieveMSassigned();
     }
 
     // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
-    @PreAuthorize("hasRole('ADMIN')")
-    private List<ManagedServicesModel> retrieveListMs(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER')")
+    public List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
 
@@ -98,7 +102,7 @@ public class ManagedServicesRestController {
     // Mengembalikan response dengan result managed services yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updatePIC")
     @PreAuthorize("hasRole('ADMIN')")
-    private BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,
+    public BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,
                                                          BindingResult bindingResult){
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -119,7 +123,7 @@ public class ManagedServicesRestController {
     // Mengembalikan response dengan result managed services yang berhasil menyimpan periode kontrak
     @PutMapping(value="/order/{idOrder}/ms/updateKontrak")
     @PreAuthorize("hasRole('ADMIN')")
-    private BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
+    public BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
                                                              @PathVariable("idOrder") Long idOrder,
                                                              BindingResult bindingResult){
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();
@@ -147,7 +151,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/perc")
-    private LinkedHashMap<String, String> retrieveTermMs(){
+    public LinkedHashMap<String, String> retrieveTermMs(){
 
         return managedServicesRestService.retrievePercentageMs();
     }

@@ -33,12 +33,14 @@ public class InstallationReportRestController {
 
     // Mengembalikan list seluruh installation report
     @GetMapping(value="/reports/ir")
-    private List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
+    @PreAuthorize("hasRole('ENGINEER')")
+    public List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
 
     // Membuat installation report setelah object report dibuat
     // Mengembalikan response dengan result installation report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/installation/upload")
-    private BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
+    @PreAuthorize("hasRole('ENGINEER')")
+    public BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
                                                                             @PathVariable("idReport") Long idReport,
                                                                             BindingResult bindingResult){
         BaseResponse<InstallationReportModel> response = new BaseResponse<>();
@@ -59,7 +61,8 @@ public class InstallationReportRestController {
     }
 
     @PutMapping(value = "/update/notes/{idInstallationReport}")
-    private InstallationReportModel updateNotesReport(
+    @PreAuthorize("hasRole('MANAGER')")
+    public InstallationReportModel updateNotesReport(
             @PathVariable(value = "idInstallationReport") Long idInstallationReport,
             @RequestBody InstallationReportModel installationReport
     ) {

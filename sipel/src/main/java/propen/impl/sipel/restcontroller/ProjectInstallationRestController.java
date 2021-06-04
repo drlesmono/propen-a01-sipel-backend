@@ -30,7 +30,7 @@ public class ProjectInstallationRestController {
     private OrderRestService orderRestService;
 
     @PostMapping(value = "/order/tambah/PI/{idOrder}")
-    private ProjectInstallationModel createOrderPI(
+    public ProjectInstallationModel createOrderPI(
             @Valid
             @RequestBody ProjectInstallationModel projectInstallation,
             @PathVariable ("idOrder") Long idOrder,
@@ -48,7 +48,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value = "/order/detail/PI/{idOrderPi}")
-    private ProjectInstallationModel retrieveOrderPI(
+    public ProjectInstallationModel retrieveOrderPI(
             @PathVariable(value = "idOrderPi") Long idOrderPi
     ) {
         try {
@@ -62,7 +62,7 @@ public class ProjectInstallationRestController {
     }
 
     @PutMapping(value = "/order/ubah/PI/{idOrderPi}")
-    private ProjectInstallationModel updateOrderPI(
+    public ProjectInstallationModel updateOrderPI(
             @PathVariable(value = "idOrderPi") Long idOrderPi,
             @RequestBody ProjectInstallationModel projectInstallation
     ) {
@@ -78,8 +78,8 @@ public class ProjectInstallationRestController {
 
     // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
-    @PreAuthorize("hasRole('ADMIN')")
-    private List<ProjectInstallationModel> retrieveListPi(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER')")
+    public List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }
 
@@ -87,7 +87,7 @@ public class ProjectInstallationRestController {
     // Mengembalikan response dengan result project installation yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updatePIC")
     @PreAuthorize("hasRole('ADMIN')")
-    private BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
+    public BaseResponse<ProjectInstallationModel> updatePIC(@Valid @RequestBody ProjectInstallationDto pi,
                                                              BindingResult bindingResult){
         BaseResponse<ProjectInstallationModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){

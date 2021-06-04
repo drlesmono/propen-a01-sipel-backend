@@ -30,7 +30,7 @@ public class ServicesRestController {
     // Mengembalikan response dengan result service yang berhasil diubah
     @PutMapping(value="/service/{idService}/updateService")
     @PreAuthorize("hasRole('ADMIN')")
-    private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
+    public BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
@@ -52,7 +52,7 @@ public class ServicesRestController {
     // Mengembalikan response dengan result service yang berhasil dibuat
     @PostMapping(value="/ms/{idOrderMs}/createService")
     @PreAuthorize("hasRole('ADMIN')")
-    private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
+    public BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
@@ -73,7 +73,7 @@ public class ServicesRestController {
 
     @GetMapping(value = "/order/MS/{idOrderMS}/listService")
     @PreAuthorize("hasRole('ADMIN')")
-    private List<ServicesModel> retrieveListService(
+    public List<ServicesModel> retrieveListService(
             @Valid
             @PathVariable (value = "idOrderMS") Long idOrderMS
     ) {
@@ -82,7 +82,7 @@ public class ServicesRestController {
 
     @DeleteMapping(value = "order/delete/service/{idService}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<String> deleteService(
+    public ResponseEntity<String> deleteService(
             @Valid
             @PathVariable(value = "idService") Long idService
     ) {
@@ -104,7 +104,7 @@ public class ServicesRestController {
 
     @GetMapping(value = "/order/detail/Service/{idService}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ServicesModel retrieveService(
+    public ServicesModel retrieveService(
             @PathVariable(value = "idService") Long idService
     ) {
         try {

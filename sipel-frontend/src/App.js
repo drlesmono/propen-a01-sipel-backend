@@ -66,9 +66,9 @@ class App extends Component {
     if (user) {
       this.setState({
         currentUser: user,
-        showPeriodeKontrak: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
-        showPenugasanEngineer: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
-        showMengelolaLaporan: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_ENGINEER"),
+        showPeriodeKontrak: user.roles.includes("ROLE_ADMIN"),
+        showPenugasanEngineer: user.roles.includes("ROLE_ADMIN"),
+        showMengelolaLaporan: user.roles.includes("ROLE_ENGINEER"),
 		    showBoardAdmin: user.roles.includes("ROLE_ADMIN"),
         showHalamanAdmin: user.roles.includes("ROLE_ADMIN"),
         showDeliveryProgress: user.roles.includes("ROLE_ENGINEER"),

@@ -47,7 +47,8 @@ public class ReportRestController {
 
     // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
-    private List<ReportModel> retrieveListReportIrMr(){
+    @PreAuthorize("hasRole('ENGINEER')")
+    public List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
         List<ReportModel> listReportFiltered = new ArrayList<>();
@@ -65,7 +66,8 @@ public class ReportRestController {
     // File yang memiliki nama yang sama akan dibuat nama dengan versi
     // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    private BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
+    @PreAuthorize("hasRole('ENGINEER')")
+    public BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
                                                    HttpServletRequest request) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();
         if(report.getReportType() == null && report.getFile() == null){
@@ -112,6 +114,7 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
+    @PreAuthorize("hasRole('ENGINEER')")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName) throws IOException {
 
         ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
@@ -133,6 +136,7 @@ public class ReportRestController {
 
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
+    @PreAuthorize("hasRole('ENGINEER')")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         ReportModel report = reportRestService.findReportByReportName(fileName);
         File file = new File(report.getUrlFile());
@@ -150,7 +154,8 @@ public class ReportRestController {
 
     // Menghapus file dari local server dan report dari database
     @DeleteMapping(value="/api/v1/report/{idReport}/delete")
-    private ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
+    @PreAuthorize("hasRole('ENGINEER')")
+    public ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
             File file = new File(report.getUrlFile());
@@ -170,7 +175,8 @@ public class ReportRestController {
     }
 
     @PutMapping(value = "/api/v1/report/update/{idReport}")
-    private ReportModel updateStatusReport(
+    @PreAuthorize("hasRole('MANAGER')")
+    public ReportModel updateStatusReport(
             @PathVariable (value = "idReport") Long idReport,
             @RequestBody ReportModel report
     ) {
@@ -183,8 +189,10 @@ public class ReportRestController {
             );
         }
     }
+
     @GetMapping(value="/api/v1/reports")
-    private List<ReportModel> retrieveListReportApproved(){
+    @PreAuthorize("hasRole('FINANCE')")
+    public List<ReportModel> retrieveListReportApproved(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
         List<ReportModel> toBeSeenReport = new ArrayList<>();
         for(ReportModel report : listReport){
@@ -196,8 +204,10 @@ public class ReportRestController {
 
         return toBeSeenReport;
     }
+
     @GetMapping(value="/api/v1/reports/all")
-    private List<ReportModel> retrieveListReportAll(){
+    @PreAuthorize("hasRole('MANAGER')")
+    public List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
         return listReport;
