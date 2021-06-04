@@ -6,6 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./style.css";
 import jsPDF from "jspdf";
+import authHeader from '../../services/auth-header';
 
 class ReportFinance extends Component {
     constructor(props) {

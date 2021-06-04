@@ -7,13 +7,13 @@ import ProjectInstallation from "../../components/ProjectInstallation/piDetail";
 import ManagedService from "../../components/ManagedService/msDetail";
 import { withRouter } from "react-router-dom";
 import CustomizedTables from "../../components/Table";
-//import Modal from "../../components/Modal";
 import ServiceList from "../../components/Services/serviceList";
 import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
 import * as moment from "moment";
 import { store } from "react-notifications-component";
 import ReactNotification from "react-notifications-component";
+import authHeader from '../../services/auth-header';
 
 const initState = {
     name: "",

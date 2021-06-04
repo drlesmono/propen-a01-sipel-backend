@@ -5,6 +5,7 @@ import { Form, Button, Card, Table } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./style.css";
 import jsPDF from "jspdf";
+import authHeader from '../../services/auth-header';
 
 class ReportAdmin extends Component {
     constructor(props) {

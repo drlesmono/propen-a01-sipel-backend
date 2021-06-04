@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import OrderService from "../../services/OrderService";
-import { Form } from "react-bootstrap";
 import authHeader from '../../services/auth-header';
 import axios from 'axios';
 import { Form, Button, Card, Table } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
 
@@ -54,7 +52,7 @@ class OrderVerificationComponent extends Component {
     handleSave = (e) => {
         e.preventDefault();
         let order = {idOrder: this.state.idOrder, nama_verifikasi: this.state.nama_verifikasi};
-        console.log('order => ' + JSON.stringify(user));
+        console.log('order => ' + JSON.stringify(order));
         const URL = "http://localhost:2020/api/v1/order/verification";
         axios.put(URL, order, { headers: authHeader() });
         this.props.history.push(`/order-verification`)

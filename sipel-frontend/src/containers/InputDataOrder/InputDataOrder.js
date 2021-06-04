@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import authHeader from '../../services/auth-header';
 
 const initState = {
     orderTarget: null,

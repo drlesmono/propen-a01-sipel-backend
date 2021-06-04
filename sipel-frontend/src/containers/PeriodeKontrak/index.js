@@ -6,6 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./styles.module.css";
 import moment from "moment";
+import authHeader from '../../services/auth-header';
 
 class PeriodeKontrak extends Component {
     constructor(props) {

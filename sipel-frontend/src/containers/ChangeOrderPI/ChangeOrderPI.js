@@ -8,6 +8,7 @@ import { store } from "react-notifications-component";
 import ReactNotification from "react-notifications-component";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
+import authHeader from '../../services/auth-header';
 
 class ChangeOrderPI extends React.Component {
     constructor(props) {

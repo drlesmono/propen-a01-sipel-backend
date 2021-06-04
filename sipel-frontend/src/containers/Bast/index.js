@@ -6,6 +6,7 @@ import Modal from "../../components/Modal";
 import {Form, Card, Table} from "react-bootstrap";
 import { Input, FormControlLabel } from "@material-ui/core";
 import './style.css';
+import authHeader from '../../services/auth-header';
 
 
 class Bast extends Component {

@@ -8,6 +8,7 @@ import classes from "./styles.module.css";
 import LaporanDetail from "../../components/Laporan/laporanUbahStatusForm";
 import { store } from "react-notifications-component";
 import ReactNotification from "react-notifications-component";
+import authHeader from '../../services/auth-header';
 
 const initState = {
     statusApproval: "",

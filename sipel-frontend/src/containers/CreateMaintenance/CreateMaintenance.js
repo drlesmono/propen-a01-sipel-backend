@@ -10,6 +10,7 @@ import { store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
+import authHeader from '../../services/auth-header';
 
 class CreateMaintenance extends React.Component {
     constructor(props) {

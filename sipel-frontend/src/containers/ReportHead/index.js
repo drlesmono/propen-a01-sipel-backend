@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import classes from "./style.css";
 import CustomizedButtons from "../../components/Button";
 import jsPDF from "jspdf";
+import authHeader from '../../services/auth-header';
 
 class ReportHead extends Component {
     constructor(props) {
