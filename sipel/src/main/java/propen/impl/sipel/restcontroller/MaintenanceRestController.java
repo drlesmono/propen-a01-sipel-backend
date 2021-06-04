@@ -121,7 +121,8 @@ public class MaintenanceRestController {
     }
 
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/maintenance/{idMaintenance}/updateStatus")
-    private BaseResponse<MaintenanceDto> updateStatus(@Valid @RequestBody MaintenanceDto maintenance,
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<MaintenanceDto> updateStatus(@Valid @RequestBody MaintenanceDto maintenance,
                                                       BindingResult bindingResult){
         BaseResponse<MaintenanceDto> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){

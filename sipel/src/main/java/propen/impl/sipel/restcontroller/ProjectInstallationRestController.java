@@ -133,7 +133,8 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/namaBulan/{startDateString}/{endDateString}")
-    private List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -157,7 +158,8 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/masuk/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -181,7 +183,8 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/selesai/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -205,7 +208,8 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/tepatWaktuTelat/{startDateString}/{endDateString}")
-    private List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
 
@@ -229,13 +233,15 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/belumSelesai")
-    private Integer retrieveListJumlahPiTepatWaktuTelat(){
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public Integer retrieveListJumlahPiTepatWaktuTelat(){
         System.out.println("masuk ke controller pi selesai");
         return projectInstallationRestService.getPiBelumSelesai();
     }
 
     @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updateStatus")
-    private BaseResponse<ProjectInstallationDto> updateStatus(@Valid @RequestBody ProjectInstallationDto pi,
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ProjectInstallationDto> updateStatus(@Valid @RequestBody ProjectInstallationDto pi,
                                                               BindingResult bindingResult){
         BaseResponse<ProjectInstallationDto> response = new BaseResponse<>();
         if(bindingResult.hasFieldErrors()){
