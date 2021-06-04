@@ -46,7 +46,7 @@ public class OrderRestServiceImpl implements OrderRestService {
     public OrderModel createOrder(OrderModel order) {
         //Date today = new Date();
         //order.setDateOrder(today);
-        order.setVerified(true)
+        order.setVerified(true);
         return orderDb.save(order);
     }
 
