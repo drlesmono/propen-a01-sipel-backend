@@ -52,41 +52,50 @@ class App extends Component {
 	    showBoardAdmin: false,
       showHalamanAdmin: false,
       showDeliveryProgress: false,
-      showLaporanFinance: false,
-      showLaporanHead: false,
-      showLaporanAdmin: false,
       showBast: false,
+      showProgressOrder: false,
       currentUser: undefined,
+      showInputDataOrder: false,
+      showPenjadwalanMaintenance: false,
+      showStatusPersetujuanLaporan: false,
     };
   }
 
   componentDidMount() {
-    const user = AuthService.getCurrentUser();
+    const user = AuthService.getCurrentUser(); 
+  
 
     if (user) {
       this.setState({
         currentUser: user,
-        showPeriodeKontrak: user.roles.includes("ROLE_ADMIN"),
-        showPenugasanEngineer: user.roles.includes("ROLE_ADMIN"),
-        showMengelolaLaporan: user.roles.includes("ROLE_ENGINEER"),
+        showPeriodeKontrak: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
+        showPenugasanEngineer: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER"),
+        showMengelolaLaporan: user.roles.includes("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_ENGINEER"),
 		    showBoardAdmin: user.roles.includes("ROLE_ADMIN"),
         showHalamanAdmin: user.roles.includes("ROLE_ADMIN"),
         showDeliveryProgress: user.roles.includes("ROLE_ENGINEER"),
         showOrderVerification: user.roles.includes("ROLE_ADMIN"),
-        showBast: user.roles.includes("ROLE_ADMIN"),
         showLaporanAdmin: user.roles.includes("ROLE_ADMIN"),
         showLaporanFinance: user.roles.includes("ROLE_FINANCE"),
-        showLaporanHead: user.roles.includes("ROLE_MANAGER")
+        showLaporanHead: user.roles.includes("ROLE_MANAGER"),
+        showInputDataOrder: user.roles.includes("ROLE_ADMIN", "ROLE_DATA_ENTRY",),
+        showPenjadwalanMaintenance: user.roles.includes("ROLE_ADMIN"),
+        showProgressOrder: user.roles.includes("ROLE_MANAGER"),
+        showBast: user.roles.includes("ROLE_ADMIN"),
+        showStatusPersetujuanLaporan: user.roles.includes("ROLE_MANAGER"),
+
       });
     }
   }
 
+  
   logOut() {
     AuthService.logout();
   }
+
   render() {
-    const { currentUser, showPeriodeKontrak, showOrderVerification, showPenugasanEngineer, showMengelolaLaporan, showBoardAdmin, showHalamanAdmin, showDeliveryProgress, 
-    showLaporanAdmin, showLaporanFinance, showLaporanHead, showBast } = this.state;
+    const { currentUser, showPenjadwalanMaintenance, showPeriodeKontrak, showOrderVerification, showPenugasanEngineer, showMengelolaLaporan, showBoardAdmin, showHalamanAdmin, showDeliveryProgress, 
+    showLaporanAdmin, showLaporanFinance, showLaporanHead, showBast, showProgressOrder, showStatusPersetujuanLaporan, showInputDataOrder } = this.state;
 
     return (
       <div>
@@ -98,10 +107,9 @@ class App extends Component {
               <Nav.Link href="#dashboard">Dashboard</Nav.Link>
               <NavDropdown title="Order" id="collasible-nav-dropdown">
                 <div className="d-flex justify-content-between">
-                  <Nav.Link href="#action/3.1" style={{color: "black"}} className="pl-5 pr-5">Action</Nav.Link>
+                  {showInputDataOrder && (<Nav.Link href="/order/order" style={{color: "black"}} className="pl-5 pr-5">Input Data Order</Nav.Link>)}
                   {showOrderVerification && (<Nav.Link href="/order-verification" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Order</Nav.Link>)}
-                  <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something</Nav.Link>
-                  <Nav.Link href="#action/3.4" style={{color: "black"}} className="pl-5 pr-5">Something 2</Nav.Link>
+                  {showProgressOrder && (<Nav.Link href="/order/progress" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>)}
                   </div>
               </NavDropdown>
               <NavDropdown title="Produksi" id="collasible-nav-dropdown">
@@ -109,7 +117,8 @@ class App extends Component {
                   {showPenugasanEngineer && (<Nav.Link href="/produksi/penugasan" style={{color: "black"}} className="pl-5 pr-5">Penugasan</Nav.Link>)}
                   {showDeliveryProgress && (<Nav.Link href="/delivery-progress" style={{color: "black"}} className="pl-5 pr-5">Progress Delivery</Nav.Link>)}
                   {showPeriodeKontrak && (<Nav.Link href="/produksi/periode-kontrak" style={{color: "black"}} className="pl-5 pr-5">Periode Kontrak</Nav.Link>)}
-                  <Nav.Link href="#produksi/maintenance" style={{color: "black"}} className="pl-5 pr-5">Maintenance</Nav.Link>
+                  {showPenjadwalanMaintenance && (<Nav.Link href="/produksi/maintenance" style={{color: "black"}} className="pl-5 pr-5">Penjadwalan Maintenance</Nav.Link>)}
+                  
               </div>
               </NavDropdown>
               <NavDropdown title="Laporan"  id="collasible-nav-dropdown">
@@ -118,9 +127,12 @@ class App extends Component {
               {showLaporanAdmin &&  (<Nav.Link href="/laporan/admin" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>)}
               {showLaporanFinance && (<Nav.Link href="/laporan/finance" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>)}
               {showLaporanHead && (<Nav.Link href="/laporan/head" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>)}
+              {showBast && (<Nav.Link href="/laporan/create-bast" style={{color: "black"}} className="pl-5 pr-5">Laporan</Nav.Link>)}
+              {showStatusPersetujuanLaporan && (<Nav.Link href="/laporan/verifikasiLaporan" style={{color: "black"}} className="pl-5 pr-5">Verifikasi Laporan</Nav.Link>)}
+
               </div>
               </NavDropdown>
-              {showHalamanAdmin && (<Nav.Link href="/halaman/admin">Halaman Admin</Nav.Link>)}
+              //{showHalamanAdmin && (<Nav.Link href="/halaman/admin">Halaman Admin</Nav.Link>)}
               </Nav>
 
               {currentUser ? (
@@ -196,7 +208,8 @@ class App extends Component {
         </div>
       </div>
     );
-  }
-}
+          }
+        }
+  
 
 export default App;
