@@ -33,11 +33,16 @@ public class TaskModel implements Serializable{
     @Column(name="percentage", nullable = false)
     private Float percentage;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private UserModel idUserPic;
+    @Column(name="description", nullable = true)
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Long getIdTask() {
         return idTask;
@@ -71,11 +76,4 @@ public class TaskModel implements Serializable{
         this.percentage = percentage;
     }
 
-    public UserModel getIdUserPic() {
-        return idUserPic;
-    }
-
-    public void setIdUserPic(UserModel idUserPic) {
-        this.idUserPic = idUserPic;
-    }
 }

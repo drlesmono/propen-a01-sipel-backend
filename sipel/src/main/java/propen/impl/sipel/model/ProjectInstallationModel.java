@@ -20,7 +20,7 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProjectInstallationModel implements Serializable{
 
-//    @Id
+    //    @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -39,6 +39,9 @@ public class ProjectInstallationModel implements Serializable{
     @NotNull
     @Column(name="percentage", nullable = false)
     private Float percentage;
+
+    @Column(name="orderName", nullable = true)
+    private String orderName;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -68,7 +71,7 @@ public class ProjectInstallationModel implements Serializable{
     @JsonIgnore
     private List<InstallationReportModel> listInstallationReport;
 
-    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idOrderPi", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<BastModel> listBast;
@@ -160,4 +163,13 @@ public class ProjectInstallationModel implements Serializable{
     public void setDateClosedPI(Date dateClosedPI) {
         this.dateClosedPI = dateClosedPI;
     }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
 }

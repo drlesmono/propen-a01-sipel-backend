@@ -2,10 +2,17 @@ package propen.impl.sipel.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import propen.impl.sipel.model.MaintenanceModel;
+import org.springframework.web.reactive.function.client.WebClient;
 import propen.impl.sipel.model.ManagedServicesModel;
-import propen.impl.sipel.repository.MaintenanceDb;
 import propen.impl.sipel.repository.ManagedServicesDb;
+import propen.impl.sipel.rest.Setting;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import propen.impl.sipel.model.MaintenanceModel;
+import propen.impl.sipel.repository.MaintenanceDb;
 import propen.impl.sipel.repository.UserDb;
 
 import javax.transaction.Transactional;
@@ -20,6 +27,67 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
 
     @Autowired
     private ManagedServicesDb managedServicesDb;
+
+    @Override
+    public ManagedServicesModel createOrderMS(ManagedServicesModel managedServices) {
+        managedServices.setActivated(false);
+        managedServices.setDateClosedMS(null);
+        //managedServices.setTimeRemaining(setRem(managedServices));
+        return managedServicesDb.save(managedServices);
+    }
+
+    @Override
+    public ManagedServicesModel changeOrderMS(Long idOrderMS, ManagedServicesModel orderMSUpdate) {
+        ManagedServicesModel orderMS = getMSOrderById(idOrderMS);
+        orderMS.setActivated(orderMSUpdate.getActivated());
+        orderMS.setDateClosedMS(null);
+        //orderMS.setTimeRemaining(setRem(orderMSUpdate));
+        orderMS.setActualStart(orderMSUpdate.getActualStart());
+        orderMS.setActualEnd(orderMSUpdate.getActualEnd());
+        return managedServicesDb.save(orderMS);
+    }
+
+    @Override
+    public ManagedServicesModel getMSOrderById(Long idOrderMS) {
+        Optional<ManagedServicesModel> orderMS = managedServicesDb.findById(idOrderMS);
+        if (orderMS.isPresent()) {
+            return orderMS.get();
+        }
+        else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    @Override
+    public Long setRem(ManagedServicesModel managedServices) {
+        Date startPeriod = managedServices.getActualStart();
+        Date endPeriod = managedServices.getActualEnd();
+        LocalDate ldStartPeriod = startPeriod.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate ldEndPeriod = endPeriod.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dateStart = LocalDate.of(ldStartPeriod.getYear(), ldStartPeriod.getMonth(), ldStartPeriod.getDayOfMonth());
+        LocalDate dateEnd = LocalDate.of(ldEndPeriod.getYear(), ldEndPeriod.getMonth(), ldEndPeriod.getDayOfMonth());
+        Long days = ChronoUnit.DAYS.between(dateStart, dateEnd);
+
+        return days;
+    }
+
+    @Override
+    public List<ManagedServicesModel> retrieveMS() {
+        return managedServicesDb.findAll();
+    }
+
+    @Override
+    public List<ManagedServicesModel> retrieveMSassigned() {
+        Date today = new Date();
+        List<ManagedServicesModel> msList = retrieveMS();
+        List<ManagedServicesModel> msListAssigned = new ArrayList<ManagedServicesModel>();
+        for (ManagedServicesModel i : msList) {
+            if (i.getIdUserPic() != null && i.getDateClosedMS() == null && today.compareTo(i.getActualEnd()) < 0) {
+                msListAssigned.add(i);
+            }
+        }
+        return msListAssigned;
+    }
 
     @Autowired
     private UserDb userDb;
@@ -54,7 +122,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
         msTarget.setActualStart(actualStart);
         msTarget.setActualEnd(actualEnd);
-        msTarget.setIdUserPic(userDb.findById(idUserPic).get());
+        if(idUserPic != null) msTarget.setIdUserPic(userDb.findById(idUserPic).get());
         return managedServicesDb.save(msTarget);
     }
 

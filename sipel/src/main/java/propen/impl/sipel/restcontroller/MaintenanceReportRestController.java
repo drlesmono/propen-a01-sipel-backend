@@ -1,6 +1,11 @@
 package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.MaintenanceReportModel;
@@ -12,6 +17,7 @@ import propen.impl.sipel.service.ReportRestService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -26,12 +32,14 @@ public class MaintenanceReportRestController {
 
     // Mengembalikan list seluruh maintenance report
     @GetMapping(value="/reports/mr")
+    @PreAuthorize("hasRole('ENGINEER')")
     private List<MaintenanceReportModel> retrieveListMr(){ return maintenanceReportRestService.retrieveListMr(); }
 
     // Membuat maintenance report setelah object report dibuat
     // Mengembalikan response dengan result maintenance report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/maintenance/upload")
-    private BaseResponse<MaintenanceReportModel> uploadMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
+    @PreAuthorize("hasRole('ENGINEER')")
+    public BaseResponse<MaintenanceReportModel> uploadMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
                                                                          @PathVariable("idReport") Long idReport,
                                                                           BindingResult bindingResult){
         BaseResponse<MaintenanceReportModel> response = new BaseResponse<>();
@@ -49,5 +57,21 @@ public class MaintenanceReportRestController {
         response.setResult(newMr);
 
         return response;
+    }
+
+    @PutMapping(value = "/update/mr/notes/{idMaintenanceReport}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public MaintenanceReportModel updateNotesMrReport(
+            @PathVariable(value = "idMaintenanceReport") Long idMaintenanceReport,
+            @RequestBody MaintenanceReportModel maintenanceReport
+            ) {
+        try {
+            return maintenanceReportRestService.updateNotes(idMaintenanceReport, maintenanceReport);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Report with ID " + String.valueOf(idMaintenanceReport) + " not found!"
+            );
+        }
     }
 }

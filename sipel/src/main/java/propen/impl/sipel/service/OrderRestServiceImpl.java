@@ -2,6 +2,12 @@ package propen.impl.sipel.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.repository.OrderDb;
+import propen.impl.sipel.rest.Setting;
+
+import javax.transaction.Transactional;
 import propen.impl.sipel.model.*;
 import propen.impl.sipel.repository.*;
 import propen.impl.sipel.rest.ProgressOrderDto;
@@ -13,8 +19,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class OrderRestServiceImpl implements OrderRestService{
-
+public class OrderRestServiceImpl implements OrderRestService {
     @Autowired
     private OrderDb orderDb;
 
@@ -32,6 +37,62 @@ public class OrderRestServiceImpl implements OrderRestService{
 
     @Autowired
     private MaintenanceDb maintenanceDb;
+
+    @Autowired
+    private ProjectInstallationDb projectInstallationDb;
+
+
+    @Override
+    public OrderModel createOrder(OrderModel order) {
+        //Date today = new Date();
+        //order.setDateOrder(today);
+        order.setVerified(false);
+        return orderDb.save(order);
+    }
+
+    @Override
+    public List<OrderModel> retrieveOrder() {
+        return orderDb.findAll();
+    }
+
+    @Override
+    public OrderModel getLatestOrder() {
+        List<OrderModel> orders = retrieveOrder();
+        OrderModel order = orders.get(orders.size() - 1);
+        return order;
+    }
+
+    @Override
+    public OrderModel getOrderById(Long idOrder) {
+        Optional<OrderModel> order = orderDb.findById(idOrder);
+        if (order.isPresent()) {
+            return order.get();
+        }
+        else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    @Override
+    public OrderModel changeOrder(Long idOrder, OrderModel orderUpdate) {
+        OrderModel order = getOrderById(idOrder);
+        Date today = new Date();
+        order.setNoPO(orderUpdate.getNoPO());
+        order.setNoSPH(orderUpdate.getNoSPH());
+        order.setOrderName(orderUpdate.getOrderName());
+        order.setDescription(orderUpdate.getDescription());
+        order.setProjectInstallation(orderUpdate.getProjectInstallation());
+        order.setManagedService(orderUpdate.getManagedService());
+        order.setClientName(orderUpdate.getClientName());
+        order.setClientDiv(orderUpdate.getClientDiv());
+        order.setClientPIC(orderUpdate.getClientPIC());
+        order.setClientOrg(orderUpdate.getClientOrg());
+        order.setClientPhone(orderUpdate.getClientPhone());
+        order.setClientEmail(orderUpdate.getClientEmail());
+        order.setDateOrder(orderUpdate.getDateOrder());
+        order.setVerified(false);
+        return orderDb.save(order);
+    }
 
     // Mencari seluruh order yang telah terverifikasi
     @Override
@@ -94,7 +155,7 @@ public class OrderRestServiceImpl implements OrderRestService{
 
             newOrder.setOrderName(orderName);
         }else{
-            if(listOrderSameName.size() == 0) {
+            if(listOrderSameName.size() == 1) {
                 newOrder.setOrderName(orderName + " ver.2");
             }else{
                 int i = 3;
@@ -147,7 +208,7 @@ public class OrderRestServiceImpl implements OrderRestService{
                 newDoc.setIdOrder(orderSaved);
                 newDoc.setDocName(doc.getDocName());
                 newDoc.setUploadedDate(doc.getUploadedDate());
-                newDoc.setDocType(doc.getDocType());
+                //newDoc.setDocType(doc.getDocType());
                 DocumentOrderModel docSaved = documentOrderDb.save(newDoc);
                 newDocOrder.add(docSaved);
             }
@@ -308,4 +369,18 @@ public class OrderRestServiceImpl implements OrderRestService{
 
         return defaultStatus;
     }
+
+    @Override
+    public List<OrderModel> retrieveListNotVerifiedOrder(){
+        List<OrderModel> listNotVerifiedOrder = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAll()){
+            if (order.getVerified() == false) {
+                listNotVerifiedOrder.add(order);
+            }
+        }
+
+        return listNotVerifiedOrder;
+    }
+
 }
