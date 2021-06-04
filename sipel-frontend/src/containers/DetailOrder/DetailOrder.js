@@ -276,6 +276,7 @@ class DetailOrder extends React.Component {
                 return false;
             }
             const data = {
+                idService: this.state.idService,
                 name: this.state.name,
             }
             // await APIConfig.put(`/order/ubah/service/${this.state.idService}`, data);
@@ -431,6 +432,7 @@ class DetailOrder extends React.Component {
                 const data = {
                     name: this.state.listServiceNew[i].name,
                 };
+                console.log(this.state.idOrderMs);
                 await APIConfig.post(`/ms/${this.state.idOrderMs}/createService`, data);
                 this.loadData();
                 this.setState({ finishedSubmitAddService: true });

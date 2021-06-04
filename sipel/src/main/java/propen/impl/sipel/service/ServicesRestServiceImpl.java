@@ -99,8 +99,8 @@ public class ServicesRestServiceImpl implements ServicesRestService{
     public ServicesModel createService(ServicesDto service, Long idOrderMs) {
         ServicesModel newService = new ServicesModel();
         ManagedServicesModel ms = managedServicesDb.findById(idOrderMs).get();
-        newService.setName(service.getName());
-        newService.setIdUser(userDb.findById(service.getIdUser()).get());
+        if (service.getName() != null) newService.setName(service.getName());
+        if (service.getIdUser() != null) newService.setIdUser(userDb.findById(service.getIdUser()).get());
         newService.setIdOrderMS(ms);
         return servicesDb.save(newService);
     }
