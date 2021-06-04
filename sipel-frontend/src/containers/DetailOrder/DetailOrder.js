@@ -276,10 +276,11 @@ class DetailOrder extends React.Component {
                 return false;
             }
             const data = {
+                idService: this.state.idService,
                 name: this.state.name,
             }
             // await APIConfig.put(`/order/ubah/service/${this.state.idService}`, data);
-            await APIConfig.put(`/order/${this.state.orderTarget.idOrder.idOrder}/service/${this.state.idService}/updateService`, data);
+            await APIConfig.put(`/service/${this.state.idService}/updateService`, data);
             this.loadData();
             this.setState({ finishedSubmitService: true });
         } catch (error) {
@@ -431,7 +432,7 @@ class DetailOrder extends React.Component {
                 const data = {
                     name: this.state.listServiceNew[i].name,
                 };
-                await APIConfig.post(`/order/tambah/MS/${this.state.idOrderMs}/Service`, data);
+                await APIConfig.post(`/ms/${this.state.orderMSTarget.idOrderMs}/createService`, data);
                 this.loadData();
                 this.setState({ finishedSubmitAddService: true });
             }
