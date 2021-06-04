@@ -174,8 +174,11 @@ public class BastServiceImpl implements BastService {
                 MaintenanceModel mns = bast.getIdMaintenance();
                 Boolean isNull = mns == null;
                 if(!isNull){
-                    idToRetrieveBast.remove(mns);
+                    if(this.getReportByBast(bast).getStatusApproval().toLowerCase() == "approved"){
+                        idToRetrieveBast.remove(mns);
+                    }
                 }
+
             }
         }
         return idToRetrieveBast;
@@ -184,14 +187,31 @@ public class BastServiceImpl implements BastService {
     @Override
     public List<ProjectInstallationModel> getPiList(String keyword) {
         List<ProjectInstallationModel> projectInstallationModels = projectInstallationDb.findAll();
-        List<ProjectInstallationModel> idToRetrieveBast = new ArrayList<>();
+        List<ProjectInstallationModel> idToRetrieveBast = projectInstallationModels;
         List<BastModel> BastList = bastDb.findAll();
         if(keyword.toLowerCase() == "create"){
+            for(int x=0; x<BastList.size(); x++){
+                BastModel bast = BastList.get(x);
+                ProjectInstallationModel pi = bast.getIdOrderPi();
+                Boolean isNull = pi == null;
+                if(!isNull){
+                    ReportModel report = this.getReportByBast(bast);
+                    String stat = report.getStatusApproval().toLowerCase();
+                    Boolean isRemove = stat.equals("approved");
+                    if(isRemove){
+                        System.out.println("appapa");
+                        idToRetrieveBast.remove(pi);
+                    }
+
+                }
+            }
+            /*
             for(int i = 0; i<projectInstallationModels.size(); i++){
                 ProjectInstallationModel pi = projectInstallationModels.get(i);
                 List<BastModel> bast_pi = pi.getIdBast();
                 if(bast_pi.size() == 0){
                     if (pi.getClose() == true){
+                    }else{
                         idToRetrieveBast.add(pi);
                     }
                 }
@@ -216,6 +236,7 @@ public class BastServiceImpl implements BastService {
 
                 }
             }
+            */
         }
         else{
             idToRetrieveBast = projectInstallationModels;
