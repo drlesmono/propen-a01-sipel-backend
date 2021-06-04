@@ -25,7 +25,7 @@ public class ServicesRestController {
 
     // Mengubah data dari service
     // Mengembalikan response dengan result service yang berhasil diubah
-    @PutMapping(value="/order/{idOrder}/service/{idService}/updateService")
+    @PutMapping(value="/service/{idService}/updateService")
     private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
@@ -46,7 +46,7 @@ public class ServicesRestController {
 
     // Membuat service baru
     // Mengembalikan response dengan result service yang berhasil dibuat
-    @PostMapping(value="/order/{idOrder}/ms/{idOrderMs}/createService")
+    @PostMapping(value="/ms/{idOrderMs}/createService")
     private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){

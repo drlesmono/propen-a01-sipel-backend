@@ -122,7 +122,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
         msTarget.setActualStart(actualStart);
         msTarget.setActualEnd(actualEnd);
-        msTarget.setIdUserPic(userDb.findById(idUserPic).get());
+        if(idUserPic != null) msTarget.setIdUserPic(userDb.findById(idUserPic).get());
         return managedServicesDb.save(msTarget);
     }
 
