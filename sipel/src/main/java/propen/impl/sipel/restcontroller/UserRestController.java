@@ -41,7 +41,7 @@ public class UserRestController {
         for (UserModel user : users){
             Set<RoleModel> roles = user.getRoles();
             for (RoleModel role : roles){
-                if (role.getName().equals("ROLE_ENGINEER")){
+                if (user.getRole_name().equals("Engineer")){
                     EngineerUser.add(user);
                 }
             }
