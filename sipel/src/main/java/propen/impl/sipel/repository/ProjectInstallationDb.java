@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ProjectInstallationDb extends JpaRepository<ProjectInstallationModel, Long> {
     Optional<ProjectInstallationModel> findById(Long idOrder);
+    ProjectInstallationModel findByIdOrderPi(Long idOrderPi);
 }

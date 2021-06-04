@@ -6,4 +6,5 @@ import propen.impl.sipel.model.TaskModel;
 
 @Repository
 public interface TaskDb extends JpaRepository<TaskModel,Long> {
+    TaskModel findByIdTask(Long idTask);
 }

@@ -24,8 +24,10 @@ import propen.impl.sipel.service.MaintenanceRestService;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1")
 public class MaintenanceRestController {
     @Autowired

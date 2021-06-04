@@ -432,7 +432,6 @@ class DetailOrder extends React.Component {
                 const data = {
                     name: this.state.listServiceNew[i].name,
                 };
-                console.log(this.state.idOrderMs);
                 await APIConfig.post(`/ms/${this.state.idOrderMs}/createService`, data);
                 this.loadData();
                 this.setState({ finishedSubmitAddService: true });
@@ -446,10 +445,12 @@ class DetailOrder extends React.Component {
     }
 
     getUrl(document){
+        //const BASE_URL = "https://propen-a01-sipel.herokuapp.com/order/document/";
+		const BASE_URL = "http://localhost:2020/order/document/";
         if(document.fileType === "application/pdf"){
-            return document.urlFile+"/preview";
+            return BASE_URL+document.docName+"/preview";
         }else{
-            return document.urlFile;
+            return BASE_URL+document.docName;
         }
     }
 

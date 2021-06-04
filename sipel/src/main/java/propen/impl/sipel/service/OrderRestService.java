@@ -32,4 +32,6 @@ public interface OrderRestService {
 
     String getStatusPI(OrderModel order);
     String getStatusMS(OrderModel order);
+
+    List<OrderModel> retrieveListNotVerifiedOrder();
 }

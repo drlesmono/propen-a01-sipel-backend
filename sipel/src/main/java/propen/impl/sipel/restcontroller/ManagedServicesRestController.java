@@ -22,8 +22,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1")
 public class ManagedServicesRestController {
 
@@ -87,6 +89,7 @@ public class ManagedServicesRestController {
 
     // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
+    @PreAuthorize("hasRole('ADMIN')")
     private List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
@@ -94,6 +97,7 @@ public class ManagedServicesRestController {
     // Mengubah pic engineer dari suatu managed services
     // Mengembalikan response dengan result managed services yang berhasil menyimpan pic engineer
     @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updatePIC")
+    @PreAuthorize("hasRole('ADMIN')")
     private BaseResponse<ManagedServicesModel> updatePIC(@Valid @RequestBody ManagedServicesDto ms,
                                                          BindingResult bindingResult){
         BaseResponse<ManagedServicesModel> response = new BaseResponse<>();
@@ -114,6 +118,7 @@ public class ManagedServicesRestController {
     // Mengubah periode kontrak dari suatu managed services
     // Mengembalikan response dengan result managed services yang berhasil menyimpan periode kontrak
     @PutMapping(value="/order/{idOrder}/ms/updateKontrak")
+    @PreAuthorize("hasRole('ADMIN')")
     private BaseResponse<ManagedServicesModel> updateKontrak(@Valid @RequestBody ManagedServicesDto ms,
                                                              @PathVariable("idOrder") Long idOrder,
                                                              BindingResult bindingResult){
