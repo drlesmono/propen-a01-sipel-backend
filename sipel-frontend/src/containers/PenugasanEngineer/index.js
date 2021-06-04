@@ -100,7 +100,7 @@ class PenugasanEngineer extends Component {
                             name: service.name,
                             idUser: this.state.servicesEngineer[i]
                         }
-                        await APIConfig.put(`/order/${this.state.orderTarget.idOrder}/service/${service.idService}/updateService`, dataService);
+                        await APIConfig.put(`/service/${service.idService}/updateService`, dataService);
                     }
                 }
 

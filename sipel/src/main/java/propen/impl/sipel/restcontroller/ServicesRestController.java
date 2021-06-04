@@ -25,7 +25,7 @@ public class ServicesRestController {
 
     // Mengubah data dari service
     // Mengembalikan response dengan result service yang berhasil diubah
-    @PutMapping(value="/order/{idOrder}/service/{idService}/updateService")
+    @PutMapping(value="/service/{idService}/updateService")
     private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();

@@ -670,7 +670,7 @@ class CreateOrder extends React.Component {
                 };
                 //console.log(this.state.listService[i].name);
                 // await APIConfig.post(`/order/tambah/MS/${this.state.orderMSTarget.idOrderMs}/Service`, data);
-                await APIConfig.post(`/order/${this.state.orderMSTarget.idOrder.idOrder}/ms/${this.state.orderMSTarget.idOrderMs}/createService`, data);
+                await APIConfig.post(`/ms/${this.state.orderMSTarget.idOrderMs}/createService`, data);
                 this.loadData();
                 this.setState({ finishSubmitOrder: true });
             }

@@ -1,14 +1,13 @@
-import { useRoutes, A } from "hookrouter";
+import { useRoutes} from "hookrouter";
 import './App.css';
-import React, { Component } from "react";
 import Layout from "./components/Layout";
 import InputDataOrder from "./containers/InputDataOrder/InputDataOrder";
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import homepage from "./assets/homepage.png";
+import Homepage from "./containers/Homepage";
 import PenjadwalanMaintenance from "./containers/PenjadwalanMaintenance/PenjadwalanMaintenance";
 import CreateMaintenance from "./containers/CreateMaintenance/CreateMaintenance";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LookUpdateMaintenance from "./containers/LookUpdateMaintenance/LookUpdateMaintenance";
 import CreateOrder from "./containers/CreateOrder/CreateOrder";
 import DetailOrder from "./containers/DetailOrder/DetailOrder";
@@ -25,24 +24,9 @@ import ReportHead from "./containers/ReportHead";
 import PenugasanEngineer from "./containers/PenugasanEngineer";
 import PeriodeKontrak from "./containers/PeriodeKontrak";
 import Bast from "./containers/Bast";
+import PageNotFound from "./errors/PageNotFound"
 
 const routes = {
-  "/": () => 
-            <div> 
-              <div style={{ margin: 75 }}>
-                <table>
-                  <tr>
-                    <td>
-                      <div style={{ margin: 30 }}>
-                        <h3 style={{ color: '#F7873F' }}>Hello, name_here</h3>
-                        <h1 style={{ color: '#2F3F58' }}>Selamat Datang di Sistem Informasi Pengelolaan Layanan</h1>
-                      </div>
-                    </td>
-                    <td><img src={homepage} alt="homepage"/></td>
-                  </tr>
-                </table>
-              </div>
-            </div>,
   "/order/progress": () => <Progress />,
   "/produksi/penugasan": () => <PenugasanEngineer />,
   "/produksi/periodeKontrak": () => <PeriodeKontrak />,
@@ -50,7 +34,8 @@ const routes = {
   "/laporan/finance" : () => < ReportFinance/>,
   "/laporan/head" : () => < ReportHead/>,
   "/laporan/admin" : () => < ReportAdmin/>,
-  "/laporan/create-bast" : () => < Bast/>
+  "/laporan/create-bast" : () => < Bast/>,
+  // "*" : () => <PageNotFound/>
 };
 
 function App(){
@@ -112,6 +97,7 @@ function App(){
           <Layout>
           <Router>
             <Switch>
+              <Route exact path="/" component={Homepage}/>
               <Route exact path="/order/order" component={InputDataOrder} />
               <Route exact path="/produksi/maintenance" component={PenjadwalanMaintenance} />
               <Route exact path="/produksi/maintenance/create/:id" component={CreateMaintenance} />
@@ -123,9 +109,11 @@ function App(){
               <Route exact path="/orderPIMS/change/:id/:idPi/:idMs" component={ChangeOrderPIMS} />
               <Route exact path="/laporan/verifikasiLaporan" component={StatusPersetujuanLaporan} />
               <Route exact path="/order/unggah/:id" component={UnggahDokumenOrder} />
+              { routeResult }
+              <Route component={PageNotFound}/>
+              {/* <Redirect from="*" to="/404/pageNotFound"/> */}
             </Switch>
           </Router>
-          { routeResult }
           </Layout>
         </>
     );

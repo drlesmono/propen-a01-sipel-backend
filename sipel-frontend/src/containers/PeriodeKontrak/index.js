@@ -133,7 +133,7 @@ class PeriodeKontrak extends Component {
                     name: listServiceName[i],
                     idUser: listService[i]
                     }
-                    response = await APIConfig.post(`/order/${newOrder.idOrder}/ms/${newMsUpdated.idOrderMs}/createService`, dataService);
+                    response = await APIConfig.post(`/ms/${newMsUpdated.idOrderMs}/createService`, dataService);
                     const service = response.data.result;
                     services[i] = service;
                     this.loadData();
