@@ -1,13 +1,12 @@
-import { useRoutes} from "hookrouter";
+import React, { Component } from "react";
 import './App.css';
-import Layout from "./components/Layout";
 import InputDataOrder from "./containers/InputDataOrder/InputDataOrder";
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Homepage from "./containers/Homepage";
 import PenjadwalanMaintenance from "./containers/PenjadwalanMaintenance/PenjadwalanMaintenance";
 import CreateMaintenance from "./containers/CreateMaintenance/CreateMaintenance";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import LookUpdateMaintenance from "./containers/LookUpdateMaintenance/LookUpdateMaintenance";
 import CreateOrder from "./containers/CreateOrder/CreateOrder";
 import DetailOrder from "./containers/DetailOrder/DetailOrder";
@@ -57,9 +56,6 @@ class App extends Component {
       showLaporanHead: false,
       showLaporanAdmin: false,
       showBast: false,
-      showReportAdmin: false,
-      showReportFinance: false,
-      showReportHead: false,
       currentUser: undefined,
     };
   }
@@ -76,9 +72,6 @@ class App extends Component {
 		    showBoardAdmin: user.roles.includes("ROLE_ADMIN"),
         showHalamanAdmin: user.roles.includes("ROLE_ADMIN"),
         showDeliveryProgress: user.roles.includes("ROLE_ENGINEER"),
-        showReportFinance: user.roles.includes("ROLE_FINANCE"),
-        showReportHead: user.roles.includes("ROLE_MANAGER"),
-        showReportAdmin: user.roles.includes("ROLE_ADMIN"),
         showOrderVerification: user.roles.includes("ROLE_ADMIN"),
         showBast: user.roles.includes("ROLE_ADMIN"),
         showLaporanAdmin: user.roles.includes("ROLE_ADMIN"),
@@ -93,7 +86,7 @@ class App extends Component {
   }
   render() {
     const { currentUser, showPeriodeKontrak, showOrderVerification, showPenugasanEngineer, showMengelolaLaporan, showBoardAdmin, showHalamanAdmin, showDeliveryProgress, 
-    showReportAdmin, showReportFinance, showReportHead, showBast } = this.state;
+    showLaporanAdmin, showLaporanFinance, showLaporanHead, showBast } = this.state;
 
     return (
       <div>
