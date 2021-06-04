@@ -38,6 +38,10 @@ public class OrderRestServiceImpl implements OrderRestService {
     @Autowired
     private MaintenanceDb maintenanceDb;
 
+    @Autowired
+    private ProjectInstallationDb projectInstallationDb;
+
+
     @Override
     public OrderModel createOrder(OrderModel order) {
         //Date today = new Date();
@@ -365,4 +369,18 @@ public class OrderRestServiceImpl implements OrderRestService {
 
         return defaultStatus;
     }
+
+    @Override
+    public List<OrderModel> retrieveListNotVerifiedOrder(){
+        List<OrderModel> listNotVerifiedOrder = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAll()){
+            if (order.getVerified() == false) {
+                listNotVerifiedOrder.add(order);
+            }
+        }
+
+        return listNotVerifiedOrder;
+    }
+
 }

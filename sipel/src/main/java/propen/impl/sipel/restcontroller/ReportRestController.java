@@ -30,8 +30,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "*")
 //@RequestMapping("")
 public class ReportRestController {
 

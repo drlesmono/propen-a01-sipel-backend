@@ -9,6 +9,7 @@ import propen.impl.sipel.repository.ProjectInstallationDb;
 import propen.impl.sipel.rest.Setting;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -86,5 +87,24 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         ProjectInstallationModel piTarget = projectInstallationDb.findById(idOrderPi).get();
         piTarget.setIdUserEng(userDb.findById(idUserEng).get());
         return projectInstallationDb.save(piTarget);
+    }
+
+    @Override
+    public List<ProjectInstallationModel> getListVerifiedPi(){
+
+        List<ProjectInstallationModel> listPi = projectInstallationDb.findAll();
+        List<ProjectInstallationModel> listVerifiedPi = new ArrayList<>();
+
+        for (ProjectInstallationModel pi : listPi){
+            if (pi.getIdOrder().getVerified()){
+                listVerifiedPi.add(pi);
+            }
+        }
+        return listVerifiedPi;
+    }
+
+    @Override
+    public ProjectInstallationModel getProjectInstallationByIdOrderPi(Long idOrderPi){
+        return projectInstallationDb.findByIdOrderPi(idOrderPi);
     }
 }

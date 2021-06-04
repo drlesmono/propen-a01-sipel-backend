@@ -18,8 +18,10 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class InstallationReportRestController {
 

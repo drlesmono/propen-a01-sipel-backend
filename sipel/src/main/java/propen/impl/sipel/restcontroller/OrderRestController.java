@@ -2,6 +2,7 @@ package propen.impl.sipel.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class  OrderRestController {
     @Autowired
@@ -44,6 +45,7 @@ public class  OrderRestController {
     private OrderDb orderDb;
 
     @PostMapping(value = "/order/tambah")
+    @PreAuthorize("hasRole('ADMIN')")
     public OrderModel createOrder(
             @Valid
             @RequestBody OrderModel order,
@@ -59,7 +61,59 @@ public class  OrderRestController {
         }
     }
 
+    @GetMapping(value="/order-details/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderModel getOrderByIdOrder(@PathVariable Long idOrder, Model model){
+        OrderModel order = orderDb.findByIdOrder(idOrder);
+        return order;
+    }
+
+    @PutMapping("/verification/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderModel updateStatusVerifikasi(@PathVariable Long idOrder, @RequestBody OrderModel order){
+
+        OrderModel targetedOrder = orderDb.findByIdOrder(idOrder);
+        targetedOrder.setVerified(order.getVerified());
+        return orderDb.save(targetedOrder);
+        //ResponseEntity.ok(updatedTask);
+    }
+
+    @PutMapping(value="/order/verification")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<OrderModel> updateOrder(@Valid @RequestBody OrderDto order,
+                                              BindingResult bindingResult){
+        BaseResponse<OrderModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("verifikasi gagal" );
+            response.setStatus(405);
+            return response;
+        }
+        OrderModel oldOrder = orderRestService.findOrderById(order.getIdOrder());
+
+
+        if (order.getNama_verifikasi().equals("Verified")) {
+            oldOrder.setVerified(true);
+        } else {
+            oldOrder.setVerified(false);
+        }
+        orderDb.save(oldOrder);
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(oldOrder);
+        return response;
+    }
+
+    @GetMapping(value="/order-verification")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderModel> getAllNotVerifiedOrders(){
+        //List<OrderModel> listNotVerifiedOrder =
+
+        return orderRestService.retrieveListNotVerifiedOrder();
+    }
+
     @GetMapping(value = "/order/detail/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN')")
     private OrderModel retrieveOrder(
             @PathVariable(value = "idOrder") Long idOrder
     ) {
@@ -74,6 +128,7 @@ public class  OrderRestController {
     }
 
     @PutMapping(value = "/order/ubah/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN')")
     private OrderModel updateOrder(
             @PathVariable(value = "idOrder") Long idOrder,
             @RequestBody OrderModel order
@@ -89,23 +144,27 @@ public class  OrderRestController {
     }
 
     @GetMapping(value = "/orderList")
+    @PreAuthorize("hasRole('ADMIN')")
     private List<OrderModel> retrieveListOrder() {
         return orderRestService.retrieveOrder();
     }
 
     @GetMapping(value = "/order/target")
+    @PreAuthorize("hasRole('ADMIN')")
     private OrderModel retrieveOrderTarget() {
         return orderRestService.getLatestOrder();
     }
 
     // Mengembalikan list seluruh order yang telah terverifikasi
     @GetMapping(value="/ordersVerified")
+    @PreAuthorize("hasRole('ADMIN')")
     private List<OrderModel> retrieveListOrderVerified(){
         return orderRestService.retrieveListOrderVerified();
     }
 
     // Mengembalikan list seluruh order jenis managed services yang telah terverifikasi
     @GetMapping(value="/ordersVerified/ms")
+    @PreAuthorize("hasRole('ADMIN')")
     private List<OrderModel> retrieveListOrderMS() {
         List<ManagedServicesModel> listMs = managedServicesRestService.msOrderByActualEnd();
 
@@ -136,6 +195,7 @@ public class  OrderRestController {
     // Membuat order baru dengan data yang sama dengan order lama dan periode kontrak baru
     // Mengembalikan response dengan result order baru yang berhasil dibuat
     @PutMapping(value="/order/{idOrder}/perpanjangKontrak")
+    @PreAuthorize("hasRole('ADMIN')")
     private BaseResponse<OrderModel> extendKontrak(@Valid @RequestBody OrderDto order,
                                                  BindingResult bindingResult){
         BaseResponse<OrderModel> response = new BaseResponse<>();

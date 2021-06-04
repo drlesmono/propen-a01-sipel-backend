@@ -15,8 +15,11 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1")
 public class ServicesRestController {
 
@@ -26,6 +29,7 @@ public class ServicesRestController {
     // Mengubah data dari service
     // Mengembalikan response dengan result service yang berhasil diubah
     @PutMapping(value="/service/{idService}/updateService")
+    @PreAuthorize("hasRole('ADMIN')")
     private BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
@@ -47,6 +51,7 @@ public class ServicesRestController {
     // Membuat service baru
     // Mengembalikan response dengan result service yang berhasil dibuat
     @PostMapping(value="/ms/{idOrderMs}/createService")
+    @PreAuthorize("hasRole('ADMIN')")
     private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){
@@ -67,6 +72,7 @@ public class ServicesRestController {
     }
 
     @GetMapping(value = "/order/MS/{idOrderMS}/listService")
+    @PreAuthorize("hasRole('ADMIN')")
     private List<ServicesModel> retrieveListService(
             @Valid
             @PathVariable (value = "idOrderMS") Long idOrderMS
@@ -75,6 +81,7 @@ public class ServicesRestController {
     }
 
     @DeleteMapping(value = "order/delete/service/{idService}")
+    @PreAuthorize("hasRole('ADMIN')")
     private ResponseEntity<String> deleteService(
             @Valid
             @PathVariable(value = "idService") Long idService
@@ -96,6 +103,7 @@ public class ServicesRestController {
     }
 
     @GetMapping(value = "/order/detail/Service/{idService}")
+    @PreAuthorize("hasRole('ADMIN')")
     private ServicesModel retrieveService(
             @PathVariable(value = "idService") Long idService
     ) {
