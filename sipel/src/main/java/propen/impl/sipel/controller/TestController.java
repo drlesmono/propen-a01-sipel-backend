@@ -2,14 +2,22 @@ package propen.impl.sipel.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import propen.impl.sipel.model.ERole;
 import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.RoleModel;
+import propen.impl.sipel.model.UserModel;
+import propen.impl.sipel.repository.RoleDb;
+import propen.impl.sipel.repository.UserDb;
+import propen.impl.sipel.rest.BaseResponse;
+import propen.impl.sipel.rest.UserDto;
 import propen.impl.sipel.service.OrderRestService;
 
+import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -19,10 +27,11 @@ public class TestController {
 	@Autowired
 	private OrderRestService orderRestService;
 
-	@GetMapping("/all")
-	public List<OrderModel> allAccess() {
-		return orderRestService.retrieveListOrderVerified();
-	}
+	@Autowired
+	UserDb userDb;
+
+	@Autowired
+	RoleDb roleDb;
 	
 	@GetMapping("/admin")
 	//@PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")

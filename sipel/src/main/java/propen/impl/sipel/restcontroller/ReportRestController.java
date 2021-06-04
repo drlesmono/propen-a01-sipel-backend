@@ -103,7 +103,6 @@ public class ReportRestController {
     }
 
     @GetMapping("/report/{fileName:.+}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName,
                                                   HttpServletRequest request){
         Resource resource = fileStorageService.loadFileAsResource(fileName);
@@ -126,7 +125,6 @@ public class ReportRestController {
     }
 
     @GetMapping("/report/{fileName:.+}/preview")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('ENGINEER')")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         Path filePath = fileStorageService.getFilePath(fileName);
         File file = new File(""+filePath+"");

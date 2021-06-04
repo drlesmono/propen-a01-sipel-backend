@@ -310,21 +310,13 @@ class LaporanInstalasiMaintenance extends Component {
     }
 
     getUrl(report){
-        //const FILE_API_BASE_URL = "http://localhost:2020/report";
-        //const url = report.urlFile;
-        //const suffix = "/preview";
-        //const nama = report.fileName
+        
         if(report.fileType === "application/pdf"){
             return report.urlFile+"/preview";
-            //this.props.history.push(`/report/${report.reportName}/preview`, { headers: authHeader() } );
-            //return axios.post(http://localhost:2020/report/ + report.urlFile + /preview);
-            //return axios.get(FILE_API_BASE_URL + report.reportName + suffix, { headers: authHeader() });
 
         }else{
             return report.urlFile;
-            //this.props.history.push(`/report/${report.reportName}`, { headers: authHeader() } );
-            //return axios.get(FILE_API_BASE_URL + "/" + report.reportName, { headers: authHeader() });
-        
+            
         }
 
     }
@@ -377,13 +369,13 @@ class LaporanInstalasiMaintenance extends Component {
                         this.getDate(report.uploadedDate), this.getNotes(report), 
                         <div className="d-flex justify-content-center"><Button className={classes.button2}
                         onClick={() => this.handleConfirmDelete(report)}>hapus</Button>
-                        <Button className={classes.button4} /**onClick = { () => this.getUrl(report) }*/ href={this.getUrl(report)} target = "_blank">lihat</Button></div>])
+                        <Button className={classes.button4} href={this.getUrl(report)} target = "_blank">lihat</Button></div>])
                         : reports.map((report) =>
                         [ this.getReportNum(report), report.reportName, this.getOrder(report).noPO, this.getOrder(report).clientOrg, 
                         this.getDate(report.uploadedDate), this.getNotes(report), 
                         <div className="d-flex justify-content-center"><Button className={classes.button2}
                         onClick={() => this.handleConfirmDelete(report)}>hapus</Button>
-                        <Button className={classes.button4} /**onClick = { () => this.getUrl(report) }*/ href={this.getUrl(report)} target = "_blank">lihat</Button></div>]);
+                        <Button className={classes.button4} href={this.getUrl(report)} target = "_blank">lihat</Button></div>]);
         }
 
         return (
@@ -537,7 +529,7 @@ class LaporanInstalasiMaintenance extends Component {
                                 </Button></div></>  
                                 :<><div className="d-flex justify-content-center">Laporan {reportTarget.reportType === "installation" ? "Instalasi" : "Maintenace"} {reportTarget.reportName} pada order {this.getOrder(reportTarget) === null ? "" : this.getOrder(reportTarget).noPO} berhasil disimpan.</div><br></br>
                                 <div className="d-flex justify-content-center">
-                                <Button variant="primary" className={classes.button1} href={this.getUrl(reportTarget)} /**onClick = { () => this.getUrl(reportTarget) }*/ target="_blank">
+                                <Button variant="primary" className={classes.button1} href={this.getUrl(reportTarget)} target="_blank">
                                     lihat
                                 </Button></div></>
                             }

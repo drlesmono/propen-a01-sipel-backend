@@ -6,5 +6,6 @@ public enum ERole {
     ROLE_ADMIN,
     ROLE_DATA_ENTRY,
     ROLE_FINANCE,
+    ROLE_NONE,
 
 }

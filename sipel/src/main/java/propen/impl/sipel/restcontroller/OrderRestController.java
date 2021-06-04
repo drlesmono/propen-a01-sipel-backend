@@ -3,10 +3,12 @@ package propen.impl.sipel.restcontroller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.repository.OrderDb;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ManagedServicesDto;
 import propen.impl.sipel.rest.OrderDto;
@@ -26,6 +28,9 @@ public class OrderRestController {
 
     @Autowired
     private OrderRestService orderRestService;
+
+    @Autowired
+    private OrderDb orderDb;
 
     @Autowired
     private ManagedServicesRestService managedServicesRestService;
@@ -84,6 +89,31 @@ public class OrderRestController {
         response.setResult(newOrder);
 
         return response;
+    }
+
+    @GetMapping(value="/order-verification")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderModel> getAllNotVerifiedOrders(){
+        //List<OrderModel> listNotVerifiedOrder = 
+
+        return orderRestService.retrieveListNotVerifiedOrder();
+    }
+
+    @GetMapping(value="/order-details/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderModel getOrderByIdOrder(@PathVariable Long idOrder, Model model){
+        OrderModel order = orderDb.findByIdOrder(idOrder);
+        return order;
+    }
+
+    @PutMapping("/verification/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderModel updateStatusVerifikasi(@PathVariable Long idOrder, @RequestBody OrderModel order){
+        
+        OrderModel targetedOrder = orderDb.findByIdOrder(idOrder);
+        targetedOrder.setVerified(order.getVerified());
+        return orderDb.save(targetedOrder);
+        //ResponseEntity.ok(updatedTask);
     }
 
 }

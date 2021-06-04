@@ -187,7 +187,7 @@ export default class Register extends Component {
                 </div>
                 
                 <div className="form-group">
-                  <label htmlFor="surname">Surname</label>
+                  <label htmlFor="surname">Nickname</label>
                   <Input
                     type="text"
                     className="form-control"

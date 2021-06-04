@@ -13,4 +13,6 @@ public interface OrderRestService {
     List<OrderModel> retrieveListOrderMs();
 
     OrderModel extendKontrak(Long idOrder, String noPO);
+    
+    List<OrderModel> retrieveListNotVerifiedOrder();
 }

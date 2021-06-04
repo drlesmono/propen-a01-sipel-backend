@@ -29,6 +29,17 @@ public class TaskModel implements Serializable{
     @Column(name="percentage", nullable = true)
     private Float percentage;
 
+    @Column(name="description", nullable = true)
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
     public Long getIdTask() {
         return idTask;
     }

@@ -40,6 +40,9 @@ public class ProjectInstallationModel implements Serializable{
     @Column(name="percentage", nullable = false)
     private Float percentage;
 
+    @Column(name="orderName", nullable = true)
+    private String orderName;
+
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="startPI", nullable = false)
@@ -160,4 +163,13 @@ public class ProjectInstallationModel implements Serializable{
     public void setDateClosedPI(Date dateClosedPI) {
         this.dateClosedPI = dateClosedPI;
     }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
 }

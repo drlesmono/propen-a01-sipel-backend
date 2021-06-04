@@ -52,12 +52,7 @@ public class UserModel implements Serializable {
     @Column(name="email", nullable = false)
     private String email;
 
-    /**@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_role", referencedColumnName = "id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private RoleModel role;*/
-
+    //kamila nambahin
     @Column(name="role_name", nullable = true)
     private String role_name;
 
@@ -69,7 +64,6 @@ public class UserModel implements Serializable {
         this.role_name = role_name;
     }
 
-    //kamila nambahin
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -90,11 +84,6 @@ public class UserModel implements Serializable {
     }
 
     //sampai sini
-
-//    @OneToMany(mappedBy = "idUser", fetch = FetchType.LAZY)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private List<OrderModel> listOrder;
 
     @OneToMany(mappedBy = "idUserEng", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -167,14 +156,6 @@ public class UserModel implements Serializable {
         return surname;
     }
 
-    /**public void setRole(RoleModel role) {
-        this.role = role;
-    }
-
-    public RoleModel getRole() {
-        return role;
-    }*/
-
     public Set<RoleModel> getRoles() {
         return roles;
     }
@@ -190,14 +171,6 @@ public class UserModel implements Serializable {
     public List<ServicesModel> getListService() {
         return listService;
     }
-
-//    public void setListOrder(List<OrderModel> listOrder) {
-//        this.listOrder = listOrder;
-//    }
-//
-//    public List<OrderModel> getListOrder() {
-//        return listOrder;
-//    }
 
     public void setListProjectInstallation(List<ProjectInstallationModel> listProjectInstallation) {
         this.listProjectInstallation = listProjectInstallation;
