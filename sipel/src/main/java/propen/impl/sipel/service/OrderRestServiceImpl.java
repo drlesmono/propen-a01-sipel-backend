@@ -151,7 +151,7 @@ public class OrderRestServiceImpl implements OrderRestService {
 
             newOrder.setOrderName(orderName);
         }else{
-            if(listOrderSameName.size() == 0) {
+            if(listOrderSameName.size() == 1) {
                 newOrder.setOrderName(orderName + " ver.2");
             }else{
                 int i = 3;
