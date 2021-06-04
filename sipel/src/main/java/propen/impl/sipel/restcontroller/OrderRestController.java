@@ -69,7 +69,7 @@ public class  OrderRestController {
     }
 
     @PutMapping("/verification/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN')")
     public OrderModel updateStatusVerifikasi(@PathVariable Long idOrder, @RequestBody OrderModel order){
 
         OrderModel targetedOrder = orderDb.findByIdOrder(idOrder);
@@ -105,7 +105,7 @@ public class  OrderRestController {
     }
 
     @GetMapping(value="/order-verification")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderModel> getAllNotVerifiedOrders(){
         //List<OrderModel> listNotVerifiedOrder =
 

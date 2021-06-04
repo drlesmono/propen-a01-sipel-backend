@@ -39,6 +39,7 @@ public class MaintenanceRestController {
     private ManagedServicesRestService managedServicesRestService;
 
     @PostMapping(value = "/produksi/maintenance/tambah/{idOrderMS}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MaintenanceModel createMaintenanceSchedule(
             @Valid
             @RequestBody MaintenanceModel maintenance,
@@ -57,6 +58,7 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/daftar/{idOrderMS}")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<MaintenanceModel> retrieveListMaintenanceByIdOrderMs(
             @Valid
             @PathVariable ("idOrderMS") Long idOrderMS
@@ -65,6 +67,7 @@ public class MaintenanceRestController {
     }
 
     @PutMapping(value = "/produksi/maintenance/ubah/{idMaintenance}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MaintenanceModel changeMaintenance(
             @PathVariable(value = "idMaintenance") Long idMaintenance,
             @RequestBody MaintenanceModel maintenance
@@ -80,6 +83,7 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/detail/{idMaintenance}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MaintenanceModel detailMaintenance(
             @PathVariable(value = "idMaintenance") Long idMaintenance
     ) {
@@ -94,6 +98,7 @@ public class MaintenanceRestController {
     }
 
     @DeleteMapping(value = "/produksi/maintenance/delete/{idMaintenance}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteMaintenance(
             @Valid
             @PathVariable(value = "idMaintenance") Long idMaintenance
@@ -116,6 +121,7 @@ public class MaintenanceRestController {
 
     // Mengembalikan list seluruh maintenance
     @GetMapping(value="/maintenances")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<MaintenanceModel> retrieveListMaintenance(){
         return maintenanceRestService.retrieveListMaintenance();
     }

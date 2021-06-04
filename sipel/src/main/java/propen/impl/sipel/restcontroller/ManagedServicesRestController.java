@@ -39,7 +39,7 @@ public class ManagedServicesRestController {
     private OrderRestService orderRestService;
 
     @PostMapping(value = "/order/tambah/MS/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ManagedServicesModel createOrderMS(
             @Valid
             @RequestBody ManagedServicesModel managedServices,
@@ -58,7 +58,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value = "/order/detail/MS/{idOrderMs}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ManagedServicesModel retrieveOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs
     ) {
@@ -73,7 +73,7 @@ public class ManagedServicesRestController {
     }
 
     @PutMapping(value = "/order/ubah/MS/{idOrderMs}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ManagedServicesModel updateOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs,
             @RequestBody ManagedServicesModel managedServices
@@ -89,14 +89,14 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value = "/orderMSassigned")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public List<ManagedServicesModel> retrieveMSTerassigned() {
         return managedServicesRestService.retrieveMSassigned();
     }
 
     // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY') ")
     public List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }

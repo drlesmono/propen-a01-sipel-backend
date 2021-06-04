@@ -35,6 +35,7 @@ public class ProjectInstallationRestController {
     private OrderRestService orderRestService;
 
     @PostMapping(value = "/order/tambah/PI/{idOrder}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ProjectInstallationModel createOrderPI(
             @Valid
             @RequestBody ProjectInstallationModel projectInstallation,
@@ -53,6 +54,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value = "/order/detail/PI/{idOrderPi}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ProjectInstallationModel retrieveOrderPI(
             @PathVariable(value = "idOrderPi") Long idOrderPi
     ) {
@@ -67,6 +69,7 @@ public class ProjectInstallationRestController {
     }
 
     @PutMapping(value = "/order/ubah/PI/{idOrderPi}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ProjectInstallationModel updateOrderPI(
             @PathVariable(value = "idOrderPi") Long idOrderPi,
             @RequestBody ProjectInstallationModel projectInstallation
@@ -83,7 +86,7 @@ public class ProjectInstallationRestController {
 
     // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY')")
     public List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }
