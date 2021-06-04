@@ -22,6 +22,8 @@ public class ProjectInstallationDto {
 
     private String dateClosedPI;
 
+    private String status;
+
     public Long getIdOrderPi() {
         return idOrderPi;
     }
@@ -68,5 +70,13 @@ public class ProjectInstallationDto {
 
     public void setDateClosedPI(String dateClosedPI) {
         this.dateClosedPI = dateClosedPI;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

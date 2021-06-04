@@ -19,8 +19,11 @@ import propen.impl.sipel.rest.ManagedServicesDto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -36,7 +39,7 @@ public class ManagedServicesRestController {
     private OrderRestService orderRestService;
 
     @PostMapping(value = "/order/tambah/MS/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ManagedServicesModel createOrderMS(
             @Valid
             @RequestBody ManagedServicesModel managedServices,
@@ -55,7 +58,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value = "/order/detail/MS/{idOrderMs}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ManagedServicesModel retrieveOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs
     ) {
@@ -70,7 +73,7 @@ public class ManagedServicesRestController {
     }
 
     @PutMapping(value = "/order/ubah/MS/{idOrderMs}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ManagedServicesModel updateOrderMS(
             @PathVariable(value = "idOrderMs") Long idOrderMs,
             @RequestBody ManagedServicesModel managedServices
@@ -86,14 +89,14 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value = "/orderMSassigned")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public List<ManagedServicesModel> retrieveMSTerassigned() {
         return managedServicesRestService.retrieveMSassigned();
     }
 
     // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY') ")
     public List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
@@ -154,5 +157,105 @@ public class ManagedServicesRestController {
     public LinkedHashMap<String, String> retrieveTermMs(){
 
         return managedServicesRestService.retrievePercentageMs();
+    }
+
+    @GetMapping(value="/orders/ms/namaBulan/{startDateString}/{endDateString}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<String> retrieveListNamaBulanMs(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller ms bulan");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return managedServicesRestService.getListBulanMs(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/ms/masuk/{startDateString}/{endDateString}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<Integer> retrieveListJumlahMsMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller ms masuk");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return managedServicesRestService.getMsMasuk(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/ms/selesai/{startDateString}/{endDateString}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller ms selesai");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return managedServicesRestService.getMsSelesai(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/ms/belumSelesai")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public Integer retrieveListJumlahMsTepatWaktuTelat(){
+        System.out.println("masuk ke controller pi selesai");
+        return managedServicesRestService.getMsBelumSelesai();
+    }
+
+    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/updateStatus")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public BaseResponse<ManagedServicesDto> updateStatus(@Valid @RequestBody ManagedServicesDto ms,
+                                                          BindingResult bindingResult){
+        BaseResponse<ManagedServicesDto> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Status pada Managed Service gagal diubah." );
+            response.setStatus(405);
+            return response;
+        }
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(ms);
+        managedServicesRestService.updateStatus(ms.getIdOrderMs(), ms.getStatus());
+        return response;
     }
 }

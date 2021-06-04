@@ -29,7 +29,7 @@ public class ServicesRestController {
     // Mengubah data dari service
     // Mengembalikan response dengan result service yang berhasil diubah
     @PutMapping(value="/service/{idService}/updateService")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public BaseResponse<ServicesModel> updateService(@Valid @RequestBody ServicesDto service,
                                                      BindingResult bindingResult){
         BaseResponse<ServicesModel> response = new BaseResponse<>();
@@ -51,7 +51,7 @@ public class ServicesRestController {
     // Membuat service baru
     // Mengembalikan response dengan result service yang berhasil dibuat
     @PostMapping(value="/ms/{idOrderMs}/createService")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){
@@ -72,7 +72,7 @@ public class ServicesRestController {
     }
 
     @GetMapping(value = "/order/MS/{idOrderMS}/listService")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public List<ServicesModel> retrieveListService(
             @Valid
             @PathVariable (value = "idOrderMS") Long idOrderMS
@@ -81,7 +81,7 @@ public class ServicesRestController {
     }
 
     @DeleteMapping(value = "order/delete/service/{idService}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ResponseEntity<String> deleteService(
             @Valid
             @PathVariable(value = "idService") Long idService
@@ -103,7 +103,7 @@ public class ServicesRestController {
     }
 
     @GetMapping(value = "/order/detail/Service/{idService}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ServicesModel retrieveService(
             @PathVariable(value = "idService") Long idService
     ) {

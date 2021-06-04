@@ -10,6 +10,8 @@ import propen.impl.sipel.model.MaintenanceModel;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.service.MaintenanceRestService;
 import propen.impl.sipel.service.ManagedServicesRestService;
+import propen.impl.sipel.rest.BaseResponse;
+import propen.impl.sipel.rest.MaintenanceDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,6 +39,7 @@ public class MaintenanceRestController {
     private ManagedServicesRestService managedServicesRestService;
 
     @PostMapping(value = "/produksi/maintenance/tambah/{idOrderMS}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MaintenanceModel createMaintenanceSchedule(
             @Valid
             @RequestBody MaintenanceModel maintenance,
@@ -55,6 +58,7 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/daftar/{idOrderMS}")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<MaintenanceModel> retrieveListMaintenanceByIdOrderMs(
             @Valid
             @PathVariable ("idOrderMS") Long idOrderMS
@@ -63,6 +67,7 @@ public class MaintenanceRestController {
     }
 
     @PutMapping(value = "/produksi/maintenance/ubah/{idMaintenance}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MaintenanceModel changeMaintenance(
             @PathVariable(value = "idMaintenance") Long idMaintenance,
             @RequestBody MaintenanceModel maintenance
@@ -78,6 +83,7 @@ public class MaintenanceRestController {
     }
 
     @GetMapping(value = "/produksi/maintenance/detail/{idMaintenance}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MaintenanceModel detailMaintenance(
             @PathVariable(value = "idMaintenance") Long idMaintenance
     ) {
@@ -92,6 +98,7 @@ public class MaintenanceRestController {
     }
 
     @DeleteMapping(value = "/produksi/maintenance/delete/{idMaintenance}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteMaintenance(
             @Valid
             @PathVariable(value = "idMaintenance") Long idMaintenance
@@ -114,7 +121,26 @@ public class MaintenanceRestController {
 
     // Mengembalikan list seluruh maintenance
     @GetMapping(value="/maintenances")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<MaintenanceModel> retrieveListMaintenance(){
         return maintenanceRestService.retrieveListMaintenance();
+    }
+
+    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/maintenance/{idMaintenance}/updateStatus")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<MaintenanceDto> updateStatus(@Valid @RequestBody MaintenanceDto maintenance,
+                                                      BindingResult bindingResult){
+        BaseResponse<MaintenanceDto> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Perubahan status maintenance gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(maintenance);
+        maintenanceRestService.updateStatus(maintenance.getIdMaintenance(), maintenance.getMaintained());
+        return response;
     }
 }

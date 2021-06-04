@@ -2,12 +2,13 @@ package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class ProjectInstallationModel implements Serializable{
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idUserEng", referencedColumnName = "id", nullable = true)
+    @NotFound(action = NotFoundAction.IGNORE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private UserModel idUserEng;
 
@@ -56,6 +58,9 @@ public class ProjectInstallationModel implements Serializable{
     @NotNull
     @Column(name = "isClose", nullable = false)
     private Boolean isClose;
+
+    @Column(name="status", nullable = false)
+    private String status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="dateClosedPI", nullable = true)
@@ -172,4 +177,11 @@ public class ProjectInstallationModel implements Serializable{
         this.orderName = orderName;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

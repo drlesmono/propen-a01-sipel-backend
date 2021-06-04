@@ -31,6 +31,9 @@ public class ManagedServicesModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
+    @Column(name="status", nullable = false)
+    private String status;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idUserPic", referencedColumnName = "id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -147,5 +150,13 @@ public class ManagedServicesModel implements Serializable{
 
     public void setDateClosedMS(Date dateClosedMS) {
         this.dateClosedMS = dateClosedMS;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
