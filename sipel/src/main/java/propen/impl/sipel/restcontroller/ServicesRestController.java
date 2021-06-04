@@ -46,7 +46,7 @@ public class ServicesRestController {
 
     // Membuat service baru
     // Mengembalikan response dengan result service yang berhasil dibuat
-    @PostMapping(value="ms/{idOrderMs}/createService")
+    @PostMapping(value="/ms/{idOrderMs}/createService")
     private BaseResponse<ServicesModel> createService(@Valid @RequestBody ServicesDto service,
                                                     @PathVariable("idOrderMs") Long idOrderMs,
                                                      BindingResult bindingResult){
