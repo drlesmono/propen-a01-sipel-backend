@@ -33,4 +33,6 @@ public interface ProjectInstallationRestService {
     List<Integer> getPiTepatWaktuTelat(Date startDate, Date endDate);
 
     Integer getPiBelumSelesai();
+
+    ProjectInstallationModel updateStatus(Long idOrderPi, String status);
 }

@@ -36,4 +36,10 @@ public interface ManagedServicesRestService {
     List<Integer> getMsSelesai(Date startDate, Date endDate);
 
     Integer getMsBelumSelesai();
+
+    ManagedServicesModel updateStatus(Long idOrderMs, String status);
+
+    ManagedServicesModel getMsById(Long idOrderMs);
+
+
 }

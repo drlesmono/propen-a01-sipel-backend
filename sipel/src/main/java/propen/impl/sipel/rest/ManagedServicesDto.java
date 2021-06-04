@@ -24,6 +24,8 @@ public class ManagedServicesDto {
 
     private String dateClosedMS;
 
+    private String status;
+
     public Long getIdOrderMs() {
         return idOrderMs;
     }
@@ -78,5 +80,13 @@ public class ManagedServicesDto {
 
     public void setDateClosedMS(String dateClosedMS) {
         this.dateClosedMS = dateClosedMS;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

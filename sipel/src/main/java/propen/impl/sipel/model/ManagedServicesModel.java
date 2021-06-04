@@ -1,8 +1,11 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -44,6 +47,10 @@ public class ManagedServicesModel implements Serializable{
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name="actualEnd", nullable = false)
     private Date actualEnd;
+
+    @NotNull
+    @Column(name="status", nullable = false)
+    private String status;
 
     @NotNull
     @Column(name = "isActivated", nullable = false)

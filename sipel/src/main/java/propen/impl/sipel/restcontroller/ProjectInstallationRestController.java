@@ -236,4 +236,21 @@ public class ProjectInstallationRestController {
         return projectInstallationRestService.getPiBelumSelesai();
     }
 
+
+    @PutMapping(value="/order/{idOrder}/pi/{idOrderPi}/updateStatus")
+    private BaseResponse<ProjectInstallationDto> updateStatus(@Valid @RequestBody ProjectInstallationDto pi,
+                                                           BindingResult bindingResult){
+        BaseResponse<ProjectInstallationDto> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Status pada Project Installation gagal diubah." );
+            response.setStatus(405);
+            return response;
+        }
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(pi);
+        projectInstallationRestService.updateStatus(pi.getIdOrderPi(), pi.getStatus());
+        return response;
+    }
 }

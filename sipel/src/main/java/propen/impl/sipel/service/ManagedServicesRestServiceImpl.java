@@ -300,4 +300,16 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         }
         return msBelumSelesai;
     }
+
+    @Override
+    public ManagedServicesModel updateStatus(Long idOrderMs, String status) {
+        ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
+        msTarget.setStatus(status);
+        return managedServicesDb.save(msTarget);
+    }
+
+    @Override
+    public ManagedServicesModel getMsById(Long idOrderMs){
+        return managedServicesDb.findById(idOrderMs).get();
+    }
 }

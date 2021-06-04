@@ -66,4 +66,11 @@ public class MaintenanceRestServiceImpl implements MaintenanceRestService {
     public List<MaintenanceModel> retrieveListMaintenance() {
         return maintenanceDb.findAll();
     }
+
+    @Override
+    public MaintenanceModel updateStatus(Long idMaintenance, Boolean status) {
+        MaintenanceModel maintenanceTarget = maintenanceDb.findById(idMaintenance).get();
+        maintenanceTarget.setMaintained(status);
+        return maintenanceDb.save(maintenanceTarget);
+    }
 }

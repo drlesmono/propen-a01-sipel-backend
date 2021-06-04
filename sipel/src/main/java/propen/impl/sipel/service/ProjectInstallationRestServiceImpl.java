@@ -261,4 +261,11 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         }
         return piBelumSelesai;
     }
+
+    @Override
+    public ProjectInstallationModel updateStatus(Long idOrderPi, String status) {
+        ProjectInstallationModel piTarget = projectInstallationDb.findById(idOrderPi).get();
+        piTarget.setStatus(status);
+        return projectInstallationDb.save(piTarget);
+    }
 }

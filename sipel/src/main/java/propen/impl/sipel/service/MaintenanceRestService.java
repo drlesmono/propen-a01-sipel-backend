@@ -18,4 +18,6 @@ public interface MaintenanceRestService {
 
     List<MaintenanceModel> retrieveListMaintenance();
 
+    MaintenanceModel updateStatus(Long idMaintenance, Boolean status);
+
 }
