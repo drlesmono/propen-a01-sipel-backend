@@ -23,4 +23,6 @@ public interface ManagedServicesRestService{
     List<Integer> getMsMasuk(Date startDate, Date endDate);
 
     List<Integer> getMsSelesai(Date startDate, Date endDate);
+
+    Integer getMsBelumSelesai();
 }

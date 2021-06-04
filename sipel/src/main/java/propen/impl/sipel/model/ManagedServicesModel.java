@@ -70,6 +70,9 @@ public class ManagedServicesModel implements Serializable{
     @Column(name="dateClosedMS", nullable = true)
     private Date dateClosedMS;
 
+    @Column(name="status", nullable = false)
+    private String status;
+
     public OrderModel getIdOrder() {
         return idOrder;
     }
@@ -148,5 +151,13 @@ public class ManagedServicesModel implements Serializable{
 
     public void setDateClosedMS(Date dateClosedMS) {
         this.dateClosedMS = dateClosedMS;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

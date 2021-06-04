@@ -123,4 +123,34 @@ public class ProjectInstallationRestController {
         return projectInstallationRestService.getPiSelesai(startDate, endDate);
     }
 
+    @GetMapping(value="/orders/pi/tepatWaktuTelat/{startDateString}/{endDateString}")
+    private List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
+        String[] buatMisahinStart = startDateString.split("_");
+        String[] buatMisahinEnd = endDateString.split("_");
+
+        int startMonth = Integer.parseInt(buatMisahinStart[0]);
+        int startYear = Integer.parseInt(buatMisahinStart[1]);
+
+        int endMonth = Integer.parseInt(buatMisahinEnd[0]);
+        int endYear = Integer.parseInt(buatMisahinEnd[1]);
+
+        Date startDate = java.util.Date.from(
+                LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+
+        Date endDate = java.util.Date.from(
+                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+        );
+        System.out.println("masuk ke controller pi selesai");
+        System.out.println(startDate);
+        System.out.println(endDate);
+        return projectInstallationRestService.getPiTepatWaktuTelat(startDate, endDate);
+    }
+
+    @GetMapping(value="/orders/pi/belumSelesai")
+    private Integer retrieveListJumlahPiTepatWaktuTelat(){
+        System.out.println("masuk ke controller pi selesai");
+        return projectInstallationRestService.getPiBelumSelesai();
+    }
+
 }

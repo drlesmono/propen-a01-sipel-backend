@@ -145,9 +145,46 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         }
         System.out.println("ini jumlah Pi selesai " + jumlahPiSelesaiPerBulan);
         return jumlahPiSelesaiPerBulan;
+    }
 
+    // Mencari jumlah PI yang selesai dalam suatu timeframe tertentu (max 1 tahun)
+    @Override
+    public List<Integer> getPiTepatWaktuTelat(Date startDate, Date endDate){
+        List<Integer> jumlahPiTepatWaktuTelat = new ArrayList<>();
+        List<ProjectInstallationModel> listPi = retrieveListPi();
+        List<ProjectInstallationModel> listPiSelesaiDateFiltered = new ArrayList<>();
+        for(int i = 0; i < listPi.size(); i++){
+            if (listPi.get(i).getDateClosedPI().after(startDate) && listPi.get(i).getDateClosedPI().before(endDate)){
+                listPiSelesaiDateFiltered.add(listPi.get(i));
+            }
+        }
+        listPiSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedPI().compareTo(o2.getDateClosedPI()));
+        List<String> listNamaBulan = getListBulanPi(startDate,endDate);
+        int telat = 0;
+        int tepatWaktu = 0;
+        for (int j = 0; j < listPiSelesaiDateFiltered.size(); j++){
 
+            if (listPiSelesaiDateFiltered.get(j).getDateClosedPI().after(listPiSelesaiDateFiltered.get(j).getDeadline())){
+                telat++;
+            } else {
+                tepatWaktu++;
+            }
+        }
+        jumlahPiTepatWaktuTelat.add(tepatWaktu);
+        jumlahPiTepatWaktuTelat.add(telat);
+        System.out.println("ini jumlah Pi tepat waktu dan telat " + jumlahPiTepatWaktuTelat);
+        return jumlahPiTepatWaktuTelat;
+    }
 
-
+    @Override
+    public Integer getPiBelumSelesai(){
+        Integer piBelumSelesai = new Integer(0);
+        List<ProjectInstallationModel> listPi = retrieveListPi();
+        for(int i = 0; i < listPi.size(); i++){
+            if (listPi.get(i).getDateClosedPI().equals(null)){
+                piBelumSelesai++;
+            }
+        }
+        return piBelumSelesai;
     }
 }

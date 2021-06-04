@@ -163,4 +163,10 @@ public class ManagedServicesRestController {
         System.out.println(endDate);
         return managedServicesRestService.getMsSelesai(startDate, endDate);
     }
+
+    @GetMapping(value="/orders/ms/belumSelesai")
+    private Integer retrieveListJumlahMsTepatWaktuTelat(){
+        System.out.println("masuk ke controller pi selesai");
+        return managedServicesRestService.getMsBelumSelesai();
+    }
 }

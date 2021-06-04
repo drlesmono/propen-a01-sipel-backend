@@ -52,6 +52,9 @@ public class ProjectInstallationModel implements Serializable{
     @Column(name="deadline", nullable = false)
     private Date deadline;
 
+    @Column(name="status", nullable = false)
+    private String status;
+
     @NotNull
     @Column(name = "isClose", nullable = false)
     private Boolean isClose;
@@ -161,5 +164,13 @@ public class ProjectInstallationModel implements Serializable{
 
     public void setDateClosedPI(Date dateClosedPI) {
         this.dateClosedPI = dateClosedPI;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

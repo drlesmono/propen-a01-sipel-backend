@@ -17,4 +17,8 @@ public interface ProjectInstallationRestService {
     List<Integer> getPiMasuk(Date startDate, Date endDate);
 
     List<Integer> getPiSelesai(Date startDate, Date endDate);
+
+    List<Integer> getPiTepatWaktuTelat(Date startDate, Date endDate);
+
+    Integer getPiBelumSelesai();
 }

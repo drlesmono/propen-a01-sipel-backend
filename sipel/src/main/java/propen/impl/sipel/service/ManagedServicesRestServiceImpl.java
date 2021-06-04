@@ -218,4 +218,16 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
 
 
     }
+
+    @Override
+    public Integer getMsBelumSelesai(){
+        Integer msBelumSelesai = new Integer(0);
+        List<ManagedServicesModel> listMs = retrieveListMs();
+        for(int i = 0; i < listMs.size(); i++){
+            if (listMs.get(i).getDateClosedMS().equals(null)){
+                msBelumSelesai++;
+            }
+        }
+        return msBelumSelesai;
+    }
 }
