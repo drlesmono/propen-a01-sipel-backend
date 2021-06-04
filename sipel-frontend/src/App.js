@@ -81,7 +81,9 @@ class App extends Component {
         showReportAdmin: user.roles.includes("ROLE_ADMIN"),
         showOrderVerification: user.roles.includes("ROLE_ADMIN"),
         showBast: user.roles.includes("ROLE_ADMIN"),
-        
+        showLaporanAdmin: user.roles.includes("ROLE_ADMIN"),
+        showLaporanFinance: user.roles.includes("ROLE_FINANCE"),
+        showLaporanHead: user.roles.includes("ROLE_MANAGER")
       });
     }
   }
@@ -196,7 +198,6 @@ class App extends Component {
             <Route exact path="/orderPIMS/change/:id/:idPi/:idMs" component={ChangeOrderPIMS} />
             <Route exact path="/laporan/verifikasiLaporan" component={StatusPersetujuanLaporan} />
             <Route exact path="/order/unggah/:id" component={UnggahDokumenOrder} />
-            { routeResult }
             <Route component={PageNotFound}/>
           </Switch>
         </div>

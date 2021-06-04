@@ -3,7 +3,10 @@ import OrderService from "../../services/OrderService";
 import { Form } from "react-bootstrap";
 import authHeader from '../../services/auth-header';
 import axios from 'axios';
-
+import { Form, Button, Card, Table } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import classes from "./styles.module.css";
 
 class OrderVerificationComponent extends Component {
     constructor(props) {
