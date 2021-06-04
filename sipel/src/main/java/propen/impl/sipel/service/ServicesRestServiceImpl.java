@@ -90,8 +90,8 @@ public class ServicesRestServiceImpl implements ServicesRestService{
     @Override
     public ServicesModel updateService(ServicesDto service) {
         ServicesModel serviceTarget = servicesDb.findById(service.getIdService()).get();
-        serviceTarget.setName(service.getName());
-        serviceTarget.setIdUser(userDb.findById(service.getIdUser()).get());
+        if (service.getName() != null) serviceTarget.setName(service.getName());
+        if (service.getIdUser() != null) serviceTarget.setIdUser(userDb.findById(service.getIdUser()).get());
         return servicesDb.save(serviceTarget);
     }
 
