@@ -33,7 +33,7 @@ public class InstallationReportRestController {
 
     // Mengembalikan list seluruh installation report
     @GetMapping(value="/reports/ir")
-    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')")
     public List<InstallationReportModel> retrieveListIr(){ return installationReportRestService.retrieveListIr(); }
 
     // Membuat installation report setelah object report dibuat
