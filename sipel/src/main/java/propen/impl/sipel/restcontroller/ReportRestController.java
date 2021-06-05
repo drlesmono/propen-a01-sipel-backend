@@ -114,7 +114,6 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
-    @PreAuthorize("hasRole('ENGINEER')")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName) throws IOException {
 
         ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
@@ -134,7 +133,6 @@ public class ReportRestController {
 
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
-    @PreAuthorize("hasRole('Manager')")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         ReportModel report = reportRestService.findReportByReportName(fileName);
         File file = new File(report.getUrlFile());

@@ -109,7 +109,6 @@ public class DocumentOrderRestController {
     }
 
     @GetMapping("/order/document/{fileName:.+}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ResponseEntity<Resource> downloadDocumentOrder(@PathVariable String fileName) throws IOException {
 
         DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
@@ -129,7 +128,6 @@ public class DocumentOrderRestController {
     }
 
     @GetMapping("/order/document/{fileName:.+}/preview")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ResponseEntity<InputStreamResource> previewDocumentOrder(@PathVariable String fileName) throws FileNotFoundException {
         DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
         File file = new File(document.getUrlFile());
