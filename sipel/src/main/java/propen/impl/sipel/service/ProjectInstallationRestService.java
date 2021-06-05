@@ -13,7 +13,7 @@ public interface ProjectInstallationRestService {
 
     ProjectInstallationModel getPIOrderById(Long idOrderPI);
 
-    List<ProjectInstallationModel> retrievePI();
+//    List<ProjectInstallationModel> retrievePI();
 
     List<ProjectInstallationModel> retrieveListPi();
 

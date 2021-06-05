@@ -1,16 +1,14 @@
 package propen.impl.sipel.filestorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,13 +41,14 @@ public class FileStorageService {
     // Mengakses file dari local server
     public Resource loadFileAsResource(String filePath, String fileName){
         try{
-            Resource resource = new UrlResource(new URI(filePath));
+            File file = new File(filePath);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             if(resource.exists()){
                 return resource;
             }else{
                 throw new MyFileNotFoundException("File "+fileName+" tidak ditemukan");
             }
-        }catch (MalformedURLException | URISyntaxException e){
+        }catch (FileNotFoundException e){
             throw new MyFileNotFoundException("File "+fileName+" tidak ditemukan");
         }
     }
