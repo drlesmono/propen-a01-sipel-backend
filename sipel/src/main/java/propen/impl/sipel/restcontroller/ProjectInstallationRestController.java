@@ -147,12 +147,17 @@ public class ProjectInstallationRestController {
         int endMonth = Integer.parseInt(buatMisahinEnd[0]);
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
+        int endDate = 30;
+	if (endMonth == 02) {
+		endDate = 28;
+	}
+
         Date startDate = java.util.Date.from(
                 LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
 
         Date endDate = java.util.Date.from(
-                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+                LocalDate.of(endYear, endMonth, endDate).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
         System.out.println("masuk ke controller pi bulan");
         System.out.println(startDate);
@@ -172,12 +177,17 @@ public class ProjectInstallationRestController {
         int endMonth = Integer.parseInt(buatMisahinEnd[0]);
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
+        int endDate = 30;
+	if (endMonth == 02) {
+		endDate = 28;
+	}
+
         Date startDate = java.util.Date.from(
                 LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
 
         Date endDate = java.util.Date.from(
-                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+                LocalDate.of(endYear, endMonth, endDate).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
         System.out.println("masuk ke controller pi masuk");
         System.out.println(startDate);
@@ -197,12 +207,17 @@ public class ProjectInstallationRestController {
         int endMonth = Integer.parseInt(buatMisahinEnd[0]);
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
+        int endDate = 30;
+	if (endMonth == 02) {
+		endDate = 28;
+	}
+
         Date startDate = java.util.Date.from(
                 LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
 
         Date endDate = java.util.Date.from(
-                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+                LocalDate.of(endYear, endMonth, endDate).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
         System.out.println("masuk ke controller pi selesai");
         System.out.println(startDate);
@@ -222,12 +237,17 @@ public class ProjectInstallationRestController {
         int endMonth = Integer.parseInt(buatMisahinEnd[0]);
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
+        int endDate = 30;
+	if (endMonth == 02) {
+		endDate = 28;
+	}
+
         Date startDate = java.util.Date.from(
                 LocalDate.of(startYear, startMonth, 01).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
 
         Date endDate = java.util.Date.from(
-                LocalDate.of(endYear, endMonth, 30).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
+                LocalDate.of(endYear, endMonth, endDate).atStartOfDay(ZoneId.of("Africa/Tunis")).toInstant()
         );
         System.out.println("masuk ke controller pi selesai");
         System.out.println(startDate);
