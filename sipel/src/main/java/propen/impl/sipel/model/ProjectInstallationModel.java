@@ -59,7 +59,7 @@ public class ProjectInstallationModel implements Serializable{
     @Column(name = "isClose", nullable = false)
     private Boolean isClose;
 
-    @Column(name="status", nullable = false)
+    @Column(name="status", nullable = true)
     private String status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

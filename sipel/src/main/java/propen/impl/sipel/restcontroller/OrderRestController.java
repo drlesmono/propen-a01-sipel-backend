@@ -69,7 +69,7 @@ public class  OrderRestController {
     }
 
     @PutMapping("/verification/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public OrderModel updateStatusVerifikasi(@PathVariable Long idOrder, @RequestBody OrderModel order){
 
         OrderModel targetedOrder = orderDb.findByIdOrder(idOrder);
@@ -179,7 +179,7 @@ public class  OrderRestController {
 
     // Mengembalikan list order yang telah terverifikasi dan sudah memiliki nomor PO
     @GetMapping(value="/ordersVerifiedReport")
-    @PreAuthorize("hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')")
     public List<OrderModel> retrieveListOrderVerifiedReport(){
         List<OrderModel> listOrder = orderRestService.retrieveListOrderVerified();
 

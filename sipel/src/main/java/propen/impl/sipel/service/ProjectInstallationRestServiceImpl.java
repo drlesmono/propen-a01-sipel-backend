@@ -71,10 +71,10 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         }
     }
 
-    @Override
-    public List<ProjectInstallationModel> retrievePI() {
-        return projectInstallationDb.findAll();
-    }
+//    @Override
+//    public List<ProjectInstallationModel> retrievePI() {
+//        return projectInstallationDb.findAll();
+//    }
 
     // Mencari seluruh order yang memiliki jenis project installation
     @Override
@@ -226,9 +226,9 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         List<Integer> jumlahPiTepatWaktuTelat = new ArrayList<>();
         List<ProjectInstallationModel> listPi = retrieveListPi();
         List<ProjectInstallationModel> listPiSelesaiDateFiltered = new ArrayList<>();
-        for(int i = 0; i < listPi.size(); i++){
-            if (listPi.get(i).getDateClosedPI().after(startDate) && listPi.get(i).getDateClosedPI().before(endDate)){
-                listPiSelesaiDateFiltered.add(listPi.get(i));
+        for(ProjectInstallationModel pi : listPi){
+            if (pi.getDateClosedPI().after(startDate) && pi.getDateClosedPI().before(endDate)){
+                listPiSelesaiDateFiltered.add(pi);
             }
         }
         listPiSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedPI().compareTo(o2.getDateClosedPI()));
@@ -251,10 +251,10 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
 
     @Override
     public Integer getPiBelumSelesai(){
-        Integer piBelumSelesai = new Integer(0);
+        Integer piBelumSelesai = 0;
         List<ProjectInstallationModel> listPi = retrieveListPi();
-        for(int i = 0; i < listPi.size(); i++){
-            if (listPi.get(i).getDateClosedPI().equals(null)){
+        for(ProjectInstallationModel pi : listPi){
+            if (pi.getDateClosedPI() == null){
                 piBelumSelesai++;
             }
         }

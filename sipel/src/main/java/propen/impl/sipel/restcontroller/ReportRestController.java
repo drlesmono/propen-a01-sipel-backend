@@ -114,29 +114,25 @@ public class ReportRestController {
 
     // Download file report yang dipilih
     @GetMapping("/report/{fileName:.+}")
-    @PreAuthorize("hasRole('ENGINEER')")
     public ResponseEntity<Resource> downloadReport(@PathVariable String fileName) throws IOException {
 
         ReportModel reportTarget = reportRestService.findReportByReportName(fileName);
+        Resource resource = fileStorageService.loadFileAsResource(reportTarget.getUrlFile(), reportTarget.getReportName());
 
-        File file = new File(reportTarget.getUrlFile());
+        String fileType = reportTarget.getFileType();
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
+        if(fileType==null){
+            fileType = "application/octet-stream";
+        }
 
         return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentType(MediaType.parseMediaType(fileType))
                 .body(resource);
     }
 
     // Menampilkan preview dari file yang dipilih dan berjenis pdf tanpa men-download
     @GetMapping("/report/{fileName:.+}/preview")
-    @PreAuthorize("hasRole('Manager')")
     public ResponseEntity<InputStreamResource> previewReport(@PathVariable String fileName) throws FileNotFoundException {
         ReportModel report = reportRestService.findReportByReportName(fileName);
         File file = new File(report.getUrlFile());
@@ -206,7 +202,7 @@ public class ReportRestController {
     }
 
     @GetMapping(value="/api/v1/reports/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     public List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 

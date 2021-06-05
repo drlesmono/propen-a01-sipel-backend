@@ -96,7 +96,7 @@ public class ManagedServicesRestController {
 
     // Mengembalikan list seluruh order jenis managed services
     @GetMapping(value="/orders/ms")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY') ")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY')  or hasRole('MANAGER') or hasRole('FINANCE')")
     public List<ManagedServicesModel> retrieveListMs(){
         return managedServicesRestService.retrieveListMs();
     }
@@ -154,14 +154,14 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/perc")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('FINANCE')")
     public LinkedHashMap<String, String> retrieveTermMs(){
 
         return managedServicesRestService.retrievePercentageMs();
     }
 
     @GetMapping(value="/orders/ms/namaBulan/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<String> retrieveListNamaBulanMs(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -186,7 +186,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/masuk/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<Integer> retrieveListJumlahMsMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -211,7 +211,7 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/selesai/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -236,8 +236,8 @@ public class ManagedServicesRestController {
     }
 
     @GetMapping(value="/orders/ms/belumSelesai")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    public Integer retrieveListJumlahMsTepatWaktuTelat(){
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
+    public Integer retrieveJumlahMsBelumSelesai(){
         System.out.println("masuk ke controller pi selesai");
         return managedServicesRestService.getMsBelumSelesai();
     }

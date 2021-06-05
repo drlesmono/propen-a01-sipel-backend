@@ -31,7 +31,7 @@ public class ManagedServicesModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOrderMs;
 
-    @Column(name="status", nullable = false)
+    @Column(name="status", nullable = true)
     private String status;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = true)

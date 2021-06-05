@@ -86,7 +86,7 @@ public class ProjectInstallationRestController {
 
     // Mengembalikan list seluruh order jenis project installation
     @GetMapping(value="/orders/pi")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ENGINEER') or hasRole('DATA_ENTRY')  or hasRole('MANAGER') or hasRole('FINANCE')")
     public List<ProjectInstallationModel> retrieveListPi(){
         return projectInstallationRestService.retrieveListPi();
     }
@@ -136,7 +136,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/namaBulan/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<String> retrieveListNamaBulanPi(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -161,7 +161,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/masuk/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<Integer> retrieveListJumlahPiMasukPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -186,7 +186,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/selesai/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<Integer> retrieveListJumlahPiSelesaiPerBulan(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -211,7 +211,7 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/tepatWaktuTelat/{startDateString}/{endDateString}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
     public List<Integer> retrieveListJumlahPiTepatWaktuTelat(@PathVariable("startDateString") String startDateString, @PathVariable("endDateString") String endDateString){
         String[] buatMisahinStart = startDateString.split("_");
         String[] buatMisahinEnd = endDateString.split("_");
@@ -236,8 +236,8 @@ public class ProjectInstallationRestController {
     }
 
     @GetMapping(value="/orders/pi/belumSelesai")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
-    public Integer retrieveListJumlahPiTepatWaktuTelat(){
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')  or hasRole('DATA_ENTRY')")
+    public Integer retrieveJumlahPiBelumSelesai(){
         System.out.println("masuk ke controller pi selesai");
         return projectInstallationRestService.getPiBelumSelesai();
     }

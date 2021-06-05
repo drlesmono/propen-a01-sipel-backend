@@ -109,28 +109,25 @@ public class DocumentOrderRestController {
     }
 
     @GetMapping("/order/document/{fileName:.+}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ResponseEntity<Resource> downloadDocumentOrder(@PathVariable String fileName) throws IOException {
 
         DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
 
-        File file = new File(document.getUrlFile());
+        Resource resource = fileStorageService.loadFileAsResource(document.getUrlFile(), document.getDocName());
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
+        String fileType = document.getFileType();
+
+        if(fileType==null){
+            fileType = "application/octet-stream";
+        }
 
         return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentType(MediaType.parseMediaType(fileType))
                 .body(resource);
     }
 
     @GetMapping("/order/document/{fileName:.+}/preview")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
     public ResponseEntity<InputStreamResource> previewDocumentOrder(@PathVariable String fileName) throws FileNotFoundException {
         DocumentOrderModel document = documentOrderRestService.findDocumentByDocumentName(fileName);
         File file = new File(document.getUrlFile());

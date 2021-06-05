@@ -32,8 +32,10 @@ public class MaintenanceReportRestController {
 
     // Mengembalikan list seluruh maintenance report
     @GetMapping(value="/reports/mr")
-    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER')")
-    private List<MaintenanceReportModel> retrieveListMr(){ return maintenanceReportRestService.retrieveListMr(); }
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')")
+    public List<MaintenanceReportModel> retrieveListMr(){
+        return maintenanceReportRestService.retrieveListMr();
+    }
 
     // Membuat maintenance report setelah object report dibuat
     // Mengembalikan response dengan result maintenance report yang berhasil dibuat
