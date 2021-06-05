@@ -173,7 +173,7 @@ public class ManagedServicesRestController {
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
 	int endDate = 30;
-	if (endMonth == 02) {
+	if (endMonth == 2) {
 		endDate = 28;
 	}
 
@@ -203,7 +203,7 @@ public class ManagedServicesRestController {
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
 	int endDate = 30;
-	if (endMonth == 02) {
+	if (endMonth == 2) {
 		endDate = 28;
 	}
 
@@ -233,7 +233,7 @@ public class ManagedServicesRestController {
         int endYear = Integer.parseInt(buatMisahinEnd[1]);
 
         int endDate = 30;
-	if (endMonth == 02) {
+	if (endMonth == 2) {
 		endDate = 28;
 	}
 
