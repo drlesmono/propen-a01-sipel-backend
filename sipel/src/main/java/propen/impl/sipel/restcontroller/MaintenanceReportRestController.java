@@ -40,7 +40,7 @@ public class MaintenanceReportRestController {
     // Membuat maintenance report setelah object report dibuat
     // Mengembalikan response dengan result maintenance report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/maintenance/upload")
-    @PreAuthorize("hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('ADMIN')")
     public BaseResponse<MaintenanceReportModel> uploadMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
                                                                          @PathVariable("idReport") Long idReport,
                                                                           BindingResult bindingResult){
@@ -62,7 +62,7 @@ public class MaintenanceReportRestController {
     }
 
     @PutMapping(value = "/update/mr/notes/{idMaintenanceReport}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     public MaintenanceReportModel updateNotesMrReport(
             @PathVariable(value = "idMaintenanceReport") Long idMaintenanceReport,
             @RequestBody MaintenanceReportModel maintenanceReport

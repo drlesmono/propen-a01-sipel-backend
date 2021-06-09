@@ -47,7 +47,7 @@ public class ReportRestController {
 
     // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
-    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN')")
     public List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
@@ -66,7 +66,7 @@ public class ReportRestController {
     // File yang memiliki nama yang sama akan dibuat nama dengan versi
     // Mengembalikan response dengan result report yang berhasil dibuat
     @PostMapping(value="/api/v1/report/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('ADMIN') or hasRole('MANAGER')")
     public BaseResponse<ReportModel> uploadReport(@Valid @ModelAttribute ReportDto report,
                                                    HttpServletRequest request) throws Exception{
         BaseResponse<ReportModel> response = new BaseResponse<>();

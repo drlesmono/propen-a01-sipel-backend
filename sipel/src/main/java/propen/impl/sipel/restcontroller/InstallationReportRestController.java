@@ -39,7 +39,7 @@ public class InstallationReportRestController {
     // Membuat installation report setelah object report dibuat
     // Mengembalikan response dengan result installation report yang berhasil dibuat
     @PostMapping(value="/report/{idReport}/installation/upload")
-    @PreAuthorize("hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('ADMIN')")
     public BaseResponse<InstallationReportModel> uploadInstallationReport(@Valid @RequestBody InstallationReportDto ir,
                                                                             @PathVariable("idReport") Long idReport,
                                                                             BindingResult bindingResult){
@@ -61,7 +61,7 @@ public class InstallationReportRestController {
     }
 
     @PutMapping(value = "/update/notes/{idInstallationReport}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     public InstallationReportModel updateNotesReport(
             @PathVariable(value = "idInstallationReport") Long idInstallationReport,
             @RequestBody InstallationReportModel installationReport
