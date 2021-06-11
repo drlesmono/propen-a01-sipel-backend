@@ -113,16 +113,16 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     // Order diurutkan berdasarkan periode berakhir atau actual end
     @Override
     public List<ManagedServicesModel> msOrderByActualEnd() {
-//        return managedServicesDb.findByOrderByActualEnd();
-        List<ManagedServicesModel> listMs = managedServicesDb.findAll();
-
-        Comparator<ManagedServicesModel> compareByActualEnd = Comparator.comparing(ManagedServicesModel::getActualEnd);
-
-        Collections.sort(listMs, compareByActualEnd);
-
-        Collections.sort(listMs, compareByActualEnd.reversed());
-
-        return listMs;
+        return managedServicesDb.findByOrderByActualEnd();
+//        List<ManagedServicesModel> listMs = managedServicesDb.findAll();
+//
+//        Comparator<ManagedServicesModel> compareByActualEnd = Comparator.comparing(ManagedServicesModel::getActualEnd);
+//
+//        Collections.sort(listMs, compareByActualEnd);
+//
+//        Collections.sort(listMs, compareByActualEnd.reversed());
+//
+//        return listMs;
     }
 
     // Mengubah data periode kontrak

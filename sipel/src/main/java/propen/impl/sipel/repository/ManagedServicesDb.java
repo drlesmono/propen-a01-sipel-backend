@@ -8,6 +8,6 @@ import propen.impl.sipel.model.ManagedServicesModel;
 import java.util.List;
 
 @Repository
-public interface ManagedServicesDb extends JpaRepository<ManagedServicesModel, Long> {
-//    List<ManagedServicesModel> findByOrderByActualEnd();
+public interface ManagedServicesDb extends JpaRepository<ManagedServicesModel, Long>, PagingAndSortingRepository<ManagedServicesModel, Long> {
+    List<ManagedServicesModel> findByOrderByActualEnd();
 }
