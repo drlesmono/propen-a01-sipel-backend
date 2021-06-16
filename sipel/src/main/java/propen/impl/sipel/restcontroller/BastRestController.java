@@ -75,7 +75,7 @@ public class BastRestController {
             dto.setDescription(order.getDescription());
             dto.setManagedService(order.getManagedService());
             dto.setProjectInstallation(order.getProjectInstallation());
-            dto.setVerified(order.getVerified());
+            dto.setIsVerified(order.getVerified());
             dto.setOrderName(order.getOrderName());
 
             String test = null;

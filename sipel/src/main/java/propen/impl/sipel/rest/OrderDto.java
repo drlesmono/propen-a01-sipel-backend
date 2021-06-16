@@ -9,42 +9,32 @@ public class OrderDto {
 
     private Long idOrder;
 
-    @NotNull
     private String orderName;
 
-    @NotNull
     private String clientName;
 
-    @NotNull
     private String clientOrg;
 
     private String clientDiv;
 
-    @NotNull
     private String clientPIC;
 
-    @NotNull
     private String clientEmail;
 
     private String clientPhone;
 
-    @NotNull
     private String dateOrder;
 
     private String noPO;
 
     private String noSPH;
 
-    @NotNull
     private String description;
 
-    @NotNull
     private Boolean isVerified;
 
-    @NotNull
     private Boolean isProjectInstallation;
 
-    @NotNull
     private Boolean isManagedService;
 
     private Long idOrderPi;
@@ -157,11 +147,11 @@ public class OrderDto {
         this.description = description;
     }
 
-    public Boolean getVerified() {
+    public Boolean getIsVerified() {
         return isVerified;
     }
 
-    public void setVerified(Boolean verified) {
+    public void setIsVerified(Boolean verified) {
         isVerified = verified;
     }
 

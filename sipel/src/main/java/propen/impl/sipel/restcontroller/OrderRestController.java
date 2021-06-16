@@ -68,49 +68,6 @@ public class  OrderRestController {
         return order;
     }
 
-    @PutMapping("/verification/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
-    public OrderModel updateStatusVerifikasi(@PathVariable Long idOrder, @RequestBody OrderModel order){
-
-        OrderModel targetedOrder = orderDb.findByIdOrder(idOrder);
-        targetedOrder.setVerified(order.getVerified());
-        return orderDb.save(targetedOrder);
-        //ResponseEntity.ok(updatedTask);
-    }
-
-    @PutMapping(value="/order/verification")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
-    public BaseResponse<OrderModel> updateOrder(@Valid @RequestBody OrderDto order,
-                                              BindingResult bindingResult){
-        BaseResponse<OrderModel> response = new BaseResponse<>();
-        if(bindingResult.hasFieldErrors()){
-            // Respon Gagal Simpan
-            response.setMessage("verifikasi gagal" );
-            response.setStatus(405);
-            return response;
-        }
-        OrderModel oldOrder = orderRestService.findOrderById(order.getIdOrder());
-
-
-        if (order.getNama_verifikasi().equals("Verified")) {
-            oldOrder.setVerified(true);
-        } else {
-            oldOrder.setVerified(false);
-        }
-        orderDb.save(oldOrder);
-        response.setStatus(200);
-        response.setMessage("Success");
-        response.setResult(oldOrder);
-        return response;
-    }
-
-    @GetMapping(value="/order-verification")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<OrderModel> getAllNotVerifiedOrders(){
-        //List<OrderModel> listNotVerifiedOrder =
-
-        return orderRestService.retrieveListNotVerifiedOrder();
-    }
 
     @GetMapping(value = "/order/detail/{idOrder}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
@@ -220,6 +177,36 @@ public class  OrderRestController {
     public List<ProgressOrderDto> showAllProgress(Model model){
         List<ProgressOrderDto> allProgress = orderRestService.getAllProgress();
         return allProgress;
+    }
+
+    @GetMapping(value = "/unverifiedOrders")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderModel> retrieveListOrderUnverified() {
+        return orderRestService.retrieveUnverifiedOrder();
+    }
+
+    @PutMapping(value = "/order/verification")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<OrderModel> updateVerificationStatus(@Valid @RequestBody OrderDto order,
+    BindingResult bindingResult){
+        BaseResponse<OrderModel> response = new BaseResponse<>();
+        System.out.println(order.getIdOrder());
+        System.out.println(order.getIsVerified());
+        if(bindingResult.hasFieldErrors()){
+            response.setMessage("Status verifikasi order gagal disimpan" );
+            response.setStatus(405);
+            return response;
+        }
+        OrderModel oldOrder = orderDb.findById(order.getIdOrder()).get();
+        oldOrder.setVerified(order.getIsVerified());
+        orderDb.save(oldOrder);
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(oldOrder);
+
+        return response;
+        
+       
     }
 
 }

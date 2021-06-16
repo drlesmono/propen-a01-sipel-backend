@@ -66,43 +66,42 @@ public class UserRestController {
             response.setStatus(405);
             return response;
         }
-//        UserModel oldUser = userDb.findByUsername(user.getUsername()).get();
-//
-//        Set<RoleModel> roles = new HashSet<>();
-//
-//        if (user.getRole_name().equals("None")) {
-//            RoleModel noneRole = roleDb.findByName(ERole.ROLE_NONE)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(noneRole);
-//        } else if (user.getRole_name().equals("Admin")) {
-//            RoleModel adminRole = roleDb.findByName(ERole.ROLE_ADMIN)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(adminRole);
-//        } else if (user.getRole_name().equals("Finance")) {
-//            RoleModel financeRole = roleDb.findByName(ERole.ROLE_FINANCE)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(financeRole);
-//        } else if (user.getRole_name().equals("Manager")) {
-//            RoleModel managerRole = roleDb.findByName(ERole.ROLE_MANAGER)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(managerRole);
-//        } else if (user.getRole_name().equals("Engineer")) {
-//            RoleModel engineerRole = roleDb.findByName(ERole.ROLE_ENGINEER)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(engineerRole);
-//        } else {
-//            RoleModel dataEntryRole = roleDb.findByName(ERole.ROLE_DATA_ENTRY)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(dataEntryRole);
-//        }
-//
-//        oldUser.setRole_name(user.getRole_name());
-//        oldUser.setRoles(roles);
-//        userDb.save(oldUser);
-        UserModel userUpdated = userRestService.updateRole(user);
+        UserModel oldUser = userDb.findByUsername(user.getUsername()).get();
+
+        Set<RoleModel> roles = new HashSet<>();
+
+        if (user.getRole_name().equals("None")) {
+            RoleModel noneRole = roleDb.findByName(ERole.ROLE_NONE)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(noneRole);
+        } else if (user.getRole_name().equals("Admin")) {
+            RoleModel adminRole = roleDb.findByName(ERole.ROLE_ADMIN)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(adminRole);
+        } else if (user.getRole_name().equals("Finance")) {
+            RoleModel financeRole = roleDb.findByName(ERole.ROLE_FINANCE)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(financeRole);
+        } else if (user.getRole_name().equals("Manager")) {
+            RoleModel managerRole = roleDb.findByName(ERole.ROLE_MANAGER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(managerRole);
+        } else if (user.getRole_name().equals("Engineer")) {
+            RoleModel engineerRole = roleDb.findByName(ERole.ROLE_ENGINEER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(engineerRole);
+        } else {
+            RoleModel dataEntryRole = roleDb.findByName(ERole.ROLE_DATA_ENTRY)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(dataEntryRole);
+        }
+
+        oldUser.setRole_name(user.getRole_name());
+        oldUser.setRoles(roles);
+        userDb.save(oldUser);
         response.setStatus(200);
         response.setMessage("Success");
-        response.setResult(userUpdated);
+        response.setResult(oldUser);
 
         return response;
     }

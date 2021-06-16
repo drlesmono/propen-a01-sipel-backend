@@ -108,6 +108,7 @@ public class AuthController {
 			RoleModel noneRole = roleRepository.findByName(ERole.ROLE_NONE)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(noneRole);
+			user.setRole_name("None");
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
@@ -115,18 +116,21 @@ public class AuthController {
 					RoleModel managerRole = roleRepository.findByName(ERole.ROLE_MANAGER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(managerRole);
+					user.setRole_name("Manager");
 
 					break;
 				case "Data Entry":
 					RoleModel dataEntryRole = roleRepository.findByName(ERole.ROLE_DATA_ENTRY)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(dataEntryRole);
+					user.setRole_name("Data Entry");
 
 					break;
 				case "Engineer":
 					RoleModel engineerRole = roleRepository.findByName(ERole.ROLE_ENGINEER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(engineerRole);
+					user.setRole_name("Engineer");
 
 					break;
 
@@ -134,6 +138,7 @@ public class AuthController {
 					RoleModel financeRole = roleRepository.findByName(ERole.ROLE_FINANCE)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(financeRole);
+					user.setRole_name("Finance");
 
 					break;
 				
@@ -141,6 +146,7 @@ public class AuthController {
 				RoleModel adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
 						.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 				roles.add(adminRole);
+				user.setRole_name("Admin");
 
 				break;
 
@@ -148,12 +154,12 @@ public class AuthController {
 					RoleModel noneRole = roleRepository.findByName(ERole.ROLE_NONE)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(noneRole);
+					user.setRole_name("None");
 				}
 			});
 		}
 
 		user.setRoles(roles);
-		user.setRole_name(signUpRequest.getRole_name());
 		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
