@@ -115,10 +115,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     @Override
     public List<ManagedServicesModel> msOrderByActualEnd() {
 
-//        return managedServicesDb.findByOrderByActualEnd();
-        List<ManagedServicesModel> listMs = managedServicesDb.findAll(Sort.by(Sort.Direction.DESC, "actualEnd"));
-
-        return listMs;
+        return managedServicesDb.findByOrderByActualEnd();
     }
 
     // Mengubah data periode kontrak
