@@ -22,7 +22,7 @@ import java.util.List;
 public class ProjectInstallationModel implements Serializable{
 
     //    @Id
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore

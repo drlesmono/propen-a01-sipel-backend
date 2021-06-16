@@ -36,9 +36,6 @@ public class ServicesRestServiceImpl implements ServicesRestService{
     @Autowired
     private ServicesDb servicesDb;
 
-    @Autowired
-    private ManagedServicesRestService managedServicesRestService;
-
 //    @Override
 //    public ServicesModel createServices(ServicesModel services, ManagedServicesModel managedServices) {
 //        services.setIdOrderMS(managedServices);

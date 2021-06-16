@@ -21,7 +21,7 @@ import java.util.List;
 public class ManagedServicesModel implements Serializable{
 
     //    @Id
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOrder", referencedColumnName = "idOrder", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
@@ -58,7 +58,7 @@ public class ManagedServicesModel implements Serializable{
 //    @Column(name="timeRemaining", nullable = true)
 //    private Long timeRemaining;
 
-    @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idOrderMS", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
     private List<ServicesModel> listService;

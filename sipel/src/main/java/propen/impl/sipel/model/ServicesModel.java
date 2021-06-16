@@ -1,6 +1,7 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,7 +17,7 @@ public class ServicesModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idService;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idOrderMS", referencedColumnName = "idOrderMS", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
