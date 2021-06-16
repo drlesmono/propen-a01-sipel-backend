@@ -1,6 +1,7 @@
 package propen.impl.sipel.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import propen.impl.sipel.model.ManagedServicesModel;
@@ -113,7 +114,11 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     // Order diurutkan berdasarkan periode berakhir atau actual end
     @Override
     public List<ManagedServicesModel> msOrderByActualEnd() {
-        return managedServicesDb.findByOrderByActualEnd();
+
+//        return managedServicesDb.findByOrderByActualEnd();
+        List<ManagedServicesModel> listMs = managedServicesDb.findAll(Sort.by(Sort.Direction.DESC, "actualEnd"));
+
+        return listMs;
     }
 
     // Mengubah data periode kontrak
