@@ -1,7 +1,6 @@
 package propen.impl.sipel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -22,7 +21,6 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserModel implements Serializable {
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -67,7 +65,7 @@ public class UserModel implements Serializable {
         this.role_name = role_name;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
