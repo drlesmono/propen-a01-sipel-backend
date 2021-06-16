@@ -6,7 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.QueryAnnotation;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -91,12 +96,12 @@ public class OrderModel implements Serializable{
         this.nama_verifikasi = nama_verifikasi;
     }
 
-    @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idOrder", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
-    @OneToOne(mappedBy = "idOrder", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idOrder", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private ManagedServicesModel idOrderMs;
@@ -268,4 +273,13 @@ public class OrderModel implements Serializable{
     public void setNoSPH(String noSPH) {
         this.noSPH = noSPH;
     }
+
+//    @Modifying
+//    @Query(value = "insert into orders (client_div, client_email, client_name, client_org, clientpic, client_phone, date_order, description, is_managed_service, is_project_installation, is_verified, nama_verifikasi, nopo, nosph, order_name) values (:client_div, :client_email, :client_name, :client_org, :clientpic, :client_phone, :date_order, :description, :is_managed_service, :is_project_installation, :is_verified, :nama_verifikasi, :nopo, :nosph, :order_name)",
+//          nativeQuery = true)
+//    public void insertOrder(@Param("client_div") String client_div, @Param("client_email") String client_email, @Param("client_name") String client_name,
+//                     @Param("client_org") String client_org, @Param("clientpic") String clientpic, @Param("client_phone") String client_phone,
+//                     @Param("date_order") Date date_order, @Param("description") String description, @Param("is_managed_service") Boolean is_managed_service,
+//                     @Param("is_project_installation") Boolean is_project_installation, @Param("is_verified") Boolean is_verified, @Param("nama_verifikasi") String nama_verifikasi,
+//                     @Param("nopo") String nopo, @Param("nosph") String nosph, @Param("order_name") String order_name){}
 }

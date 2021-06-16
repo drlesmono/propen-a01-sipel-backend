@@ -156,6 +156,7 @@ public class OrderRestServiceImpl implements OrderRestService {
             newOrder.setOrderName(orderName);
         }else{
             if(listOrderSameName.size() == 1) {
+//                orderName = orderName + " ver.2";
                 newOrder.setOrderName(orderName + " ver.2");
             }else{
                 int i = 3;
@@ -188,6 +189,13 @@ public class OrderRestServiceImpl implements OrderRestService {
         newOrder.setProjectInstallation(false);
         newOrder.setManagedService(order.getManagedService());
 
+//        OrderModel orderSaved = orderDb.save(newOrder);
+//        newOrder.insertOrder(order.getClientDiv(), order.getClientEmail(), order.getClientName(), order.getClientOrg(),
+//                            order.getClientPIC(), order.getClientPhone(), dateOrder, order.getDescription(),
+//                            order.getManagedService(), false, order.getVerified(), order.getNama_verifikasi(),
+//                            noPO, order.getNoSPH(), orderName);
+
+//        orderDb.flush();
         OrderModel orderSaved = orderDb.save(newOrder);
 
         ManagedServicesModel ms = managedServicesDb.findById(order.getIdOrderMs().getIdOrderMs()).get();
@@ -198,7 +206,10 @@ public class OrderRestServiceImpl implements OrderRestService {
         newMs.setActualEnd(ms.getActualEnd());
         newMs.setActivated(ms.getActivated());
         ManagedServicesModel msSaved = managedServicesDb.save(newMs);
-        orderSaved.setIdOrderMs(msSaved);
+//        managedServicesDb.save(newMs);
+//        System.out.println(orderSaved.getIdOrder());
+//        ManagedServicesModel msSaved = managedServicesDb.findByIdOrder(orderSaved);
+//        orderSaved.setIdOrderMs(msSaved);
 
         List<DocumentOrderModel> docOrder = order.getDocumentOrder();
         if(docOrder != null) {

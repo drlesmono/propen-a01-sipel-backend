@@ -116,4 +116,11 @@ public class ServicesRestController {
             );
         }
     }
+
+    // Mengembalikan seluruh service
+    @GetMapping(value = "/services")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    public List<ServicesModel> retrieveAllService() {
+        return servicesRestService.retrieveServices();
+    }
 }

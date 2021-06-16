@@ -38,7 +38,7 @@ public class InstallationReportModel implements Serializable{
     @Column(name = "notes", nullable = true)
     private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
