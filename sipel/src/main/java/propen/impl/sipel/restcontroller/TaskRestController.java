@@ -7,10 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import propen.impl.sipel.model.TaskModel;
 import propen.impl.sipel.repository.TaskDb;
+import propen.impl.sipel.repository.ProjectInstallationDb;
 import propen.impl.sipel.service.ProjectInstallationRestService;
 import propen.impl.sipel.service.TaskRestService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import propen.impl.sipel.model.ProjectInstallationModel;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -21,51 +24,38 @@ public class TaskRestController {
     TaskRestService taskRestService;
 
     @Autowired
-    TaskDb taskDb;
-
-    @Autowired
     ProjectInstallationRestService projectInstallationRestService;
 
     @PostMapping("/list-task/{idOrderPi}")
     @PreAuthorize("hasRole('ENGINEER')")
     public TaskModel createTask(@PathVariable Long idOrderPi, @RequestBody TaskModel task){
-        //return taskRestService.addTask(task, idOrderPi);
         task.setIdOrderPi(projectInstallationRestService.getProjectInstallationByIdOrderPi(idOrderPi));
-        Float persen = (float) 0;
-        task.setPercentage(persen);
-        TaskModel taskss = taskDb.save(task);
-        return taskss;
+        return taskRestService.addTask(task);
     }
 
     @GetMapping(value="/retrieve-task/{idTask}")
     @PreAuthorize("hasRole('ENGINEER')")
     public TaskModel getTaskByIdTask(@PathVariable Long idTask, Model model){
-        TaskModel task = taskDb.findByIdTask(idTask);//.orElseThrow(( -> new ResourceNotFoundException("Task not exist wth id :" + idTask)));
-        //return taskDb.findByIdTask(idTask);
-        return task;
+        return taskRestService.findTaskById(idTask);
     }
 
     @PutMapping("list-task/{idTask}")
     @PreAuthorize("hasRole('ENGINEER')")
     public TaskModel updateTaskModel(@PathVariable Long idTask, @RequestBody TaskModel task){
-        TaskModel targetedTask = taskDb.findByIdTask(idTask);//.orElseThrow(( -> new ResourceNotFoundException("Task not exist wth id :" + idTask)));
+        TaskModel updatedTask = taskRestService.updateTask(idTask, task);
 
-        if(task.getPercentage()==null){
-            targetedTask.setTaskName(task.getTaskName());
-            targetedTask.setDescription(task.getDescription());
-        } else {
-            targetedTask.setPercentage(task.getPercentage());
-        }
+        projectInstallationRestService.updateTask();
 
-        TaskModel updatedTask = taskDb.save(targetedTask);
         return updatedTask;
     }
 
     @DeleteMapping("/list-task/{idTask}")
     @PreAuthorize("hasRole('ENGINEER')")
     public ResponseEntity<Map<String, Boolean>> deleteTask(@PathVariable Long idTask){
-        TaskModel task = taskDb.findByIdTask(idTask);
-        taskDb.delete(task);
+        taskRestService.deleteTask(idTask);
+
+        projectInstallationRestService.updateTask();
+
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return ResponseEntity.ok(response);

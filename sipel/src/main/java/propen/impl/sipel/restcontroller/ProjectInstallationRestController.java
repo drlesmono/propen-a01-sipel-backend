@@ -119,12 +119,6 @@ public class ProjectInstallationRestController {
 
         for (ProjectInstallationModel pi : listVerifiedPi) {
             pi.setOrderName(pi.getIdOrder().getOrderName());
-            List<TaskModel> listTask = pi.getListTask();
-            if (listTask!=null){
-                for (TaskModel task : listTask){
-                    pi.setPercentage(pi.getPercentage()+(task.getPercentage()/listTask.size()));
-                }
-            }
         }
         return listVerifiedPi;
     }

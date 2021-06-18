@@ -34,4 +34,6 @@ public interface OrderRestService {
     String getStatusMS(OrderModel order);
 
     List<OrderModel> retrieveListNotVerifiedOrder();
+
+    List<OrderModel> retrieveUnverifiedOrder();
 }

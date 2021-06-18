@@ -19,9 +19,34 @@ public class TaskRestServiceImpl implements TaskRestService {
     ProjectInstallationRestService projectInstallationRestService;
 
     @Override
-    public TaskModel addTask(TaskModel task, Long idPi){
-        task.setIdOrderPi(projectInstallationRestService.getProjectInstallationByIdOrderPi(idPi));
+    public TaskModel addTask(TaskModel task){
+        Float persen = (float) 0;
+        task.setPercentage(persen);
         return taskDb.save(task);
     }
 
+    @Override
+    public TaskModel updateTask(Long idTask, TaskModel task) {
+        TaskModel targetedTask = taskDb.findByIdTask(idTask);//.orElseThrow(( -> new ResourceNotFoundException("Task not exist wth id :" + idTask)));
+
+        if(task.getPercentage()==null){
+            targetedTask.setTaskName(task.getTaskName());
+            targetedTask.setDescription(task.getDescription());
+        } else {
+            targetedTask.setPercentage(task.getPercentage());
+        }
+
+        return taskDb.save(targetedTask);
+    }
+
+    @Override
+    public void deleteTask(Long idTask) {
+        TaskModel task = taskDb.findByIdTask(idTask);
+        taskDb.delete(task);
+    }
+
+    @Override
+    public TaskModel findTaskById(Long idTask) {
+        return taskDb.findById(idTask).get();
+    }
 }
