@@ -3,6 +3,11 @@ import propen.impl.sipel.model.TaskModel;
 
 public interface TaskRestService {
 
-    TaskModel addTask(TaskModel task, Long idOrderPi);
-    
+    TaskModel addTask(TaskModel task);
+
+    TaskModel updateTask(Long idTask, TaskModel task);
+
+    void deleteTask(Long idTask);
+
+    TaskModel findTaskById(Long idTask);
 }

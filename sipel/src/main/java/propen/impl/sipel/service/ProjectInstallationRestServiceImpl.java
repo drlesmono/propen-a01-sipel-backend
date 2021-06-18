@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
+import propen.impl.sipel.model.TaskModel;
 import propen.impl.sipel.repository.ProjectInstallationDb;
 import propen.impl.sipel.rest.Setting;
 
@@ -266,5 +267,25 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         ProjectInstallationModel piTarget = projectInstallationDb.findById(idOrderPi).get();
         piTarget.setStatus(status);
         return projectInstallationDb.save(piTarget);
+    }
+
+    @Override
+    public void updateTask() {
+        List<ProjectInstallationModel> listVerifiedPi = getListVerifiedPi();
+
+        for (ProjectInstallationModel pi : listVerifiedPi) {
+            List<TaskModel> listTask = pi.getListTask();
+            Float persen = (float) 0;
+            pi.setPercentage(persen);
+            if (listTask!=null){
+                for (TaskModel taskk : listTask){
+                    pi.setPercentage(pi.getPercentage()+(taskk.getPercentage()/listTask.size()));
+                }
+            } else {
+                Float persen1 = (float) 0;
+                pi.setPercentage(persen1);
+            }
+            projectInstallationDb.save(pi);
+        }
     }
 }

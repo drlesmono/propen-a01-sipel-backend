@@ -222,4 +222,34 @@ public class  OrderRestController {
         return allProgress;
     }
 
+    @GetMapping(value = "/unverifiedOrders")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderModel> retrieveListOrderUnverified() {
+        return orderRestService.retrieveUnverifiedOrder();
+    }
+
+    @PutMapping(value = "/order/status/verification")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<OrderModel> updateVerificationStatus(@Valid @RequestBody OrderDto order,
+    BindingResult bindingResult){
+        BaseResponse<OrderModel> response = new BaseResponse<>();
+        System.out.println(order.getIdOrder());
+        System.out.println(order.getIsVerified());
+        if(bindingResult.hasFieldErrors()){
+            response.setMessage("Status verifikasi order gagal disimpan" );
+            response.setStatus(405);
+            return response;
+        }
+        OrderModel oldOrder = orderDb.findById(order.getIdOrder()).get();
+        oldOrder.setVerified(order.getIsVerified());
+        orderDb.save(oldOrder);
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(oldOrder);
+
+        return response;
+        
+       
+    }
+
 }

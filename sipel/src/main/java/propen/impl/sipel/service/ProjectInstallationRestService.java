@@ -2,6 +2,7 @@ package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ProjectInstallationModel;
+import propen.impl.sipel.model.TaskModel;
 
 import java.util.List;
 import java.util.Date;
@@ -34,4 +35,6 @@ public interface ProjectInstallationRestService {
     Integer getPiBelumSelesai();
 
     ProjectInstallationModel updateStatus(Long idOrderPi, String status);
+
+    void updateTask();
 }

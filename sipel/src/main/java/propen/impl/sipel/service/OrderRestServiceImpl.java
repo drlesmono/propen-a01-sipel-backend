@@ -46,7 +46,7 @@ public class OrderRestServiceImpl implements OrderRestService {
     public OrderModel createOrder(OrderModel order) {
         //Date today = new Date();
         //order.setDateOrder(today);
-        order.setVerified(true);
+        order.setVerified(false);
         return orderDb.save(order);
     }
 
@@ -60,6 +60,19 @@ public class OrderRestServiceImpl implements OrderRestService {
         List<OrderModel> orders = retrieveOrder();
         OrderModel order = orders.get(orders.size() - 1);
         return order;
+    }
+
+    @Override
+    public List<OrderModel> retrieveUnverifiedOrder() {
+        List<OrderModel> listOrderUnverified = new ArrayList<>();
+
+        for(OrderModel order : orderDb.findAll()){
+            if (order.getVerified() == false) {
+                listOrderUnverified.add(order);
+            }
+        }
+
+        return listOrderUnverified;
     }
 
     @Override
