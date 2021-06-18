@@ -231,9 +231,11 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         List<Integer> jumlahPiTepatWaktuTelat = new ArrayList<>();
         List<ProjectInstallationModel> listPi = retrieveListPi();
         List<ProjectInstallationModel> listPiSelesaiDateFiltered = new ArrayList<>();
-        for(ProjectInstallationModel pi : listPi){
-            if (pi.getDateClosedPI().after(startDate) && pi.getDateClosedPI().before(endDate)){
-                listPiSelesaiDateFiltered.add(pi);
+        for(int i = 0; i < listPi.size(); i++){
+            if (!(listPi.get(i).getDateClosedPI() == null)){
+                if (listPi.get(i).getDateClosedPI().after(startDate) && listPi.get(i).getDateClosedPI().before(endDate)){
+                    listPiSelesaiDateFiltered.add(listPi.get(i));
+                }
             }
         }
         listPiSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedPI().compareTo(o2.getDateClosedPI()));
