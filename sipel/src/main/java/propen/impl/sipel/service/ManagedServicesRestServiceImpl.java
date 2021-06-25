@@ -184,8 +184,10 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
             }
         }
         for(int i = 0; i < listMs.size(); i++){
-            if (listMs.get(i).getDateClosedMS().after(startDate) && listMs.get(i).getDateClosedMS().before(endDate)){
-                listMsSelesaiDateFiltered.add(listMs.get(i));
+            if (!(listMs.get(i).getDateClosedMS() == null)){
+                if (listMs.get(i).getDateClosedMS().after(startDate) && listMs.get(i).getDateClosedMS().before(endDate)){
+                    listMsSelesaiDateFiltered.add(listMs.get(i));
+                }
             }
         }
         listMsMasukDateFiltered.sort((o1, o2) -> o1.getIdOrder().getDateOrder().compareTo(o2.getIdOrder().getDateOrder()));
@@ -258,8 +260,10 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         List<ManagedServicesModel> listMs = retrieveListMs();
         List<ManagedServicesModel> listMsSelesaiDateFiltered = new ArrayList<>();
         for(int i = 0; i < listMs.size(); i++){
-            if (listMs.get(i).getDateClosedMS().after(startDate) && listMs.get(i).getDateClosedMS().before(endDate)){
-                listMsSelesaiDateFiltered.add(listMs.get(i));
+            if (!(listMs.get(i).getDateClosedMS() == null)){
+                if (listMs.get(i).getDateClosedMS().after(startDate) && listMs.get(i).getDateClosedMS().before(endDate)){
+                    listMsSelesaiDateFiltered.add(listMs.get(i));
+                }
             }
         }
         listMsSelesaiDateFiltered.sort((o1, o2) -> o1.getDateClosedMS().compareTo(o2.getDateClosedMS()));
