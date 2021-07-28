@@ -385,7 +385,7 @@ public class OrderRestServiceImpl implements OrderRestService {
         UserModel assigned = ms.getIdUserPic();
         Float percentage = getProgressMS(order);
 
-        String defaultStatus = "Inactivate";
+        String defaultStatus = "Inactive";
         Boolean activated = ms.getActivated();
         if (activated==true && assigned != null){
             defaultStatus = "Active";

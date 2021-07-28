@@ -34,6 +34,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         //projectInstallation.setPercentage(0.00F);
         //projectInstallation.setClose(false);
         //projectInstallation.setDateClosedPI(null);
+        projectInstallation.setStatus("Inactive");
 
         return projectInstallationDb.save(projectInstallation);
     }

@@ -32,6 +32,7 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     public ManagedServicesModel createOrderMS(ManagedServicesModel managedServices) {
         managedServices.setActivated(false);
         managedServices.setDateClosedMS(null);
+        managedServices.setStatus("Inactive");
         //managedServices.setTimeRemaining(setRem(managedServices));
         return managedServicesDb.save(managedServices);
     }
