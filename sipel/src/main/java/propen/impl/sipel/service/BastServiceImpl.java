@@ -141,17 +141,17 @@ public class BastServiceImpl implements BastService {
     }
 
     @Override
-    public Long getIdOrder(BastModel bastModel) {
+    public OrderModel getIdOrder(BastModel bastModel) {
         ProjectInstallationModel idPi = bastModel.getIdOrderPi();
         MaintenanceModel idMain = bastModel.getIdMaintenance();
 
-        Long toBeReturned;
+        OrderModel toBeReturned;
 
         if(idPi == null){
-            toBeReturned = idMain.getIdOrderMS().getIdOrder().getIdOrder();
+            toBeReturned = idMain.getIdOrderMS().getIdOrder();
         }
         else{
-            toBeReturned = idPi.getIdOrder().getIdOrder();
+            toBeReturned = idPi.getIdOrder();
         }
         return toBeReturned;
     }
