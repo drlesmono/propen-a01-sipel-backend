@@ -2,6 +2,7 @@ package propen.impl.sipel.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import propen.impl.sipel.model.BastModel;
 import propen.impl.sipel.model.InstallationReportModel;
 import propen.impl.sipel.model.MaintenanceReportModel;
@@ -14,6 +15,7 @@ import propen.impl.sipel.rest.ReportDto;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -84,5 +86,30 @@ public class ReportRestServiceImpl implements ReportRestService{
         ReportModel rpt = reportDb.findById(idReport).get();
         rpt.setStatusApproval(report.getStatusApproval());
         return reportDb.save(rpt);
+    }
+
+    @Override
+    public int findReportMaxVersion(String fileName) {
+        List<ReportModel> listReport = reportDb.findAll();
+        System.out.println(fileName);
+
+        int maxVersion = 0;
+        for(ReportModel report : listReport){
+            String originalName = report.getReportName();
+            if(originalName.contains(fileName)){
+                if(originalName.contains("ver ")){
+                    String[] splitReportNameOriginal = StringUtils.split(originalName, ".");
+                    System.out.println(originalName);
+                    System.out.println(splitReportNameOriginal[0]);
+                    String[] splitReportName = StringUtils.split(splitReportNameOriginal[0], "ver ");
+                    int ver = Integer.parseInt(splitReportName[1]);
+                    if( ver > maxVersion){
+                        maxVersion = ver;
+                    }
+                }
+            }
+        }
+
+        return maxVersion;
     }
 }

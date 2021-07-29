@@ -18,4 +18,6 @@ public interface ReportRestService {
     ReportModel findReportByReportName(String reportName);
 
     ReportModel updateStatus(Long idReport, ReportModel report);
+
+    int findReportMaxVersion(String fileName);
 }

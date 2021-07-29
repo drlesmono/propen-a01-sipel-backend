@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import propen.impl.sipel.filestorage.FileStorageService;
+import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.model.ReportModel;
 import propen.impl.sipel.rest.BaseResponse;
 import propen.impl.sipel.rest.ReportDto;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
@@ -87,18 +89,21 @@ public class ReportRestController {
         }
 
         String fileNameOriginal = StringUtils.cleanPath(report.getFile().getOriginalFilename());
-        ReportModel reportTarget = reportRestService.findReportByReportName(fileNameOriginal);
-        if(reportTarget != null){
-            String[] listFileNameOriginal = StringUtils.split(fileNameOriginal, ".");
-            if(listFileNameOriginal[0].contains("ver.")) {
-                String[] listFileNameOriginalTarget = listFileNameOriginal[0].split("ver.");
-                fileNameOriginal = listFileNameOriginalTarget[0] + " ver." +
-                        (Integer.parseInt(listFileNameOriginalTarget[1]) + 1) +
-                        "." + listFileNameOriginal[1];
+        String[] listFileNameOriginal = StringUtils.split(fileNameOriginal, ".");
+        if(listFileNameOriginal[0].contains("ver ")) {
+
+            int version = reportRestService.findReportMaxVersion(listFileNameOriginal[0]);
+            fileNameOriginal = listFileNameOriginal[0] + " ver " + (version + 1) + "." + listFileNameOriginal[1];
+        }else{
+
+            int version = reportRestService.findReportMaxVersion(listFileNameOriginal[0]);
+            if( version == 0){
+                fileNameOriginal = listFileNameOriginal[0] + " ver 2" + "." + listFileNameOriginal[1];
             }else{
-                fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
+                fileNameOriginal = listFileNameOriginal[0] + " ver " + (version + 1) + "." + listFileNameOriginal[1];
             }
         }
+
         File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
         String urlFile = file.getAbsolutePath();
         report.setReportName(fileNameOriginal);
