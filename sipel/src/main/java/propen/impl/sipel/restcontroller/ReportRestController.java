@@ -209,5 +209,22 @@ public class ReportRestController {
         return listReport;
     }
 
+    @GetMapping(value="/api/v1/reports/finance")
+    @PreAuthorize("hasRole('FINANCE')")
+    private List<ReportModel> retrieveListReportSigned(){
+        List<ReportModel> listReport = reportRestService.retrieveListReport();
+        List<ReportModel> toBeSeenReport = new ArrayList<>();
+        for(ReportModel report : listReport){
+            if(report.getStatusApproval().toLowerCase().equals("approved")){
+                if(report.getSigned() == true){
+                    toBeSeenReport.add(report);
+                }
+            }
+
+        }
+
+        return toBeSeenReport;
+    }
+
 
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.SequenceModel;
 import propen.impl.sipel.repository.OrderDb;
 import propen.impl.sipel.rest.Setting;
 
@@ -41,12 +42,19 @@ public class OrderRestServiceImpl implements OrderRestService {
     @Autowired
     private ProjectInstallationDb projectInstallationDb;
 
+    @Autowired
+    SequenceDb sequenceDb;
+
 
     @Override
     public OrderModel createOrder(OrderModel order) {
         //Date today = new Date();
         //order.setDateOrder(today);
         order.setVerified(false);
+        SequenceModel seq = sequenceDb.findById(Long.valueOf(1)).get();
+        Long seqCurrent = seq.getSequenceValue();
+        order.setSequence(seqCurrent);
+        seq.setSequenceValue(seqCurrent+1);
         return orderDb.save(order);
     }
 

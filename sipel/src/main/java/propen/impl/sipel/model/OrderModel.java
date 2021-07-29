@@ -106,29 +106,22 @@ public class OrderModel implements Serializable{
     @JsonIgnore
     private ManagedServicesModel idOrderMs;
 
-//    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "idUser", referencedColumnName = "id", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private UserModel idUser;
-
     @OneToMany(mappedBy = "idOrder", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private List<DocumentOrderModel> documentOrder;
 
-//    @OneToOne(mappedBy = "idOrder")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private ReportModel report;
+    @Column(name="sequence", nullable = true)
+    @JsonIgnore
+    private Long sequence;
 
-//    public void setIdUser(Long idUser) {
-//        this.idUser = idUser;
-//    }
+    public Long getSequence() {
+        return sequence;
+    }
 
-//    public Long getIdUser() {
-//        return idUser;
-//    }
+    public void setSequence(Long sequence) {
+        this.sequence = sequence;
+    }
 
     public Long getIdOrder() {
         return idOrder;
@@ -274,12 +267,4 @@ public class OrderModel implements Serializable{
         this.noSPH = noSPH;
     }
 
-//    @Modifying
-//    @Query(value = "insert into orders (client_div, client_email, client_name, client_org, clientpic, client_phone, date_order, description, is_managed_service, is_project_installation, is_verified, nama_verifikasi, nopo, nosph, order_name) values (:client_div, :client_email, :client_name, :client_org, :clientpic, :client_phone, :date_order, :description, :is_managed_service, :is_project_installation, :is_verified, :nama_verifikasi, :nopo, :nosph, :order_name)",
-//          nativeQuery = true)
-//    public void insertOrder(@Param("client_div") String client_div, @Param("client_email") String client_email, @Param("client_name") String client_name,
-//                     @Param("client_org") String client_org, @Param("clientpic") String clientpic, @Param("client_phone") String client_phone,
-//                     @Param("date_order") Date date_order, @Param("description") String description, @Param("is_managed_service") Boolean is_managed_service,
-//                     @Param("is_project_installation") Boolean is_project_installation, @Param("is_verified") Boolean is_verified, @Param("nama_verifikasi") String nama_verifikasi,
-//                     @Param("nopo") String nopo, @Param("nosph") String nosph, @Param("order_name") String order_name){}
 }

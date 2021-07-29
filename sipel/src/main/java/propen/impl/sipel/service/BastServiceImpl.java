@@ -132,7 +132,8 @@ public class BastServiceImpl implements BastService {
         LocalDate dateCurrent = LocalDate.now();
         String date = dateCurrent.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String[] dateSplit = String.valueOf(date).split("-");
-        String seqOrder = "0000" + String.valueOf(getIdOrder(bastModel));
+//        String seqOrder = "0000" + String.valueOf(getIdOrder(bastModel));
+        String seqOrder = "0000" + String.valueOf(getIdOrder(bastModel).getSequence());
         seqOrder = seqOrder.substring(seqOrder.length() - 3);
 
         nomorBast = nomorBast + seqOrder + pemisah + docId + pemisah + "020" + pemisah + dateSplit[1] + pemisah + dateSplit[2];
@@ -141,17 +142,17 @@ public class BastServiceImpl implements BastService {
     }
 
     @Override
-    public Long getIdOrder(BastModel bastModel) {
+    public OrderModel getIdOrder(BastModel bastModel) {
         ProjectInstallationModel idPi = bastModel.getIdOrderPi();
         MaintenanceModel idMain = bastModel.getIdMaintenance();
 
-        Long toBeReturned;
+        OrderModel toBeReturned;
 
         if(idPi == null){
-            toBeReturned = idMain.getIdOrderMS().getIdOrder().getIdOrder();
+            toBeReturned = idMain.getIdOrderMS().getIdOrder();
         }
         else{
-            toBeReturned = idPi.getIdOrder().getIdOrder();
+            toBeReturned = idPi.getIdOrder();
         }
         return toBeReturned;
     }

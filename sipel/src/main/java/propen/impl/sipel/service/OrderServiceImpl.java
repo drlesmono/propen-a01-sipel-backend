@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.SequenceModel;
 import propen.impl.sipel.repository.OrderDb;
+import propen.impl.sipel.repository.SequenceDb;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +17,16 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderDb orderDb;
 
+    ///add disini
+    @Autowired
+    SequenceDb sequenceDb;
+
     @Override
     public void addOrder(OrderModel order) {
+        SequenceModel seq = sequenceDb.findById(Long.valueOf(1)).get();
+        Long seqCurrent = seq.getSequenceValue();
+        order.setSequence(seqCurrent);
+        seq.setSequenceValue(seqCurrent+1);
         orderDb.save(order);
     }
 

@@ -19,7 +19,7 @@ public interface BastService {
 
     String createBastNum(BastModel bastModel);
 
-    Long getIdOrder(BastModel bastModel);
+    OrderModel getIdOrder(BastModel bastModel);
 
     List<OrderModel> getOrderList();
 

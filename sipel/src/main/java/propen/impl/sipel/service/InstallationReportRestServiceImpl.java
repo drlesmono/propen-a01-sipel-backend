@@ -47,7 +47,8 @@ public class InstallationReportRestServiceImpl implements InstallationReportRest
         LocalDate dateCurrent = LocalDate.now();
         String date = dateCurrent.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String[] dateSplit = String.valueOf(date).split("-");
-        String seqOrder = "0000" + String.valueOf(order.getIdOrder());
+//        String seqOrder = "0000" + String.valueOf(order.getIdOrder());
+        String seqOrder = "0000" + String.valueOf(order.getSequence());
         seqOrder = seqOrder.substring(seqOrder.length() - 3);
 
         nomorIr = nomorIr + seqOrder + pemisah + docId + pemisah + "020" + pemisah + dateSplit[1] + pemisah + dateSplit[2];
