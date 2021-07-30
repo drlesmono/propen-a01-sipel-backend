@@ -208,10 +208,17 @@ public class ReportRestController {
 
     @GetMapping(value="/api/v1/reports/all")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
-    public List<ReportModel> retrieveListReportAll(){
+    private List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
-
-        return listReport;
+        List<ReportModel> listReport2 = new ArrayList<>();
+        for(int i= 0; i< listReport.size(); i++){
+            String typeReport = listReport.get(i).getReportType();
+            String wantedType = "BAST";
+            if(typeReport.equals(wantedType)){
+                listReport2.add(listReport.get(i));
+            }
+        }
+        return listReport2;
     }
 
     @GetMapping(value="/api/v1/reports/finance")

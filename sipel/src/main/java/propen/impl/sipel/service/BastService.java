@@ -39,8 +39,8 @@ public interface BastService {
 
     BastModel approveBast(BastModel bastModel);
 
-    ReportModel approveBastFromLaporan(Long idReport);
-    ReportModel rejectBastFromLaporan(Long idReport);
+    ReportModel approveBastFromLaporan(Long idReport, String notes);
+    ReportModel rejectBastFromLaporan(Long idReport, String notes);
 
     BastModel rejectBast(BastModel bastModel);
 

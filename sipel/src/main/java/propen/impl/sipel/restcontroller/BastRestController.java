@@ -339,7 +339,7 @@ public class BastRestController {
         response.setStatus(200);
         response.setMessage("Success");
         response.setResult(report);
-        bastService.approveBastFromLaporan(report.getIdReport());
+        bastService.approveBastFromLaporan(report.getIdReport(), report.getNotes());
         return response;
     }
 
@@ -357,7 +357,7 @@ public class BastRestController {
         response.setStatus(200);
         response.setMessage("Success");
         response.setResult(report);
-        bastService.rejectBastFromLaporan(report.getIdReport());
+        bastService.rejectBastFromLaporan(report.getIdReport(), report.getNotes());
         return response;
     }
 

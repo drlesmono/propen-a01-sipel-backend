@@ -30,6 +30,8 @@ public class ReportDto {
 
     private Long idBast;
 
+    private String notes;
+
     public Long getIdReport() {
         return idReport;
     }
@@ -124,5 +126,13 @@ public class ReportDto {
 
     public void setIdBast(Long idBast) {
         this.idBast = idBast;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

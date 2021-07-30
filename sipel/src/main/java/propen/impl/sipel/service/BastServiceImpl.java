@@ -322,9 +322,14 @@ public class BastServiceImpl implements BastService {
     }
 
     @Override
-    public ReportModel approveBastFromLaporan(Long idReport) {
+    public ReportModel approveBastFromLaporan(Long idReport, String notes) {
         ReportModel report = reportDb.findById(idReport).get();
-
+        List<BastModel> allBast = bastDb.findAll();
+        for (int i = 0; i < allBast.size(); i++){
+            if(allBast.get(i).getIdReport().getIdReport() == idReport){
+                allBast.get(i).setNotes(notes);
+            }
+        }
         report.setStatusApproval("Approved");
         return report;
     }
@@ -340,9 +345,14 @@ public class BastServiceImpl implements BastService {
     }
 
     @Override
-    public ReportModel rejectBastFromLaporan(Long idReport) {
+    public ReportModel rejectBastFromLaporan(Long idReport, String notes) {
         ReportModel report = reportDb.findById(idReport).get();
-
+        List<BastModel> allBast = bastDb.findAll();
+        for (int i = 0; i < allBast.size(); i++){
+            if(allBast.get(i).getIdReport().getIdReport() == idReport){
+                allBast.get(i).setNotes(notes);
+            }
+        }
         report.setStatusApproval("Rejected");
         return report;
     }

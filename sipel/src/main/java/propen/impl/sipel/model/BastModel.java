@@ -60,7 +60,17 @@ public class BastModel implements Serializable{
     @Column(name="endPeriod", nullable = true)
     private Date endPeriod;
 
+    @Column(name = "notes", nullable = true)
+    private String notes;
 
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
 //    public void setIdReport(ReportModel idReport) {
 //        this.idReport = idReport;
