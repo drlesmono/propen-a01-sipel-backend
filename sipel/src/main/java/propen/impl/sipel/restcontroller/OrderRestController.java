@@ -9,10 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
 import propen.impl.sipel.repository.OrderDb;
-import propen.impl.sipel.service.ManagedServicesRestService;
-import propen.impl.sipel.service.OrderRestService;
-import propen.impl.sipel.service.ProjectInstallationRestService;
-import propen.impl.sipel.service.ServicesRestService;
+import propen.impl.sipel.rest.SequenceDto;
+import propen.impl.sipel.service.*;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -43,6 +41,9 @@ public class  OrderRestController {
 
     @Autowired
     private OrderDb orderDb;
+
+    @Autowired
+    private SequenceService sequenceService;
 
     @PostMapping(value = "/order/tambah")
     @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
@@ -250,6 +251,33 @@ public class  OrderRestController {
         return response;
         
        
+    }
+    @GetMapping(value = "/order/resetSeq")
+    @PreAuthorize("hasRole('ADMIN')")
+    public SequenceDto resetSeq(Model model){
+        SequenceDto seq = new SequenceDto();
+        seq.setSequenceNum(Long.valueOf(0));
+        return seq;
+    }
+
+    @PutMapping(value = "/order/resetSeq/{idSequence}")
+    @PreAuthorize("hasRole('ADMIN')")
+    private void resetSeqOrder(
+            @PathVariable(value = "idSequence") Long idSequence,
+            @Valid @RequestBody SequenceDto res,
+            BindingResult bindingResult
+
+    ) {
+        try {
+            System.out.println(res);
+            Long num = Long.valueOf(res.getSequenceNum());
+            sequenceService.setSequence(num);
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "not found!"
+            );
+        }
     }
 
 }
