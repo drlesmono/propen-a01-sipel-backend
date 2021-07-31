@@ -133,6 +133,7 @@ public class OrderModel implements Serializable{
     ///add this
     @NotNull
     @Column(name="sequence", nullable = false)
+    @JsonIgnore
     private Long sequence;
     ///////////
     ////this
