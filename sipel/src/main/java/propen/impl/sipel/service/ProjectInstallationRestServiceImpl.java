@@ -272,6 +272,11 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
     public ProjectInstallationModel updateStatus(Long idOrderPi, String status) {
         ProjectInstallationModel piTarget = projectInstallationDb.findById(idOrderPi).get();
         piTarget.setStatus(status);
+        if (status == "Closed"){
+            Date today = new Date();
+            piTarget.setDateClosedPI(today);
+            piTarget.setClose(true);
+        }
         return projectInstallationDb.save(piTarget);
     }
 
