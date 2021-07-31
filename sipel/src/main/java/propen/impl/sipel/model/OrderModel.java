@@ -130,13 +130,10 @@ public class OrderModel implements Serializable{
 //        return idUser;
 //    }
 
-    ///add this
-    @NotNull
-    @Column(name="sequence", nullable = false)
+    @Column(name="sequence", nullable = true)
     @JsonIgnore
     private Long sequence;
-    ///////////
-    ////this
+
     public Long getSequence() {
         return sequence;
     }
@@ -144,8 +141,6 @@ public class OrderModel implements Serializable{
     public void setSequence(Long sequence) {
         this.sequence = sequence;
     }
-
-    ///to this
 
     public Long getIdOrder() {
         return idOrder;
