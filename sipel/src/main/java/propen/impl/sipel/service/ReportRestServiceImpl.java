@@ -96,11 +96,9 @@ public class ReportRestServiceImpl implements ReportRestService{
         int maxVersion = 0;
         for(ReportModel report : listReport){
             String originalName = report.getReportName();
-            if(originalName.contains(fileName)){
+            if(originalName.equals(fileName)){
                 if(originalName.contains("ver ")){
-                    String[] splitReportNameOriginal = StringUtils.split(originalName, ".");
-                    System.out.println(originalName);
-                    System.out.println(splitReportNameOriginal[0]);
+                    String[] splitReportNameOriginal = originalName.split("\\.");
                     String[] splitReportName = StringUtils.split(splitReportNameOriginal[0], "ver ");
                     int ver = Integer.parseInt(splitReportName[1]);
                     if( ver > maxVersion){

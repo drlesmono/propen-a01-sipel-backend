@@ -89,24 +89,30 @@ public class ReportRestController {
         }
 
         String fileNameOriginal = StringUtils.cleanPath(report.getFile().getOriginalFilename());
-        String[] listFileNameOriginal = StringUtils.split(fileNameOriginal, ".");
-        if(listFileNameOriginal[0].contains("ver ")) {
+        String[] listFileNameOriginal = fileNameOriginal.split("\\.");
+        String fileType = listFileNameOriginal[listFileNameOriginal.length-1];
+        String fileName = "";
+        for(int i=0; i<listFileNameOriginal.length-1; i++){
+            fileName = fileName + listFileNameOriginal[i] + " ";
+        }
+        fileName = fileName.substring(0,fileName.length()-1);
 
-            int version = reportRestService.findReportMaxVersion(listFileNameOriginal[0]);
-            fileNameOriginal = listFileNameOriginal[0] + " ver " + (version + 1) + "." + listFileNameOriginal[1];
+        if(fileName.contains("ver ")) {
+            int version = reportRestService.findReportMaxVersion(fileName);
+            fileName = fileName + " ver " + (version + 1) + "." + fileType;
         }else{
 
-            int version = reportRestService.findReportMaxVersion(listFileNameOriginal[0]);
+            int version = reportRestService.findReportMaxVersion(fileName);
             if( version == 0){
-                fileNameOriginal = listFileNameOriginal[0] + " ver 2" + "." + listFileNameOriginal[1];
+                fileName = fileName + "." + fileType;
             }else{
-                fileNameOriginal = listFileNameOriginal[0] + " ver " + (version + 1) + "." + listFileNameOriginal[1];
+                fileName = fileName + " ver " + (version + 1) + "." + fileType;
             }
         }
 
-        File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
+        File file = fileStorageService.storeFile(uploadRootDir, fileName, report.getFile());
         String urlFile = file.getAbsolutePath();
-        report.setReportName(fileNameOriginal);
+        report.setReportName(fileName);
         report.setFileType(report.getFile().getContentType());
         report.setSize(report.getFile().getSize());
         ReportModel newReport = reportRestService.uploadReport(report, urlFile);
