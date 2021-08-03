@@ -61,6 +61,28 @@ public class MaintenanceReportRestController {
         return response;
     }
 
+    @PostMapping(value="/report/{idReport}/maintenance/finalize")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<MaintenanceReportModel> finalizeMaintenanceReport(@Valid @RequestBody MaintenanceReportDto mr,
+                                                                        @PathVariable("idReport") Long idReport,
+                                                                        BindingResult bindingResult){
+        BaseResponse<MaintenanceReportModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Maintenance Report gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        ReportModel report = reportRestService.findReportById(idReport);
+        MaintenanceReportModel newMr = maintenanceReportRestService.uploadMr(report, mr);
+
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newMr);
+
+        return response;
+    }
+
     @PutMapping(value = "/update/mr/notes/{idMaintenanceReport}")
     @PreAuthorize("hasRole('MANAGER')")
     public MaintenanceReportModel updateNotesMrReport(

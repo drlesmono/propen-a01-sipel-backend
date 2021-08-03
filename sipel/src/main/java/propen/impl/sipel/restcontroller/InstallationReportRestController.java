@@ -60,6 +60,28 @@ public class InstallationReportRestController {
         return response;
     }
 
+    @PostMapping(value="/report/{idReport}/installation/finalize")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<InstallationReportModel> finalizeInstallationReport(@Valid @RequestBody InstallationReportDto ir,
+                                                                          @PathVariable("idReport") Long idReport,
+                                                                          BindingResult bindingResult){
+        BaseResponse<InstallationReportModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Installation Report gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        ReportModel report = reportRestService.findReportById(idReport);
+        InstallationReportModel newIr = installationReportRestService.uploadIr(report, ir);
+
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newIr);
+
+        return response;
+    }
+
     @PutMapping(value = "/update/notes/{idInstallationReport}")
     @PreAuthorize("hasRole('MANAGER')")
     public InstallationReportModel updateNotesReport(
