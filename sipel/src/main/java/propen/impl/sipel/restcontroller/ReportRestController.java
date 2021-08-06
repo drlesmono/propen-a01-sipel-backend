@@ -248,6 +248,7 @@ public class ReportRestController {
         report.setReportName(fileNameOriginal);
         report.setFileType(report.getFile().getContentType());
         report.setSize(report.getFile().getSize());
+        report.setSigned(true);
         ReportModel newReport = reportRestService.uploadReport(report, urlFile);
         response.setStatus(200);
         response.setMessage("Success");
