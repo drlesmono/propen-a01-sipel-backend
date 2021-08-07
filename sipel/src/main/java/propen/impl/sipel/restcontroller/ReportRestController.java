@@ -49,7 +49,7 @@ public class ReportRestController {
 
     // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
-    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN')")
     public List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
@@ -225,6 +225,54 @@ public class ReportRestController {
             }
         }
         return listReport2;
+    }
+
+    @PostMapping(value="/api/v1/report/finalize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<ReportModel> finalizeReport(@Valid @ModelAttribute ReportDto report,
+                                                    HttpServletRequest request) throws Exception{
+        BaseResponse<ReportModel> response = new BaseResponse<>();
+        if(report.getReportType() == null && report.getFile() == null){
+            // Respon Gagal Simpan
+            response.setMessage("Laporan gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+
+        // Root Directory
+        String uploadRootPath = request.getServletContext().getRealPath("upload");
+
+        File uploadRootDir = new File(uploadRootPath);
+        // Create directory if it not exists.
+        if (!uploadRootDir.exists()) {
+            uploadRootDir.mkdirs();
+        }
+
+        String fileNameOriginal = StringUtils.cleanPath(report.getFile().getOriginalFilename());
+        ReportModel reportTarget = reportRestService.findReportByReportName(fileNameOriginal);
+        if(reportTarget != null){
+            String[] listFileNameOriginal = StringUtils.split(fileNameOriginal, ".");
+            if(listFileNameOriginal[0].contains("ver.")) {
+                String[] listFileNameOriginalTarget = listFileNameOriginal[0].split("ver.");
+                fileNameOriginal = listFileNameOriginalTarget[0] + " ver." +
+                        (Integer.parseInt(listFileNameOriginalTarget[1]) + 1) +
+                        "." + listFileNameOriginal[1];
+            }else{
+                fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
+            }
+        }
+        File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
+        String urlFile = file.getAbsolutePath();
+        report.setReportName(fileNameOriginal);
+        report.setFileType(report.getFile().getContentType());
+        report.setSize(report.getFile().getSize());
+        report.setSigned(true);
+        ReportModel newReport = reportRestService.uploadReport(report, urlFile);
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newReport);
+
+        return response;
     }
 
     @GetMapping(value="/api/v1/reports/finance")

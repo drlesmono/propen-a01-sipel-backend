@@ -307,6 +307,10 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
     public ManagedServicesModel updateStatus(Long idOrderMs, String status) {
         ManagedServicesModel msTarget = managedServicesDb.findById(idOrderMs).get();
         msTarget.setStatus(status);
+        if (status == "Closed"){
+            Date today = new Date();
+            msTarget.setDateClosedMS(today);
+        }
         return managedServicesDb.save(msTarget);
     }
 }
