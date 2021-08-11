@@ -62,6 +62,11 @@ public class MaintenanceReportRestServiceImpl implements MaintenanceReportRestSe
         newMr.setMrNum(createMrNum(maintenance.getIdOrderMS().getIdOrder()));
         newMr.setNotes(mr.getNotes());
         newMr.setIdMaintenance(maintenance);
+        System.out.println(newMr.getIdReport());
+        System.out.println(newMr.getIdMaintenance());
+        System.out.println(newMr.getIdMaintenanceReport());
+        System.out.println(newMr.getMrNum());
+        System.out.println(newMr.getNotes());
         return maintenanceReportDb.save(newMr);
     }
 
