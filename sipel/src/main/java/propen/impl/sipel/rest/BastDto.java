@@ -28,14 +28,6 @@ public class BastDto {
 
     private Long idOrderMs;
 
-    public Long getIdOrderMs() {
-        return idOrderMs;
-    }
-
-    public void setIdOrderMs(Long idOrderMs) {
-        this.idOrderMs = idOrderMs;
-    }
-
     private Long idOrderPi;
 
     private Date startPeriod;
@@ -60,6 +52,14 @@ public class BastDto {
 
     public void setPicName(String picName) {
         this.picName = picName;
+    }
+
+    public Long getIdOrderMs() {
+        return idOrderMs;
+    }
+
+    public void setIdOrderMs(Long idOrderMs) {
+        this.idOrderMs = idOrderMs;
     }
 
     public Long getIdReport() {

@@ -51,10 +51,10 @@ public class OrderRestServiceImpl implements OrderRestService {
         //Date today = new Date();
         //order.setDateOrder(today);
         order.setVerified(false);
-//        SequenceModel seq = sequenceDb.findById(Long.valueOf(1)).get();
-//        Long seqCurrent = seq.getSequenceValue();
-//        order.setSequence(seqCurrent);
-//        seq.setSequenceValue(seqCurrent+1);
+        SequenceModel seq = sequenceDb.findById(Long.valueOf(1)).get();
+        Long seqCurrent = seq.getSequenceValue();
+        order.setSequence(seqCurrent);
+        seq.setSequenceValue(seqCurrent+1);
         return orderDb.save(order);
     }
 
@@ -111,7 +111,7 @@ public class OrderRestServiceImpl implements OrderRestService {
         order.setClientPhone(orderUpdate.getClientPhone());
         order.setClientEmail(orderUpdate.getClientEmail());
         order.setDateOrder(orderUpdate.getDateOrder());
-        order.setVerified(false);
+        order.setVerified(orderUpdate.getVerified());
         return orderDb.save(order);
     }
 

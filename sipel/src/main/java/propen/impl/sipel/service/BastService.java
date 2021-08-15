@@ -1,6 +1,7 @@
 package propen.impl.sipel.service;
 
 import propen.impl.sipel.model.*;
+import propen.impl.sipel.rest.BastDto;
 
 import java.text.ParseException;
 import java.util.List;
@@ -47,4 +48,6 @@ public interface BastService {
     List<ReportModel> getAllReport();
 
     ReportModel getReportByBast(BastModel bastModel);
+
+    BastModel uploadBast(ReportModel report, BastDto bast);
 }

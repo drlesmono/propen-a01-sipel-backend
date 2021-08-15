@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.*;
 import propen.impl.sipel.rest.*;
 import propen.impl.sipel.service.BastService;
+import propen.impl.sipel.service.ReportRestService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,6 +35,9 @@ public class BastRestController {
     @Qualifier("bastServiceImpl")
     @Autowired
     private BastService bastService;
+
+    @Autowired
+    ReportRestService reportRestService;
 
     // used to retrieve all report from backend
     @GetMapping(value = "/laporan")
@@ -358,6 +362,28 @@ public class BastRestController {
         response.setMessage("Success");
         response.setResult(report);
         bastService.rejectBastFromLaporan(report.getIdReport(), report.getNotes());
+        return response;
+    }
+
+    @PostMapping(value="/report/{idReport}/bast/finalize")
+    @PreAuthorize("hasRole('ADMIN')")
+    public BaseResponse<BastModel> finalizeBast(@Valid @RequestBody BastDto bast,
+                                                                            @PathVariable("idReport") Long idReport,
+                                                                            BindingResult bindingResult){
+        BaseResponse<BastModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()){
+            // Respon Gagal Simpan
+            response.setMessage("Installation Report gagal disimpan." );
+            response.setStatus(405);
+            return response;
+        }
+        ReportModel report = reportRestService.findReportById(idReport);
+        BastModel newBast = bastService.uploadBast(report, bast);
+
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(newBast);
+
         return response;
     }
 

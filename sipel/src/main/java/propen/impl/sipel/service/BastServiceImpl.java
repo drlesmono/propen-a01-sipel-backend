@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import propen.impl.sipel.model.*;
 import propen.impl.sipel.repository.*;
+import propen.impl.sipel.rest.BastDto;
+import propen.impl.sipel.rest.InstallationReportDto;
 
 import javax.sql.rowset.BaseRowSet;
 import javax.transaction.Transactional;
@@ -373,5 +375,22 @@ public class BastServiceImpl implements BastService {
             }
         }
         return selected;
+    }
+
+    @Override
+    public BastModel uploadBast(ReportModel report, BastDto bast) {
+        BastModel newBast = new BastModel();
+//        ProjectInstallationModel pi = projectInstallationDb.findById(ir.getIdOrderPi()).get();
+
+        newBast.setIdReport(report);
+        newBast.setStartPeriod(bast.getStartPeriod());
+        newBast.setEndPeriod(bast.getEndPeriod());
+        newBast.setBastNum(bast.getBastNum());
+        newBast.setDateHandover(bast.getDateHandover());
+//        newBast.setIdMaintenance();
+//        newBast.setIdOrderPi();
+        newBast.setNotes(bast.getNotes());
+
+        return bastDb.save(newBast);
     }
 }
