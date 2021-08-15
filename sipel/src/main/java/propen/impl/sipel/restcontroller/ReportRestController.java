@@ -215,7 +215,7 @@ public class ReportRestController {
 
     @GetMapping(value="/api/v1/reports/all")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
-    private List<ReportModel> retrieveListReportAll(){
+    public List<ReportModel> retrieveListReportAll(){
         System.out.println("masuk reportrestcontroller");
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 //        List<ReportModel> listReport2 = new ArrayList<>();
