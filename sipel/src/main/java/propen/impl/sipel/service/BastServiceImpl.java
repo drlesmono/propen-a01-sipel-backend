@@ -380,15 +380,20 @@ public class BastServiceImpl implements BastService {
     @Override
     public BastModel uploadBast(ReportModel report, BastDto bast) {
         BastModel newBast = new BastModel();
-//        ProjectInstallationModel pi = projectInstallationDb.findById(ir.getIdOrderPi()).get();
+        if (bast.getIdOrderPi() != null) {
+            ProjectInstallationModel pi = projectInstallationDb.findById(bast.getIdOrderPi()).get();
+            newBast.setIdOrderPi(pi);
+        }
+        if (bast.getIdMaintenance() != null){
+            MaintenanceModel maintenance = maintenanceDb.findById(bast.getIdMaintenance()).get();
+            newBast.setIdMaintenance(maintenance);
+        }
 
         newBast.setIdReport(report);
         newBast.setStartPeriod(bast.getStartPeriod());
         newBast.setEndPeriod(bast.getEndPeriod());
-        newBast.setBastNum(bast.getBastNum());
+        newBast.setBastNum(createBastNum(newBast));
         newBast.setDateHandover(bast.getDateHandover());
-//        newBast.setIdMaintenance();
-//        newBast.setIdOrderPi();
         newBast.setNotes(bast.getNotes());
 
         return bastDb.save(newBast);
