@@ -217,15 +217,15 @@ public class ReportRestController {
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
     private List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
-        List<ReportModel> listReport2 = new ArrayList<>();
-        for(int i= 0; i< listReport.size(); i++){
-            String typeReport = listReport.get(i).getReportType();
-            String wantedType = "BAST";
-            if(typeReport.equals(wantedType)){
-                listReport2.add(listReport.get(i));
-            }
-        }
-        return listReport2;
+//        List<ReportModel> listReport2 = new ArrayList<>();
+//        for(int i= 0; i< listReport.size(); i++){
+//            String typeReport = listReport.get(i).getReportType();
+//            String wantedType = "BAST";
+//            if(typeReport.equals(wantedType)){
+//                listReport2.add(listReport.get(i));
+//            }
+//        }
+        return listReport;
     }
 
     @PostMapping(value="/api/v1/report/finalize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
