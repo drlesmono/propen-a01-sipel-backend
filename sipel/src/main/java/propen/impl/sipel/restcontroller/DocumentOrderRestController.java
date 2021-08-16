@@ -48,7 +48,7 @@ public class DocumentOrderRestController {
     private static final Logger logger = Logger.getLogger(DocumentOrderRestController.class.getName());
 
     @GetMapping(value = "/api/v1/order/{idOrder}/documents")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY') or hasRole('FINANCE')")
     public List<DocumentOrderModel> retrieveDocOrderList(
             @Valid
             @PathVariable (value = "idOrder") Long idOrder
