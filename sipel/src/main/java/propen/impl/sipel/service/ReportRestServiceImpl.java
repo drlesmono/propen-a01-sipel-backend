@@ -29,6 +29,7 @@ public class ReportRestServiceImpl implements ReportRestService{
     // Mencari seluruh report
     @Override
     public List<ReportModel> retrieveListReport() {
+        System.out.println("masuk ke reportservice");
         return reportDb.findAllByOrderByUploadedDateDesc();
     }
 

@@ -95,6 +95,7 @@ public class ReportRestController {
         for(int i=0; i<listFileNameOriginal.length-1; i++){
             fileName = fileName + listFileNameOriginal[i] + " ";
         }
+        // Membuang spasi di paling belakang
         fileName = fileName.substring(0,fileName.length()-1);
 
         if(fileName.contains("ver ")) {
@@ -214,17 +215,18 @@ public class ReportRestController {
 
     @GetMapping(value="/api/v1/reports/all")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
-    private List<ReportModel> retrieveListReportAll(){
+    public List<ReportModel> retrieveListReportAll(){
+        System.out.println("masuk reportrestcontroller");
         List<ReportModel> listReport = reportRestService.retrieveListReport();
-        List<ReportModel> listReport2 = new ArrayList<>();
-        for(int i= 0; i< listReport.size(); i++){
-            String typeReport = listReport.get(i).getReportType();
-            String wantedType = "BAST";
-            if(typeReport.equals(wantedType)){
-                listReport2.add(listReport.get(i));
-            }
-        }
-        return listReport2;
+//        List<ReportModel> listReport2 = new ArrayList<>();
+//        for(int i= 0; i< listReport.size(); i++){
+//            String typeReport = listReport.get(i).getReportType();
+//            String wantedType = "BAST";
+//            if(typeReport.equals(wantedType)){
+//                listReport2.add(listReport.get(i));
+//            }
+//        }
+        return listReport;
     }
 
     @PostMapping(value="/api/v1/report/finalize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -249,18 +251,44 @@ public class ReportRestController {
         }
 
         String fileNameOriginal = StringUtils.cleanPath(report.getFile().getOriginalFilename());
-        ReportModel reportTarget = reportRestService.findReportByReportName(fileNameOriginal);
-        if(reportTarget != null){
-            String[] listFileNameOriginal = StringUtils.split(fileNameOriginal, ".");
-            if(listFileNameOriginal[0].contains("ver.")) {
-                String[] listFileNameOriginalTarget = listFileNameOriginal[0].split("ver.");
-                fileNameOriginal = listFileNameOriginalTarget[0] + " ver." +
-                        (Integer.parseInt(listFileNameOriginalTarget[1]) + 1) +
-                        "." + listFileNameOriginal[1];
+        String[] listFileNameOriginal = fileNameOriginal.split("\\.");
+        String fileType = listFileNameOriginal[listFileNameOriginal.length-1];
+        String fileName = "";
+        for(int i=0; i<listFileNameOriginal.length-1; i++){
+            fileName = fileName + listFileNameOriginal[i] + " ";
+        }
+        // Membuang spasi di paling belakang
+        fileName = fileName.substring(0,fileName.length()-1);
+
+        if(fileName.contains("Final")){
+            if(fileName.contains("ver ")) {
+                int version = reportRestService.findReportMaxVersion(fileName);
+                fileName = fileName + " ver " + (version + 1) + "." + fileType;
             }else{
-                fileNameOriginal = listFileNameOriginal[0] + " ver.2" + "." + listFileNameOriginal[1];
+
+                int version = reportRestService.findReportMaxVersion(fileName);
+                if( version == 0){
+                    fileName = fileName + "." + fileType;
+                }else{
+                    fileName = fileName + " ver " + (version + 1) + "." + fileType;
+                }
+            }
+        }else{
+            if(fileName.contains("ver ")) {
+                // Membuang version di paling belakang
+                fileName = fileName.substring(0, fileName.length()-5);
+                fileName = fileName + "Final." + fileType;
+            }else{
+
+                int version = reportRestService.findReportMaxVersion(fileName);
+                if( version == 0){
+                    fileName = fileName + "Final." + fileType;
+                }else{
+                    fileName = fileName + "Final ver " + (version + 1) + "." + fileType;
+                }
             }
         }
+        
         File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
         String urlFile = file.getAbsolutePath();
         report.setReportName(fileNameOriginal);

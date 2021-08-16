@@ -72,7 +72,7 @@ public class ServicesRestController {
     }
 
     @GetMapping(value = "/order/MS/{idOrderMS}/listService")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY') or hasRole('FINANCE')")
     public List<ServicesModel> retrieveListService(
             @Valid
             @PathVariable (value = "idOrderMS") Long idOrderMS

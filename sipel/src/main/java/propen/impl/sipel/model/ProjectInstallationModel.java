@@ -145,11 +145,11 @@ public class ProjectInstallationModel implements Serializable{
         this.listInstallationReport = listInstallationReport;
     }
 
-    public List<BastModel> getIdBast() {
-        return listBast;
+    public List<BastModel> getListBast() {
+        return this.listBast;
     }
 
-    public void setIdBast(List<BastModel> idBast) {
+    public void setListBast(List<BastModel> listBast) {
         this.listBast = listBast;
     }
 

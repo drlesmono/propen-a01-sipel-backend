@@ -114,7 +114,7 @@ public class  OrderRestController {
     }
 
     @GetMapping(value = "/order/detail/{idOrder}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY') or hasRole('FINANCE')")
     public OrderModel retrieveOrder(
             @PathVariable(value = "idOrder") Long idOrder
     ) {
@@ -145,7 +145,7 @@ public class  OrderRestController {
     }
 
     @GetMapping(value = "/orderList")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DATA_ENTRY') or hasRole('FINANCE')")
     public List<OrderModel> retrieveListOrder() {
         return orderRestService.retrieveOrder();
     }

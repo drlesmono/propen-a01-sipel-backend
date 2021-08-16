@@ -23,7 +23,7 @@ public class BastModel implements Serializable{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idReport", referencedColumnName = "idReport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private ReportModel idReport;
 
     @Id
@@ -43,13 +43,13 @@ public class BastModel implements Serializable{
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "idMaintenance", referencedColumnName = "idMaintenance", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private MaintenanceModel idMaintenance;
 
     @ManyToOne(fetch = FetchType.EAGER, optional=true)
     @JoinColumn(name = "idOrderPi", referencedColumnName = "idOrderPi", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+//    @JsonIgnore
     private ProjectInstallationModel idOrderPi;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
