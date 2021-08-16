@@ -273,4 +273,20 @@ public class ProjectInstallationRestController {
         projectInstallationRestService.updateStatus(pi.getIdOrderPi(), pi.getStatus());
         return response;
     }
+
+    @GetMapping(value = "/order/name/PI/{idOrderPi}")
+    @PreAuthorize("hasRole('ENGINEER')")
+    public String retrieveOrderNamePI(
+            @PathVariable(value = "idOrderPi") Long idOrderPi
+    ) {
+        try {
+            ProjectInstallationModel pi = projectInstallationRestService.getPIOrderById(idOrderPi);
+            return pi.getOrderName();
+        }
+        catch (NoSuchElementException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Order name PI with ID " + String.valueOf(idOrderPi) + " not found!"
+            );
+        }
+    }
 }

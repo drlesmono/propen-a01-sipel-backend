@@ -30,7 +30,9 @@ public class TaskRestController {
     @PreAuthorize("hasRole('ENGINEER')")
     public TaskModel createTask(@PathVariable Long idOrderPi, @RequestBody TaskModel task){
         task.setIdOrderPi(projectInstallationRestService.getProjectInstallationByIdOrderPi(idOrderPi));
-        return taskRestService.addTask(task);
+        TaskModel addedTask = taskRestService.addTask(task);
+        projectInstallationRestService.updateTask(projectInstallationRestService.getProjectInstallationByIdOrderPi(idOrderPi));
+        return addedTask;
     }
 
     @GetMapping(value="/retrieve-task/{idTask}")
@@ -43,18 +45,19 @@ public class TaskRestController {
     @PreAuthorize("hasRole('ENGINEER')")
     public TaskModel updateTaskModel(@PathVariable Long idTask, @RequestBody TaskModel task){
         TaskModel updatedTask = taskRestService.updateTask(idTask, task);
-
-        projectInstallationRestService.updateTask();
-
+        TaskModel targetedTask = taskRestService.findTaskById(idTask);
+        ProjectInstallationModel targetedPI = projectInstallationRestService.getPIbyTask(targetedTask);
+        projectInstallationRestService.updateTask(targetedPI);
         return updatedTask;
     }
 
     @DeleteMapping("/list-task/{idTask}")
     @PreAuthorize("hasRole('ENGINEER')")
     public ResponseEntity<Map<String, Boolean>> deleteTask(@PathVariable Long idTask){
+        TaskModel targetedTask = taskRestService.findTaskById(idTask);
+        ProjectInstallationModel targetedPI = projectInstallationRestService.getPIbyTask(targetedTask);
         taskRestService.deleteTask(idTask);
-
-        projectInstallationRestService.updateTask();
+        projectInstallationRestService.updateTask(targetedPI);
 
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);

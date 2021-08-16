@@ -99,7 +99,7 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
         List<ProjectInstallationModel> listVerifiedPi = new ArrayList<>();
 
         for (ProjectInstallationModel pi : listPi){
-            if (pi.getIdOrder().getVerified()){
+            if (pi.getIdOrder().getVerified() && pi.getStatus().equals("In Progress")){
                 listVerifiedPi.add(pi);
             }
         }
@@ -282,22 +282,21 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
     }
 
     @Override
-    public void updateTask() {
-        List<ProjectInstallationModel> listVerifiedPi = getListVerifiedPi();
+    public void updateTask(ProjectInstallationModel pi) {
 
-        for (ProjectInstallationModel pi : listVerifiedPi) {
-            List<TaskModel> listTask = pi.getListTask();
-            Float persen = (float) 0;
-            pi.setPercentage(persen);
-            if (listTask!=null){
-                for (TaskModel taskk : listTask){
-                    pi.setPercentage(pi.getPercentage()+(taskk.getPercentage()/listTask.size()));
-                }
-            } else {
-                Float persen1 = (float) 0;
-                pi.setPercentage(persen1);
+        List<TaskModel> listTask = pi.getListTask();
+        Float persen = (float) 0;
+        pi.setPercentage(persen);
+        if (listTask!=null){
+            for (TaskModel task : listTask){
+                pi.setPercentage(pi.getPercentage()+(task.getPercentage()/listTask.size()));
             }
-            projectInstallationDb.save(pi);
         }
+        projectInstallationDb.save(pi);
+    }
+
+    @Override
+    public  ProjectInstallationModel getPIbyTask(TaskModel task){
+        return task.getIdOrderPi();
     }
 }

@@ -36,5 +36,7 @@ public interface ProjectInstallationRestService {
 
     ProjectInstallationModel updateStatus(Long idOrderPi, String status);
 
-    void updateTask();
+    void updateTask(ProjectInstallationModel pi);
+
+    ProjectInstallationModel getPIbyTask(TaskModel task);
 }

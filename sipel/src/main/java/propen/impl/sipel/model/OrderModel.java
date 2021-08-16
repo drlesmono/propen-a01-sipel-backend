@@ -85,17 +85,6 @@ public class OrderModel implements Serializable{
     @Column(name="isManagedService", nullable = false)
     private Boolean isManagedService;
 
-    @Column(name="nama_verifikasi", nullable = true)
-    private String nama_verifikasi;
-
-    public String getNama_verifikasi() {
-        return nama_verifikasi;
-    }
-
-    public void setNama_verifikasi(String nama_verifikasi) {
-        this.nama_verifikasi = nama_verifikasi;
-    }
-
     @OneToOne(mappedBy = "idOrder", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
