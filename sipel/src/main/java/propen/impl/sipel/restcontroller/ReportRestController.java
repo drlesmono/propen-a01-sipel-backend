@@ -95,15 +95,15 @@ public class ReportRestController {
         for(int i=0; i<listFileNameOriginal.length-1; i++){
             fileName = fileName + listFileNameOriginal[i] + " ";
         }
-        // Membuang spasi di paling belakang
         fileName = fileName.substring(0,fileName.length()-1);
 
         if(fileName.contains("ver ")) {
-            int version = reportRestService.findReportMaxVersion(fileName);
+            fileName = fileName.substring(0,fileName.length()-5);
+            int version = reportRestService.findReportMaxVersion(fileName, fileType);
             fileName = fileName + " ver " + (version + 1) + "." + fileType;
         }else{
 
-            int version = reportRestService.findReportMaxVersion(fileName);
+            int version = reportRestService.findReportMaxVersion(fileName, fileType);
             if( version == 0){
                 fileName = fileName + "." + fileType;
             }else{
@@ -215,18 +215,17 @@ public class ReportRestController {
 
     @GetMapping(value="/api/v1/reports/all")
     @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
-    public List<ReportModel> retrieveListReportAll(){
-        System.out.println("masuk reportrestcontroller");
+    private List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
-//        List<ReportModel> listReport2 = new ArrayList<>();
-//        for(int i= 0; i< listReport.size(); i++){
-//            String typeReport = listReport.get(i).getReportType();
-//            String wantedType = "BAST";
-//            if(typeReport.equals(wantedType)){
-//                listReport2.add(listReport.get(i));
-//            }
-//        }
-        return listReport;
+        List<ReportModel> listReport2 = new ArrayList<>();
+        for(int i= 0; i< listReport.size(); i++){
+            String typeReport = listReport.get(i).getReportType();
+            String wantedType = "BAST";
+            if(typeReport.equals(wantedType)){
+                listReport2.add(listReport.get(i));
+            }
+        }
+        return listReport2;
     }
 
     @PostMapping(value="/api/v1/report/finalize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -262,11 +261,12 @@ public class ReportRestController {
 
         if(fileName.contains("Final")){
             if(fileName.contains("ver ")) {
-                int version = reportRestService.findReportMaxVersion(fileName);
+                fileName = fileName.substring(0, fileName.length()-5);
+                int version = reportRestService.findReportMaxVersion(fileName, fileType);
                 fileName = fileName + " ver " + (version + 1) + "." + fileType;
             }else{
 
-                int version = reportRestService.findReportMaxVersion(fileName);
+                int version = reportRestService.findReportMaxVersion(fileName, fileType);
                 if( version == 0){
                     fileName = fileName + "." + fileType;
                 }else{
@@ -280,7 +280,7 @@ public class ReportRestController {
                 fileName = fileName + "Final." + fileType;
             }else{
 
-                int version = reportRestService.findReportMaxVersion(fileName);
+                int version = reportRestService.findReportMaxVersion(fileName, fileType);
                 if( version == 0){
                     fileName = fileName + "Final." + fileType;
                 }else{

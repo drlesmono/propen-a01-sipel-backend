@@ -19,5 +19,5 @@ public interface ReportRestService {
 
     ReportModel updateStatus(Long idReport, ReportModel report);
 
-    int findReportMaxVersion(String fileName);
+    int findReportMaxVersion(String fileName, String fileType);
 }

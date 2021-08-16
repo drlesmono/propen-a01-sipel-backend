@@ -90,20 +90,23 @@ public class ReportRestServiceImpl implements ReportRestService{
     }
 
     @Override
-    public int findReportMaxVersion(String fileName) {
+    public int findReportMaxVersion(String fileName, String fileType) {
         List<ReportModel> listReport = reportDb.findAll();
-        System.out.println(fileName);
 
         int maxVersion = 0;
         for(ReportModel report : listReport){
             String originalName = report.getReportName();
-            if(originalName.equals(fileName)){
-                if(originalName.contains("ver ")){
-                    String[] splitReportNameOriginal = originalName.split("\\.");
-                    String[] splitReportName = StringUtils.split(splitReportNameOriginal[0], "ver ");
-                    int ver = Integer.parseInt(splitReportName[1]);
-                    if( ver > maxVersion){
-                        maxVersion = ver;
+            String[] splitReportNameOriginal = originalName.split("\\.");
+            if(splitReportNameOriginal[0].contains(fileName)){
+                if(splitReportNameOriginal[1].equals(fileType)){
+                    if(splitReportNameOriginal[0].contains("ver ")){
+                        String[] splitReportName = StringUtils.split(splitReportNameOriginal[0], "ver ");
+                        int ver = Integer.parseInt(splitReportName[1]);
+                        if( ver > maxVersion){
+                            maxVersion = ver;
+                        }
+                    }else{
+                        maxVersion = 1;
                     }
                 }
             }
