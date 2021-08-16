@@ -117,9 +117,6 @@ public class ProjectInstallationRestController {
     public List<ProjectInstallationModel> getAllVerifiedPi(){
         List<ProjectInstallationModel> listVerifiedPi = projectInstallationRestService.getListVerifiedPi();
 
-        for (ProjectInstallationModel pi : listVerifiedPi) {
-            pi.setOrderName(pi.getIdOrder().getOrderName());
-        }
         return listVerifiedPi;
     }
 

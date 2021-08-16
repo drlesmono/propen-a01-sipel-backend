@@ -100,6 +100,8 @@ public class ProjectInstallationRestServiceImpl implements ProjectInstallationRe
 
         for (ProjectInstallationModel pi : listPi){
             if (pi.getIdOrder().getVerified() && pi.getStatus().equals("In Progress")){
+                pi.setOrderName(pi.getIdOrder().getOrderName());
+                projectInstallationDb.save(pi);
                 listVerifiedPi.add(pi);
             }
         }
