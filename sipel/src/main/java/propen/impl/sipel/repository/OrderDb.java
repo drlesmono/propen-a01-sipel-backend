@@ -3,6 +3,7 @@ package propen.impl.sipel.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.ReportModel;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface OrderDb extends JpaRepository<OrderModel,Long> {
     OrderModel findByIdOrder(Long idOrder);
 
     OrderModel findByNoPO(String noPO);
+
+    List<OrderModel> findAllByIdOrderDesc();
 }
