@@ -225,7 +225,7 @@ public class ReportRestController {
                 listReport2.add(listReport.get(i));
             }
         }
-        return listReport2;
+        return listReport;
     }
 
     @PostMapping(value="/api/v1/report/finalize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
