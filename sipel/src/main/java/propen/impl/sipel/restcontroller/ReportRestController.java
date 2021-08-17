@@ -291,7 +291,7 @@ public class ReportRestController {
         
         File file = fileStorageService.storeFile(uploadRootDir, fileNameOriginal, report.getFile());
         String urlFile = file.getAbsolutePath();
-        report.setReportName(fileNameOriginal);
+        report.setReportName(fileName);
         report.setFileType(report.getFile().getContentType());
         report.setSize(report.getFile().getSize());
         report.setSigned(true);
