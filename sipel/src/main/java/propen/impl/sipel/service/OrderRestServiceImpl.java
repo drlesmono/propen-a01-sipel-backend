@@ -60,7 +60,7 @@ public class OrderRestServiceImpl implements OrderRestService {
 
     @Override
     public List<OrderModel> retrieveOrder() {
-        return orderDb.findAllByIdOrder();
+        return orderDb.findAllByOrderByIdOrderDesc();
     }
 
     @Override
