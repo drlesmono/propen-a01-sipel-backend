@@ -17,5 +17,5 @@ public interface OrderDb extends JpaRepository<OrderModel,Long> {
 
     OrderModel findByNoPO(String noPO);
 
-    List<OrderModel> findAllByIdOrderDesc();
+    List<OrderModel> findAllByIdOrder();
 }
