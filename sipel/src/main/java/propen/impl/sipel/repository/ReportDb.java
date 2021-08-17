@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ReportDb extends JpaRepository<ReportModel,Long>, PagingAndSortingRepository<ReportModel, Long> {
-    List<ReportModel> findAllByOrderByUploadedDateDesc();
+    List<ReportModel> findAllByOrderByIdReportDesc();
 
     ReportModel findByIdInstallationReport(Long idIr);
 
