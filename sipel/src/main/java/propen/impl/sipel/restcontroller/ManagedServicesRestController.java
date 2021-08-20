@@ -274,4 +274,10 @@ public class ManagedServicesRestController {
         managedServicesRestService.updateStatus(ms.getIdOrderMs(), ms.getStatus());
         return response;
     }
+
+    @GetMapping(value="/order/{idOrder}/ms/{idOrderMs}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    public ManagedServicesModel getManagedServiceById(@PathVariable("idOrderMs") Long idOrderMs){
+        return managedServicesRestService.getMsById(idOrderMs);
+    }
 }

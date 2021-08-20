@@ -313,4 +313,9 @@ public class ManagedServicesRestServiceImpl implements ManagedServicesRestServic
         }
         return managedServicesDb.save(msTarget);
     }
+
+    @Override
+    public ManagedServicesModel getMsById(Long idOrderMs){
+        return managedServicesDb.findById(idOrderMs).get();
+    }
 }
