@@ -126,7 +126,7 @@ public class MaintenanceRestController {
         return maintenanceRestService.retrieveListMaintenance();
     }
 
-    @PutMapping(value="/order/{idOrder}/ms/{idOrderMs}/maintenance/{idMaintenance}/updateStatus")
+    @PutMapping(value="maintenance/{idMaintenance}/updateStatus")
     @PreAuthorize("hasRole('ADMIN')")
     public BaseResponse<MaintenanceDto> updateStatus(@Valid @RequestBody MaintenanceDto maintenance,
                                                       BindingResult bindingResult){
