@@ -49,7 +49,7 @@ public class ReportRestController {
 
     // Mengembalikan list report yang berjenis installation dan maintenance
     @GetMapping(value="/api/v1/reportsIrMr")
-    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')")
     public List<ReportModel> retrieveListReportIrMr(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
 
@@ -214,7 +214,7 @@ public class ReportRestController {
     }
 
     @GetMapping(value="/api/v1/reports/all")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN') or hasRole('FINANCE')")
     public List<ReportModel> retrieveListReportAll(){
         List<ReportModel> listReport = reportRestService.retrieveListReport();
         List<ReportModel> listReport2 = new ArrayList<>();

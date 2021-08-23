@@ -62,7 +62,7 @@ public class BastRestController {
 
     // used to retrieve all order from backend
     @GetMapping(value = "/laporan/order")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER') or hasRole('FINANCE')")
     public List<OrderDto> showAllOrder(Model model){
         List<OrderModel> orderList = bastService.getOrderList();
         List<OrderDto> dtoList = new ArrayList<>();
@@ -127,6 +127,7 @@ public class BastRestController {
             dto.setBastNum(bast.getBastNum());
             dto.setDateHandover(bast.getDateHandover());
             dto.setIdReport(bast.getIdReport().getIdReport());
+            dto.setNotes((bast.getNotes()));
             ProjectInstallationModel pi = bast.getIdOrderPi();
             MaintenanceModel mn = bast.getIdMaintenance();
             if(pi == null){
