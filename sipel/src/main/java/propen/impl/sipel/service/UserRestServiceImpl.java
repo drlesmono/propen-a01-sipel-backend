@@ -66,4 +66,10 @@ public class UserRestServiceImpl implements UserRestService{
         oldUser.setRoles(roles);
         return userDb.save(oldUser);
     }
+
+    @Override
+    public void deleteUser(String username){
+        UserModel user = userDb.findByUsername(username).get();
+        userDb.delete(user);
+    }
 }

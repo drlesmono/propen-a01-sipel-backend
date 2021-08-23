@@ -11,4 +11,6 @@ public interface UserRestService {
 
     UserModel updateRole(UserDto user);
 
+    void deleteUser(String username);
+
 }

@@ -25,12 +25,6 @@ public class UserRestController {
     @Autowired
     private UserRestService userRestService;
 
-    @Autowired
-    UserDb userDb;
-
-    @Autowired
-    RoleDb roleDb;
-
     // Mengembalikan list user yang memiliki role engineer
     @GetMapping(value="/engineers")
     @PreAuthorize("hasRole('ADMIN')")
@@ -79,8 +73,7 @@ public class UserRestController {
     @DeleteMapping("/delete-user/{username}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable String username){
-        UserModel user = userDb.findByUsername(username).get();
-        userDb.delete(user);
+        userRestService.deleteUser(username);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return ResponseEntity.ok(response);
