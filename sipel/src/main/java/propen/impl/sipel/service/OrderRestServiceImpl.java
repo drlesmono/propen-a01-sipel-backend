@@ -224,6 +224,7 @@ public class OrderRestServiceImpl implements OrderRestService {
         newMs.setIdOrder(orderSaved);
         newMs.setIdUserPic(ms.getIdUserPic());
         newMs.setActualStart(ms.getActualStart());
+        newMs.setStatus("Active");
         newMs.setActualEnd(ms.getActualEnd());
         newMs.setActivated(ms.getActivated());
         ManagedServicesModel msSaved = managedServicesDb.save(newMs);

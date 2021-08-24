@@ -162,7 +162,7 @@ public class ReportRestController {
 
     // Menghapus file dari local server dan report dari database
     @DeleteMapping(value="/api/v1/report/{idReport}/delete")
-    @PreAuthorize("hasRole('ENGINEER')")
+    @PreAuthorize("hasRole('ENGINEER') or hasRole('ADMIN')")
     public ResponseEntity<String> deleteReport(@PathVariable("idReport") Long idReport) {
         try{
             ReportModel report = reportRestService.findReportById(idReport);
@@ -277,14 +277,14 @@ public class ReportRestController {
             if(fileName.contains("ver ")) {
                 // Membuang version di paling belakang
                 fileName = fileName.substring(0, fileName.length()-5);
-                fileName = fileName + "Final." + fileType;
+                fileName = fileName + " - Final." + fileType;
             }else{
 
                 int version = reportRestService.findReportMaxVersion(fileName, fileType);
                 if( version == 0){
-                    fileName = fileName + "Final." + fileType;
+                    fileName = fileName + " - Final." + fileType;
                 }else{
-                    fileName = fileName + "Final ver " + (version + 1) + "." + fileType;
+                    fileName = fileName + " - Final ver " + (version + 1) + "." + fileType;
                 }
             }
         }
