@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import propen.impl.sipel.model.ManagedServicesModel;
 import propen.impl.sipel.model.OrderModel;
+import propen.impl.sipel.model.SequenceModel;
 import propen.impl.sipel.repository.OrderDb;
 import propen.impl.sipel.rest.SequenceDto;
 import propen.impl.sipel.service.*;
@@ -252,32 +253,36 @@ public class  OrderRestController {
         
        
     }
-    @GetMapping(value = "/order/resetSeq")
+
+    @GetMapping(value = "/order/sequence")
     @PreAuthorize("hasRole('ADMIN')")
-    public SequenceDto resetSeq(Model model){
-        SequenceDto seq = new SequenceDto();
-        seq.setSequenceNum(Long.valueOf(0));
+    public SequenceModel resetSeq(Model model){
+        SequenceModel seq = sequenceService.retrieveSequence();
         return seq;
     }
 
-    @PutMapping(value = "/order/resetSeq/{idSequence}")
+    @PutMapping(value = "/order/resetSeq")
     @PreAuthorize("hasRole('ADMIN')")
-    private void resetSeqOrder(
-            @PathVariable(value = "idSequence") Long idSequence,
+    public BaseResponse<SequenceModel> resetSeqOrder(
             @Valid @RequestBody SequenceDto res,
             BindingResult bindingResult
 
     ) {
-        try {
-            System.out.println(res);
-            Long num = Long.valueOf(res.getSequenceNum());
-            sequenceService.setSequence(num);
+        BaseResponse<SequenceModel> response = new BaseResponse<>();
+        if(bindingResult.hasFieldErrors()) {
+            // Respon Gagal Simpan
+            response.setMessage("Sequence order gagal diubah.");
+            response.setStatus(405);
+            return response;
         }
-        catch (NoSuchElementException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "not found!"
-            );
-        }
+
+        SequenceModel seq = sequenceService.setSequence(res.getSequenceNum());
+
+        response.setStatus(200);
+        response.setMessage("Success");
+        response.setResult(seq);
+
+        return response;
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SequenceService {
 
-    List<SequenceModel> retrieveListSequence();
+    SequenceModel retrieveSequence();
 
-    void setSequence(Long sequence);
+    SequenceModel setSequence(Long sequence);
 }

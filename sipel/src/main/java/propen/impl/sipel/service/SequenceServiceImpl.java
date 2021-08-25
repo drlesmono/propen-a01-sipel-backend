@@ -6,7 +6,6 @@ import propen.impl.sipel.model.SequenceModel;
 import propen.impl.sipel.repository.SequenceDb;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @Transactional
@@ -16,13 +15,15 @@ public class SequenceServiceImpl implements  SequenceService{
     SequenceDb sequenceDb;
 
     @Override
-    public List<SequenceModel> retrieveListSequence() {
-        return sequenceDb.findAll();
+    public SequenceModel retrieveSequence() {
+        return sequenceDb.findById(Long.valueOf(1)).get();
     }
 
     @Override
-    public void setSequence(Long sequence) {
+    public SequenceModel setSequence(Long sequence) {
         SequenceModel seq = sequenceDb.findById(Long.valueOf(1)).get();
         seq.setSequenceValue(sequence);
+        sequenceDb.save(seq);
+        return seq;
     }
 }
